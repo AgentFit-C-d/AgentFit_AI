@@ -7,6 +7,7 @@ from pathlib import Path
 import time
 
 from .evaluate import CASES, load_api_key
+from .semantic_review import REVIEW_PROMPT, REVIEW_REASONING_EFFORT, REVIEW_MAX_TOKENS
 from .profile import FIELDS
 from .solar import AnalysisError, SolarAnalyzer, PROMPT_VERSION, COMMON_PROMPT, CORE_PROMPT, FEATURE_PROMPT, REASONING_EFFORT, FREQUENCY_PENALTY
 
@@ -55,12 +56,12 @@ def evaluate_cases(cases, analyzer, *, repeats=2, workers=2, on_row=None):
         "first_pass_validated": sum(row["first_pass_validated"] for row in rows),
         "prompt_version": PROMPT_VERSION,
         "prompt_sha256": hashlib.sha256(json.dumps({
-            "common": COMMON_PROMPT, "core": CORE_PROMPT, "features": FEATURE_PROMPT,
+            "common": COMMON_PROMPT, "core": CORE_PROMPT, "features": FEATURE_PROMPT, "review": REVIEW_PROMPT,
         }, sort_keys=True).encode()).hexdigest(),
-        "prompt_hash_scope": "sorted-json-of-common-core-features",
+        "prompt_hash_scope": "sorted-json-of-common-core-features-review",
         "fixtures_sha256": hashlib.sha256(json.dumps(cases, sort_keys=True).encode()).hexdigest(),
         "model_requested": "solar-pro4", "reasoning_effort": REASONING_EFFORT, "frequency_penalty": FREQUENCY_PENALTY, "temperature": 0,
-        "max_tokens": 4096, "workers": workers, "cases": rows,
+        "max_tokens": 4096, "review_reasoning_effort": REVIEW_REASONING_EFFORT, "review_max_tokens": REVIEW_MAX_TOKENS, "workers": workers, "cases": rows,
     }
 
 
@@ -71,7 +72,7 @@ def main():
     parser.add_argument("--diagnostics-dir", type=Path, help="Opt-in local diagnostics; failed raw responses expire after 7 days")
     args = parser.parse_args()
     if not args.live:
-        parser.error("--live is required for 24 synthetic analyses (48 to 72 billable calls)")
+        parser.error("--live is required for 24 synthetic analyses (72 to 144 billable calls)")
     # Exclusive creation prevents accidentally replacing earlier failure results.
     try:
         from .diagnostics import LocalDiagnosticsStore

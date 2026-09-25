@@ -1,0 +1,24 @@
+{
+  "purpose": "diagnostic_only_not_quality_gate",
+  "case": "ROLE-003",
+  "rows": [
+    {
+      "effort": "low",
+      "draft": "correct",
+      "validated": true,
+      "issues": [],
+      "passed": true,
+      "prompt_tokens": 1111,
+      "completion_tokens": 1389,
+      "elapsed_ms": 10672
+    },
+    {
+      "effort": "low",
+      "draft": "wrong",
+      "validated": false,
+      "passed": false,
+      "error": "PROVIDER_TIMEOUT",
+      "elapsed_ms": 40078
+    }
+  ]
+}

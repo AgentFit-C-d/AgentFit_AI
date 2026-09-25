@@ -7,26 +7,31 @@ class FeatureSpanTests(unittest.TestCase):
         fields=dict.fromkeys(FIELDS)
         fields["features"]={"spans":spans,"absenceLineIds":[]}
         return fields
-    def span(self,start=1,end=2):
-        return {"lineId":1,"startId":start,"endId":end,"role":"user_action"}
     def test_feature_is_copied_from_source_not_generated_label(self):
-        fields=self.candidate([self.span(3,4)])
+        fields=self.candidate([{"lineId":1,"occurrence":1,"role":"user_action","quote":"book search"}])
         r=cited_to_profile("Required: book search and loans.","doc-1",fields)
         self.assertEqual(r["data"]["features"],["book search"])
         self.assertEqual(r["evidence"]["features"],[{"documentId":"doc-1","start":10,"end":21}])
-    def test_missing_reordered_or_out_of_range_ids_rejected(self):
-        for span in [self.span(0,2),self.span(2,1),self.span(1,3)]:
-            with self.subTest(span=span),self.assertRaises(AnalysisError) as caught:
-                cited_to_profile("book search","doc-1",self.candidate([span]))
+    def test_missing_reordered_or_out_of_range_quotes_rejected(self):
+        for doc,span in [
+            ("book search",{"lineId":1,"occurrence":1,"role":"user_action","quote":"missing search"}),
+            ("book search",{"lineId":1,"occurrence":1,"role":"user_action","quote":"search book"}),
+            ("book search; book search",{"lineId":1,"occurrence":3,"role":"user_action","quote":"book search"})]:
+            with self.subTest(doc=doc),self.assertRaises(AnalysisError) as caught:
+                cited_to_profile(doc,"doc-1",self.candidate([span]))
             self.assertEqual(caught.exception.field,"features")
     def test_feature_count_limit_is_not_silently_truncated(self):
+        spans=[{"lineId":1,"occurrence":1,"role":"user_action","quote":"book search"}]*31
         with self.assertRaises(AnalysisError):
-            cited_to_profile("book search","doc-1",self.candidate([self.span()]*31))
+            cited_to_profile("book search","doc-1",self.candidate(spans))
     def test_span_and_absence_cannot_both_be_supplied(self):
-        fields=self.candidate([self.span()])
+        fields=self.candidate([{"lineId":1,"occurrence":1,"role":"user_action","quote":"book search"}])
         fields["features"]["absenceLineIds"]=[1]
         with self.assertRaises(AnalysisError):
             cited_to_profile("book search","doc-1",fields)
-    def test_ids_disambiguate_repeated_boundary_words(self):
-        r=cited_to_profile("book search and book order","doc-1",self.candidate([self.span(4,5)]))
-        self.assertEqual(r["data"]["features"],["book order"])
+
+
+    def test_whole_quote_disambiguates_repeated_boundary_words(self):
+        fields=self.candidate([{"lineId":1,"occurrence":1,"role":"user_action","quote":"book search"}])
+        r=cited_to_profile("book search and book order","doc-1",fields)
+        self.assertEqual(r["data"]["features"],["book search"])

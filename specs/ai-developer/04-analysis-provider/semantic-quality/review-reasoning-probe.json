@@ -1,0 +1,62 @@
+{
+  "purpose": "diagnostic_only_not_quality_gate",
+  "case": "ROLE-003",
+  "rows": [
+    {
+      "effort": "none",
+      "draft": "correct",
+      "validated": false,
+      "passed": false,
+      "error": "SEMANTIC_REVIEW_INVALID",
+      "elapsed_ms": 1063
+    },
+    {
+      "effort": "none",
+      "draft": "wrong",
+      "validated": true,
+      "issues": [
+        {
+          "field": "features",
+          "kind": "wrong_role",
+          "itemIndex": 0,
+          "evidenceLineIds": [
+            1
+          ]
+        }
+      ],
+      "passed": true,
+      "prompt_tokens": 1126,
+      "completion_tokens": 72,
+      "elapsed_ms": 859
+    },
+    {
+      "effort": "medium",
+      "draft": "correct",
+      "validated": true,
+      "issues": [],
+      "passed": true,
+      "prompt_tokens": 1111,
+      "completion_tokens": 1823,
+      "elapsed_ms": 38703
+    },
+    {
+      "effort": "medium",
+      "draft": "wrong",
+      "validated": true,
+      "issues": [
+        {
+          "field": "features",
+          "kind": "wrong_role",
+          "itemIndex": 0,
+          "evidenceLineIds": [
+            1
+          ]
+        }
+      ],
+      "passed": true,
+      "prompt_tokens": 1125,
+      "completion_tokens": 1316,
+      "elapsed_ms": 23828
+    }
+  ]
+}

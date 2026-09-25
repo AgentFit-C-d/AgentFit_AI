@@ -9,7 +9,7 @@ from test_staged_analysis import response, core, features
 class CallDiagnosticsTests(unittest.TestCase):
     def test_success_has_scoped_metadata_without_source(self):
         transport = Mock(side_effect=[response(core()), response(features())])
-        result = SolarAnalyzer("synthetic-key", transport=transport).analyze("Alpha registration", "private-document")
+        result = SolarAnalyzer("synthetic-key", semantic_review=False, transport=transport).analyze("Alpha registration", "private-document")
         d = result.diagnostics
         self.assertEqual([c["stage"] for c in d["calls"]], ["core", "features"])
         self.assertTrue(all(c["outcome"] == "validated" for c in d["calls"]))
@@ -25,7 +25,7 @@ class CallDiagnosticsTests(unittest.TestCase):
     def test_second_call_timeout_identifies_stage_without_retry(self):
         transport = Mock(side_effect=[response(core()), TimeoutError("private detail")])
         with self.assertRaises(AnalysisError) as caught:
-            SolarAnalyzer("synthetic-key", transport=transport).analyze("Alpha registration", "doc")
+            SolarAnalyzer("synthetic-key", semantic_review=False, transport=transport).analyze("Alpha registration", "doc")
         d = caught.exception.diagnostics
         self.assertEqual(transport.call_count, 2)
         self.assertEqual(d["calls"][1]["stage"], "features")
@@ -37,7 +37,7 @@ class CallDiagnosticsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             store = LocalDiagnosticsStore(Path(folder))
             transport = Mock(side_effect=[response(core()), response(features(99)), response(features())])
-            r = SolarAnalyzer("synthetic-key", transport=transport, diagnostics_store=store).analyze("Alpha registration", "doc")
+            r = SolarAnalyzer("synthetic-key", semantic_review=False, transport=transport, diagnostics_store=store).analyze("Alpha registration", "doc")
             self.assertEqual(r.diagnostics["calls"][1]["outcome"], "validation_failed")
             self.assertEqual(r.diagnostics["calls"][2]["stage"], "repair")
             saved = json.loads(next(Path(folder).glob("*.json")).read_text())
@@ -50,7 +50,7 @@ class CallDiagnosticsTests(unittest.TestCase):
             store = LocalDiagnosticsStore(Path(folder))
             transport = Mock(side_effect=[response(core()), response(features(99)), response(features(99))])
             with self.assertRaises(AnalysisError):
-                SolarAnalyzer("synthetic-key", transport=transport, diagnostics_store=store).analyze("Alpha registration", "doc")
+                SolarAnalyzer("synthetic-key", semantic_review=False, transport=transport, diagnostics_store=store).analyze("Alpha registration", "doc")
             saved = json.loads(next(Path(folder).glob("*.json")).read_text())
             self.assertEqual([x["call"] for x in saved["failed_responses"]], [2, 3])
             self.assertNotIn("Alpha", json.dumps(saved))
@@ -60,7 +60,7 @@ class CallDiagnosticsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             transport = Mock(return_value=response({"secret": "synthetic-key"}))
             with self.assertRaises(AnalysisError):
-                SolarAnalyzer("synthetic-key", transport=transport,
+                SolarAnalyzer("synthetic-key", semantic_review=False, transport=transport,
                     diagnostics_store=LocalDiagnosticsStore(Path(folder))).analyze("Alpha", "doc")
             saved = next(Path(folder).glob("*.json")).read_text()
             self.assertNotIn("synthetic-key", saved)
@@ -70,7 +70,7 @@ class CallDiagnosticsTests(unittest.TestCase):
         store = Mock()
         store.write.side_effect = OSError("private path")
         transport = Mock(side_effect=[response(core()), response(features())])
-        r = SolarAnalyzer("synthetic-key", transport=transport, diagnostics_store=store).analyze("Alpha registration", "doc")
+        r = SolarAnalyzer("synthetic-key", semantic_review=False, transport=transport, diagnostics_store=store).analyze("Alpha registration", "doc")
         self.assertEqual(r.profile["data"]["project_name"], "Alpha")
         self.assertEqual(r.diagnostics["storage"], "failed")
         self.assertNotIn("private path", json.dumps(r.diagnostics))
@@ -80,7 +80,7 @@ class CallDiagnosticsTests(unittest.TestCase):
         payload["choices"][0]["finish_reason"] = "length"
         transport = Mock(return_value=json.dumps(payload).encode())
         with self.assertRaises(AnalysisError) as caught:
-            SolarAnalyzer("synthetic-key", transport=transport).analyze("Alpha", "doc")
+            SolarAnalyzer("synthetic-key", semantic_review=False, transport=transport).analyze("Alpha", "doc")
         call = caught.exception.diagnostics["calls"][0]
         self.assertEqual(call.get("completion_tokens"), 20)
         self.assertEqual(call["error"], "INCOMPLETE_RESPONSE")
@@ -89,7 +89,7 @@ class CallDiagnosticsTests(unittest.TestCase):
         store = Mock()
         store.write.side_effect = OSError("private path")
         with self.assertRaises(AnalysisError) as caught:
-            SolarAnalyzer("synthetic-key", transport=Mock(side_effect=TimeoutError()),
+            SolarAnalyzer("synthetic-key", semantic_review=False, transport=Mock(side_effect=TimeoutError()),
                           diagnostics_store=store).analyze("Alpha", "doc")
         self.assertEqual(caught.exception.code, "PROVIDER_TIMEOUT")
         self.assertEqual(caught.exception.diagnostics["storage"], "failed")
@@ -104,7 +104,7 @@ class CallDiagnosticsTests(unittest.TestCase):
                 barrier.wait(timeout=5)
                 return response(core())
             return response(features())
-        analyzer = SolarAnalyzer("synthetic-key", transport=transport)
+        analyzer = SolarAnalyzer("synthetic-key", semantic_review=False, transport=transport)
         with ThreadPoolExecutor(max_workers=2) as pool:
             results = list(pool.map(lambda i: analyzer.analyze("Alpha registration", "doc-" + str(i)), range(2)))
         self.assertNotEqual(results[0].diagnostics["run_id"], results[1].diagnostics["run_id"])
@@ -119,7 +119,7 @@ class CallDiagnosticsTests(unittest.TestCase):
         for raw in (json.dumps(payload).encode(), b"not-json"):
             with self.subTest(raw=raw), tempfile.TemporaryDirectory() as folder:
                 with self.assertRaises(AnalysisError):
-                    SolarAnalyzer("synthetic-key", transport=Mock(return_value=raw),
+                    SolarAnalyzer("synthetic-key", semantic_review=False, transport=Mock(return_value=raw),
                         diagnostics_store=LocalDiagnosticsStore(Path(folder))).analyze("Alpha", "doc")
                 saved = json.loads(next(Path(folder).glob("*.json")).read_text())
                 self.assertEqual(saved["failed_responses"], [])
@@ -128,7 +128,7 @@ class CallDiagnosticsTests(unittest.TestCase):
         store = Mock()
         transport = Mock()
         with self.assertRaises(AnalysisError) as caught:
-            SolarAnalyzer("synthetic-key", transport=transport, diagnostics_store=store).analyze("", "doc")
+            SolarAnalyzer("synthetic-key", semantic_review=False, transport=transport, diagnostics_store=store).analyze("", "doc")
         self.assertEqual(caught.exception.provider_calls, 0)
         transport.assert_not_called()
         store.write.assert_not_called()
