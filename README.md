@@ -26,16 +26,18 @@ From ai_service/ with Python 3.12, run the fixed synthetic evaluation:
 python -m agentfit_ai.evaluate --live
 ```
 
-This makes six billable calls using UPSTAGE_API_KEY from the environment or root .env. No extra packages are needed. Reports contain outcomes and metadata only.
+This makes six analyses (12 to 18 billable calls) using UPSTAGE_API_KEY from the environment or root .env. No extra packages are needed. Reports contain outcomes and metadata only.
 
 The Python module agentfit_ai.solar.SolarAnalyzer accepts document text and a generated document ID, returning a validated draft Profile with evidence positions. It does not persist results.
 
-Spec, plan, tasks and measured limitations: [Solar analysis](specs/ai-developer/04-analysis-provider/README.md). Latest stability evaluation: 12 synthetic cases, two runs each, 24/24 passed; production quality is not established. HTTP endpoints, PDF extraction and Spring integration remain future work.
+Spec, plan, tasks and measured limitations: [Solar analysis](specs/ai-developer/04-analysis-provider/README.md). Latest staged evaluation: 21/24 existing synthetic runs, 2/2 new synthetic cases, and 2/4 real-document runs passed. The quality gate remains unmet; see [current validation](specs/ai-developer/04-analysis-provider/document-quality/validation.md). HTTP endpoints, PDF extraction and Spring integration remain future work.
 
-Fixed stability evaluation (24 billable calls, no retries; use a new report filename each time):
+Fixed stability evaluation (24 analyses, 48 to 72 billable calls, no network retries; use a new report filename each time):
 
 ```text
 python -m agentfit_ai.name_stability --live --report ../output/name-stability.json
 ```
 
 [Stability spec and evidence](specs/ai-developer/04-analysis-provider/stability/validation.md).
+
+Staged extraction makes two calls (metadata/technology and features), then at most one correction call for invalid fields. Profile shape remains unchanged. Results expose provider_calls, repaired_fields and first_pass_validated; usage totals cover all successful provider responses. Structural validation does not establish semantic correctness.

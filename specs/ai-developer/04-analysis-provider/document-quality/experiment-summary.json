@@ -1,0 +1,561 @@
+[
+  {
+    "prompt_version": "profile-v5",
+    "cases": [
+      {
+        "id": "FEATURE-001",
+        "repeat": 1,
+        "synthetic": true,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "elapsed_ms": 8093,
+        "prompt_tokens": 904,
+        "completion_tokens": 140
+      },
+      {
+        "id": "FEATURE-002",
+        "repeat": 1,
+        "synthetic": true,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "elapsed_ms": 6688,
+        "prompt_tokens": 916,
+        "completion_tokens": 112
+      },
+      {
+        "id": "REAL-HANDOFF-001",
+        "repeat": 1,
+        "synthetic": false,
+        "validated": false,
+        "passed": false,
+        "error": "EVIDENCE_MISMATCH",
+        "field": "features",
+        "elapsed_ms": 7516
+      },
+      {
+        "id": "REAL-AGENTFIT-001",
+        "repeat": 1,
+        "synthetic": false,
+        "validated": false,
+        "passed": false,
+        "error": "AMBIGUOUS_EVIDENCE",
+        "field": "features",
+        "elapsed_ms": 6250
+      },
+      {
+        "id": "REAL-HANDOFF-001",
+        "repeat": 2,
+        "synthetic": false,
+        "validated": false,
+        "passed": false,
+        "error": "EVIDENCE_MISMATCH",
+        "field": "features",
+        "elapsed_ms": 12406
+      },
+      {
+        "id": "REAL-AGENTFIT-001",
+        "repeat": 2,
+        "synthetic": false,
+        "validated": false,
+        "passed": false,
+        "error": "AMBIGUOUS_EVIDENCE",
+        "field": "features",
+        "elapsed_ms": 6609
+      }
+    ]
+  },
+  {
+    "prompt_version": "profile-v6",
+    "cases": [
+      {
+        "id": "FEATURE-001",
+        "repeat": 1,
+        "synthetic": true,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "elapsed_ms": 2547,
+        "prompt_tokens": 648,
+        "completion_tokens": 134
+      },
+      {
+        "id": "FEATURE-002",
+        "repeat": 1,
+        "synthetic": true,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "elapsed_ms": 4703,
+        "prompt_tokens": 660,
+        "completion_tokens": 108
+      },
+      {
+        "id": "REAL-HANDOFF-001",
+        "repeat": 1,
+        "synthetic": false,
+        "validated": false,
+        "passed": false,
+        "error": "PROVIDER_TIMEOUT",
+        "field": null,
+        "elapsed_ms": 40203
+      },
+      {
+        "id": "REAL-AGENTFIT-001",
+        "repeat": 1,
+        "synthetic": false,
+        "validated": false,
+        "passed": false,
+        "error": "INVALID_PROFILE_VALUE",
+        "field": "features",
+        "elapsed_ms": 12937
+      },
+      {
+        "id": "REAL-HANDOFF-001",
+        "repeat": 2,
+        "synthetic": false,
+        "validated": false,
+        "passed": false,
+        "error": "EVIDENCE_MISMATCH",
+        "field": "features",
+        "elapsed_ms": 8672
+      },
+      {
+        "id": "REAL-AGENTFIT-001",
+        "repeat": 2,
+        "synthetic": false,
+        "validated": false,
+        "passed": false,
+        "error": "INVALID_PROFILE_VALUE",
+        "field": "features",
+        "elapsed_ms": 17078
+      }
+    ]
+  },
+  {
+    "prompt_version": "profile-v7",
+    "cases": [
+      {
+        "id": "FEATURE-001",
+        "repeat": 1,
+        "synthetic": true,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "elapsed_ms": 2437,
+        "prompt_tokens": 862,
+        "completion_tokens": 180
+      },
+      {
+        "id": "FEATURE-002",
+        "repeat": 1,
+        "synthetic": true,
+        "validated": true,
+        "passed": false,
+        "missing": [
+          "frontend",
+          "backend"
+        ],
+        "elapsed_ms": 4641,
+        "prompt_tokens": 874,
+        "completion_tokens": 107
+      },
+      {
+        "id": "REAL-HANDOFF-001",
+        "repeat": 1,
+        "synthetic": false,
+        "validated": true,
+        "passed": false,
+        "missing": [
+          "external_integrations:Cloud Storage"
+        ],
+        "elapsed_ms": 10625,
+        "prompt_tokens": 3993,
+        "completion_tokens": 1235
+      },
+      {
+        "id": "REAL-AGENTFIT-001",
+        "repeat": 1,
+        "synthetic": false,
+        "validated": true,
+        "passed": false,
+        "missing": [
+          "ai"
+        ],
+        "elapsed_ms": 7797,
+        "prompt_tokens": 5922,
+        "completion_tokens": 1095
+      },
+      {
+        "id": "REAL-HANDOFF-001",
+        "repeat": 2,
+        "synthetic": false,
+        "validated": true,
+        "passed": false,
+        "missing": [
+          "external_integrations:Cloud Storage"
+        ],
+        "elapsed_ms": 23656,
+        "prompt_tokens": 3993,
+        "completion_tokens": 1235
+      },
+      {
+        "id": "REAL-AGENTFIT-001",
+        "repeat": 2,
+        "synthetic": false,
+        "validated": true,
+        "passed": false,
+        "missing": [
+          "ai"
+        ],
+        "elapsed_ms": 28782,
+        "prompt_tokens": 5922,
+        "completion_tokens": 1142
+      }
+    ]
+  },
+  {
+    "prompt_version": "profile-v8",
+    "cases": [
+      {
+        "id": "FEATURE-001",
+        "repeat": 1,
+        "synthetic": true,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "elapsed_ms": 2453,
+        "prompt_tokens": 990,
+        "completion_tokens": 180
+      },
+      {
+        "id": "FEATURE-002",
+        "repeat": 1,
+        "synthetic": true,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "elapsed_ms": 2063,
+        "prompt_tokens": 1002,
+        "completion_tokens": 133
+      },
+      {
+        "id": "REAL-HANDOFF-001",
+        "repeat": 1,
+        "synthetic": false,
+        "validated": false,
+        "passed": false,
+        "error": "INVALID_FEATURE_SPAN",
+        "field": "features",
+        "elapsed_ms": 23172
+      },
+      {
+        "id": "REAL-AGENTFIT-001",
+        "repeat": 1,
+        "synthetic": false,
+        "validated": false,
+        "passed": false,
+        "error": "INVALID_FEATURE_SPAN",
+        "field": "features",
+        "elapsed_ms": 21296
+      },
+      {
+        "id": "REAL-HANDOFF-001",
+        "repeat": 2,
+        "synthetic": false,
+        "validated": true,
+        "passed": false,
+        "missing": [
+          "external_integrations:Cloud Storage"
+        ],
+        "elapsed_ms": 9375,
+        "prompt_tokens": 4121,
+        "completion_tokens": 1348
+      },
+      {
+        "id": "REAL-AGENTFIT-001",
+        "repeat": 2,
+        "synthetic": false,
+        "validated": false,
+        "passed": false,
+        "error": "INVALID_FEATURE_SPAN",
+        "field": "features",
+        "elapsed_ms": 10266
+      }
+    ]
+  },
+  {
+    "prompt_version": "profile-v9",
+    "cases": [
+      {
+        "id": "FEATURE-001",
+        "repeat": 1,
+        "synthetic": true,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 2734,
+        "prompt_tokens": 2059,
+        "completion_tokens": 171
+      },
+      {
+        "id": "FEATURE-002",
+        "repeat": 1,
+        "synthetic": true,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 3953,
+        "prompt_tokens": 2083,
+        "completion_tokens": 136
+      },
+      {
+        "id": "REAL-HANDOFF-001",
+        "repeat": 1,
+        "synthetic": false,
+        "validated": true,
+        "passed": false,
+        "missing": [
+          "external_integrations:Cloud Storage",
+          "features:백업"
+        ],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 19094,
+        "prompt_tokens": 8321,
+        "completion_tokens": 882
+      },
+      {
+        "id": "REAL-AGENTFIT-001",
+        "repeat": 1,
+        "synthetic": false,
+        "validated": true,
+        "passed": false,
+        "missing": [
+          "ai"
+        ],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 13328,
+        "prompt_tokens": 12179,
+        "completion_tokens": 1553
+      },
+      {
+        "id": "REAL-HANDOFF-001",
+        "repeat": 2,
+        "synthetic": false,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 13797,
+        "prompt_tokens": 8321,
+        "completion_tokens": 1404
+      },
+      {
+        "id": "REAL-AGENTFIT-001",
+        "repeat": 2,
+        "synthetic": false,
+        "validated": true,
+        "passed": false,
+        "missing": [
+          "ai"
+        ],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 18266,
+        "prompt_tokens": 12179,
+        "completion_tokens": 1209
+      }
+    ]
+  },
+  {
+    "prompt_version": "profile-v10",
+    "cases": [
+      {
+        "id": "FEATURE-001",
+        "repeat": 1,
+        "synthetic": true,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 4032,
+        "prompt_tokens": 2203,
+        "completion_tokens": 183
+      },
+      {
+        "id": "FEATURE-002",
+        "repeat": 1,
+        "synthetic": true,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 4047,
+        "prompt_tokens": 2227,
+        "completion_tokens": 136
+      },
+      {
+        "id": "REAL-HANDOFF-001",
+        "repeat": 1,
+        "synthetic": false,
+        "validated": false,
+        "passed": false,
+        "error": "PROVIDER_TIMEOUT",
+        "field": null,
+        "elapsed_ms": 42687
+      },
+      {
+        "id": "REAL-AGENTFIT-001",
+        "repeat": 1,
+        "synthetic": false,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 38516,
+        "prompt_tokens": 12323,
+        "completion_tokens": 1709
+      },
+      {
+        "id": "REAL-HANDOFF-001",
+        "repeat": 2,
+        "synthetic": false,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 32031,
+        "prompt_tokens": 8465,
+        "completion_tokens": 1446
+      },
+      {
+        "id": "REAL-AGENTFIT-001",
+        "repeat": 2,
+        "synthetic": false,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 20406,
+        "prompt_tokens": 12323,
+        "completion_tokens": 840
+      }
+    ]
+  },
+  {
+    "prompt_version": "profile-v12",
+    "cases": [
+      {
+        "id": "FEATURE-001",
+        "repeat": 1,
+        "synthetic": true,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 7297,
+        "prompt_tokens": 2367,
+        "completion_tokens": 183
+      },
+      {
+        "id": "FEATURE-002",
+        "repeat": 1,
+        "synthetic": true,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 6203,
+        "prompt_tokens": 2391,
+        "completion_tokens": 109
+      },
+      {
+        "id": "REAL-HANDOFF-001",
+        "repeat": 1,
+        "synthetic": false,
+        "validated": false,
+        "passed": false,
+        "error": "PROVIDER_TIMEOUT",
+        "field": null,
+        "provider_calls": 2,
+        "first_pass_validated": false,
+        "repaired_fields": [],
+        "elapsed_ms": 51204
+      },
+      {
+        "id": "REAL-AGENTFIT-001",
+        "repeat": 1,
+        "synthetic": false,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 23125,
+        "prompt_tokens": 12487,
+        "completion_tokens": 1400
+      },
+      {
+        "id": "REAL-HANDOFF-001",
+        "repeat": 2,
+        "synthetic": false,
+        "validated": true,
+        "passed": false,
+        "missing": [
+          "external_integrations:Cloud Storage"
+        ],
+        "provider_calls": 2,
+        "repaired_fields": [],
+        "first_pass_validated": true,
+        "elapsed_ms": 14359,
+        "prompt_tokens": 8629,
+        "completion_tokens": 1224
+      },
+      {
+        "id": "REAL-AGENTFIT-001",
+        "repeat": 2,
+        "synthetic": false,
+        "validated": true,
+        "passed": true,
+        "missing": [],
+        "provider_calls": 3,
+        "repaired_fields": [
+          "features"
+        ],
+        "first_pass_validated": false,
+        "elapsed_ms": 24719,
+        "prompt_tokens": 19633,
+        "completion_tokens": 1847
+      }
+    ]
+  }
+]

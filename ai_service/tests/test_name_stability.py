@@ -19,14 +19,15 @@ class StabilityEvaluationTests(unittest.TestCase):
     def test_failure_then_success_keeps_both_attempts(self):
         case=sample()
         analyzer=Mock()
-        analyzer.analyze.side_effect=[AnalysisError("PROVIDER_TIMEOUT"),result(case["expected"])]
+        analyzer.analyze.side_effect=[AnalysisError("EVIDENCE_MISMATCH", "backend"),result(case["expected"])]
         report=evaluate_cases([case],analyzer,repeats=2,workers=1)
         self.assertEqual(analyzer.analyze.call_count,2)
         self.assertEqual(report["attempts"],2)
         self.assertEqual(report["passed"],1)
         self.assertEqual(report["name_passed"],1)
         self.assertFalse(report["cases"][0]["passed"])
-        self.assertEqual(report["cases"][0]["error"],"PROVIDER_TIMEOUT")
+        self.assertEqual(report["cases"][0]["error"],"EVIDENCE_MISMATCH")
+        self.assertEqual(report["cases"][0]["field"],"backend")
 
     def test_wrong_name_is_failure_and_report_contains_no_content(self):
         case=sample()

@@ -49,10 +49,12 @@ def main():
             result = analyzer.analyze(case["document"], case["id"])
             mismatches = [f for f in FIELDS if result.profile["data"][f] != case["expected"][f]]
             row = {"id": case["id"], "passed": not mismatches, "mismatch_fields": mismatches,
-                   "model": result.model, "prompt_tokens": result.prompt_tokens,
+                   "provider_calls": result.provider_calls, "repaired_fields": result.repaired_fields,
+                   "first_pass_validated": result.first_pass_validated, "model": result.model, "prompt_tokens": result.prompt_tokens,
                    "completion_tokens": result.completion_tokens, "elapsed_ms": result.elapsed_ms}
         except AnalysisError as error:
-            row = {"id": case["id"], "passed": False, "error": error.code,
+            row = {"id": case["id"], "passed": False, "error": error.code, "field": error.field, "provider_calls": error.provider_calls,
+                   "first_pass_validated": error.first_pass_validated, "repaired_fields": error.repaired_fields,
                    "elapsed_ms": round((time.monotonic() - started) * 1000)}
         rows.append(row)
         print(json.dumps(row), flush=True)

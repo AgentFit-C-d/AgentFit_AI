@@ -29,10 +29,14 @@ def evaluate_cases(cases, analyzer, *, repeats=2, workers=2, on_row=None):
             row.update(passed=not mismatches, name_passed="project_name" not in mismatches,
                        mismatch_fields=mismatches,
                        name_span={"start": start, "end": start + len(name)} if start >= 0 else None,
+                       provider_calls=getattr(result, "provider_calls", 2),
+                       repaired_fields=getattr(result, "repaired_fields", ()),
+                       first_pass_validated=getattr(result, "first_pass_validated", True),
                        model=result.model, prompt_tokens=result.prompt_tokens,
                        completion_tokens=result.completion_tokens, elapsed_ms=result.elapsed_ms)
         except AnalysisError as error:
-            row.update(passed=False, name_passed=False, error=error.code,
+            row.update(passed=False, name_passed=False, error=error.code, field=error.field, provider_calls=error.provider_calls,
+                       first_pass_validated=error.first_pass_validated, repaired_fields=error.repaired_fields,
                        elapsed_ms=round((time.monotonic() - started) * 1000))
         return row
 
@@ -46,6 +50,8 @@ def evaluate_cases(cases, analyzer, *, repeats=2, workers=2, on_row=None):
         "attempts": len(rows), "distinct_cases": len(cases), "repeats": repeats, "retries": 0,
         "passed": sum(row["passed"] for row in rows),
         "name_passed": sum(row["name_passed"] for row in rows),
+        "provider_calls": sum(row["provider_calls"] for row in rows),
+        "first_pass_validated": sum(row["first_pass_validated"] for row in rows),
         "prompt_version": PROMPT_VERSION,
         "prompt_sha256": hashlib.sha256(SYSTEM_PROMPT.encode()).hexdigest(),
         "fixtures_sha256": hashlib.sha256(json.dumps(cases, sort_keys=True).encode()).hexdigest(),
@@ -60,7 +66,7 @@ def main():
     parser.add_argument("--report", type=Path, required=True)
     args = parser.parse_args()
     if not args.live:
-        parser.error("--live is required for 24 billable synthetic requests")
+        parser.error("--live is required for 24 synthetic analyses (48 to 72 billable calls)")
     # Exclusive creation prevents accidentally replacing earlier failure results.
     try:
         analyzer = SolarAnalyzer(load_api_key())

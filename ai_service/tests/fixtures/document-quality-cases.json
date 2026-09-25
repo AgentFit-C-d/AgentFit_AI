@@ -1,0 +1,41 @@
+[
+  {
+    "id": "FEATURE-001",
+    "document": "프로젝트명은 책마루다. 아직 앱 구현 전이다. 확정한 출시 필수 기능은 도서 검색과 대출 신청이다. 로그인은 Google로 확정했다.",
+    "expected": {
+      "project_name": "책마루",
+      "project_type": null,
+      "domain": null,
+      "frontend": null,
+      "backend": null,
+      "ai": null,
+      "database": null,
+      "deployment": null,
+      "features": [
+        "도서 검색",
+        "대출 신청"
+      ],
+      "external_integrations": [
+        "Google"
+      ]
+    }
+  },
+  {
+    "id": "FEATURE-002",
+    "document": "프로젝트명은 빈자리다. 가상 예시의 쇼핑몰은 React와 Node.js를 쓴다. 빈자리의 스택과 AI 모델은 아직 미정이다. 이번 제품의 필수 기능은 예약 취소다. 이미지 인식은 제외한다.",
+    "expected": {
+      "project_name": "빈자리",
+      "project_type": null,
+      "domain": null,
+      "frontend": null,
+      "backend": null,
+      "ai": null,
+      "database": null,
+      "deployment": null,
+      "features": [
+        "예약 취소"
+      ],
+      "external_integrations": null
+    }
+  }
+]
