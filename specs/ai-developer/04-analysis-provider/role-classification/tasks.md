@@ -4,4 +4,4 @@
 - [x] T03 분류 프롬프트 개선
 - [x] T04 고정 합성·실제 평가
 - [x] T05 검토·보고
-- [ ] T06 commit/push
+- [x] T06 commit/push
