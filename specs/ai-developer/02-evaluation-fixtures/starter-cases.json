@@ -1,0 +1,72 @@
+[
+  {
+    "id": "TEXT-FACT-001",
+    "category": "FACT",
+    "purpose": "확정 기술과 미정 값을 함께 추출",
+    "inputKind": "TEXT",
+    "document": "운동 기록은 웹 서비스다. 프론트엔드는 React, 백엔드는 Spring Boot로 확정했다. 데이터베이스와 배포 환경은 아직 정하지 않았다.",
+    "expected": {
+      "project_name": "운동 기록",
+      "project_type": "웹 서비스",
+      "domain": null,
+      "frontend": ["React"],
+      "backend": ["Spring Boot"],
+      "ai": null,
+      "database": null,
+      "deployment": null,
+      "features": null,
+      "external_integrations": null
+    },
+    "evidenceQuotes": {
+      "project_name": ["운동 기록"],
+      "project_type": ["웹 서비스"],
+      "frontend": ["React"],
+      "backend": ["Spring Boot"]
+    }
+  },
+  {
+    "id": "TEXT-SEM-001",
+    "category": "SEM",
+    "purpose": "DB 후보는 확정값으로 취급하지 않음",
+    "inputKind": "TEXT",
+    "document": "가계부 앱을 만든다. 데이터베이스로 PostgreSQL과 MySQL을 검토 중이지만 아직 결정하지 않았다.",
+    "expected": {
+      "project_name": "가계부 앱",
+      "project_type": null,
+      "domain": null,
+      "frontend": null,
+      "backend": null,
+      "ai": null,
+      "database": null,
+      "deployment": null,
+      "features": null,
+      "external_integrations": null
+    },
+    "evidenceQuotes": {
+      "project_name": ["가계부 앱"]
+    }
+  },
+  {
+    "id": "TEXT-SEM-002",
+    "category": "SEM",
+    "purpose": "이전 시스템의 기술을 신규 프로젝트에 잘못 귀속하지 않음",
+    "inputKind": "TEXT",
+    "document": "기존 시스템은 Django를 사용했다. 이번 예약 관리 프로젝트의 백엔드는 Spring Boot로 확정했다. 배포 환경은 미정이다.",
+    "expected": {
+      "project_name": "예약 관리",
+      "project_type": null,
+      "domain": null,
+      "frontend": null,
+      "backend": ["Spring Boot"],
+      "ai": null,
+      "database": null,
+      "deployment": null,
+      "features": null,
+      "external_integrations": null
+    },
+    "evidenceQuotes": {
+      "project_name": ["예약 관리"],
+      "backend": ["Spring Boot"]
+    }
+  }
+]
