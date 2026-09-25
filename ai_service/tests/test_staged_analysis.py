@@ -16,7 +16,7 @@ def features(line=1):
 class StagedAnalysisTests(unittest.TestCase):
     def test_two_calls_without_repair(self):
         transport=Mock(side_effect=[response(core()),response(features())])
-        r=SolarAnalyzer("synthetic-key", semantic_review=False,transport=transport).analyze("Alpha registration","doc-1")
+        r=SolarAnalyzer("synthetic-key", evidence_contract=False, semantic_review=False,transport=transport).analyze("Alpha registration","doc-1")
         self.assertEqual(transport.call_count,2)
         self.assertEqual(r.provider_calls,2)
         self.assertTrue(r.first_pass_validated)
@@ -25,7 +25,7 @@ class StagedAnalysisTests(unittest.TestCase):
         self.assertEqual(r.profile["data"]["features"],["registration"])
     def test_only_invalid_field_gets_one_repair(self):
         transport=Mock(side_effect=[response(core()),response(features(0)),response(features())])
-        r=SolarAnalyzer("synthetic-key", semantic_review=False,transport=transport).analyze("Alpha registration","doc-1")
+        r=SolarAnalyzer("synthetic-key", evidence_contract=False, semantic_review=False,transport=transport).analyze("Alpha registration","doc-1")
         self.assertEqual(transport.call_count,3)
         repair=transport.call_args_list[2].args[0]
         self.assertEqual(repair["response_format"]["json_schema"]["schema"]["required"],["features"])
@@ -35,7 +35,7 @@ class StagedAnalysisTests(unittest.TestCase):
     def test_bad_repair_stops_at_three_calls(self):
         transport=Mock(side_effect=[response(core()),response(features(0)),response(features(0))])
         with self.assertRaises(AnalysisError) as caught:
-            SolarAnalyzer("synthetic-key", semantic_review=False,transport=transport).analyze("Alpha registration","doc-1")
+            SolarAnalyzer("synthetic-key", evidence_contract=False, semantic_review=False,transport=transport).analyze("Alpha registration","doc-1")
         self.assertEqual(transport.call_count,3)
         self.assertEqual(caught.exception.field,"features")
         self.assertEqual(caught.exception.provider_calls,3)
@@ -43,7 +43,7 @@ class StagedAnalysisTests(unittest.TestCase):
     def test_network_failure_is_not_retried(self):
         transport=Mock(side_effect=AnalysisError("PROVIDER_TIMEOUT"))
         with self.assertRaises(AnalysisError):
-            SolarAnalyzer("synthetic-key", semantic_review=False,transport=transport).analyze("Alpha","doc-1")
+            SolarAnalyzer("synthetic-key", evidence_contract=False, semantic_review=False,transport=transport).analyze("Alpha","doc-1")
         self.assertEqual(transport.call_count,1)
 
 
@@ -53,7 +53,7 @@ class StagedAnalysisTests(unittest.TestCase):
         repair = features()
         repair["backend"] = {"value": ["Python"], "evidenceLineIds": [1]}
         transport = Mock(side_effect=[response(bad), response(features(0)), response(repair)])
-        result = SolarAnalyzer("synthetic-key", semantic_review=False, transport=transport).analyze("Alpha Python registration", "doc-1")
+        result = SolarAnalyzer("synthetic-key", evidence_contract=False, semantic_review=False, transport=transport).analyze("Alpha Python registration", "doc-1")
         self.assertEqual(transport.call_count, 3)
         self.assertEqual(set(result.repaired_fields), {"backend", "features"})
         self.assertEqual(result.profile["data"]["project_name"], "Alpha")
@@ -65,20 +65,20 @@ class StagedAnalysisTests(unittest.TestCase):
         incomplete = json.loads(response(core()))
         incomplete.pop("usage")
         transport = Mock(side_effect=[json.dumps(incomplete).encode(), response(features())])
-        result = SolarAnalyzer("synthetic-key", semantic_review=False, transport=transport).analyze("Alpha registration", "doc-1")
+        result = SolarAnalyzer("synthetic-key", evidence_contract=False, semantic_review=False, transport=transport).analyze("Alpha registration", "doc-1")
         self.assertIsNone(result.prompt_tokens)
         self.assertIsNone(result.completion_tokens)
 
 
     def test_request_sampling_is_explicit_for_extraction_and_repair(self):
         transport = Mock(side_effect=[response(core()), response(features(0)), response(features())])
-        SolarAnalyzer("synthetic-key", semantic_review=False, transport=transport).analyze("Alpha registration", "doc-1")
+        SolarAnalyzer("synthetic-key", evidence_contract=False, semantic_review=False, transport=transport).analyze("Alpha registration", "doc-1")
         payloads = [call.args[0] for call in transport.call_args_list]
         self.assertEqual([payload.get("frequency_penalty") for payload in payloads], [0, 0, 0])
         self.assertEqual([payload["reasoning_effort"] for payload in payloads], ["none", "none", "none"])
 
     def test_numbered_input_retains_unicode_and_original_lines(self):
         transport = Mock(side_effect=[response(core()), response(features())])
-        SolarAnalyzer("synthetic-key", semantic_review=False, transport=transport).analyze("Alpha registration\r\n" + chr(0x1f600), "doc-1")
+        SolarAnalyzer("synthetic-key", evidence_contract=False, semantic_review=False, transport=transport).analyze("Alpha registration\r\n" + chr(0x1f600), "doc-1")
         content = transport.call_args_list[0].args[0]["messages"][1]["content"]
         self.assertEqual(content, "[L1] Alpha registration\n[L2] " + chr(0x1f600))

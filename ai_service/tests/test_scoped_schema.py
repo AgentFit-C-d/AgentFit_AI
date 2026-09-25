@@ -7,7 +7,7 @@ class ScopedSchemaTests(unittest.TestCase):
     def test_line_bounds_follow_each_document_on_reused_analyzer(self):
         transport=Mock(side_effect=[response(core()),response(features()),
                                   response(core()),response(features(3))])
-        analyzer=SolarAnalyzer("synthetic-key", semantic_review=False,transport=transport)
+        analyzer=SolarAnalyzer("synthetic-key", evidence_contract=False, semantic_review=False,transport=transport)
         analyzer.analyze("Alpha registration","doc-1")
         analyzer.analyze("Alpha\n\nregistration","doc-2")
         for index,maximum in ((0,1),(2,3)):
@@ -19,7 +19,7 @@ class ScopedSchemaTests(unittest.TestCase):
 
     def test_features_schema_requires_either_spans_or_absence(self):
         transport=Mock(side_effect=[response(core()),response(features())])
-        SolarAnalyzer("synthetic-key", semantic_review=False,transport=transport).analyze("Alpha registration","doc-1")
+        SolarAnalyzer("synthetic-key", evidence_contract=False, semantic_review=False,transport=transport).analyze("Alpha registration","doc-1")
         schema=transport.call_args_list[1].args[0]["response_format"]["json_schema"]["schema"]
         variants=schema["properties"]["features"]["anyOf"]
         self.assertEqual(len(variants),3)
@@ -32,7 +32,7 @@ class ScopedSchemaTests(unittest.TestCase):
 
     def test_repair_schema_keeps_document_bounds(self):
         transport=Mock(side_effect=[response(core()),response(features(2)),response(features())])
-        SolarAnalyzer("synthetic-key", semantic_review=False,transport=transport).analyze("Alpha registration","doc-1")
+        SolarAnalyzer("synthetic-key", evidence_contract=False, semantic_review=False,transport=transport).analyze("Alpha registration","doc-1")
         schema=transport.call_args_list[2].args[0]["response_format"]["json_schema"]["schema"]
         self.assertEqual(schema["required"],["features"])
         span=schema["properties"]["features"]["anyOf"][1]["properties"]["spans"]["items"]

@@ -49,7 +49,7 @@ class ReviewContractTests(unittest.TestCase):
 class SemanticPipelineTests(unittest.TestCase):
     def run_case(self,replies,**kwargs):
         transport=Mock(side_effect=[response(x) if isinstance(x,dict) else x for x in replies])
-        analyzer=SolarAnalyzer("synthetic-key",transport=transport,**kwargs)
+        analyzer=SolarAnalyzer("synthetic-key", evidence_contract=False,transport=transport,**kwargs)
         return analyzer,transport
 
     def test_default_requires_review_and_sums_usage(self):
@@ -122,7 +122,7 @@ class SemanticPipelineTests(unittest.TestCase):
         def transport(payload,key,timeout):
             timeouts.append(timeout);now[0]+=20
             return response(next(replies))
-        analyzer=SolarAnalyzer("synthetic-key",transport=transport,clock=lambda:now[0])
+        analyzer=SolarAnalyzer("synthetic-key", evidence_contract=False,transport=transport,clock=lambda:now[0])
         with self.assertRaises(AnalysisError) as caught:analyzer.analyze("Alpha registration","doc")
         self.assertEqual(caught.exception.code,"ANALYSIS_DEADLINE")
         self.assertEqual(timeouts,[40,40,20])
@@ -151,7 +151,7 @@ class SemanticErrorMetadataTests(unittest.TestCase):
                                    response(rejected),response({"features":None}),
                                    response(verdict([issue("missing",index=None)]))])
         with self.assertRaises(AnalysisError) as caught:
-            SolarAnalyzer("synthetic-key",transport=transport).analyze("Alpha registration","doc")
+            SolarAnalyzer("synthetic-key", evidence_contract=False,transport=transport).analyze("Alpha registration","doc")
         self.assertEqual(caught.exception.provider_calls,6)
         self.assertEqual(caught.exception.repaired_fields,("features",))
         self.assertFalse(caught.exception.first_pass_validated)
@@ -159,7 +159,7 @@ class SemanticErrorMetadataTests(unittest.TestCase):
     def test_review_timeout_after_repair_preserves_repair_metadata(self):
         transport=Mock(side_effect=[response(core()),response(features(0)),response(features()),TimeoutError()])
         with self.assertRaises(AnalysisError) as caught:
-            SolarAnalyzer("synthetic-key",transport=transport).analyze("Alpha registration","doc")
+            SolarAnalyzer("synthetic-key", evidence_contract=False,transport=transport).analyze("Alpha registration","doc")
         self.assertEqual(caught.exception.repaired_fields,("features",))
 
 
@@ -170,6 +170,6 @@ class ReviewTimeBudgetTests(unittest.TestCase):
             timeouts.append(timeout)
             now[0] += 5
             return response(next(replies))
-        result=SolarAnalyzer("synthetic-key",transport=transport,clock=lambda:now[0]).analyze("Alpha registration","doc")
+        result=SolarAnalyzer("synthetic-key", evidence_contract=False,transport=transport,clock=lambda:now[0]).analyze("Alpha registration","doc")
         self.assertEqual(timeouts,[40,40,50])
         self.assertTrue(result.semantic_reviewed)

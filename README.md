@@ -89,4 +89,17 @@ Solar 검토·제한된 수정·재검토와 실패 응답 보관을 구현했�
 
 ## 순번 오류 보완 실험 — profile-v28
 
-기능 인용의 등장 순서 설명과 항목별 수정 진단을 추가했습니다. 단위121건은 통과했지만 실제 실패 초안 수정은 실패했고, 합성 정확도는2/3이었습니다. 운영 적용을 위한 품질 개선은 입증되지 않았습니다. [검증 결과](specs/ai-developer/04-analysis-provider/occurrence-repair/validation.md)와 [전체 필드 공통 근거 계약 설계안](specs/ai-developer/04-analysis-provider/evidence-contract/spec.md)을 참고하세요. 공통 계약 구현은 설계 확인 후 진행합니다.
+기능 인용의 등장 순서 설명과 항목별 수정 진단을 추가했습니다. 단위121건은 통과했지만 실제 실패 초안 수정은 실패했고, 합성 정확도는2/3이었습니다. 운영 적용을 위한 품질 개선은 입증되지 않았습니다. [검증 결과](specs/ai-developer/04-analysis-provider/occurrence-repair/validation.md)와 [전체 필드 공통 근거 계약 설계안](specs/ai-developer/04-analysis-provider/evidence-contract/spec.md)을 참고하세요. 공통 계약은 사용자 승인 후 별도 feature/shared-evidence-contract 브랜치에 구현했습니다.
+
+
+## 공통 근거 계약 — profile-v30
+
+10개 필드의 값과 근거를 항목별로 묶고, 서버가 원문과 정확히 일치하는 위치를 계산합니다. 같은 인용이 여러 번 나오면 원문에서 유일한 문맥을 요구하며, 임의의 첫 위치를 고르지 않습니다. 중복 값·원문에 없는 인용·다른 항목의 근거·잘못된 상태와 역할은 거절합니다.
+
+미언급은 JSON null, 명시적 없음은 근거가 있는 absent, 확정은 confirmed로 구분합니다. 모델의 역할 분류와 의미 판단이 맞다는 보장은 별도의 평가가 필요합니다. 공개 Profile과 최대6회·60초 예산, 실패 원본7일 정책은 유지합니다.
+
+기본 내부 계약은 evidence-v1입니다. evidence_contract=False는 과거 줄번호/등장순서 방식의 비교용 옵션이며 자동 fallback은 없습니다. semantic_review=False도 비교용입니다. 새 계약의 확정성 검사는 짧은 인용이 속한 원문 줄을 확인합니다.
+
+[공통 계약 명세](specs/ai-developer/04-analysis-provider/evidence-contract/spec.md) · [검증 결과와 남은 과제](specs/ai-developer/04-analysis-provider/evidence-contract/validation.md)
+
+공통 계약 검증: 단위140/140, 최종 실호출 정답1/7·오답반환1·오류5. 두 차례 중단의 미확인 시도는 별도 기록했습니다. 전체 분석 품질 기준은 미충족이며 운영 적용을 보류합니다.

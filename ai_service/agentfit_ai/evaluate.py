@@ -5,6 +5,7 @@ import os
 import time
 from pathlib import Path
 
+from .evidence import CONTRACT_VERSION
 from .solar import AnalysisError, SolarAnalyzer, PROMPT_VERSION, REASONING_EFFORT, FREQUENCY_PENALTY
 from .semantic_review import REVIEW_PROMPT, REVIEW_REASONING_EFFORT, REVIEW_MAX_TOKENS
 from .profile import FIELDS
@@ -63,7 +64,7 @@ def main():
         rows.append(row)
         print(json.dumps(row), flush=True)
     report = {"case_count": len(rows), "passed": sum(row["passed"] for row in rows),
-              "retries": 0, "prompt_version": PROMPT_VERSION, "model_requested": "solar-pro4",
+              "retries": 0, "prompt_version": PROMPT_VERSION, "evidence_contract": CONTRACT_VERSION, "model_requested": "solar-pro4",
               "reasoning_effort": REASONING_EFFORT, "frequency_penalty": FREQUENCY_PENALTY, "temperature": 0, "max_tokens": 4096, "review_reasoning_effort": REVIEW_REASONING_EFFORT, "review_max_tokens": REVIEW_MAX_TOKENS, "cases": rows}
     if args.report:
         args.report.parent.mkdir(parents=True, exist_ok=True)

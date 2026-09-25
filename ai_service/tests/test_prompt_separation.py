@@ -6,7 +6,7 @@ from test_staged_analysis import response, core, features
 class PromptSeparationTests(unittest.TestCase):
     def run_analysis(self, replies):
         transport = Mock(side_effect=[response(reply) for reply in replies])
-        result = SolarAnalyzer("synthetic-key", semantic_review=False, transport=transport).analyze(
+        result = SolarAnalyzer("synthetic-key", evidence_contract=False, semantic_review=False, transport=transport).analyze(
             "Alpha Python registration", "doc-1")
         prompts = [call.args[0]["messages"][0]["content"] for call in transport.call_args_list]
         return result, prompts

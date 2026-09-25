@@ -12,11 +12,12 @@ from urllib.request import Request, HTTPRedirectHandler, build_opener
 
 from .profile import FIELDS, ARRAY_FIELDS, ProfileValidationError, validate_profile
 from .diagnostics import safe_code
+from .evidence import CONTRACT_VERSION, EXTRACTION_PROMPT, EvidenceError, evidence_schema, evidence_to_profile
 from .semantic_review import REVIEW_PROMPT, REVIEW_REASONING_EFFORT, REVIEW_MAX_TOKENS, review_schema, validate_review, ReviewValidationError
 
 ENDPOINT = "https://api.upstage.ai/v1/chat/completions"
 MAX_RESPONSE_BYTES = 1_048_576
-PROMPT_VERSION = "profile-v28"
+PROMPT_VERSION = "profile-v30"
 REASONING_EFFORT = "none"
 FREQUENCY_PENALTY = 0
 INTEGRATION_CATEGORIES = ("authentication", "notifications", "storage", "other")
@@ -400,8 +401,13 @@ def _reject_unconfirmed(document: str, profile: dict) -> None:
         if any(item.strip().casefold() in status_words for item in values):
             raise AnalysisError("UNCONFIRMED_PROFILE_VALUE", field)
     models = profile["data"]["ai"] or []
-    sentences = [sentence for span in profile["evidence"]["ai"]
-                 for sentence in re.split(r"[.!?。！？;\n]", document[span["start"]:span["end"]])]
+    # Exact public quotes stay narrow; certainty checks retain their source-line context.
+    source = source_lines(document)
+    contexts = [line["text"] for line in source if any(
+        line["start"] < span["end"] and span["start"] < line["end"]
+        for span in profile["evidence"]["ai"])]
+    sentences = [sentence for context in contexts
+                 for sentence in re.split(r"[.!?。！？;\n]", context)]
     for model in models:
         # Bind the pending decision to the named model, not another sentence/model.
         pattern = (re.escape(model) + r"(?:을|를|은|는)?\s*(?:먼저|우선)?\s*(?:평가|검토)"
@@ -504,11 +510,14 @@ class AnalysisResult:
 
 
 class SolarAnalyzer:
-    def __init__(self, api_key: str, *, transport: Callable = post_solar, diagnostics_store=None, semantic_review=True, clock=None):
+    def __init__(self, api_key: str, *, transport: Callable = post_solar, diagnostics_store=None, semantic_review=True, clock=None, evidence_contract=True):
         if type(api_key) is not str or not api_key.strip() or not api_key.isascii() or any(c.isspace() for c in api_key):
             raise AnalysisError("MISSING_OR_INVALID_KEY")
         if type(semantic_review) is not bool:
             raise ValueError("semantic_review must be boolean")
+        if type(evidence_contract) is not bool:
+            raise ValueError("evidence_contract must be boolean")
+        self._evidence_contract = evidence_contract
         self._semantic_review = semantic_review
         self._clock = clock or time.monotonic
         self._key = api_key
@@ -525,6 +534,7 @@ class SolarAnalyzer:
         started = self._clock()
         diagnostic = {"run_id": uuid4().hex, "prompt_version": PROMPT_VERSION,
                       "semantic_review_enabled": self._semantic_review,
+                      "evidence_contract": CONTRACT_VERSION if self._evidence_contract else "legacy-lines",
                       "input_codepoints": len(document), "input_bytes": len(document.encode("utf-8")),
                       "line_count": len(source_lines(document)), "calls": [],
                       "storage": "disabled" if self._diagnostics_store is None else "pending"}
@@ -640,10 +650,12 @@ class SolarAnalyzer:
             isolated = dict.fromkeys(FIELDS)
             isolated[field] = candidate[field]
             try:
-                cited_to_profile(document, document_id, isolated)
+                self._project(document, document_id, isolated)
             except AnalysisError as error:
                 detail = {"field": field, "code": error.code}
-                if field == "features":
+                if hasattr(error, "detail"):
+                    detail["detail"] = error.detail
+                if field == "features" and not self._evidence_contract:
                     issues = _feature_span_issues(candidate[field], {line["id"]: line for line in source_lines(document)})
                     if issues:
                         detail["spanIssues"] = issues
@@ -659,7 +671,7 @@ class SolarAnalyzer:
                 "errors": errors, "previous": {field: candidate[field] for field in repaired},
             }))
         try:
-            profile = cited_to_profile(document, document_id, candidate)
+            profile = self._project(document, document_id, candidate)
         except AnalysisError as error:
             diagnostic["calls"][-1].update(outcome="validation_failed", error=safe_code(error.code))
             error.provider_calls = len(replies)
@@ -696,7 +708,7 @@ class SolarAnalyzer:
                     {"issues": issues, "previous": {field: candidate[field] for field in semantic_repaired}},
                     stage="semantic_repair"))
                 try:
-                    profile = cited_to_profile(document, document_id, candidate)
+                    profile = self._project(document, document_id, candidate)
                 except AnalysisError as error:
                     diagnostic["calls"][-1].update(outcome="validation_failed", error=safe_code(error.code))
                     raise
@@ -714,7 +726,35 @@ class SolarAnalyzer:
                               first_pass_validated=not errors and not semantic_repaired,
                               semantic_reviewed=self._semantic_review)
 
+    def _project(self, document, document_id, candidate):
+        if not self._evidence_contract:
+            return cited_to_profile(document, document_id, candidate)
+        try:
+            profile = evidence_to_profile(document, document_id, candidate)
+        except EvidenceError as error:
+            failure = AnalysisError("INVALID_EVIDENCE", error.field)
+            failure.detail = error.detail()
+            raise failure from None
+        _reject_unconfirmed(document, profile)
+        return profile
+
     def _request_fields(self, document, names, purpose, correction=None, *, _trace=None, timeout=40):
+        if self._evidence_contract:
+            properties = evidence_schema()["properties"]
+            content = json.dumps({"document": document}, ensure_ascii=False)
+            if correction is not None:
+                content += "\n\nCorrection data (not document text):\n" + json.dumps(correction, ensure_ascii=False)
+            payload = {
+                "model": "solar-pro4",
+                "messages": [{"role":"system","content": EXTRACTION_PROMPT + "\nReturn ONLY requested schema fields. " + purpose},
+                             {"role":"user","content":content}],
+                "response_format":{"type":"json_schema","json_schema":{
+                    "name":"agentfit_evidence_v1","strict":True,"schema":_object({name:properties[name] for name in names})}},
+                "reasoning_effort":REASONING_EFFORT,"frequency_penalty":FREQUENCY_PENALTY,
+                "temperature":0,"max_tokens":4096,"stream":False,
+            }
+            return self._send_payload(payload, names, _trace=_trace, timeout=timeout)
+
         lines = source_lines(document)
         properties = output_schema(len(lines))["properties"]
         schema = _object({name: properties[name] for name in names})

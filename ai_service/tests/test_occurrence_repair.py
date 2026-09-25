@@ -10,7 +10,7 @@ def feature(quote, occurrence):
 class OccurrenceRepairTests(unittest.TestCase):
     def correction(self, doc, bad, good):
         transport=Mock(side_effect=[response(core()),response(bad),response(good)])
-        result=SolarAnalyzer("synthetic-key",transport=transport,semantic_review=False).analyze(doc,"doc")
+        result=SolarAnalyzer("synthetic-key", evidence_contract=False,transport=transport,semantic_review=False).analyze(doc,"doc")
         content=transport.call_args_list[2].args[0]["messages"][1]["content"]
         correction=json.loads(content.split("Correction data (not document text):\n")[1])
         return result,correction["errors"][0]["spanIssues"]
@@ -34,6 +34,6 @@ class OccurrenceRepairTests(unittest.TestCase):
         bad=feature("checkout",2)
         transport=Mock(side_effect=[response(core()),response(bad),response(bad)])
         with self.assertRaises(AnalysisError) as caught:
-            SolarAnalyzer("synthetic-key",transport=transport,semantic_review=False).analyze("Alpha checkout","doc")
+            SolarAnalyzer("synthetic-key", evidence_contract=False,transport=transport,semantic_review=False).analyze("Alpha checkout","doc")
         self.assertEqual(caught.exception.code,"INVALID_FEATURE_SPAN")
         self.assertEqual(transport.call_count,3)

@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 from .evaluate import load_api_key
+from .evidence import CONTRACT_VERSION
 from .solar import SolarAnalyzer, AnalysisError, PROMPT_VERSION
 from .diagnostics import LocalDiagnosticsStore
 
@@ -60,7 +61,7 @@ def main():
                                diagnostics=error.diagnostics)
                 rows.append(row)
                 print(json.dumps({k:v for k,v in row.items() if k != "diagnostics"}), flush=True)
-        report = {"prompt_version": PROMPT_VERSION, "fixtures_sha256": hashlib.sha256(fixtures).hexdigest(),
+        report = {"prompt_version": PROMPT_VERSION, "evidence_contract": CONTRACT_VERSION, "fixtures_sha256": hashlib.sha256(fixtures).hexdigest(),
                   "attempts": len(rows), "passed": sum(row["passed"] for row in rows), "retries": 0,
                   "cases": rows}
         handle.write(json.dumps(report, indent=2) + "\n")

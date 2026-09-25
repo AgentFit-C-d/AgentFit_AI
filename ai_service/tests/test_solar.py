@@ -41,7 +41,7 @@ def stage_reply(raw, payload):
 
 class SolarTests(unittest.TestCase):
     def run_with(self, reply, document="Alpha"):
-        return SolarAnalyzer(KEY, semantic_review=False, transport=lambda payload, *args: stage_reply(reply, payload)).analyze(document, "doc-1")
+        return SolarAnalyzer(KEY, evidence_contract=False, semantic_review=False, transport=lambda payload, *args: stage_reply(reply, payload)).analyze(document, "doc-1")
 
     def test_valid_unicode_evidence_and_safe_result(self):
         value = candidate()
@@ -59,7 +59,7 @@ class SolarTests(unittest.TestCase):
         def transport(payload, key, timeout):
             calls.append((payload, key, timeout))
             return stage_reply(envelope(), payload)
-        SolarAnalyzer(KEY, semantic_review=False, transport=transport).analyze("Alpha", "doc-1")
+        SolarAnalyzer(KEY, evidence_contract=False, semantic_review=False, transport=transport).analyze("Alpha", "doc-1")
         payload, key, timeout = calls[0]
         self.assertEqual(key, KEY)
         self.assertEqual(timeout, 40)
@@ -72,7 +72,7 @@ class SolarTests(unittest.TestCase):
 
     def test_invalid_input_never_calls_provider(self):
         transport = MagicMock()
-        client = SolarAnalyzer(KEY, semantic_review=False, transport=transport)
+        client = SolarAnalyzer(KEY, evidence_contract=False, semantic_review=False, transport=transport)
         for doc in (" ", "x" * 100001, "api_key=abcdef1234567890", KEY):
             with self.subTest(doc_length=len(doc)):
                 with self.assertRaises(AnalysisError):
@@ -142,7 +142,7 @@ class SolarTests(unittest.TestCase):
         def broken(*args):
             raise TimeoutError("sensitive message " + KEY)
         with self.assertRaises(AnalysisError) as caught:
-            SolarAnalyzer(KEY, semantic_review=False, transport=broken).analyze("Alpha", "doc-1")
+            SolarAnalyzer(KEY, evidence_contract=False, semantic_review=False, transport=broken).analyze("Alpha", "doc-1")
         self.assertEqual(caught.exception.code, "PROVIDER_TIMEOUT")
         self.assertNotIn(KEY, str(caught.exception))
 
