@@ -1,0 +1,173 @@
+{
+  "version": "section-v2",
+  "case_hashes": {
+    "ROLE-001": "ebc49e0350a41ceb23a8d2523c197bd8b2fdf357bc68a344af62257bcbb13b4d",
+    "ROLE-002": "52e83dd0ef8c9806db44a57f20b18c035d459cd9bd2a3b07230fbb0aa55f94c1",
+    "ROLE-003": "8e9ad6facfc3822584d5c1a956ecc2344e780ef11bf16f194922ce31ac67c658",
+    "ROLE-004": "c5ece09e11fb2594ab44e44bd33a2737df646b58b5b13d3bb1c0520d51b2f958",
+    "TEXT-SEM-004": "55afa1228adac44cdacf935076baee711e2b9907fd082b97564e810f2a1e87e0",
+    "REAL-MABC-001": "e4ef5ad9c866b578bc98104db7c8c319ba952add94606c83125dbacc07850ee9",
+    "REAL-AGENTFIT-001": "08601468157ccd4b4dfd5be052182510e654181e8890b6446b703cabdff08475"
+  },
+  "modes": [
+    "review"
+  ],
+  "evidence_contract": "section-decisions-v2",
+  "comparison_note": "compare archived section-v1 rows; extraction unchanged",
+  "strict": {
+    "mabc_feature_aliases": [
+      [
+        "장소 확인"
+      ],
+      [
+        "사용자 최종 확인",
+        "사용자 확인"
+      ],
+      [
+        "출발시각 계산",
+        "출발 시각 계산"
+      ],
+      [
+        "재탐색"
+      ],
+      [
+        "후보 선택"
+      ]
+    ],
+    "agentfit_forbidden_features": [
+      "시연",
+      "React",
+      "Node.js",
+      "Solar Pro 4",
+      "담당 Task",
+      "API 계약"
+    ],
+    "provisional": true
+  },
+  "rubric_status": "provisional_not_user_confirmed",
+  "prompt_sha256": "9a60cc0bcfbd9d5bc628f770aa3272ca1c864d0cdad27b132eb63e9a2947641f",
+  "cases": [
+    {
+      "id": "ROLE-001",
+      "mode": "review",
+      "kind": "synthetic",
+      "returned": false,
+      "passed": false,
+      "legacy_passed": false,
+      "error": "SECTION_CANDIDATE",
+      "field": null,
+      "provider_calls": 1,
+      "elapsed_ms": 21000
+    },
+    {
+      "id": "ROLE-002",
+      "mode": "review",
+      "kind": "synthetic",
+      "returned": false,
+      "passed": false,
+      "legacy_passed": false,
+      "error": "PROVIDER_TIMEOUT",
+      "field": null,
+      "provider_calls": 1,
+      "elapsed_ms": 40188
+    },
+    {
+      "id": "ROLE-003",
+      "mode": "review",
+      "kind": "synthetic",
+      "returned": false,
+      "passed": false,
+      "legacy_passed": false,
+      "error": "SECTION_CANDIDATE",
+      "field": null,
+      "provider_calls": 1,
+      "elapsed_ms": 11156
+    },
+    {
+      "id": "ROLE-004",
+      "mode": "review",
+      "kind": "synthetic",
+      "returned": false,
+      "passed": false,
+      "legacy_passed": false,
+      "error": "SECTION_CANDIDATE",
+      "field": null,
+      "provider_calls": 1,
+      "elapsed_ms": 9953
+    },
+    {
+      "id": "TEXT-SEM-004",
+      "mode": "review",
+      "kind": "synthetic",
+      "returned": false,
+      "passed": false,
+      "legacy_passed": false,
+      "error": "SECTION_CANDIDATE",
+      "field": null,
+      "provider_calls": 1,
+      "elapsed_ms": 1531
+    },
+    {
+      "id": "REAL-MABC-001",
+      "mode": "review",
+      "kind": "mabc",
+      "returned": false,
+      "passed": false,
+      "legacy_passed": false,
+      "error": "SECTION_CANDIDATE",
+      "field": null,
+      "provider_calls": 1,
+      "elapsed_ms": 28235
+    },
+    {
+      "id": "REAL-AGENTFIT-001",
+      "mode": "review",
+      "kind": "agentfit",
+      "returned": false,
+      "passed": false,
+      "legacy_passed": false,
+      "error": "INCOMPLETE_RESPONSE",
+      "field": null,
+      "provider_calls": 1,
+      "elapsed_ms": 33578
+    }
+  ],
+  "summary": {
+    "passed": 0,
+    "returned": 0,
+    "calls": 7,
+    "elapsed_ms": 145641
+  },
+  "fixed_pool_probes": [
+    {
+      "kind": "hand_constructed_ROLE-002_pool_not_original_replay",
+      "candidate_count": 8,
+      "version": "section-v2",
+      "input_sha256": "6fc578db0aa499c315eb82377ed3ae9fadd327e99abd8d8dd5e9c46739bdd136",
+      "structurally_valid": false,
+      "error": "SECTION_MERGE",
+      "elapsed_ms": 1968
+    },
+    {
+      "kind": "hand_constructed_ROLE-002_pool_not_original_replay",
+      "candidate_count": 8,
+      "version": "section-v2",
+      "input_sha256": "6fc578db0aa499c315eb82377ed3ae9fadd327e99abd8d8dd5e9c46739bdd136",
+      "decisions": {
+        "decisions": {
+          "F0001": "selected",
+          "F0002": "selected",
+          "F0003": "selected",
+          "F0004": "selected",
+          "F0005": "selected",
+          "F0006": "selected",
+          "F0007": "selected",
+          "F0008": "selected"
+        }
+      },
+      "structurally_valid": false,
+      "error": "SECTION_MERGE",
+      "elapsed_ms": 3625
+    }
+  ]
+}

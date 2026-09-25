@@ -11,7 +11,9 @@ def fact(field,value,role="product_fact",status="confirmed",scope="current"):
 def extraction(sid,*facts):
     return {"sections":[{"sectionId":sid,"facts":list(facts)}]}
 def selection(fields=None,excluded=None):
-    return {"fields":dict(dict.fromkeys(FIELDS),**(fields or {})),"excluded":excluded or []}
+    decisions={ref:"selected" for refs in (fields or {}).values() for ref in (refs or [])}
+    decisions.update({item["id"]:item["reason"] for item in (excluded or [])})
+    return {"decisions":decisions}
 
 class SectionAnalysisTests(unittest.TestCase):
     def run_case(self,document,replies):
@@ -111,3 +113,40 @@ class SectionAnalysisTests(unittest.TestCase):
             selection({"external_integrations":["F0001"]},[{"id":"F0002","reason":"conflict"}])])
         with self.assertRaises(AnalysisError) as c:a.analyze("none GitHub","doc")
         self.assertEqual(c.exception.code,"SECTION_MERGE")
+
+
+    def test_decisions_are_total_and_exclusive(self):
+        from agentfit_ai.section_analysis import merge_profile,validate_candidates,merge_schema
+        from agentfit_ai.sections import split_sections
+        pool=validate_candidates(extraction("S0001",fact("project_name","Alpha")),split_sections("Alpha"),0)
+        good={"decisions":{"F0001":"selected"}}
+        try:
+            profile=merge_profile("Alpha","doc",good,pool)
+        except AnalysisError as error:
+            self.fail("Valid single decision was rejected: "+error.code)
+        self.assertEqual(profile["data"]["project_name"],"Alpha")
+        schema=merge_schema(pool)["properties"]["decisions"]
+        self.assertEqual(schema["required"],["F0001"])
+        self.assertFalse(schema["additionalProperties"])
+        for bad in [{"decisions":{}},{"decisions":{"F9999":"selected"}},
+                    {"decisions":{"F0001":["selected","wrong_role"]}},
+                    {"decisions":{"F0001":"invented"}},
+                    {"fields":dict.fromkeys(FIELDS),"excluded":[]},
+                    {"decisions":{"F0001":"selected","F9999":"duplicate"}}]:
+            with self.subTest(bad=bad),self.assertRaises(AnalysisError):
+                merge_profile("Alpha","doc",bad,pool)
+
+    def test_empty_pool_produces_unknown_profile(self):
+        from agentfit_ai.section_analysis import merge_profile
+        try:
+            profile=merge_profile("Alpha","doc",{"decisions":{}},[])
+        except AnalysisError as error:
+            self.fail("Empty candidate decisions rejected: "+error.code)
+        self.assertTrue(all(v is None for v in profile["data"].values()))
+
+    def test_decision_order_does_not_reorder_source_candidates(self):
+        doc="checkout refund"
+        a,t=self.run_case(doc,[extraction("S0001",fact("features","checkout","user_action"),
+            fact("features","refund","user_action")),
+            {"decisions":{"F0002":"selected","F0001":"selected"}},verdict()])
+        self.assertEqual(a.analyze(doc,"doc") .profile["data"]["features"],["checkout","refund"])
