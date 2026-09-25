@@ -1,63 +1,72 @@
 # AgentFit AI
 
-AI service for AgentFit: document extraction, analysis, Profile validation and evaluation.
-Service boundary: Next.js -> Spring Boot -> FastAPI. Only Spring Boot accesses PostgreSQL.
+AgentFit의 문서 추출·분석, Profile 검증과 평가를 담당하는 AI 서비스입니다.
+서비스 흐름은 Next.js → Spring Boot → FastAPI이며, PostgreSQL에는 Spring Boot만 접근합니다.
 
-## Workflow
+## 개발 절차
 
-Create feature/<feature-name> before implementation. Follow Spec -> Plan -> Tasks -> Tests -> Implementation -> Validation, then commit and push the feature branch. Merge is a separate action.
+기능 구현 전에 `feature/<기능명>` 브랜치를 생성합니다. SDD 기반으로 명세(Spec) → 계획(Plan) → 작업 목록(Tasks) → 테스트 → 구현 → 검증 순서로 진행한 뒤, 해당 브랜치에 커밋하고 push합니다. 병합은 별도로 진행합니다.
 
-## Local setup
+## 로컬 환경 설정
 
-Set UPSTAGE_API_KEY in the root .env file. Never commit .env.
-On the feature branch, run Profile unit tests from ai_service/ with Python 3.12:
+루트 `.env` 파일에 `UPSTAGE_API_KEY`를 설정합니다. `.env`는 커밋하지 않습니다.
+기능 브랜치의 `ai_service/` 디렉터리에서 Python 3.12로 Profile 단위 테스트를 실행합니다.
 
 ```text
 python -m unittest discover -s tests -v
 ```
 
-Feature scope and validation evidence live under specs/ai-developer/01-profile-contract/.
+기능 범위와 검증 근거는 `specs/ai-developer/01-profile-contract/`에 있습니다.
 
-## Solar text analysis (local development)
+## Solar 텍스트 분석 — 로컬 개발
 
-From ai_service/ with Python 3.12, run the fixed synthetic evaluation:
+`ai_service/` 디렉터리에서 Python 3.12로 고정된 합성 사례를 평가합니다.
 
 ```text
 python -m agentfit_ai.evaluate --live
 ```
 
-This makes six analyses (12 to 18 billable calls) using UPSTAGE_API_KEY from the environment or root .env. No extra packages are needed. Reports contain outcomes and metadata only.
+환경 변수 또는 루트 `.env`의 `UPSTAGE_API_KEY`를 사용해 6건을 분석합니다. 유료 API 호출은 12~18회이며, 추가 패키지는 필요하지 않습니다. 보고서에는 평가 결과와 메타데이터만 기록합니다.
 
-The Python module agentfit_ai.solar.SolarAnalyzer accepts document text and a generated document ID, returning a validated draft Profile with evidence positions. By default it does not write files. Optional local diagnostics can retain failed responses for debugging.
+Python 모듈 `agentfit_ai.solar.SolarAnalyzer`는 문서 텍스트와 생성된 문서 ID를 받아, 근거 위치와 함께 검증된 Profile 초안을 반환합니다. 기본적으로 파일을 저장하지 않습니다. 로컬 진단 저장을 활성화하면 디버깅용 실패 응답을 보관할 수 있습니다.
 
-Spec, plan, tasks and measured limitations: [Solar analysis](specs/ai-developer/04-analysis-provider/README.md). Latest Solar prompt separation (profile-v18): 70 unit tests, 24/24 existing synthetic runs, 2/2 new synthetic cases, and 3/4 real-document runs passed. All successful final runs passed without repair; one real run timed out. The full quality gate remains unmet. See [current validation](specs/ai-developer/04-analysis-provider/prompt-separation/validation.md). HTTP endpoints, PDF extraction and Spring integration remain future work.
+명세·계획·작업 목록과 측정된 한계는 [Solar 분석 문서](specs/ai-developer/04-analysis-provider/README.md)에 정리되어 있습니다.
 
-Fixed stability evaluation (24 analyses, 48 to 72 billable calls, no network retries; use a new report filename each time):
+프롬프트 분리 실험(`profile-v18`) 당시 단위 테스트 70건, 기존 합성 평가 24/24건, 추가 합성 사례 2/2건, 실제 문서 평가 3/4건이 통과했습니다. 최종 평가에서 성공한 건은 모두 수정 호출 없이 통과했고, 실제 문서 1건은 시간 초과로 실패했습니다. 전체 품질 기준은 충족하지 못했습니다. 자세한 내용은 [프롬프트 분리 검증 결과](specs/ai-developer/04-analysis-provider/prompt-separation/validation.md)를 참고하세요. HTTP 엔드포인트, PDF 추출, Spring 연동은 향후 작업입니다.
+
+고정된 안정성 평가도 실행할 수 있습니다. 분석 24건에 유료 API 호출 48~72회가 발생하며, 네트워크 재시도는 하지 않습니다. 실행할 때마다 새로운 보고서 파일명을 사용합니다.
 
 ```text
 python -m agentfit_ai.name_stability --live --report ../output/name-stability.json
 ```
 
-[Stability spec and evidence](specs/ai-developer/04-analysis-provider/stability/validation.md).
+[안정성 명세 및 검증 근거](specs/ai-developer/04-analysis-provider/stability/validation.md)
 
-Staged extraction makes two calls (metadata/technology and features), then at most one correction call for invalid fields. Profile shape remains unchanged. Results expose provider_calls, repaired_fields and first_pass_validated; usage totals cover all successful provider responses. Structural validation does not establish semantic correctness.
+단계별 추출은 메타데이터·기술 정보와 기능을 각각 호출해 총 2회 분석한 뒤, 검증에 실패한 필드에 한해 최대 1회 수정 요청을 보냅니다. Profile 형식은 유지합니다. 결과의 `provider_calls`, `repaired_fields`, `first_pass_validated`로 호출 횟수, 수정된 필드, 최초 검증 통과 여부를 확인할 수 있습니다. 사용량 합계에는 응답을 정상 수신한 모든 호출이 포함됩니다. 구조 검증 통과가 내용의 의미적 정확성까지 보장하지는 않습니다.
 
+## 호출 진단 — 로컬
 
-## Call diagnostics (local)
-
-From ai_service/, enable diagnostic file storage explicitly:
+`ai_service/` 디렉터리에서 진단 파일 저장을 명시적으로 활성화합니다.
 
 ```text
 python -m agentfit_ai.evaluate --live --diagnostics-dir ../output/diagnostics --report ../output/new-evaluation.json
 python -m agentfit_ai.diagnostics --directory ../output/diagnostics
 ```
 
-Results and analysis errors expose per-call diagnostics even without file storage.
-Records contain timing, size, usage and safe error metadata. Raw responses are stored only for failed calls in a finally failed analysis; repaired successes store no raw responses. Sensitive or unparseable responses are omitted.
-Local records expire after seven days and are purged on read, write or the explicit purge command. A stopped process cannot delete files; deployment needs scheduled cleanup and access controls. Windows uses inherited directory ACLs.
-86 unit tests and six live synthetic analyses passed. This adds observability; it does not fix the previously observed provider timeout.
-See [diagnostics spec and validation](specs/ai-developer/04-analysis-provider/call-diagnostics/validation.md).
+파일 저장을 활성화하지 않아도 분석 결과와 오류에서 호출별 진단 정보를 확인할 수 있습니다.
 
-## Role classification experiment (profile-v21)
+진단 기록에는 처리 시간, 크기, 사용량, 민감 정보를 제외한 오류 메타데이터가 포함됩니다. 최종적으로 분석이 실패한 경우에만 해당 분석의 실패 호출 원본 응답을 저장합니다. 수정 후 성공한 분석의 원본 응답은 저장하지 않으며, 민감 정보가 있거나 파싱할 수 없는 응답도 제외합니다.
 
-99 unit tests passed; existing synthetic runs 24/24, additional feature cases 2/2, new role cases 5/8, existing real-document runs 3/4, and MABC README 0/2. The quality gate remains unmet. This feature branch is an experiment, not a validated production upgrade. See [results and remaining failures](specs/ai-developer/04-analysis-provider/role-classification/validation.md).
+로컬 기록의 보관 기간은 7일입니다. 읽기·쓰기 또는 명시적 정리 명령 실행 시 만료된 기록을 삭제합니다. 프로세스가 중지된 동안에는 파일을 삭제할 수 없으므로, 배포 환경에서는 주기적인 정리와 접근 통제가 필요합니다. Windows에서는 디렉터리에서 상속된 접근 권한(ACL)을 사용합니다.
+
+호출 진단 기능 검증 당시 단위 테스트 86건과 실제 API를 사용한 합성 분석 6건이 통과했습니다. 이 기능은 호출 상태를 추적하기 위한 것으로, 앞서 확인된 제공자 응답 시간 초과 문제는 남아 있습니다.
+
+[호출 진단 명세 및 검증 결과](specs/ai-developer/04-analysis-provider/call-diagnostics/validation.md)
+
+## 역할 분류 실험 — profile-v21
+
+단위 테스트 99건이 통과했습니다. 기존 합성 평가 24/24건, 추가 기능 사례 2/2건, 신규 역할 분류 사례 5/8건, 기존 실제 문서 평가 3/4건, MABC README 평가 0/2건이 통과했습니다.
+
+**전체 품질 기준은 아직 충족하지 못했습니다.** 현재 기능 브랜치는 실험 단계이며, 운영 적용을 위한 검증이 완료되지 않았습니다.
+
+[검증 결과와 남은 오류](specs/ai-developer/04-analysis-provider/role-classification/validation.md)
