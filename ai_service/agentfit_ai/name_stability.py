@@ -33,11 +33,12 @@ def evaluate_cases(cases, analyzer, *, repeats=2, workers=2, on_row=None):
                        repaired_fields=getattr(result, "repaired_fields", ()),
                        first_pass_validated=getattr(result, "first_pass_validated", True),
                        model=result.model, prompt_tokens=result.prompt_tokens,
-                       completion_tokens=result.completion_tokens, elapsed_ms=result.elapsed_ms)
+                       completion_tokens=result.completion_tokens, elapsed_ms=result.elapsed_ms,
+                       diagnostics=getattr(result, "diagnostics", None))
         except AnalysisError as error:
             row.update(passed=False, name_passed=False, error=error.code, field=error.field, provider_calls=error.provider_calls,
                        first_pass_validated=error.first_pass_validated, repaired_fields=error.repaired_fields,
-                       elapsed_ms=round((time.monotonic() - started) * 1000))
+                       elapsed_ms=round((time.monotonic() - started) * 1000), diagnostics=error.diagnostics)
         return row
 
     rows = []
@@ -67,12 +68,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--diagnostics-dir", type=Path, help="Opt-in local diagnostics; failed raw responses expire after 7 days")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live is required for 24 synthetic analyses (48 to 72 billable calls)")
     # Exclusive creation prevents accidentally replacing earlier failure results.
     try:
-        analyzer = SolarAnalyzer(load_api_key())
+        from .diagnostics import LocalDiagnosticsStore
+        store = LocalDiagnosticsStore(args.diagnostics_dir) if args.diagnostics_dir else None
+        analyzer = SolarAnalyzer(load_api_key(), diagnostics_store=store)
     except AnalysisError as error:
         print(json.dumps({"error": error.code}))
         return 1

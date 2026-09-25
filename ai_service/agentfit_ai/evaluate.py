@@ -33,11 +33,14 @@ def main():
     parser = argparse.ArgumentParser(description="Evaluate fixed synthetic cases; never prints model content.")
     parser.add_argument("--live", action="store_true", help="Allow billable Upstage requests")
     parser.add_argument("--report", type=Path, help="Write aggregate metadata and case outcomes only")
+    parser.add_argument("--diagnostics-dir", type=Path, help="Opt-in local diagnostics; failed raw responses expire after 7 days")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live is required to call Upstage")
     try:
-        analyzer = SolarAnalyzer(load_api_key())
+        from .diagnostics import LocalDiagnosticsStore
+        store = LocalDiagnosticsStore(args.diagnostics_dir) if args.diagnostics_dir else None
+        analyzer = SolarAnalyzer(load_api_key(), diagnostics_store=store)
     except AnalysisError as error:
         print(json.dumps({"error": error.code}))
         return 1
@@ -51,11 +54,11 @@ def main():
             row = {"id": case["id"], "passed": not mismatches, "mismatch_fields": mismatches,
                    "provider_calls": result.provider_calls, "repaired_fields": result.repaired_fields,
                    "first_pass_validated": result.first_pass_validated, "model": result.model, "prompt_tokens": result.prompt_tokens,
-                   "completion_tokens": result.completion_tokens, "elapsed_ms": result.elapsed_ms}
+                   "completion_tokens": result.completion_tokens, "elapsed_ms": result.elapsed_ms, "diagnostics": result.diagnostics}
         except AnalysisError as error:
             row = {"id": case["id"], "passed": False, "error": error.code, "field": error.field, "provider_calls": error.provider_calls,
                    "first_pass_validated": error.first_pass_validated, "repaired_fields": error.repaired_fields,
-                   "elapsed_ms": round((time.monotonic() - started) * 1000)}
+                   "elapsed_ms": round((time.monotonic() - started) * 1000), "diagnostics": error.diagnostics}
         rows.append(row)
         print(json.dumps(row), flush=True)
     report = {"case_count": len(rows), "passed": sum(row["passed"] for row in rows),

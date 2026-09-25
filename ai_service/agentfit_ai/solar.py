@@ -1,15 +1,17 @@
-"""Solar staged text analysis. One validation repair; no network retries or persistence."""
+"""Solar staged text analysis. One validation repair; no network retries; opt-in local diagnostics."""
 from __future__ import annotations
 
 import json
 import re
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
+from uuid import uuid4
 from typing import Callable
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, HTTPRedirectHandler, build_opener
 
 from .profile import FIELDS, ARRAY_FIELDS, ProfileValidationError, validate_profile
+from .diagnostics import safe_code
 
 ENDPOINT = "https://api.upstage.ai/v1/chat/completions"
 MAX_RESPONSE_BYTES = 1_048_576
@@ -102,6 +104,7 @@ class AnalysisError(ValueError):
         self.provider_calls = 0
         self.first_pass_validated = False
         self.repaired_fields = ()
+        self.diagnostics = None
         super().__init__(code)
 
 
@@ -386,14 +389,16 @@ class AnalysisResult:
     provider_calls: int = 2
     repaired_fields: tuple[str, ...] = ()
     first_pass_validated: bool = True
+    diagnostics: dict | None = None
 
 
 class SolarAnalyzer:
-    def __init__(self, api_key: str, *, transport: Callable = post_solar):
+    def __init__(self, api_key: str, *, transport: Callable = post_solar, diagnostics_store=None):
         if type(api_key) is not str or not api_key.strip() or not api_key.isascii() or any(c.isspace() for c in api_key):
             raise AnalysisError("MISSING_OR_INVALID_KEY")
         self._key = api_key
         self._transport = transport
+        self._diagnostics_store = diagnostics_store
 
     def analyze(self, document: str, document_id: str) -> AnalysisResult:
         if type(document) is not str or not document.strip() or len(document) > 100_000:
@@ -403,15 +408,97 @@ class SolarAnalyzer:
         _reject_sensitive(document, self._key)
         _reject_sensitive(document_id, self._key)
         started = time.monotonic()
+        diagnostic = {"run_id": uuid4().hex, "prompt_version": PROMPT_VERSION,
+                      "input_codepoints": len(document), "input_bytes": len(document.encode("utf-8")),
+                      "line_count": len(source_lines(document)), "calls": [],
+                      "storage": "disabled" if self._diagnostics_store is None else "pending"}
+        raw_responses = {}
+        try:
+            result = self._analyze(document, document_id, diagnostic, raw_responses)
+        except AnalysisError as error:
+            diagnostic["outcome"] = "failed"
+            diagnostic["error"] = safe_code(error.code)
+            diagnostic["elapsed_ms"] = round((time.monotonic() - started) * 1000)
+            self._save_diagnostic(diagnostic, raw_responses)
+            error.diagnostics = diagnostic
+            raise
+        diagnostic["outcome"] = "succeeded"
+        diagnostic["elapsed_ms"] = round((time.monotonic() - started) * 1000)
+        self._save_diagnostic(diagnostic, {})
+        return replace(result, diagnostics=diagnostic)
+
+    def _save_diagnostic(self, diagnostic, raw_responses):
+        if self._diagnostics_store is None:
+            return
+        failed = []
+        for call in diagnostic["calls"]:
+            raw = raw_responses.get(call["call"])
+            if raw is not None and call["outcome"] in ("failed", "validation_failed"):
+                text = self._diagnostic_raw(raw)
+                if text is not None:
+                    failed.append({"call": call["call"], "response": text})
+                else:
+                    call["raw_omitted"] = True
+        try:
+            diagnostic["storage"] = "stored"
+            self._diagnostics_store.write(diagnostic, failed)
+        except Exception:
+            diagnostic["storage"] = "failed"
+
+    def _diagnostic_raw(self, raw):
+        # Fail closed on malformed encodings/JSON and inspect JSON-in-JSON content.
+        try:
+            text = raw.decode("utf-8")
+            _reject_sensitive(text, self._key)
+            def inspect(value, depth=0):
+                if depth > 32:
+                    raise ValueError("nested response")
+                if isinstance(value, str):
+                    _reject_sensitive(value, self._key)
+                    try:
+                        nested = json.loads(value)
+                    except ValueError:
+                        return
+                    inspect(nested, depth + 1)
+                elif isinstance(value, dict):
+                    for key, item in value.items():
+                        inspect(key, depth + 1)
+                        inspect(item, depth + 1)
+                elif isinstance(value, list):
+                    for item in value:
+                        inspect(item, depth + 1)
+            inspect(_json(raw))
+            return text
+        except (AnalysisError, ValueError, UnicodeError, RecursionError):
+            return None
+
+    def _analyze(self, document, document_id, diagnostic, raw_responses):
+        started = time.monotonic()
         replies = []
         def request(names, purpose, correction=None):
+            call = {"call": len(diagnostic["calls"]) + 1,
+                    "stage": "repair" if correction is not None else "features" if names == ("features",) else "core",
+                    "fields": list(names), "outcome": "started", "response_bytes": None,
+                    "prompt_tokens": None, "completion_tokens": None, "model": None}
+            diagnostic["calls"].append(call)
+            trace = {}
+            call_started = time.monotonic()
             try:
-                reply = self._request_fields(document, names, purpose, correction)
+                reply = self._request_fields(document, names, purpose, correction, _trace=trace)
             except AnalysisError as error:
+                call.update(outcome="failed", error=safe_code(error.code))
                 error.provider_calls = len(replies) + 1
                 error.first_pass_validated = False
                 error.repaired_fields = tuple(names) if correction is not None else ()
                 raise
+            finally:
+                raw = trace.pop("raw", None)
+                if raw is not None and self._diagnostics_store is not None:
+                    raw_responses[call["call"]] = raw
+                call.update(trace)
+                call["elapsed_ms"] = round((time.monotonic() - call_started) * 1000)
+            call.update(outcome="response_received", model=reply[1],
+                        prompt_tokens=reply[2], completion_tokens=reply[3])
             replies.append(reply)
             return reply[0]
         core = tuple(field for field in FIELDS if field != "features")
@@ -425,6 +512,11 @@ class SolarAnalyzer:
                 cited_to_profile(document, document_id, isolated)
             except AnalysisError as error:
                 errors.append({"field": field, "code": error.code})
+        for call in diagnostic["calls"]:
+            invalid = [error for error in errors if error["field"] in call["fields"]]
+            call["outcome"] = "validation_failed" if invalid else "validated"
+            if invalid:
+                call["validation_errors"] = invalid
         repaired = tuple(error["field"] for error in errors)
         if errors:
             candidate.update(request(repaired, "Correct only the requested invalid fields using exact source lines. Do not discard confirmed facts merely to pass validation.", {
@@ -433,10 +525,13 @@ class SolarAnalyzer:
         try:
             profile = cited_to_profile(document, document_id, candidate)
         except AnalysisError as error:
+            diagnostic["calls"][-1].update(outcome="validation_failed", error=safe_code(error.code))
             error.provider_calls = len(replies)
             error.first_pass_validated = False
             error.repaired_fields = repaired
             raise
+        if repaired:
+            diagnostic["calls"][-1]["outcome"] = "validated"
         def total(index):
             counts = [reply[index] for reply in replies]
             return sum(counts) if all(value is not None for value in counts) else None
@@ -446,7 +541,7 @@ class SolarAnalyzer:
                               provider_calls=len(replies), repaired_fields=repaired,
                               first_pass_validated=not errors)
 
-    def _request_fields(self, document, names, purpose, correction=None):
+    def _request_fields(self, document, names, purpose, correction=None, *, _trace=None):
         lines = source_lines(document)
         properties = output_schema(len(lines))["properties"]
         schema = _object({name: properties[name] for name in names})
@@ -467,6 +562,9 @@ class SolarAnalyzer:
             }},
             "reasoning_effort": REASONING_EFFORT, "frequency_penalty": FREQUENCY_PENALTY, "temperature": 0, "max_tokens": 4096, "stream": False,
         }
+        trace = _trace if _trace is not None else {}
+        trace["request_bytes"] = len(json.dumps(payload).encode("utf-8"))
+        provider_started = time.monotonic()
         try:
             raw = self._transport(payload, self._key, 40)
         except AnalysisError:
@@ -475,12 +573,26 @@ class SolarAnalyzer:
             raise AnalysisError("PROVIDER_TIMEOUT") from None
         except Exception:
             raise AnalysisError("PROVIDER_FAILURE") from None
+        finally:
+            trace["provider_elapsed_ms"] = round((time.monotonic() - provider_started) * 1000)
+        trace["response_bytes"] = len(raw) if type(raw) is bytes else None
         if type(raw) is not bytes or len(raw) > MAX_RESPONSE_BYTES:
             raise AnalysisError("INVALID_RESPONSE")
+        trace["raw"] = raw
         envelope = _json(raw)
         if type(envelope) is not dict:
             raise AnalysisError("INVALID_RESPONSE")
         _reject_sensitive(json.dumps(envelope, ensure_ascii=False), self._key)
+        usage = envelope.get("usage", {})
+        if type(usage) is not dict:
+            usage = {}
+        def count(name):
+            value = usage.get(name)
+            return value if type(value) is int and value >= 0 else None
+        model = envelope.get("model", "")
+        if type(model) is not str or re.fullmatch(r"solar-pro4(?:-[0-9]+)?", model) is None:
+            model = "unknown"
+        trace.update(model=model, prompt_tokens=count("prompt_tokens"), completion_tokens=count("completion_tokens"))
         choices = envelope.get("choices")
         if type(choices) is not list or len(choices) != 1 or type(choices[0]) is not dict:
             raise AnalysisError("INVALID_RESPONSE")
@@ -499,13 +611,4 @@ class SolarAnalyzer:
         _reject_sensitive(json.dumps(candidate, ensure_ascii=False), self._key)
         if type(candidate) is not dict or set(candidate) != set(names):
             raise AnalysisError("INVALID_RESPONSE")
-        usage = envelope.get("usage", {})
-        if type(usage) is not dict:
-            usage = {}
-        def count(name):
-            value = usage.get(name)
-            return value if type(value) is int and value >= 0 else None
-        model = envelope.get("model", "")
-        if type(model) is not str or re.fullmatch(r"solar-pro4(?:-[0-9]+)?", model) is None:
-            model = "unknown"
         return candidate, model, count("prompt_tokens"), count("completion_tokens")

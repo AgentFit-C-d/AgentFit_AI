@@ -11,3 +11,6 @@ __pycache__/
 .venv/
 tmp/
 output/
+
+# Local analysis diagnostics may contain failed model responses
+**/analysis-*.json
