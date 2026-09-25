@@ -1,0 +1,58 @@
+{
+  "case_count": 6,
+  "passed": 0,
+  "retries": 0,
+  "cases": [
+    {
+      "id": "TEXT-FACT-001",
+      "passed": false,
+      "error": "UNKNOWN_HAS_EVIDENCE",
+      "elapsed_ms": 1812
+    },
+    {
+      "id": "TEXT-SEM-001",
+      "passed": false,
+      "mismatch_fields": [
+        "project_name",
+        "domain"
+      ],
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 283,
+      "completion_tokens": 150,
+      "elapsed_ms": 1703
+    },
+    {
+      "id": "TEXT-SEM-002",
+      "passed": false,
+      "mismatch_fields": [
+        "project_name"
+      ],
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 287,
+      "completion_tokens": 153,
+      "elapsed_ms": 1282
+    },
+    {
+      "id": "TEXT-SEM-003",
+      "passed": false,
+      "error": "EVIDENCE_NOT_FOUND",
+      "elapsed_ms": 1562
+    },
+    {
+      "id": "TEXT-SEM-004",
+      "passed": false,
+      "error": "UNKNOWN_HAS_EVIDENCE",
+      "elapsed_ms": 1735
+    },
+    {
+      "id": "TEXT-SEM-005",
+      "passed": false,
+      "error": "UNKNOWN_HAS_EVIDENCE",
+      "elapsed_ms": 1953
+    }
+  ],
+  "prompt_version": "profile-v1",
+  "model_requested": "solar-pro4",
+  "reasoning_effort": "none",
+  "max_tokens": 4096
+}

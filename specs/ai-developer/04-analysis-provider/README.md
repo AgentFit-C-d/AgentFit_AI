@@ -1,6 +1,12 @@
-# 분석 Provider
+# Solar 텍스트 분석 Provider
 
-- Provider 인터페이스, Prompt, 구조화 출력과 거절·시간 초과·오류 계약을 다룬다.
-- 문서에 없는 기술을 채우지 않고 검증 가능한 Profile 초안을 반환한다.
-- FastAPI 안에서 Provider 호출·구조화 출력·근거 검증을 수행하고 Spring Boot에는 검증된 초안 후보 또는 안전한 오류를 반환한다. [서비스 경계 초안](../fastapi-service-contract.md)을 따른다.
-- 기존 T018, T021과 `src/modules/analysis/` 경로는 단일 Next.js 서버 계획의 항목이므로 새 Plan·Tasks에서 재배정한다.
+텍스트 → Solar Pro 4 → Profile 10필드와 근거 인용 → 원문 위치 계산 → 기존 Profile 검증기 순서로 초안을 만든다.
+
+- [명세](spec.md)
+- [설계](plan.md)
+- [작업](tasks.md)
+- [검증과 남은 문제](validation.md)
+- [초기 평가 0/6](live-results-v1.json)
+- [보완 평가 5/6](live-results-v2.json)
+
+실행 방법은 저장소 README를 참조한다. HTTP/PDF/Spring 저장 및 실패 응답 7일 보관은 아직 포함하지 않는다.
