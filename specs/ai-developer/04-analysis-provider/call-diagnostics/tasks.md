@@ -4,4 +4,6 @@
 - [x] T03 계측·보관·CLI 구현
 - [x] T04 전체 테스트·실호출 확인
 - [x] T05 검토·문서화
-- [ ] T06 commit/push
+- [x] T06 commit/push
+
+구현 af8076c, origin/feature/analysis-call-diagnostics push 확인.
