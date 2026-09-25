@@ -4,6 +4,8 @@
 - [x] T03 요청 스키마 회귀 테스트 및 제약 구현.
 - [x] T04 동일 합성·실제 평가.
 - [x] T05 검토/결과/제약 기록.
-- [ ] T06 commit/push 확인.
+- [x] T06 commit/push 확인.
 
 품질 게이트 미달. T04는 평가 실행 완료를 뜻하며 안정화 완료가 아니다. 후속안은 validation.md에 기록.
+
+코드/평가 커밋 c64a654, origin/feature/solar-extraction-tuning push 성공. 품질 게이트는 미달.
