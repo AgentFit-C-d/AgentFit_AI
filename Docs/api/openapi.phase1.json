@@ -1,0 +1,3393 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AgentFit — Phase 1 API Contract",
+    "version": "1.0.0",
+    "description": "2026-09-08 설계 계약. 구현·배포·실제 호출 검증 전. GitHub OAuth 시작/로그아웃/callback은 인증 라이브러리 경계로 common.md에 기술한다. 로컬 cookie 기본 이름을 선언하며 운영 쿠키 이름은 T007에서 실제 설정과 함께 확인·동기화한다."
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "동일 출처 앱. 현재 동작하는 서버를 뜻하지 않음"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth"
+    },
+    {
+      "name": "Projects"
+    },
+    {
+      "name": "Analysis"
+    },
+    {
+      "name": "Profiles"
+    }
+  ],
+  "security": [
+    {
+      "sessionCookie": []
+    }
+  ],
+  "paths": {
+    "/api/auth/get-session": {
+      "get": {
+        "operationId": "getPublicSession",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "토큰을 제외한 현재 세션 조회",
+        "description": "customSession으로 제한한 응답. 미로그인은 200 null. 이 계약은 라이브러리 기본 세션 응답을 그대로 노출하지 않는다.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "인증 요약 또는 null",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicSession"
+                },
+                "example": {
+                  "user": {
+                    "id": "user_example_01",
+                    "name": "예시 사용자"
+                  },
+                  "session": {
+                    "expiresAt": "2026-09-09T00:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "인증 저장소 사용 불가",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects": {
+      "get": {
+        "operationId": "listProjects",
+        "tags": [
+          "Projects"
+        ],
+        "summary": "본인 프로젝트 목록",
+        "description": "쿼리 없음. updatedAt 내림차순, 같으면 id 오름차순. 첫 단계에는 페이지네이션 없음.",
+        "responses": {
+          "200": {
+            "description": "빈 목록은 projects: []",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectListResponse"
+                },
+                "example": {
+                  "projects": [
+                    {
+                      "id": "prj_example_01",
+                      "name": "운동 기록",
+                      "version": 0,
+                      "createdAt": "2026-09-08T00:00:00Z",
+                      "updatedAt": "2026-09-08T00:00:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "UNAUTHENTICATED"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          },
+          "503": {
+            "description": "STORAGE_UNAVAILABLE",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "STORAGE_UNAVAILABLE"
+            ]
+          }
+        }
+      },
+      "post": {
+        "operationId": "createProject",
+        "tags": [
+          "Projects"
+        ],
+        "summary": "프로젝트 생성",
+        "requestBody": {
+          "required": true,
+          "description": "UTF-8 JSON, 전체 body 최대 65,536 bytes. 정의하지 않은 필드 거부.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProjectRequest"
+              },
+              "example": {
+                "name": "운동 기록"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "version 0으로 생성",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateProjectResponse"
+                },
+                "example": {
+                  "project": {
+                    "id": "prj_example_01",
+                    "name": "운동 기록",
+                    "version": 0,
+                    "createdAt": "2026-09-08T00:00:00Z",
+                    "updatedAt": "2026-09-08T00:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_INPUT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_INPUT"
+            ]
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "UNAUTHENTICATED"
+            ]
+          },
+          "403": {
+            "description": "FORBIDDEN_ORIGIN",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "FORBIDDEN_ORIGIN"
+            ]
+          },
+          "413": {
+            "description": "INPUT_TOO_LARGE",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INPUT_TOO_LARGE"
+            ]
+          },
+          "415": {
+            "description": "UNSUPPORTED_DOCUMENT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "UNSUPPORTED_DOCUMENT"
+            ]
+          },
+          "422": {
+            "description": "INVALID_INPUT, SENSITIVE_INPUT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_INPUT",
+              "SENSITIVE_INPUT"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          },
+          "503": {
+            "description": "STORAGE_UNAVAILABLE",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "STORAGE_UNAVAILABLE"
+            ]
+          }
+        }
+      }
+    },
+    "/api/projects/{projectId}": {
+      "parameters": [
+        {
+          "name": "projectId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Id"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "getProject",
+        "tags": [
+          "Projects"
+        ],
+        "summary": "프로젝트·초안·확인값·최근 분석 조회",
+        "responses": {
+          "200": {
+            "description": "없는 프로필·시도는 null",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectDetailResponse"
+                },
+                "example": {
+                  "project": {
+                    "id": "prj_example_01",
+                    "name": "운동 기록",
+                    "version": 0,
+                    "createdAt": "2026-09-08T00:00:00Z",
+                    "updatedAt": "2026-09-08T00:00:00Z"
+                  },
+                  "confirmed": null,
+                  "draft": {
+                    "id": "prof_draft_example_01",
+                    "kind": "DRAFT",
+                    "data": {
+                      "project_name": "운동 기록",
+                      "project_type": "웹 서비스",
+                      "domain": null,
+                      "database": null,
+                      "deployment": null,
+                      "frontend": [
+                        "React"
+                      ],
+                      "backend": [
+                        "Node.js"
+                      ],
+                      "ai": null,
+                      "features": null,
+                      "external_integrations": null
+                    },
+                    "sources": {
+                      "project_name": "DOCUMENT",
+                      "project_type": "DOCUMENT",
+                      "domain": "UNKNOWN",
+                      "database": "UNKNOWN",
+                      "deployment": "UNKNOWN",
+                      "frontend": "DOCUMENT",
+                      "backend": "DOCUMENT",
+                      "ai": "UNKNOWN",
+                      "features": "UNKNOWN",
+                      "external_integrations": "UNKNOWN"
+                    },
+                    "evidence": {
+                      "project_name": [
+                        {
+                          "documentId": "doc_example_01",
+                          "start": 0,
+                          "end": 5
+                        }
+                      ],
+                      "project_type": [
+                        {
+                          "documentId": "doc_example_01",
+                          "start": 7,
+                          "end": 12
+                        }
+                      ],
+                      "domain": [],
+                      "database": [],
+                      "deployment": [],
+                      "frontend": [
+                        {
+                          "documentId": "doc_example_01",
+                          "start": 23,
+                          "end": 28
+                        }
+                      ],
+                      "backend": [
+                        {
+                          "documentId": "doc_example_01",
+                          "start": 35,
+                          "end": 42
+                        }
+                      ],
+                      "ai": [],
+                      "features": [],
+                      "external_integrations": []
+                    },
+                    "unknownFields": [
+                      "domain",
+                      "database",
+                      "deployment",
+                      "ai",
+                      "features",
+                      "external_integrations"
+                    ],
+                    "version": 1,
+                    "updatedAt": "2026-09-08T00:00:20Z"
+                  },
+                  "latestAttempt": {
+                    "id": "attempt_example_01",
+                    "document": {
+                      "id": "doc_example_01",
+                      "kind": "TEXT",
+                      "displayName": null,
+                      "byteSize": 131,
+                      "characterCount": 63,
+                      "pageCount": null,
+                      "createdAt": "2026-09-08T00:00:00Z"
+                    },
+                    "status": "SUCCEEDED",
+                    "errorCode": null,
+                    "startedAt": "2026-09-08T00:00:00Z",
+                    "deadlineAt": "2026-09-08T00:01:00Z",
+                    "finishedAt": "2026-09-08T00:00:20Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "UNAUTHENTICATED"
+            ]
+          },
+          "404": {
+            "description": "PROJECT_NOT_FOUND",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "PROJECT_NOT_FOUND"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          },
+          "503": {
+            "description": "STORAGE_UNAVAILABLE",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "STORAGE_UNAVAILABLE"
+            ]
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteProject",
+        "tags": [
+          "Projects"
+        ],
+        "summary": "확인한 프로젝트와 연결 데이터 삭제",
+        "requestBody": {
+          "required": true,
+          "description": "UTF-8 JSON, 전체 body 최대 65,536 bytes. 정의하지 않은 필드 거부.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteProjectRequest"
+              },
+              "example": {
+                "confirmation": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "삭제 완료. body 없음",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_INPUT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_INPUT"
+            ]
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "UNAUTHENTICATED"
+            ]
+          },
+          "403": {
+            "description": "FORBIDDEN_ORIGIN",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "FORBIDDEN_ORIGIN"
+            ]
+          },
+          "404": {
+            "description": "PROJECT_NOT_FOUND",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "PROJECT_NOT_FOUND"
+            ]
+          },
+          "413": {
+            "description": "INPUT_TOO_LARGE",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INPUT_TOO_LARGE"
+            ]
+          },
+          "415": {
+            "description": "UNSUPPORTED_DOCUMENT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "UNSUPPORTED_DOCUMENT"
+            ]
+          },
+          "422": {
+            "description": "INVALID_INPUT, SENSITIVE_INPUT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_INPUT",
+              "SENSITIVE_INPUT"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          },
+          "503": {
+            "description": "STORAGE_UNAVAILABLE",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "STORAGE_UNAVAILABLE"
+            ]
+          }
+        }
+      }
+    },
+    "/api/projects/{projectId}/analysis": {
+      "parameters": [
+        {
+          "name": "projectId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Id"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "analyzeDocument",
+        "tags": [
+          "Analysis"
+        ],
+        "summary": "raw 문서 입력·분석·초안 저장",
+        "description": "multipart·base64·URL·기존 documentId 입력은 받지 않는다. 동기 응답이며 200은 유효한 DRAFT 저장과 Attempt 성공을 뜻한다. 새 분석은 CONFIRMED를 변경하지 않는다. 취소·응답 소실은 자동 재요청하지 않고 상세 조회로 확인한다.",
+        "parameters": [
+          {
+            "name": "X-Document-Name",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "파일명 URI encoding. 디코딩 후 최대 200 code points, 제어 문자/Secret 검사. TEXT에서는 생략."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "raw body 최대 10,485,760 bytes. PDF 100쪽, 추출·직접 텍스트 100,000 code points. Content-Type의 charset을 지정하면 UTF-8만 허용.",
+          "content": {
+            "application/pdf": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "text/markdown": {
+              "schema": {
+                "type": "string",
+                "maxLength": 100000
+              },
+              "example": "운동 기록은 웹 서비스이다. 프론트엔드는 React, 백엔드는 Node.js로 확정했다. DB와 배포는 미정이다."
+            },
+            "text/plain": {
+              "schema": {
+                "type": "string",
+                "maxLength": 100000
+              },
+              "example": "운동 기록은 웹 서비스이다. 프론트엔드는 React, 백엔드는 Node.js로 확정했다. DB와 배포는 미정이다."
+            }
+          },
+          "x-max-body-bytes": 10485760
+        },
+        "responses": {
+          "200": {
+            "description": "초안 저장 성공",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisResponse"
+                },
+                "example": {
+                  "draft": {
+                    "id": "prof_draft_example_01",
+                    "kind": "DRAFT",
+                    "data": {
+                      "project_name": "운동 기록",
+                      "project_type": "웹 서비스",
+                      "domain": null,
+                      "database": null,
+                      "deployment": null,
+                      "frontend": [
+                        "React"
+                      ],
+                      "backend": [
+                        "Node.js"
+                      ],
+                      "ai": null,
+                      "features": null,
+                      "external_integrations": null
+                    },
+                    "sources": {
+                      "project_name": "DOCUMENT",
+                      "project_type": "DOCUMENT",
+                      "domain": "UNKNOWN",
+                      "database": "UNKNOWN",
+                      "deployment": "UNKNOWN",
+                      "frontend": "DOCUMENT",
+                      "backend": "DOCUMENT",
+                      "ai": "UNKNOWN",
+                      "features": "UNKNOWN",
+                      "external_integrations": "UNKNOWN"
+                    },
+                    "evidence": {
+                      "project_name": [
+                        {
+                          "documentId": "doc_example_01",
+                          "start": 0,
+                          "end": 5
+                        }
+                      ],
+                      "project_type": [
+                        {
+                          "documentId": "doc_example_01",
+                          "start": 7,
+                          "end": 12
+                        }
+                      ],
+                      "domain": [],
+                      "database": [],
+                      "deployment": [],
+                      "frontend": [
+                        {
+                          "documentId": "doc_example_01",
+                          "start": 23,
+                          "end": 28
+                        }
+                      ],
+                      "backend": [
+                        {
+                          "documentId": "doc_example_01",
+                          "start": 35,
+                          "end": 42
+                        }
+                      ],
+                      "ai": [],
+                      "features": [],
+                      "external_integrations": []
+                    },
+                    "unknownFields": [
+                      "domain",
+                      "database",
+                      "deployment",
+                      "ai",
+                      "features",
+                      "external_integrations"
+                    ],
+                    "version": 1,
+                    "updatedAt": "2026-09-08T00:00:20Z"
+                  },
+                  "attempt": {
+                    "id": "attempt_example_01",
+                    "document": {
+                      "id": "doc_example_01",
+                      "kind": "TEXT",
+                      "displayName": null,
+                      "byteSize": 131,
+                      "characterCount": 63,
+                      "pageCount": null,
+                      "createdAt": "2026-09-08T00:00:00Z"
+                    },
+                    "status": "SUCCEEDED",
+                    "errorCode": null,
+                    "startedAt": "2026-09-08T00:00:00Z",
+                    "deadlineAt": "2026-09-08T00:01:00Z",
+                    "finishedAt": "2026-09-08T00:00:20Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_INPUT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_INPUT"
+            ]
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "UNAUTHENTICATED"
+            ]
+          },
+          "403": {
+            "description": "FORBIDDEN_ORIGIN",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "FORBIDDEN_ORIGIN"
+            ]
+          },
+          "404": {
+            "description": "PROJECT_NOT_FOUND",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "PROJECT_NOT_FOUND"
+            ]
+          },
+          "409": {
+            "description": "ANALYSIS_BUSY",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ANALYSIS_BUSY"
+            ]
+          },
+          "413": {
+            "description": "INPUT_TOO_LARGE",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INPUT_TOO_LARGE"
+            ]
+          },
+          "415": {
+            "description": "UNSUPPORTED_DOCUMENT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "UNSUPPORTED_DOCUMENT"
+            ]
+          },
+          "422": {
+            "description": "INVALID_INPUT, EMPTY_DOCUMENT, UNREADABLE_DOCUMENT, PARTIAL_EXTRACTION, SENSITIVE_INPUT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_INPUT",
+              "EMPTY_DOCUMENT",
+              "UNREADABLE_DOCUMENT",
+              "PARTIAL_EXTRACTION",
+              "SENSITIVE_INPUT"
+            ]
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              },
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "최소 대기 초. 다음 요청 성공 보장은 아님"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "RATE_LIMITED"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          },
+          "502": {
+            "description": "AI_UNAVAILABLE, AI_INVALID_OUTPUT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "AI_UNAVAILABLE",
+              "AI_INVALID_OUTPUT"
+            ]
+          },
+          "503": {
+            "description": "STORAGE_UNAVAILABLE, AI_UNAVAILABLE",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "STORAGE_UNAVAILABLE",
+              "AI_UNAVAILABLE"
+            ]
+          },
+          "504": {
+            "description": "ANALYSIS_TIMEOUT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "ANALYSIS_TIMEOUT"
+            ]
+          }
+        }
+      }
+    },
+    "/api/projects/{projectId}/profile": {
+      "parameters": [
+        {
+          "name": "projectId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Id"
+          }
+        }
+      ],
+      "patch": {
+        "operationId": "saveConfirmedProfile",
+        "tags": [
+          "Profiles"
+        ],
+        "summary": "프로필 전체 데이터의 확인 저장",
+        "description": "PATCH이나 data 10개 필드는 모두 보낸다. expectedVersion은 Project.version. draftId/draftVersion은 쌍으로만 보낸다. sources/evidence/unknownFields/kind/ownerId는 받지 않는다.",
+        "requestBody": {
+          "required": true,
+          "description": "UTF-8 JSON, 전체 body 최대 65,536 bytes. 정의하지 않은 필드 거부.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveProfileRequest"
+              },
+              "example": {
+                "expectedVersion": 0,
+                "data": {
+                  "project_name": "운동 기록",
+                  "project_type": "웹 서비스",
+                  "domain": null,
+                  "database": null,
+                  "deployment": null,
+                  "frontend": [
+                    "React"
+                  ],
+                  "backend": [
+                    "Node.js"
+                  ],
+                  "ai": null,
+                  "features": null,
+                  "external_integrations": null
+                },
+                "draftId": "prof_draft_example_01",
+                "draftVersion": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Project.version 증가, CONFIRMED 저장",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaveProfileResponse"
+                },
+                "example": {
+                  "project": {
+                    "id": "prj_example_01",
+                    "name": "운동 기록",
+                    "version": 1,
+                    "createdAt": "2026-09-08T00:00:00Z",
+                    "updatedAt": "2026-09-08T00:00:30Z"
+                  },
+                  "confirmed": {
+                    "id": "prof_confirmed_example_01",
+                    "kind": "CONFIRMED",
+                    "data": {
+                      "project_name": "운동 기록",
+                      "project_type": "웹 서비스",
+                      "domain": null,
+                      "database": null,
+                      "deployment": null,
+                      "frontend": [
+                        "React"
+                      ],
+                      "backend": [
+                        "Node.js"
+                      ],
+                      "ai": null,
+                      "features": null,
+                      "external_integrations": null
+                    },
+                    "sources": {
+                      "project_name": "DOCUMENT",
+                      "project_type": "DOCUMENT",
+                      "domain": "UNKNOWN",
+                      "database": "UNKNOWN",
+                      "deployment": "UNKNOWN",
+                      "frontend": "DOCUMENT",
+                      "backend": "DOCUMENT",
+                      "ai": "UNKNOWN",
+                      "features": "UNKNOWN",
+                      "external_integrations": "UNKNOWN"
+                    },
+                    "evidence": {
+                      "project_name": [
+                        {
+                          "documentId": "doc_example_01",
+                          "start": 0,
+                          "end": 5
+                        }
+                      ],
+                      "project_type": [
+                        {
+                          "documentId": "doc_example_01",
+                          "start": 7,
+                          "end": 12
+                        }
+                      ],
+                      "domain": [],
+                      "database": [],
+                      "deployment": [],
+                      "frontend": [
+                        {
+                          "documentId": "doc_example_01",
+                          "start": 23,
+                          "end": 28
+                        }
+                      ],
+                      "backend": [
+                        {
+                          "documentId": "doc_example_01",
+                          "start": 35,
+                          "end": 42
+                        }
+                      ],
+                      "ai": [],
+                      "features": [],
+                      "external_integrations": []
+                    },
+                    "unknownFields": [
+                      "domain",
+                      "database",
+                      "deployment",
+                      "ai",
+                      "features",
+                      "external_integrations"
+                    ],
+                    "version": 1,
+                    "updatedAt": "2026-09-08T00:00:30Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_INPUT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_INPUT"
+            ]
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "UNAUTHENTICATED"
+            ]
+          },
+          "403": {
+            "description": "FORBIDDEN_ORIGIN",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "FORBIDDEN_ORIGIN"
+            ]
+          },
+          "404": {
+            "description": "PROJECT_NOT_FOUND",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "PROJECT_NOT_FOUND"
+            ]
+          },
+          "409": {
+            "description": "VERSION_CONFLICT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "VERSION_CONFLICT"
+            ]
+          },
+          "413": {
+            "description": "INPUT_TOO_LARGE",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INPUT_TOO_LARGE"
+            ]
+          },
+          "415": {
+            "description": "UNSUPPORTED_DOCUMENT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "UNSUPPORTED_DOCUMENT"
+            ]
+          },
+          "422": {
+            "description": "INVALID_INPUT, SENSITIVE_INPUT",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INVALID_INPUT",
+              "SENSITIVE_INPUT"
+            ]
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "INTERNAL_ERROR"
+            ]
+          },
+          "503": {
+            "description": "STORAGE_UNAVAILABLE",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "모든 API 응답의 캐시 금지"
+              },
+              "X-Request-Id": {
+                "schema": {
+                  "$ref": "#/components/schemas/Id"
+                },
+                "description": "서버 발급 요청 ID. 입력·Secret을 포함하지 않음"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "x-error-codes": [
+              "STORAGE_UNAVAILABLE"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "sessionCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "better-auth.session_token",
+        "description": "로컬 기본 쿠키 식별자. 브라우저가 관리하는 HttpOnly 세션 쿠키이며 Bearer/GitHub token 입력은 사용하지 않는다. 운영의 실제 이름/속성은 인증 설정과 동기화."
+      }
+    },
+    "schemas": {
+      "Id": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128,
+        "description": "서버가 발급한 불투명 식별자. 형식에서 소유자·정렬·권한을 추론하지 않는다."
+      },
+      "DateTime": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "version",
+          "createdAt",
+          "updatedAt"
+        ],
+        "additionalProperties": false
+      },
+      "ProfileData": {
+        "type": "object",
+        "properties": {
+          "project_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200,
+                "description": "Unicode code points. 공백뿐인 값은 거부하며 null로 미정을 표시한다."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "project_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200,
+                "description": "Unicode code points. 공백뿐인 값은 거부하며 null로 미정을 표시한다."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "domain": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200,
+                "description": "Unicode code points. 공백뿐인 값은 거부하며 null로 미정을 표시한다."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "database": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200,
+                "description": "Unicode code points. 공백뿐인 값은 거부하며 null로 미정을 표시한다."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "deployment": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200,
+                "description": "Unicode code points. 공백뿐인 값은 거부하며 null로 미정을 표시한다."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "frontend": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200,
+                  "description": "Unicode code points. 공백뿐인 값은 거부하며 null로 미정을 표시한다."
+                },
+                "maxItems": 30
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "backend": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200,
+                  "description": "Unicode code points. 공백뿐인 값은 거부하며 null로 미정을 표시한다."
+                },
+                "maxItems": 30
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ai": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200,
+                  "description": "Unicode code points. 공백뿐인 값은 거부하며 null로 미정을 표시한다."
+                },
+                "maxItems": 30
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "features": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200,
+                  "description": "Unicode code points. 공백뿐인 값은 거부하며 null로 미정을 표시한다."
+                },
+                "maxItems": 30
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "external_integrations": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200,
+                  "description": "Unicode code points. 공백뿐인 값은 거부하며 null로 미정을 표시한다."
+                },
+                "maxItems": 30
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "project_name",
+          "project_type",
+          "domain",
+          "database",
+          "deployment",
+          "frontend",
+          "backend",
+          "ai",
+          "features",
+          "external_integrations"
+        ],
+        "additionalProperties": false
+      },
+      "ProfileSources": {
+        "type": "object",
+        "properties": {
+          "project_name": {
+            "type": "string",
+            "enum": [
+              "DOCUMENT",
+              "USER",
+              "UNKNOWN"
+            ]
+          },
+          "project_type": {
+            "type": "string",
+            "enum": [
+              "DOCUMENT",
+              "USER",
+              "UNKNOWN"
+            ]
+          },
+          "domain": {
+            "type": "string",
+            "enum": [
+              "DOCUMENT",
+              "USER",
+              "UNKNOWN"
+            ]
+          },
+          "database": {
+            "type": "string",
+            "enum": [
+              "DOCUMENT",
+              "USER",
+              "UNKNOWN"
+            ]
+          },
+          "deployment": {
+            "type": "string",
+            "enum": [
+              "DOCUMENT",
+              "USER",
+              "UNKNOWN"
+            ]
+          },
+          "frontend": {
+            "type": "string",
+            "enum": [
+              "DOCUMENT",
+              "USER",
+              "UNKNOWN"
+            ]
+          },
+          "backend": {
+            "type": "string",
+            "enum": [
+              "DOCUMENT",
+              "USER",
+              "UNKNOWN"
+            ]
+          },
+          "ai": {
+            "type": "string",
+            "enum": [
+              "DOCUMENT",
+              "USER",
+              "UNKNOWN"
+            ]
+          },
+          "features": {
+            "type": "string",
+            "enum": [
+              "DOCUMENT",
+              "USER",
+              "UNKNOWN"
+            ]
+          },
+          "external_integrations": {
+            "type": "string",
+            "enum": [
+              "DOCUMENT",
+              "USER",
+              "UNKNOWN"
+            ]
+          }
+        },
+        "required": [
+          "project_name",
+          "project_type",
+          "domain",
+          "database",
+          "deployment",
+          "frontend",
+          "backend",
+          "ai",
+          "features",
+          "external_integrations"
+        ],
+        "additionalProperties": false
+      },
+      "EvidenceLocation": {
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "start": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "end": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "documentId"
+        ],
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "page"
+            ]
+          },
+          {
+            "required": [
+              "start",
+              "end"
+            ]
+          }
+        ],
+        "dependentRequired": {
+          "start": [
+            "end"
+          ],
+          "end": [
+            "start"
+          ]
+        },
+        "description": "page는 1부터. start/end는 추출 전체 텍스트의 code-point 위치(시작 포함·끝 제외); end > start를 별도 검사. 인용문 없음."
+      },
+      "ProfileEvidence": {
+        "type": "object",
+        "properties": {
+          "project_name": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvidenceLocation"
+            }
+          },
+          "project_type": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvidenceLocation"
+            }
+          },
+          "domain": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvidenceLocation"
+            }
+          },
+          "database": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvidenceLocation"
+            }
+          },
+          "deployment": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvidenceLocation"
+            }
+          },
+          "frontend": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvidenceLocation"
+            }
+          },
+          "backend": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvidenceLocation"
+            }
+          },
+          "ai": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvidenceLocation"
+            }
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvidenceLocation"
+            }
+          },
+          "external_integrations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvidenceLocation"
+            }
+          }
+        },
+        "required": [
+          "project_name",
+          "project_type",
+          "domain",
+          "database",
+          "deployment",
+          "frontend",
+          "backend",
+          "ai",
+          "features",
+          "external_integrations"
+        ],
+        "additionalProperties": false
+      },
+      "Profile": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "CONFIRMED"
+            ]
+          },
+          "data": {
+            "$ref": "#/components/schemas/ProfileData"
+          },
+          "sources": {
+            "$ref": "#/components/schemas/ProfileSources"
+          },
+          "evidence": {
+            "$ref": "#/components/schemas/ProfileEvidence"
+          },
+          "unknownFields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "project_name",
+                "project_type",
+                "domain",
+                "database",
+                "deployment",
+                "frontend",
+                "backend",
+                "ai",
+                "features",
+                "external_integrations"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "data",
+          "sources",
+          "evidence",
+          "unknownFields",
+          "version",
+          "updatedAt"
+        ],
+        "additionalProperties": false
+      },
+      "DocumentSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "PDF",
+              "MARKDOWN",
+              "TEXT"
+            ]
+          },
+          "displayName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "byteSize": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10485760
+          },
+          "characterCount": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pageCount": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "displayName",
+          "byteSize",
+          "characterCount",
+          "pageCount",
+          "createdAt"
+        ],
+        "additionalProperties": false
+      },
+      "AnalysisAttempt": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "document": {
+            "$ref": "#/components/schemas/DocumentSummary"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PROCESSING",
+              "SUCCEEDED",
+              "FAILED"
+            ]
+          },
+          "errorCode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "INVALID_INPUT",
+                  "UNAUTHENTICATED",
+                  "FORBIDDEN_ORIGIN",
+                  "PROJECT_NOT_FOUND",
+                  "INPUT_TOO_LARGE",
+                  "UNSUPPORTED_DOCUMENT",
+                  "EMPTY_DOCUMENT",
+                  "UNREADABLE_DOCUMENT",
+                  "PARTIAL_EXTRACTION",
+                  "SENSITIVE_INPUT",
+                  "ANALYSIS_BUSY",
+                  "VERSION_CONFLICT",
+                  "RATE_LIMITED",
+                  "AI_UNAVAILABLE",
+                  "AI_INVALID_OUTPUT",
+                  "STORAGE_UNAVAILABLE",
+                  "ANALYSIS_TIMEOUT",
+                  "INTERNAL_ERROR",
+                  "INTERRUPTED"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "startedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "deadlineAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "finishedAt": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DateTime"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "document",
+          "status",
+          "errorCode",
+          "startedAt",
+          "deadlineAt",
+          "finishedAt"
+        ],
+        "additionalProperties": false
+      },
+      "ErrorEnvelope": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "INVALID_INPUT",
+                  "UNAUTHENTICATED",
+                  "FORBIDDEN_ORIGIN",
+                  "PROJECT_NOT_FOUND",
+                  "INPUT_TOO_LARGE",
+                  "UNSUPPORTED_DOCUMENT",
+                  "EMPTY_DOCUMENT",
+                  "UNREADABLE_DOCUMENT",
+                  "PARTIAL_EXTRACTION",
+                  "SENSITIVE_INPUT",
+                  "ANALYSIS_BUSY",
+                  "VERSION_CONFLICT",
+                  "RATE_LIMITED",
+                  "AI_UNAVAILABLE",
+                  "AI_INVALID_OUTPUT",
+                  "STORAGE_UNAVAILABLE",
+                  "ANALYSIS_TIMEOUT",
+                  "INTERNAL_ERROR"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1
+              },
+              "requestId": {
+                "$ref": "#/components/schemas/Id"
+              },
+              "fields": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "requestId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "error": {
+              "code": "VERSION_CONFLICT",
+              "message": "저장된 내용이 변경되었습니다. 현재 수정값을 보존하고 최신 내용을 확인해 주세요.",
+              "requestId": "request_example_01"
+            }
+          }
+        ]
+      },
+      "AuthError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "additionalProperties": false,
+        "description": "인증 라이브러리용 안전한 code/message. 표시 문구는 앱에서 정규화하고 원본 예외·token은 포함하지 않는다."
+      },
+      "PublicSession": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "$ref": "#/components/schemas/Id"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name"
+                ],
+                "additionalProperties": false
+              },
+              "session": {
+                "type": "object",
+                "properties": {
+                  "expiresAt": {
+                    "$ref": "#/components/schemas/DateTime"
+                  }
+                },
+                "required": [
+                  "expiresAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "user",
+              "session"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "examples": [
+          {
+            "user": {
+              "id": "user_example_01",
+              "name": "예시 사용자"
+            },
+            "session": {
+              "expiresAt": "2026-09-09T00:00:00Z"
+            }
+          }
+        ]
+      },
+      "CreateProjectRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "trim 후 1–100 Unicode code points. 공백만 있는 값은 거부한다."
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "name": "운동 기록"
+          }
+        ]
+      },
+      "DeleteProjectRequest": {
+        "type": "object",
+        "properties": {
+          "confirmation": {
+            "const": true,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "confirmation"
+        ],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "confirmation": true
+          }
+        ]
+      },
+      "SaveProfileRequest": {
+        "type": "object",
+        "properties": {
+          "expectedVersion": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "data": {
+            "$ref": "#/components/schemas/ProfileData"
+          },
+          "draftId": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "draftVersion": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "expectedVersion",
+          "data"
+        ],
+        "additionalProperties": false,
+        "dependentRequired": {
+          "draftId": [
+            "draftVersion"
+          ],
+          "draftVersion": [
+            "draftId"
+          ]
+        },
+        "examples": [
+          {
+            "expectedVersion": 0,
+            "data": {
+              "project_name": "운동 기록",
+              "project_type": "웹 서비스",
+              "domain": null,
+              "database": null,
+              "deployment": null,
+              "frontend": [
+                "React"
+              ],
+              "backend": [
+                "Node.js"
+              ],
+              "ai": null,
+              "features": null,
+              "external_integrations": null
+            },
+            "draftId": "prof_draft_example_01",
+            "draftVersion": 1
+          }
+        ]
+      },
+      "ProjectListResponse": {
+        "type": "object",
+        "properties": {
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Project"
+            }
+          }
+        },
+        "required": [
+          "projects"
+        ],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "projects": [
+              {
+                "id": "prj_example_01",
+                "name": "운동 기록",
+                "version": 0,
+                "createdAt": "2026-09-08T00:00:00Z",
+                "updatedAt": "2026-09-08T00:00:00Z"
+              }
+            ]
+          }
+        ]
+      },
+      "CreateProjectResponse": {
+        "type": "object",
+        "properties": {
+          "project": {
+            "$ref": "#/components/schemas/Project"
+          }
+        },
+        "required": [
+          "project"
+        ],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "project": {
+              "id": "prj_example_01",
+              "name": "운동 기록",
+              "version": 0,
+              "createdAt": "2026-09-08T00:00:00Z",
+              "updatedAt": "2026-09-08T00:00:00Z"
+            }
+          }
+        ]
+      },
+      "ProjectDetailResponse": {
+        "type": "object",
+        "properties": {
+          "project": {
+            "$ref": "#/components/schemas/Project"
+          },
+          "confirmed": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Profile"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "draft": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Profile"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "latestAttempt": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AnalysisAttempt"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "project",
+          "confirmed",
+          "draft",
+          "latestAttempt"
+        ],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "project": {
+              "id": "prj_example_01",
+              "name": "운동 기록",
+              "version": 0,
+              "createdAt": "2026-09-08T00:00:00Z",
+              "updatedAt": "2026-09-08T00:00:00Z"
+            },
+            "confirmed": null,
+            "draft": {
+              "id": "prof_draft_example_01",
+              "kind": "DRAFT",
+              "data": {
+                "project_name": "운동 기록",
+                "project_type": "웹 서비스",
+                "domain": null,
+                "database": null,
+                "deployment": null,
+                "frontend": [
+                  "React"
+                ],
+                "backend": [
+                  "Node.js"
+                ],
+                "ai": null,
+                "features": null,
+                "external_integrations": null
+              },
+              "sources": {
+                "project_name": "DOCUMENT",
+                "project_type": "DOCUMENT",
+                "domain": "UNKNOWN",
+                "database": "UNKNOWN",
+                "deployment": "UNKNOWN",
+                "frontend": "DOCUMENT",
+                "backend": "DOCUMENT",
+                "ai": "UNKNOWN",
+                "features": "UNKNOWN",
+                "external_integrations": "UNKNOWN"
+              },
+              "evidence": {
+                "project_name": [
+                  {
+                    "documentId": "doc_example_01",
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "project_type": [
+                  {
+                    "documentId": "doc_example_01",
+                    "start": 7,
+                    "end": 12
+                  }
+                ],
+                "domain": [],
+                "database": [],
+                "deployment": [],
+                "frontend": [
+                  {
+                    "documentId": "doc_example_01",
+                    "start": 23,
+                    "end": 28
+                  }
+                ],
+                "backend": [
+                  {
+                    "documentId": "doc_example_01",
+                    "start": 35,
+                    "end": 42
+                  }
+                ],
+                "ai": [],
+                "features": [],
+                "external_integrations": []
+              },
+              "unknownFields": [
+                "domain",
+                "database",
+                "deployment",
+                "ai",
+                "features",
+                "external_integrations"
+              ],
+              "version": 1,
+              "updatedAt": "2026-09-08T00:00:20Z"
+            },
+            "latestAttempt": {
+              "id": "attempt_example_01",
+              "document": {
+                "id": "doc_example_01",
+                "kind": "TEXT",
+                "displayName": null,
+                "byteSize": 131,
+                "characterCount": 63,
+                "pageCount": null,
+                "createdAt": "2026-09-08T00:00:00Z"
+              },
+              "status": "SUCCEEDED",
+              "errorCode": null,
+              "startedAt": "2026-09-08T00:00:00Z",
+              "deadlineAt": "2026-09-08T00:01:00Z",
+              "finishedAt": "2026-09-08T00:00:20Z"
+            }
+          }
+        ]
+      },
+      "AnalysisResponse": {
+        "type": "object",
+        "properties": {
+          "draft": {
+            "$ref": "#/components/schemas/Profile"
+          },
+          "attempt": {
+            "$ref": "#/components/schemas/AnalysisAttempt"
+          }
+        },
+        "required": [
+          "draft",
+          "attempt"
+        ],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "draft": {
+              "id": "prof_draft_example_01",
+              "kind": "DRAFT",
+              "data": {
+                "project_name": "운동 기록",
+                "project_type": "웹 서비스",
+                "domain": null,
+                "database": null,
+                "deployment": null,
+                "frontend": [
+                  "React"
+                ],
+                "backend": [
+                  "Node.js"
+                ],
+                "ai": null,
+                "features": null,
+                "external_integrations": null
+              },
+              "sources": {
+                "project_name": "DOCUMENT",
+                "project_type": "DOCUMENT",
+                "domain": "UNKNOWN",
+                "database": "UNKNOWN",
+                "deployment": "UNKNOWN",
+                "frontend": "DOCUMENT",
+                "backend": "DOCUMENT",
+                "ai": "UNKNOWN",
+                "features": "UNKNOWN",
+                "external_integrations": "UNKNOWN"
+              },
+              "evidence": {
+                "project_name": [
+                  {
+                    "documentId": "doc_example_01",
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "project_type": [
+                  {
+                    "documentId": "doc_example_01",
+                    "start": 7,
+                    "end": 12
+                  }
+                ],
+                "domain": [],
+                "database": [],
+                "deployment": [],
+                "frontend": [
+                  {
+                    "documentId": "doc_example_01",
+                    "start": 23,
+                    "end": 28
+                  }
+                ],
+                "backend": [
+                  {
+                    "documentId": "doc_example_01",
+                    "start": 35,
+                    "end": 42
+                  }
+                ],
+                "ai": [],
+                "features": [],
+                "external_integrations": []
+              },
+              "unknownFields": [
+                "domain",
+                "database",
+                "deployment",
+                "ai",
+                "features",
+                "external_integrations"
+              ],
+              "version": 1,
+              "updatedAt": "2026-09-08T00:00:20Z"
+            },
+            "attempt": {
+              "id": "attempt_example_01",
+              "document": {
+                "id": "doc_example_01",
+                "kind": "TEXT",
+                "displayName": null,
+                "byteSize": 131,
+                "characterCount": 63,
+                "pageCount": null,
+                "createdAt": "2026-09-08T00:00:00Z"
+              },
+              "status": "SUCCEEDED",
+              "errorCode": null,
+              "startedAt": "2026-09-08T00:00:00Z",
+              "deadlineAt": "2026-09-08T00:01:00Z",
+              "finishedAt": "2026-09-08T00:00:20Z"
+            }
+          }
+        ]
+      },
+      "SaveProfileResponse": {
+        "type": "object",
+        "properties": {
+          "project": {
+            "$ref": "#/components/schemas/Project"
+          },
+          "confirmed": {
+            "$ref": "#/components/schemas/Profile"
+          }
+        },
+        "required": [
+          "project",
+          "confirmed"
+        ],
+        "additionalProperties": false,
+        "examples": [
+          {
+            "project": {
+              "id": "prj_example_01",
+              "name": "운동 기록",
+              "version": 1,
+              "createdAt": "2026-09-08T00:00:00Z",
+              "updatedAt": "2026-09-08T00:00:30Z"
+            },
+            "confirmed": {
+              "id": "prof_confirmed_example_01",
+              "kind": "CONFIRMED",
+              "data": {
+                "project_name": "운동 기록",
+                "project_type": "웹 서비스",
+                "domain": null,
+                "database": null,
+                "deployment": null,
+                "frontend": [
+                  "React"
+                ],
+                "backend": [
+                  "Node.js"
+                ],
+                "ai": null,
+                "features": null,
+                "external_integrations": null
+              },
+              "sources": {
+                "project_name": "DOCUMENT",
+                "project_type": "DOCUMENT",
+                "domain": "UNKNOWN",
+                "database": "UNKNOWN",
+                "deployment": "UNKNOWN",
+                "frontend": "DOCUMENT",
+                "backend": "DOCUMENT",
+                "ai": "UNKNOWN",
+                "features": "UNKNOWN",
+                "external_integrations": "UNKNOWN"
+              },
+              "evidence": {
+                "project_name": [
+                  {
+                    "documentId": "doc_example_01",
+                    "start": 0,
+                    "end": 5
+                  }
+                ],
+                "project_type": [
+                  {
+                    "documentId": "doc_example_01",
+                    "start": 7,
+                    "end": 12
+                  }
+                ],
+                "domain": [],
+                "database": [],
+                "deployment": [],
+                "frontend": [
+                  {
+                    "documentId": "doc_example_01",
+                    "start": 23,
+                    "end": 28
+                  }
+                ],
+                "backend": [
+                  {
+                    "documentId": "doc_example_01",
+                    "start": 35,
+                    "end": 42
+                  }
+                ],
+                "ai": [],
+                "features": [],
+                "external_integrations": []
+              },
+              "unknownFields": [
+                "domain",
+                "database",
+                "deployment",
+                "ai",
+                "features",
+                "external_integrations"
+              ],
+              "version": 1,
+              "updatedAt": "2026-09-08T00:00:30Z"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "x-contract-status": "DESIGN_ONLY",
+  "x-max-json-body-bytes": 65536,
+  "x-source-contract": "../../specs/001-project-document-analysis/contracts/http.md"
+}
