@@ -8,7 +8,7 @@ import time
 
 from .evaluate import CASES, load_api_key
 from .profile import FIELDS
-from .solar import AnalysisError, SolarAnalyzer, PROMPT_VERSION, SYSTEM_PROMPT, REASONING_EFFORT, FREQUENCY_PENALTY
+from .solar import AnalysisError, SolarAnalyzer, PROMPT_VERSION, COMMON_PROMPT, CORE_PROMPT, FEATURE_PROMPT, REASONING_EFFORT, FREQUENCY_PENALTY
 
 NEW_CASES = CASES.with_name("name-stability-cases.json")
 
@@ -53,7 +53,10 @@ def evaluate_cases(cases, analyzer, *, repeats=2, workers=2, on_row=None):
         "provider_calls": sum(row["provider_calls"] for row in rows),
         "first_pass_validated": sum(row["first_pass_validated"] for row in rows),
         "prompt_version": PROMPT_VERSION,
-        "prompt_sha256": hashlib.sha256(SYSTEM_PROMPT.encode()).hexdigest(),
+        "prompt_sha256": hashlib.sha256(json.dumps({
+            "common": COMMON_PROMPT, "core": CORE_PROMPT, "features": FEATURE_PROMPT,
+        }, sort_keys=True).encode()).hexdigest(),
+        "prompt_hash_scope": "sorted-json-of-common-core-features",
         "fixtures_sha256": hashlib.sha256(json.dumps(cases, sort_keys=True).encode()).hexdigest(),
         "model_requested": "solar-pro4", "reasoning_effort": REASONING_EFFORT, "frequency_penalty": FREQUENCY_PENALTY, "temperature": 0,
         "max_tokens": 4096, "workers": workers, "cases": rows,

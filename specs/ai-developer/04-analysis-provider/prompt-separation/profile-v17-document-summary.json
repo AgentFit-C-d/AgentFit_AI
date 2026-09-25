@@ -1,0 +1,108 @@
+{
+  "prompt_version": "profile-v17",
+  "attempts": 6,
+  "retries": 0,
+  "passed": 1,
+  "cases": [
+    {
+      "id": "FEATURE-001",
+      "repeat": 1,
+      "synthetic": true,
+      "sha256": "b732c0b2771d559a05253c947f4c52949cbb9994f2e1205e72ee424cc3b34b38",
+      "validated": true,
+      "passed": false,
+      "missing": [
+        "features"
+      ],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 2453,
+      "prompt_tokens": 1454,
+      "completion_tokens": 201
+    },
+    {
+      "id": "FEATURE-002",
+      "repeat": 1,
+      "synthetic": true,
+      "sha256": "0ac19e8e7c74afcb1632771bcfb2bafce37e4a44f791568cd8a8995a20fd6c9a",
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 4672,
+      "prompt_tokens": 1478,
+      "completion_tokens": 126
+    },
+    {
+      "id": "REAL-HANDOFF-001",
+      "repeat": 1,
+      "synthetic": false,
+      "sha256": "e172d65d7f01d4ad31f0a434527a024bc2cd16465d1a0f8efa6cd8a5babddd79",
+      "validated": false,
+      "passed": false,
+      "error": "INVALID_FEATURE_SPAN",
+      "field": "features",
+      "provider_calls": 3,
+      "first_pass_validated": false,
+      "repaired_fields": [
+        "project_type",
+        "features"
+      ],
+      "elapsed_ms": 49219
+    },
+    {
+      "id": "REAL-AGENTFIT-001",
+      "repeat": 1,
+      "synthetic": false,
+      "sha256": "08601468157ccd4b4dfd5be052182510e654181e8890b6446b703cabdff08475",
+      "validated": false,
+      "passed": false,
+      "error": "PROVIDER_TIMEOUT",
+      "field": null,
+      "provider_calls": 2,
+      "first_pass_validated": false,
+      "repaired_fields": [],
+      "elapsed_ms": 42516
+    },
+    {
+      "id": "REAL-HANDOFF-001",
+      "repeat": 2,
+      "synthetic": false,
+      "sha256": "e172d65d7f01d4ad31f0a434527a024bc2cd16465d1a0f8efa6cd8a5babddd79",
+      "validated": false,
+      "passed": false,
+      "error": "INVALID_FEATURE_SPAN",
+      "field": "features",
+      "provider_calls": 3,
+      "first_pass_validated": false,
+      "repaired_fields": [
+        "project_type",
+        "domain",
+        "features"
+      ],
+      "elapsed_ms": 50937
+    },
+    {
+      "id": "REAL-AGENTFIT-001",
+      "repeat": 2,
+      "synthetic": false,
+      "sha256": "08601468157ccd4b4dfd5be052182510e654181e8890b6446b703cabdff08475",
+      "validated": true,
+      "passed": false,
+      "missing": [
+        "frontend",
+        "backend",
+        "database"
+      ],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 20234,
+      "prompt_tokens": 8840,
+      "completion_tokens": 1050
+    }
+  ]
+}
