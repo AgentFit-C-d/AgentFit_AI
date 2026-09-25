@@ -1,0 +1,44 @@
+[
+  {
+    "id": "ROLE-001",
+    "before_sha256": "6f8737ee21e50adbaa9fd3e1dc10a2c8afb8ceb671f4e7d0b53c15f51a22e64a",
+    "after_sha256": "6f8737ee21e50adbaa9fd3e1dc10a2c8afb8ceb671f4e7d0b53c15f51a22e64a",
+    "unchanged": true
+  },
+  {
+    "id": "ROLE-002",
+    "before_sha256": "79857d226bf1127cc23d39253214027850fe121e22816f56692dce2b9fedeb3d",
+    "after_sha256": "79857d226bf1127cc23d39253214027850fe121e22816f56692dce2b9fedeb3d",
+    "unchanged": true
+  },
+  {
+    "id": "ROLE-003",
+    "before_sha256": "0b8b6646615fe260add43e10ddf34ed207b3a093673714b6e6a2af1aa72417a4",
+    "after_sha256": "0b8b6646615fe260add43e10ddf34ed207b3a093673714b6e6a2af1aa72417a4",
+    "unchanged": true
+  },
+  {
+    "id": "ROLE-004",
+    "before_sha256": "eb251e280beca32ce88a3b0228dd9cf4521daf6a0b3dc70fe6748ada284814ae",
+    "after_sha256": "eb251e280beca32ce88a3b0228dd9cf4521daf6a0b3dc70fe6748ada284814ae",
+    "unchanged": true
+  },
+  {
+    "id": "TEXT-SEM-004",
+    "before_sha256": "0bb8b681ff2de702c1726fb07dcf8a15361ee1d3664a181ca99b8ee2ea13495c",
+    "after_sha256": "0bb8b681ff2de702c1726fb07dcf8a15361ee1d3664a181ca99b8ee2ea13495c",
+    "unchanged": true
+  },
+  {
+    "id": "REAL-MABC-001",
+    "before_sha256": "cc2b1cfe00afb0f9c45565da6ee829a2c3f14642a423cb6ab3cd2abb81f6dcef",
+    "after_sha256": "cc2b1cfe00afb0f9c45565da6ee829a2c3f14642a423cb6ab3cd2abb81f6dcef",
+    "unchanged": true
+  },
+  {
+    "id": "REAL-AGENTFIT-001",
+    "before_sha256": "340c9d1c53e4c530b0ec7d8ae13ad5eaf5eb5f7bafa08b975a257ad1459a3c0d",
+    "after_sha256": "340c9d1c53e4c530b0ec7d8ae13ad5eaf5eb5f7bafa08b975a257ad1459a3c0d",
+    "unchanged": true
+  }
+]

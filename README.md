@@ -103,3 +103,11 @@ Solar 검토·제한된 수정·재검토와 실패 응답 보관을 구현했�
 [공통 계약 명세](specs/ai-developer/04-analysis-provider/evidence-contract/spec.md) · [검증 결과와 남은 과제](specs/ai-developer/04-analysis-provider/evidence-contract/validation.md)
 
 공통 계약 검증: 단위140/140, 최종 실호출 정답1/7·오답반환1·오류5. 두 차례 중단의 미확인 시도는 별도 기록했습니다. 전체 분석 품질 기준은 미충족이며 운영 적용을 보류합니다.
+
+## 구조 보존 구역 분석 실험 — section-v1
+
+별도 agentfit_ai.section_analysis.SectionAnalyzer에서 제목·문단·표·코드블록과 원문 위치를 보존해 모든 구역을 최대2묶음으로 처리합니다. 검증된 사실 후보의 ID만 통합하고 최종 검토를 거칩니다. 기본 SolarAnalyzer는 변경하지 않았습니다.
+
+묶음당12000자,최대6회 호출·60초 예산입니다. 상한 초과·구역 누락·근거 오류는 부분 성공으로 반환하지 않습니다. 임베딩이나 벡터DB는 사용하지 않습니다.
+
+전체163테스트는 통과했지만 실제 고정 평가0/7로 개선 효과를 입증하지 못했습니다. 운영 채택을 보류합니다. [실험 결과·지원 범위·제약](specs/ai-developer/04-analysis-provider/section-analysis/validation.md)
