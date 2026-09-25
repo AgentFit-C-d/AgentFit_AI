@@ -1,0 +1,57 @@
+{
+  "source_sha256": "e4ef5ad9c866b578bc98104db7c8c319ba952add94606c83125dbacc07850ee9",
+  "candidate_sha256": "52f9f3dc5672839dc4f3148d54ae82a9b0fed82630ba247ad8f18130af015338",
+  "attempts": 2,
+  "purpose": "frozen failed MABC feature draft repair only, not end-to-end quality",
+  "synthetic_cases": 3,
+  "rows": [
+    {
+      "id": "MABC-frozen-repair",
+      "version": "profile-v27",
+      "structure_passed": true,
+      "prompt_tokens": 2478,
+      "completion_tokens": 74,
+      "feature_count": 2,
+      "required_units_found": 0,
+      "extra_count": 2,
+      "elapsed_ms": 1563
+    },
+    {
+      "id": "MABC-frozen-repair",
+      "version": "profile-v28",
+      "structure_passed": false,
+      "error": "INVALID_FEATURE_SPAN",
+      "elapsed_ms": 3750
+    },
+    {
+      "id": "OCC-1",
+      "version": "profile-v28",
+      "structure_passed": true,
+      "prompt_tokens": 1343,
+      "completion_tokens": 76,
+      "feature_count": 3,
+      "exact_passed": true,
+      "elapsed_ms": 922
+    },
+    {
+      "id": "OCC-2",
+      "version": "profile-v28",
+      "structure_passed": true,
+      "prompt_tokens": 1345,
+      "completion_tokens": 75,
+      "feature_count": 3,
+      "exact_passed": false,
+      "elapsed_ms": 984
+    },
+    {
+      "id": "OCC-3",
+      "version": "profile-v28",
+      "structure_passed": true,
+      "prompt_tokens": 1344,
+      "completion_tokens": 75,
+      "feature_count": 3,
+      "exact_passed": true,
+      "elapsed_ms": 828
+    }
+  ]
+}

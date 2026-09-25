@@ -86,3 +86,7 @@ python -m agentfit_ai.diagnostics --directory ../output/diagnostics
 ## 의미 검토 실험 — profile-v27
 
 Solar 검토·제한된 수정·재검토와 실패 응답 보관을 구현했습니다. 단위 테스트117건이 통과했지만 의미 품질은 아직 승인되지 않았습니다. 작은 비교 결과와 남은 제약은 [의미 품질 검증](specs/ai-developer/04-analysis-provider/semantic-quality/validation.md)을 확인하세요.
+
+## 순번 오류 보완 실험 — profile-v28
+
+기능 인용의 등장 순서 설명과 항목별 수정 진단을 추가했습니다. 단위121건은 통과했지만 실제 실패 초안 수정은 실패했고, 합성 정확도는2/3이었습니다. 운영 적용을 위한 품질 개선은 입증되지 않았습니다. [검증 결과](specs/ai-developer/04-analysis-provider/occurrence-repair/validation.md)와 [전체 필드 공통 근거 계약 설계안](specs/ai-developer/04-analysis-provider/evidence-contract/spec.md)을 참고하세요. 공통 계약 구현은 설계 확인 후 진행합니다.

@@ -16,7 +16,7 @@ from .semantic_review import REVIEW_PROMPT, REVIEW_REASONING_EFFORT, REVIEW_MAX_
 
 ENDPOINT = "https://api.upstage.ai/v1/chat/completions"
 MAX_RESPONSE_BYTES = 1_048_576
-PROMPT_VERSION = "profile-v27"
+PROMPT_VERSION = "profile-v28"
 REASONING_EFFORT = "none"
 FREQUENCY_PENALTY = 0
 INTEGRATION_CATEGORIES = ("authentication", "notifications", "storage", "other")
@@ -99,6 +99,12 @@ features=null은 미언급/미정일 때만 쓴다.
 기능이 있으면 {"spans":[{"lineId":줄 id,"occurrence":등장순서,"role":"user_action 또는 operational_action 또는 development_task 또는 technical_description","quote":"짧은 원문 인용문"}],"absenceLineIds":[]}이다.
 quote는 선택한 줄 text의 연속 문자열이다. 각 span의 occurrence는 그 줄에서 quote가 등장하는 순서(1부터 시작)다.
 한 번만 나오면 occurrence=1. 여러 번 나오면 의미가 맞는 정확한 등장 순서를 지정한다. 서버가 임의로 위치를 고르지 않는다.
+occurrence는 spans 배열 순번이나 그 줄에서 고른 기능의 순번이 아니다. 각 quote 문자열마다 별도로 센다.
+예: 한 줄이 '검색 → 선택 → 결제'이면 '검색', '선택', '결제'는 각각 occurrence=1이다.
+한 줄이 '검색, 선택, 검색'이면 '선택'은 occurrence=1이고 두 번째 '검색'만 occurrence=2이다.
+수정 데이터의 spanIssues.index는 이전 spans 배열의 0부터 시작하는 항목 번호다.
+matchCount는 해당 quote가 지정 줄에 실제 존재하는 횟수다. 0이면 인용 또는 줄이 잘못됐으며 occurrence만 바꿔서는 해결되지 않는다.
+matchCount가 양수이면 1..matchCount 중 문맥에 맞는 등장 순서를 다시 선택한다. 원문에 없는 표현을 만들지 않는다.
 공백·문장부호·단어를 바꾸거나 떨어진 표현을 합치지 않는다. 문구가 반복되면 occurrence로 정확한 구간을 특정한다.
 각 후보의 role을 먼저 판단한다. 사용자 동작은 user_action, 제품 운영 동작은 operational_action,
 구현/테스트/시연/팀업무는 development_task, 폴더/기술/제품형태 설명은 technical_description이다.
@@ -205,7 +211,7 @@ def output_schema(line_count: int | None = None) -> dict:
         variants = [{"type": "null"}, known]
         if field == "features":
             spans = {"type": "array", "maxItems": 30, "items": _object({
-                "lineId": line_ref, "occurrence": {"type": "integer", "minimum": 1, "maximum": 100000}, "role": {"type": "string", "enum": list(FEATURE_ROLES)}, "quote": text,
+                "lineId": line_ref, "occurrence": {"type": "integer", "minimum": 1, "maximum": 100000, "description": "1-based occurrence of THIS exact quote in THIS line, not span index. Distinct quotes each occurring once all use 1."}, "role": {"type": "string", "enum": list(FEATURE_ROLES)}, "quote": text,
             })}
             variants = [
                 {"type": "null"},
@@ -235,6 +241,31 @@ def source_lines(document: str) -> list[dict]:
         lines.append({"id": number, "text": text, "start": offset, "end": offset + len(text)})
         offset += len(raw)
     return lines
+
+
+def _feature_span_issues(item, lines):
+    """Numeric repair hints only; never select or rewrite evidence."""
+    if type(item) is not dict or type(item.get("spans")) is not list:
+        return []
+    issues = []
+    for index, span in enumerate(item["spans"][:30]):
+        if type(span) is not dict:
+            continue
+        ref, quote, occurrence = span.get("lineId"), span.get("quote"), span.get("occurrence")
+        if type(ref) is not int or ref not in lines or type(quote) is not str or not quote.strip() or len(quote) > 200:
+            continue
+        text = lines[ref]["text"]
+        count, start = 0, -1
+        while True:
+            start = text.find(quote, start + 1)
+            if start < 0:
+                break
+            count += 1
+        if count == 0:
+            issues.append({"index": index, "reason": "QUOTE_NOT_FOUND", "matchCount": 0})
+        elif type(occurrence) is not int or not 1 <= occurrence <= count:
+            issues.append({"index": index, "reason": "OCCURRENCE_OUT_OF_RANGE", "matchCount": count})
+    return issues
 
 
 def _feature_evidence(item: dict, lines: dict) -> tuple[list | None, list]:
@@ -611,7 +642,12 @@ class SolarAnalyzer:
             try:
                 cited_to_profile(document, document_id, isolated)
             except AnalysisError as error:
-                errors.append({"field": field, "code": error.code})
+                detail = {"field": field, "code": error.code}
+                if field == "features":
+                    issues = _feature_span_issues(candidate[field], {line["id"]: line for line in source_lines(document)})
+                    if issues:
+                        detail["spanIssues"] = issues
+                errors.append(detail)
         for call in diagnostic["calls"]:
             invalid = [error for error in errors if error["field"] in call["fields"]]
             call["outcome"] = "validation_failed" if invalid else "validated"
