@@ -1,0 +1,445 @@
+{
+  "prompt_version": "profile-v21",
+  "attempts": 6,
+  "retries": 0,
+  "passed": 5,
+  "cases": [
+    {
+      "id": "FEATURE-001",
+      "repeat": 1,
+      "synthetic": true,
+      "sha256": "b732c0b2771d559a05253c947f4c52949cbb9994f2e1205e72ee424cc3b34b38",
+      "diagnostics": {
+        "run_id": "9338f54de2d94338b3d7fc5b4ceeb001",
+        "prompt_version": "profile-v21",
+        "input_codepoints": 74,
+        "input_bytes": 170,
+        "line_count": 1,
+        "calls": [
+          {
+            "call": 1,
+            "stage": "core",
+            "fields": [
+              "project_name",
+              "project_type",
+              "domain",
+              "frontend",
+              "backend",
+              "ai",
+              "database",
+              "deployment",
+              "external_integrations"
+            ],
+            "outcome": "validated",
+            "response_bytes": 1040,
+            "prompt_tokens": 1464,
+            "completion_tokens": 134,
+            "model": "solar-pro4-260806",
+            "request_bytes": 20879,
+            "provider_elapsed_ms": 1797,
+            "elapsed_ms": 1797
+          },
+          {
+            "call": 2,
+            "stage": "features",
+            "fields": [
+              "features"
+            ],
+            "outcome": "validated",
+            "response_bytes": 894,
+            "prompt_tokens": 1208,
+            "completion_tokens": 96,
+            "model": "solar-pro4-260806",
+            "request_bytes": 13326,
+            "provider_elapsed_ms": 1328,
+            "elapsed_ms": 1328
+          }
+        ],
+        "storage": "stored",
+        "outcome": "succeeded",
+        "elapsed_ms": 3125
+      },
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 3125,
+      "prompt_tokens": 2672,
+      "completion_tokens": 230
+    },
+    {
+      "id": "FEATURE-002",
+      "repeat": 1,
+      "synthetic": true,
+      "sha256": "0ac19e8e7c74afcb1632771bcfb2bafce37e4a44f791568cd8a8995a20fd6c9a",
+      "diagnostics": {
+        "run_id": "462b12ec9f444a6082b1a45ff24e927c",
+        "prompt_version": "profile-v21",
+        "input_codepoints": 105,
+        "input_bytes": 233,
+        "line_count": 1,
+        "calls": [
+          {
+            "call": 1,
+            "stage": "core",
+            "fields": [
+              "project_name",
+              "project_type",
+              "domain",
+              "frontend",
+              "backend",
+              "ai",
+              "database",
+              "deployment",
+              "external_integrations"
+            ],
+            "outcome": "validated",
+            "response_bytes": 795,
+            "prompt_tokens": 1476,
+            "completion_tokens": 75,
+            "model": "solar-pro4-260806",
+            "request_bytes": 20990,
+            "provider_elapsed_ms": 1125,
+            "elapsed_ms": 1125
+          },
+          {
+            "call": 2,
+            "stage": "features",
+            "fields": [
+              "features"
+            ],
+            "outcome": "validated",
+            "response_bytes": 658,
+            "prompt_tokens": 1220,
+            "completion_tokens": 35,
+            "model": "solar-pro4-260806",
+            "request_bytes": 13437,
+            "provider_elapsed_ms": 578,
+            "elapsed_ms": 578
+          }
+        ],
+        "storage": "stored",
+        "outcome": "succeeded",
+        "elapsed_ms": 1703
+      },
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 1703,
+      "prompt_tokens": 2696,
+      "completion_tokens": 110
+    },
+    {
+      "id": "REAL-HANDOFF-001",
+      "repeat": 1,
+      "synthetic": false,
+      "sha256": "e172d65d7f01d4ad31f0a434527a024bc2cd16465d1a0f8efa6cd8a5babddd79",
+      "diagnostics": {
+        "run_id": "708861f41d104b0190ecb712206b298e",
+        "prompt_version": "profile-v21",
+        "input_codepoints": 4766,
+        "input_bytes": 9795,
+        "line_count": 125,
+        "calls": [
+          {
+            "call": 1,
+            "stage": "core",
+            "fields": [
+              "project_name",
+              "project_type",
+              "domain",
+              "frontend",
+              "backend",
+              "ai",
+              "database",
+              "deployment",
+              "external_integrations"
+            ],
+            "outcome": "validated",
+            "response_bytes": 1833,
+            "prompt_tokens": 3716,
+            "completion_tokens": 333,
+            "model": "solar-pro4-260806",
+            "request_bytes": 38979,
+            "provider_elapsed_ms": 23281,
+            "elapsed_ms": 23281
+          },
+          {
+            "call": 2,
+            "stage": "features",
+            "fields": [
+              "features"
+            ],
+            "outcome": "validation_failed",
+            "response_bytes": 4354,
+            "prompt_tokens": 3460,
+            "completion_tokens": 857,
+            "model": "solar-pro4-260806",
+            "request_bytes": 31416,
+            "provider_elapsed_ms": 9438,
+            "elapsed_ms": 9438,
+            "validation_errors": [
+              {
+                "field": "features",
+                "code": "INVALID_FEATURE_SPAN"
+              }
+            ]
+          },
+          {
+            "call": 3,
+            "stage": "repair",
+            "fields": [
+              "features"
+            ],
+            "outcome": "validation_failed",
+            "response_bytes": 3123,
+            "prompt_tokens": 4186,
+            "completion_tokens": 546,
+            "model": "solar-pro4-260806",
+            "request_bytes": 35258,
+            "provider_elapsed_ms": 8390,
+            "elapsed_ms": 8390,
+            "error": "INVALID_FEATURE_SPAN"
+          }
+        ],
+        "storage": "stored",
+        "outcome": "failed",
+        "error": "INVALID_FEATURE_SPAN",
+        "elapsed_ms": 41109
+      },
+      "validated": false,
+      "passed": false,
+      "error": "INVALID_FEATURE_SPAN",
+      "field": "features",
+      "provider_calls": 3,
+      "first_pass_validated": false,
+      "repaired_fields": [
+        "features"
+      ],
+      "elapsed_ms": 41156
+    },
+    {
+      "id": "REAL-AGENTFIT-001",
+      "repeat": 1,
+      "synthetic": false,
+      "sha256": "08601468157ccd4b4dfd5be052182510e654181e8890b6446b703cabdff08475",
+      "diagnostics": {
+        "run_id": "d7c83e7be5dc4ac8ba98e4f4bc4d8670",
+        "prompt_version": "profile-v21",
+        "input_codepoints": 7610,
+        "input_bytes": 15592,
+        "line_count": 186,
+        "calls": [
+          {
+            "call": 1,
+            "stage": "core",
+            "fields": [
+              "project_name",
+              "project_type",
+              "domain",
+              "frontend",
+              "backend",
+              "ai",
+              "database",
+              "deployment",
+              "external_integrations"
+            ],
+            "outcome": "validated",
+            "response_bytes": 1159,
+            "prompt_tokens": 5157,
+            "completion_tokens": 169,
+            "model": "solar-pro4-260806",
+            "request_bytes": 50036,
+            "provider_elapsed_ms": 1735,
+            "elapsed_ms": 1750
+          },
+          {
+            "call": 2,
+            "stage": "features",
+            "fields": [
+              "features"
+            ],
+            "outcome": "validation_failed",
+            "response_bytes": 5332,
+            "prompt_tokens": 4901,
+            "completion_tokens": 1148,
+            "model": "solar-pro4-260806",
+            "request_bytes": 42473,
+            "provider_elapsed_ms": 11750,
+            "elapsed_ms": 11750,
+            "validation_errors": [
+              {
+                "field": "features",
+                "code": "INVALID_FEATURE_SPAN"
+              }
+            ]
+          },
+          {
+            "call": 3,
+            "stage": "repair",
+            "fields": [
+              "features"
+            ],
+            "outcome": "validated",
+            "response_bytes": 5611,
+            "prompt_tokens": 5838,
+            "completion_tokens": 1199,
+            "model": "solar-pro4-260806",
+            "request_bytes": 46413,
+            "provider_elapsed_ms": 12406,
+            "elapsed_ms": 12406
+          }
+        ],
+        "storage": "stored",
+        "outcome": "succeeded",
+        "elapsed_ms": 25906
+      },
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 3,
+      "repaired_fields": [
+        "features"
+      ],
+      "first_pass_validated": false,
+      "elapsed_ms": 25906,
+      "prompt_tokens": 15896,
+      "completion_tokens": 2516
+    },
+    {
+      "id": "REAL-HANDOFF-001",
+      "repeat": 2,
+      "synthetic": false,
+      "sha256": "e172d65d7f01d4ad31f0a434527a024bc2cd16465d1a0f8efa6cd8a5babddd79",
+      "diagnostics": {
+        "run_id": "693f8b95e18f4644b824a2a0eec61188",
+        "prompt_version": "profile-v21",
+        "input_codepoints": 4766,
+        "input_bytes": 9795,
+        "line_count": 125,
+        "calls": [
+          {
+            "call": 1,
+            "stage": "core",
+            "fields": [
+              "project_name",
+              "project_type",
+              "domain",
+              "frontend",
+              "backend",
+              "ai",
+              "database",
+              "deployment",
+              "external_integrations"
+            ],
+            "outcome": "validated",
+            "response_bytes": 1908,
+            "prompt_tokens": 3716,
+            "completion_tokens": 353,
+            "model": "solar-pro4-260806",
+            "request_bytes": 38979,
+            "provider_elapsed_ms": 19094,
+            "elapsed_ms": 19094
+          },
+          {
+            "call": 2,
+            "stage": "features",
+            "fields": [
+              "features"
+            ],
+            "outcome": "validated",
+            "response_bytes": 4025,
+            "prompt_tokens": 3460,
+            "completion_tokens": 755,
+            "model": "solar-pro4-260806",
+            "request_bytes": 31416,
+            "provider_elapsed_ms": 5375,
+            "elapsed_ms": 5375
+          }
+        ],
+        "storage": "stored",
+        "outcome": "succeeded",
+        "elapsed_ms": 24469
+      },
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 24469,
+      "prompt_tokens": 7176,
+      "completion_tokens": 1108
+    },
+    {
+      "id": "REAL-AGENTFIT-001",
+      "repeat": 2,
+      "synthetic": false,
+      "sha256": "08601468157ccd4b4dfd5be052182510e654181e8890b6446b703cabdff08475",
+      "diagnostics": {
+        "run_id": "c7d57c1e7609463899b5143e4b08e950",
+        "prompt_version": "profile-v21",
+        "input_codepoints": 7610,
+        "input_bytes": 15592,
+        "line_count": 186,
+        "calls": [
+          {
+            "call": 1,
+            "stage": "core",
+            "fields": [
+              "project_name",
+              "project_type",
+              "domain",
+              "frontend",
+              "backend",
+              "ai",
+              "database",
+              "deployment",
+              "external_integrations"
+            ],
+            "outcome": "validated",
+            "response_bytes": 1159,
+            "prompt_tokens": 5157,
+            "completion_tokens": 169,
+            "model": "solar-pro4-260806",
+            "request_bytes": 50036,
+            "provider_elapsed_ms": 3109,
+            "elapsed_ms": 3109
+          },
+          {
+            "call": 2,
+            "stage": "features",
+            "fields": [
+              "features"
+            ],
+            "outcome": "validated",
+            "response_bytes": 6535,
+            "prompt_tokens": 4901,
+            "completion_tokens": 1321,
+            "model": "solar-pro4-260806",
+            "request_bytes": 42473,
+            "provider_elapsed_ms": 11578,
+            "elapsed_ms": 11578
+          }
+        ],
+        "storage": "stored",
+        "outcome": "succeeded",
+        "elapsed_ms": 14687
+      },
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 14687,
+      "prompt_tokens": 10058,
+      "completion_tokens": 1490
+    }
+  ]
+}

@@ -57,3 +57,7 @@ Records contain timing, size, usage and safe error metadata. Raw responses are s
 Local records expire after seven days and are purged on read, write or the explicit purge command. A stopped process cannot delete files; deployment needs scheduled cleanup and access controls. Windows uses inherited directory ACLs.
 86 unit tests and six live synthetic analyses passed. This adds observability; it does not fix the previously observed provider timeout.
 See [diagnostics spec and validation](specs/ai-developer/04-analysis-provider/call-diagnostics/validation.md).
+
+## Role classification experiment (profile-v21)
+
+99 unit tests passed; existing synthetic runs 24/24, additional feature cases 2/2, new role cases 5/8, existing real-document runs 3/4, and MABC README 0/2. The quality gate remains unmet. This feature branch is an experiment, not a validated production upgrade. See [results and remaining failures](specs/ai-developer/04-analysis-provider/role-classification/validation.md).

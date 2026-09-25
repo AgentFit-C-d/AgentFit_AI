@@ -1,0 +1,108 @@
+[
+  {
+    "id": "ROLE-001",
+    "document": "프로젝트명은 별자리다. 제품 형태는 MCP 서비스다. NovaClient는 MCP 클라이언트이며 별빛-4 모델과 함께 개발과 시연에만 사용한다. 제품 운영 AI 채택은 정하지 않았다. 백엔드 언어는 Python, 프레임워크는 Falcon이다. 배포 환경은 Podman · Fly.io로 확정했다. 교통 API는 쓰지만 제공자 이름은 아직 정하지 않았다. 필수 기능은 장소 확인과 후보 선택이다.",
+    "exact": {
+      "project_name": "별자리",
+      "project_type": "MCP 서비스",
+      "frontend": null,
+      "ai": null,
+      "database": null,
+      "external_integrations": null,
+      "backend": [
+        "Python",
+        "Falcon"
+      ],
+      "features": [
+        "장소 확인",
+        "후보 선택"
+      ]
+    },
+    "contains": {
+      "deployment": [
+        "Podman",
+        "Fly.io"
+      ]
+    },
+    "forbidden": {
+      "backend": [
+        "Podman",
+        "Fly.io",
+        "NovaClient"
+      ]
+    }
+  },
+  {
+    "id": "ROLE-002",
+    "document": "프로젝트명은 별빛도우미다. 제품 형태는 API 서비스다. 운영에 사용할 모델은 Orion-2로 채택했다. NovaClient는 개발 도구이고 orion-sdk는 호출 라이브러리다. 백엔드는 FastAPI로 확정했다. 고객에게 일정 추천을 제공한다. 외부 지도 서비스는 Maple Maps로 확정했다.",
+    "exact": {
+      "project_name": "별빛도우미",
+      "project_type": "API 서비스",
+      "frontend": null,
+      "backend": [
+        "FastAPI"
+      ],
+      "ai": [
+        "Orion-2"
+      ],
+      "database": null,
+      "deployment": null,
+      "external_integrations": [
+        "Maple Maps"
+      ],
+      "features": [
+        "일정 추천"
+      ]
+    },
+    "contains": {},
+    "forbidden": {}
+  },
+  {
+    "id": "ROLE-003",
+    "document": "프로젝트명은 준비실이다. 현재는 문서와 폴더만 만들었다. backend/app/: 서버 코드 위치. backend/tests/: 테스트 위치. 팀 분업: 민수는 API 계약 작성과 테스트를 담당한다. 수지는 클라이언트 설정과 시연 자료를 담당한다. 이번 주에는 연결 검증 후 README를 작성한다. 제품의 사용자 기능과 운영 동작은 아직 정하지 않았다. 기술 스택과 외부 연동도 미정이다.",
+    "exact": {
+      "project_name": "준비실",
+      "project_type": null,
+      "domain": null,
+      "frontend": null,
+      "backend": null,
+      "ai": null,
+      "database": null,
+      "deployment": null,
+      "features": null,
+      "external_integrations": null
+    },
+    "contains": {},
+    "forbidden": {}
+  },
+  {
+    "id": "ROLE-004",
+    "document": "프로젝트명은 기록함이다. 제품 형태는 웹 서비스다. 필수 사용자 기능은 회원 승인이다. 운영자는 야간 백업을 실행한다. 백업 저장소는 Pine Storage로 확정했다. 개발 분업: 민수가 야간 백업 기능을 구현하고 수지는 테스트 계획을 작성한다. backend/tests/는 테스트 폴더다. 프론트엔드와 백엔드 기술은 미정이다.",
+    "exact": {
+      "project_name": "기록함",
+      "project_type": "웹 서비스",
+      "frontend": null,
+      "backend": null,
+      "ai": null,
+      "database": null,
+      "deployment": null,
+      "external_integrations": [
+        "Pine Storage"
+      ],
+      "features": [
+        "회원 승인",
+        "야간 백업"
+      ]
+    },
+    "contains": {},
+    "forbidden": {
+      "features": [
+        "민수",
+        "수지",
+        "테스트",
+        "backend/",
+        "구현"
+      ]
+    }
+  }
+]

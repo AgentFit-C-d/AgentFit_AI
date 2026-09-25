@@ -7,11 +7,12 @@ CATEGORIES = ("authentication", "notifications", "storage", "other")
 class IntegrationCategoriesTests(unittest.TestCase):
     def fields(self, value):
         fields = dict.fromkeys(FIELDS)
-        fields["external_integrations"] = {"value": value, "evidenceLineIds": [1]}
+        fields["external_integrations"] = {"value": value, "evidenceLineIds": [1], "absenceQuote": None}
         return fields
 
     def groups(self, **values):
-        return {name: values.get(name, []) for name in CATEGORIES}
+        return {name: [{"name": item, "role": "named_service"} for item in values.get(name, [])]
+                if type(values.get(name, [])) is list else values[name] for name in CATEGORIES}
 
     def test_categories_merge_deduplicate_and_preserve_public_array(self):
         result = cited_to_profile("Google Discord Cloud Storage", "doc-1",
@@ -39,7 +40,9 @@ class IntegrationCategoriesTests(unittest.TestCase):
             cited_to_profile("Google", "doc-1", self.fields(self.groups(storage=["Invented"])))
 
     def test_empty_and_unknown_remain_distinct(self):
-        empty = cited_to_profile("No external integrations.", "doc-1", self.fields(self.groups()))
+        fields = self.fields(self.groups())
+        fields["external_integrations"]["absenceQuote"] = "No external integrations."
+        empty = cited_to_profile("No external integrations.", "doc-1", fields)
         unknown = cited_to_profile("Undecided.", "doc-1", dict.fromkeys(FIELDS))
         self.assertEqual(empty["data"]["external_integrations"], [])
         self.assertTrue(empty["evidence"]["external_integrations"])
