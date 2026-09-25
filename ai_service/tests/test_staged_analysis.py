@@ -11,7 +11,7 @@ def core():
     fields["project_name"]={"value":"Alpha","evidenceLineIds":[1]}
     return fields
 def features(line=1):
-    return {"features":{"spans":[{"lineId":line,"startText":"registration","endText":"registration"}],"absenceLineIds":[]}}
+    return {"features":{"spans":[{"lineId":line,"quote":"registration"}],"absenceLineIds":[]}}
 
 class StagedAnalysisTests(unittest.TestCase):
     def test_two_calls_without_repair(self):

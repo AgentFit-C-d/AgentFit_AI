@@ -1,0 +1,34 @@
+[
+  {
+    "id": "REAL-HANDOFF-001",
+    "repeat": 1,
+    "variant": "integration-categories",
+    "passed": true,
+    "missing": [],
+    "elapsed_ms": 21344
+  },
+  {
+    "id": "REAL-AGENTFIT-001",
+    "repeat": 1,
+    "variant": "integration-categories",
+    "passed": true,
+    "missing": [],
+    "elapsed_ms": 3203
+  },
+  {
+    "id": "REAL-HANDOFF-001",
+    "repeat": 2,
+    "variant": "integration-categories",
+    "passed": true,
+    "missing": [],
+    "elapsed_ms": 11641
+  },
+  {
+    "id": "REAL-AGENTFIT-001",
+    "repeat": 2,
+    "variant": "integration-categories",
+    "passed": true,
+    "missing": [],
+    "elapsed_ms": 1750
+  }
+]

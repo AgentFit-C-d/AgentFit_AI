@@ -1,0 +1,73 @@
+[
+  {
+    "id": "NAME-003",
+    "repeat": 1,
+    "passed": true,
+    "provider_calls": 3,
+    "steps": [
+      {
+        "fields_requested": [
+          "project_name",
+          "project_type",
+          "domain",
+          "frontend",
+          "backend",
+          "ai",
+          "database",
+          "deployment",
+          "external_integrations"
+        ],
+        "backend": {
+          "value": [
+            "FastAPI"
+          ],
+          "evidenceLineIds": [
+            2
+          ]
+        }
+      },
+      {
+        "fields_requested": [
+          "backend"
+        ],
+        "backend": {
+          "value": [
+            "FastAPI"
+          ],
+          "evidenceLineIds": [
+            1
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "NAME-003",
+    "repeat": 2,
+    "passed": true,
+    "provider_calls": 2,
+    "steps": [
+      {
+        "fields_requested": [
+          "project_name",
+          "project_type",
+          "domain",
+          "frontend",
+          "backend",
+          "ai",
+          "database",
+          "deployment",
+          "external_integrations"
+        ],
+        "backend": {
+          "value": [
+            "FastAPI"
+          ],
+          "evidenceLineIds": [
+            1
+          ]
+        }
+      }
+    ]
+  }
+]

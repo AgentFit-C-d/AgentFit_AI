@@ -1,0 +1,102 @@
+{
+  "prompt_version": "profile-v15",
+  "attempts": 6,
+  "retries": 0,
+  "passed": 5,
+  "cases": [
+    {
+      "id": "FEATURE-001",
+      "repeat": 1,
+      "synthetic": true,
+      "sha256": "b732c0b2771d559a05253c947f4c52949cbb9994f2e1205e72ee424cc3b34b38",
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 7890,
+      "prompt_tokens": 2279,
+      "completion_tokens": 143
+    },
+    {
+      "id": "FEATURE-002",
+      "repeat": 1,
+      "synthetic": true,
+      "sha256": "0ac19e8e7c74afcb1632771bcfb2bafce37e4a44f791568cd8a8995a20fd6c9a",
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 1828,
+      "prompt_tokens": 2303,
+      "completion_tokens": 121
+    },
+    {
+      "id": "REAL-HANDOFF-001",
+      "repeat": 1,
+      "synthetic": false,
+      "sha256": "e172d65d7f01d4ad31f0a434527a024bc2cd16465d1a0f8efa6cd8a5babddd79",
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 13500,
+      "prompt_tokens": 6783,
+      "completion_tokens": 987
+    },
+    {
+      "id": "REAL-AGENTFIT-001",
+      "repeat": 1,
+      "synthetic": false,
+      "sha256": "08601468157ccd4b4dfd5be052182510e654181e8890b6446b703cabdff08475",
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 3,
+      "repaired_fields": [
+        "ai"
+      ],
+      "first_pass_validated": false,
+      "elapsed_ms": 8766,
+      "prompt_tokens": 14558,
+      "completion_tokens": 947
+    },
+    {
+      "id": "REAL-HANDOFF-001",
+      "repeat": 2,
+      "synthetic": false,
+      "sha256": "e172d65d7f01d4ad31f0a434527a024bc2cd16465d1a0f8efa6cd8a5babddd79",
+      "validated": true,
+      "passed": false,
+      "missing": [
+        "external_integrations:Cloud Storage"
+      ],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 15766,
+      "prompt_tokens": 6783,
+      "completion_tokens": 827
+    },
+    {
+      "id": "REAL-AGENTFIT-001",
+      "repeat": 2,
+      "synthetic": false,
+      "sha256": "08601468157ccd4b4dfd5be052182510e654181e8890b6446b703cabdff08475",
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 9468,
+      "prompt_tokens": 9665,
+      "completion_tokens": 1068
+    }
+  ]
+}
