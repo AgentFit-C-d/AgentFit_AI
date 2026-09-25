@@ -4,4 +4,4 @@
 - [x] T03 후보 모듈·Solar 통합 및 단위 회귀
 - [x] T04 고정 합성/실제 평가
 - [x] T05 검토·검증보고·README
-- [ ] T06 commit/push
+- [x] T06 commit/push
