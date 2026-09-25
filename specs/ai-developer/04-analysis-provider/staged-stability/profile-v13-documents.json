@@ -1,0 +1,97 @@
+{
+  "prompt_version": "profile-v13",
+  "attempts": 6,
+  "retries": 0,
+  "passed": 5,
+  "cases": [
+    {
+      "id": "FEATURE-001",
+      "repeat": 1,
+      "synthetic": true,
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 3687,
+      "prompt_tokens": 2359,
+      "completion_tokens": 183
+    },
+    {
+      "id": "FEATURE-002",
+      "repeat": 1,
+      "synthetic": true,
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 6031,
+      "prompt_tokens": 2383,
+      "completion_tokens": 136
+    },
+    {
+      "id": "REAL-HANDOFF-001",
+      "repeat": 1,
+      "synthetic": false,
+      "validated": true,
+      "passed": false,
+      "missing": [
+        "external_integrations:Cloud Storage"
+      ],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 8016,
+      "prompt_tokens": 6863,
+      "completion_tokens": 873
+    },
+    {
+      "id": "REAL-AGENTFIT-001",
+      "repeat": 1,
+      "synthetic": false,
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 3,
+      "repaired_fields": [
+        "ai",
+        "features"
+      ],
+      "first_pass_validated": false,
+      "elapsed_ms": 34969,
+      "prompt_tokens": 15495,
+      "completion_tokens": 1794
+    },
+    {
+      "id": "REAL-HANDOFF-001",
+      "repeat": 2,
+      "synthetic": false,
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 11640,
+      "prompt_tokens": 6863,
+      "completion_tokens": 1301
+    },
+    {
+      "id": "REAL-AGENTFIT-001",
+      "repeat": 2,
+      "synthetic": false,
+      "validated": true,
+      "passed": true,
+      "missing": [],
+      "provider_calls": 2,
+      "repaired_fields": [],
+      "first_pass_validated": true,
+      "elapsed_ms": 14907,
+      "prompt_tokens": 9745,
+      "completion_tokens": 1875
+    }
+  ]
+}

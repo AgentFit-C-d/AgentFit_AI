@@ -30,7 +30,7 @@ This makes six analyses (12 to 18 billable calls) using UPSTAGE_API_KEY from the
 
 The Python module agentfit_ai.solar.SolarAnalyzer accepts document text and a generated document ID, returning a validated draft Profile with evidence positions. It does not persist results.
 
-Spec, plan, tasks and measured limitations: [Solar analysis](specs/ai-developer/04-analysis-provider/README.md). Latest staged evaluation: 21/24 existing synthetic runs, 2/2 new synthetic cases, and 2/4 real-document runs passed. The quality gate remains unmet; see [current validation](specs/ai-developer/04-analysis-provider/document-quality/validation.md). HTTP endpoints, PDF extraction and Spring integration remain future work.
+Spec, plan, tasks and measured limitations: [Solar analysis](specs/ai-developer/04-analysis-provider/README.md). Latest staged evaluation: 23/24 existing synthetic runs, 2/2 new synthetic cases, and 3/4 real-document runs passed. The quality gate remains unmet; see [current validation](specs/ai-developer/04-analysis-provider/staged-stability/validation.md). HTTP endpoints, PDF extraction and Spring integration remain future work.
 
 Fixed stability evaluation (24 analyses, 48 to 72 billable calls, no network retries; use a new report filename each time):
 

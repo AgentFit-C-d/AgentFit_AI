@@ -8,7 +8,7 @@ import time
 
 from .evaluate import CASES, load_api_key
 from .profile import FIELDS
-from .solar import AnalysisError, SolarAnalyzer, PROMPT_VERSION, SYSTEM_PROMPT, REASONING_EFFORT
+from .solar import AnalysisError, SolarAnalyzer, PROMPT_VERSION, SYSTEM_PROMPT, REASONING_EFFORT, FREQUENCY_PENALTY
 
 NEW_CASES = CASES.with_name("name-stability-cases.json")
 
@@ -55,7 +55,7 @@ def evaluate_cases(cases, analyzer, *, repeats=2, workers=2, on_row=None):
         "prompt_version": PROMPT_VERSION,
         "prompt_sha256": hashlib.sha256(SYSTEM_PROMPT.encode()).hexdigest(),
         "fixtures_sha256": hashlib.sha256(json.dumps(cases, sort_keys=True).encode()).hexdigest(),
-        "model_requested": "solar-pro4", "reasoning_effort": REASONING_EFFORT, "temperature": 0,
+        "model_requested": "solar-pro4", "reasoning_effort": REASONING_EFFORT, "frequency_penalty": FREQUENCY_PENALTY, "temperature": 0,
         "max_tokens": 4096, "workers": workers, "cases": rows,
     }
 

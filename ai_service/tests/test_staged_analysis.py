@@ -68,3 +68,17 @@ class StagedAnalysisTests(unittest.TestCase):
         result = SolarAnalyzer("synthetic-key", transport=transport).analyze("Alpha registration", "doc-1")
         self.assertIsNone(result.prompt_tokens)
         self.assertIsNone(result.completion_tokens)
+
+
+    def test_request_sampling_is_explicit_for_extraction_and_repair(self):
+        transport = Mock(side_effect=[response(core()), response(features(0)), response(features())])
+        SolarAnalyzer("synthetic-key", transport=transport).analyze("Alpha registration", "doc-1")
+        payloads = [call.args[0] for call in transport.call_args_list]
+        self.assertEqual([payload.get("frequency_penalty") for payload in payloads], [0, 0, 0])
+        self.assertEqual([payload["reasoning_effort"] for payload in payloads], ["none", "none", "none"])
+
+    def test_numbered_input_retains_unicode_and_original_lines(self):
+        transport = Mock(side_effect=[response(core()), response(features())])
+        SolarAnalyzer("synthetic-key", transport=transport).analyze("Alpha registration\r\n" + chr(0x1f600), "doc-1")
+        content = transport.call_args_list[0].args[0]["messages"][1]["content"]
+        self.assertEqual(content, "[L1] Alpha registration\n[L2] " + chr(0x1f600))
