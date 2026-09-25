@@ -10,8 +10,8 @@ def core():
     fields={f:None for f in FIELDS if f!="features"}
     fields["project_name"]={"value":"Alpha","evidenceLineIds":[1]}
     return fields
-def features(line=1):
-    return {"features":{"spans":[{"lineId":line,"occurrence":1,"role":"user_action","quote":"registration"}],"absenceLineIds":[]}}
+def features(line=1, token=2):
+    return {"features":{"spans":[{"lineId":line,"startId":token,"endId":token,"role":"user_action"}],"absenceLineIds":[]}}
 
 class StagedAnalysisTests(unittest.TestCase):
     def test_two_calls_without_repair(self):
@@ -50,7 +50,7 @@ class StagedAnalysisTests(unittest.TestCase):
     def test_multiple_invalid_fields_share_one_repair_and_preserve_valid_fields(self):
         bad = core()
         bad["backend"] = {"value": ["Python"], "evidenceLineIds": [99]}
-        repair = features()
+        repair = features(token=3)
         repair["backend"] = {"value": ["Python"], "evidenceLineIds": [1]}
         transport = Mock(side_effect=[response(bad), response(features(0)), response(repair)])
         result = SolarAnalyzer("synthetic-key", transport=transport).analyze("Alpha Python registration", "doc-1")

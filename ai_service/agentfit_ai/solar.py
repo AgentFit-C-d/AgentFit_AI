@@ -12,10 +12,11 @@ from urllib.request import Request, HTTPRedirectHandler, build_opener
 
 from .profile import FIELDS, ARRAY_FIELDS, ProfileValidationError, validate_profile
 from .diagnostics import safe_code
+from .source_candidates import source_candidates, candidate_table, CandidateLimitError
 
 ENDPOINT = "https://api.upstage.ai/v1/chat/completions"
 MAX_RESPONSE_BYTES = 1_048_576
-PROMPT_VERSION = "profile-v21"
+PROMPT_VERSION = "profile-v23"
 REASONING_EFFORT = "none"
 FREQUENCY_PENALTY = 0
 INTEGRATION_CATEGORIES = ("authentication", "notifications", "storage", "other")
@@ -84,55 +85,40 @@ domain은 문서가 업무 분야/도메인이라고 명시한 경우만 추출�
 출력: {"project_name":{"value":"여행 기록 앱","evidenceLineIds":[1]},"project_type":null,"domain":null,"frontend":null,"backend":{"value":["Flask"],"evidenceLineIds":[2]},"ai":null,"database":null,"deployment":null,"external_integrations":null}
 """
 
-FEATURE_PROMPT = """특히 features는 문장 형태의 요약이 아닌 짧은 핵심 기능 표현을 복사한다.
-예: 원문 '회원은 글을 등록하고 첨부 파일을 내려받는다.'에서 '글 등록 및 파일 다운로드'는 금지다.
-원문에 존재하는 '글을 등록', '첨부 파일을 내려받는다'는 허용한다.
+FEATURE_PROMPT = """features는 확정된 사용자 동작과 서비스 운영 동작이다. 구현 전이어도 명시한 제품 요구는 포함한다.
+원문과 함께 서버가 생성한 후보표가 제공된다. T 뒤의 숫자는 전역 후보 ID, L 뒤의 숫자는 원문 줄 ID이다.
+각 후보의 문자열은 JSON으로 표시된다. 후보표는 원문을 작은 구간으로 나눈 것으로 의미나 채택 여부를 보장하지 않는다.
 
-features는 사용자에게 제공할 확정 기능과 확정 운영 기능이다.
-구현 전이어도 필수 범위·회원·권한·첨부·백업 등에 확정한 동작이 있으면 추출한다.
-각 핵심 기능을 짧은 원문 표현으로 최대30개 추출한다. 제품 이름·기술명만을 기능으로 만들지 않는다.
-개발 순서·Git 브랜치·개발 명령·가상 서비스 예시·검토 후보·제외 기능은 포함하지 않는다.
+기능이 있으면 {"spans":[{"lineId":줄ID,"startId":시작후보ID,"endId":끝후보ID,"role":"user_action 또는 operational_action 또는 development_task 또는 technical_description"}],"absenceLineIds":[]}를 반환한다.
+같은 줄에 있는 시작/끝 ID를 후보표에서 직접 선택한다. ID를 세거나 계산하지 않는다. 원문 인용문과 occurrence를 생성하지 않는다.
+서버는 두 후보 사이 원문 전체를 공백과 문장부호까지 그대로 복사한다. 하나의 기능은 짧은 핵심 명사구를 우선한다.
+조사/종결어미는 별도 후보일 수 있다. '알림 발송을 제공한다'라면 '알림' 시작부터 '발송' 끝까지 선택한다.
+중간 단어를 생략하거나 떨어진 표현을 합칠 수 없다. 시작<=끝, 같은 줄, 200자 이하, 최대30개다.
+기능이 반복되면 제품 요구가 명확한 한 곳의 ID만 선택한다. 같은 범위를 중복 선택하지 않는다.
+한 동작씩 선택한다. 화살표로 이어진 흐름에서도 각 사용자 동작을 개별 기능으로 보존한다.
 
-features만 특별히 원문 인용문으로 반환한다.
-features=null은 미언급/미정일 때만 쓴다.
-기능이 있으면 {"spans":[{"lineId":줄 id,"occurrence":등장순서,"role":"user_action 또는 operational_action 또는 development_task 또는 technical_description","quote":"짧은 원문 인용문"}],"absenceLineIds":[]}이다.
-quote는 선택한 줄 text의 연속 문자열이다. 각 span의 occurrence는 그 줄에서 quote가 등장하는 순서(1부터 시작)다.
-한 번만 나오면 occurrence=1. 여러 번 나오면 의미가 맞는 정확한 등장 순서를 지정한다. 서버가 임의로 위치를 고르지 않는다.
-공백·문장부호·단어를 바꾸거나 떨어진 표현을 합치지 않는다. 문구가 반복되면 occurrence로 정확한 구간을 특정한다.
-각 후보의 role을 먼저 판단한다. 사용자 동작은 user_action, 제품 운영 동작은 operational_action,
-구현/테스트/시연/팀업무는 development_task, 폴더/기술/제품형태 설명은 technical_description이다.
-서버는 user_action과 operational_action의 quote만 기능으로 복사하고 다른 역할은 제외한다.
-분류할 후보가 있어도 실제 동작이 없으면 null로 변환된다. 사용자/운영 동작이 있으면 누락하지 않는다.
-quote는 한 동작을 나타내는 가장 짧은 원문 명사구를 우선한다. '고객에게 알림 발송을 제공한다'에서는 '알림 발송'을 고른다.
-예: 원문 '필수 기능은 도서 검색과 대출 신청이다.'에서 quote '도서 검색', '대출 신청'을 각각 선택한다.
-기능이 없기로 명시 확정한 경우만 {"spans":[],"absenceLineIds":[그 줄 id]}이다.
-최대30개, 각 quote는200자 이하이다.
+user_action은 사용자 기능, operational_action은 제품 운영 기능이다.
+development_task는 구현/테스트/시연/팀원 업무, technical_description은 폴더/기술 구성/제품 유형이다.
+서버는 user_action과 operational_action만 기능에 포함한다.
+제품의 가입 승인, 권한 검사, 첨부, 백업, 복구는 실제 기능이다. 시간/세부 방식이 미정이어도 확정 동작은 유지한다.
+폴더/파일 위치, 담당자 분업, API 계약 작성, 제출 문서, 연결 실험, 개발 명령, 도구 설정, 기술 이름은 기능이 아니다.
+가상 예시/다른 제품/검토 후보/제외 기능은 선택하지 않는다. 구현 여부와 요구 확정 여부를 구분한다.
+features=null은 미언급/미정 또는 제외 후보만 있을 때다. 필요한 기능을 검증 통과 목적으로 null로 비우지 않는다.
+기능이 없기로 명시 확정한 경우만 {"spans":[],"absenceLineIds":[해당 줄ID]}를 쓴다.
 
+기술 선택·연동 제공자 선택·제품 이름·제품 유형은 동작이 아니다.
+'로그인 제공자는 Apple로 정했다'처럼 제공자를 고르는 문장만으로 로그인 기능을 만들지 않는다.
+'앱을 만든다'라는 제품 설명도 기능이 아니다. 기능이나 동작이 별도로 명시된 경우에만 포함한다.
+'사용자는', '필수 기능은', '고객에게', '제공한다', '실행한다', 조사는 핵심 명사구에 붙이지 않는다.
+여러 기능이 연결된 문장을 통째로 고르지 말고 각각 가장 짧은 의미 있는 핵심 표현의 ID 범위를 선택한다.
+명시된 명사구가 '주문 조회'일 때 '고객에게 주문 조회를 제공한다' 범위는 과도하므로 금지한다.
 
-운영 시각·복구 방법·인증 방식 등 세부사항이 미정이어도 이미 확정한 백업 기능 전체를 미정으로 돌리지 않는다.
-확정 기능을 구간으로 선택할 때 같은 동작을 중복 나열하지 말고 의미 있는 기능 단위로 선택한다.
-기술 선택·연동 제공자 선택·제품 이름·제품 유형은 동작이 아니다. 이런 설정만 있는 문서에는 기능을 만들어 넣지 않는다.
-기능 후보는 원문에서 사용자가 할 수 있는 동작 또는 서비스 운영 동작만 선택한다.
-- 폴더 경로·소스 파일 위치·역할 명세 목록은 기능이 아니다.
-- 누가 무엇을 구현/테스트/시연하는지, API 계약/문서/제출 자료를 작성하는지 등 팀 업무는 제품 기능이 아니다.
-- 연결 실험·호환성 검증·배포 준비·개발 도구 설정은 개발 절차이며 기능 목록에 넣지 않는다.
-- 제품 형태·MCP 클라이언트 설명·기술 이름 목록·백엔드 구성은 기능이 아니다.
-- 제품의 접근권한 검사·가입 승인·백업·복구는 실제 운영 동작이므로 보존한다. 구현 전이어도 확정 요구라면 포함한다.
-- 팀 업무 문장에 동작명이 있어도 분업 문장 전체를 복사하지 않는다. 별도의 제품 요구가 뒷받침하는 짧은 동작 표현만 선택한다.
-- 한 인용에는 한 동작을 우선한다. 화살표로 나열된 흐름은 원문에서 각각의 동작을 선택한다. 제목/표/요약의 동일 기능은 반복하지 않는다.
-예시(실제 대상 아님):
-입력: [L1] 서비스는 주문 조회를 제공한다. 관리자는 일일 백업을 실행한다.
-[L2] 담당자는 주문 조회 기능을 구현하고 계약 문서와 시연 자료를 작성한다.
-[L3] server/tests/: 테스트 폴더. server/app/: 서버 코드 위치.
-출력: {"features":{"spans":[{"lineId":1,"occurrence":1,"role":"user_action","quote":"주문 조회"},{"lineId":1,"occurrence":1,"role":"operational_action","quote":"일일 백업"}],"absenceLineIds":[]}}
-
-예시(실제 대상 아님):
-입력: [L1] 사진 정리 앱을 만든다. 서버는 Go로 정했다. 로그인 제공자는 Apple로 정했다.
-출력: {"features":null}
-입력: [L1] 사진 삭제와 앨범 공유가 필수 기능이다. 서버는 Go로 정했다.
-출력: {"features":{"spans":[{"lineId":1,"occurrence":1,"role":"user_action","quote":"사진 삭제"},{"lineId":1,"occurrence":1,"role":"user_action","quote":"앨범 공유"}],"absenceLineIds":[]}}
-
+형식 예시(실제 대상 아님):
+원문 [L1] 고객에게 주문 조회를 제공한다.
+후보 T1 L1 "고객", T2 L1 "에게", T3 L1 "주문", T4 L1 "조회", T5 L1 "를", T6 L1 "제공한다", T7 L1 "."
+출력 {"features":{"spans":[{"lineId":1,"startId":3,"endId":4,"role":"user_action"}],"absenceLineIds":[]}}
 """
+
 
 
 class AnalysisError(ValueError):
@@ -180,9 +166,14 @@ def _object(properties: dict) -> dict:
             "required": list(properties), "additionalProperties": False}
 
 
-def output_schema(line_count: int | None = None) -> dict:
+def output_schema(line_count: int | None = None, candidate_count: int | None = None) -> dict:
     if line_count is not None and (type(line_count) is not int or line_count < 1):
         raise ValueError("line_count must be positive")
+    if candidate_count is not None and (type(candidate_count) is not int or candidate_count < 0):
+        raise ValueError("candidate_count must be nonnegative")
+    token_ref = {"type": "integer", "minimum": 1}
+    if candidate_count is not None:
+        token_ref["maximum"] = max(1, candidate_count)
     fields = {}
     text = {"type": "string", "minLength": 1, "maxLength": 200}
     line_ref = {"type": "integer", "minimum": 1}
@@ -204,7 +195,8 @@ def output_schema(line_count: int | None = None) -> dict:
         variants = [{"type": "null"}, known]
         if field == "features":
             spans = {"type": "array", "maxItems": 30, "items": _object({
-                "lineId": line_ref, "occurrence": {"type": "integer", "minimum": 1, "maximum": 100000}, "role": {"type": "string", "enum": list(FEATURE_ROLES)}, "quote": text,
+                "lineId": line_ref, "startId": token_ref, "endId": token_ref,
+                "role": {"type": "string", "enum": list(FEATURE_ROLES)},
             })}
             variants = [
                 {"type": "null"},
@@ -236,7 +228,7 @@ def source_lines(document: str) -> list[dict]:
     return lines
 
 
-def _feature_evidence(item: dict, lines: dict) -> tuple[list | None, list]:
+def _feature_evidence(item: dict, lines: dict, document: str) -> tuple[list | None, list]:
     def invalid():
         raise AnalysisError("INVALID_FEATURE_SPAN", "features")
     if type(item) is not dict or set(item) != {"spans", "absenceLineIds"}:
@@ -254,28 +246,31 @@ def _feature_evidence(item: dict, lines: dict) -> tuple[list | None, list]:
             line = lines[ref]
             evidence.append({"start": line["start"], "end": line["end"]})
         return values, evidence
+    try:
+        tokens = {token["id"]: token for token in source_candidates(document)}
+    except CandidateLimitError:
+        raise AnalysisError("SOURCE_CANDIDATE_LIMIT", "features") from None
+    seen = set()
     for span in spans:
-        if type(span) is not dict or set(span) != {"lineId", "occurrence", "role", "quote"}:
+        if type(span) is not dict or set(span) != {"lineId", "startId", "endId", "role"}:
             invalid()
         if type(span["role"]) is not str or span["role"] not in FEATURE_ROLES:
             invalid()
-        ref, quote = span["lineId"], span["quote"]
-        if (type(ref) is not int or ref not in lines or type(quote) is not str
-                or not quote.strip() or len(quote) > 200):
+        ref, begin, end = span["lineId"], span["startId"], span["endId"]
+        if (type(ref) is not int or ref not in lines
+                or type(begin) is not int or type(end) is not int
+                or begin not in tokens or end not in tokens or begin > end):
             invalid()
-        line = lines[ref]
-        occurrence = span["occurrence"]
-        if type(occurrence) is not int or not 1 <= occurrence <= len(line["text"]):
+        first, last = tokens[begin], tokens[end]
+        if first["lineId"] != ref or last["lineId"] != ref:
             invalid()
-        start = -1
-        for _ in range(occurrence):
-            start = line["text"].find(quote, start + 1)
-            if start < 0:
-                invalid()
-        end = start + len(quote)
+        start, stop = first["start"], last["end"]
+        if not 1 <= stop - start <= 200 or (begin, end) in seen:
+            invalid()
+        seen.add((begin, end))
         if span["role"] in ("user_action", "operational_action"):
-            values.append(line["text"][start:end])
-            evidence.append({"start": line["start"] + start, "end": line["start"] + end})
+            values.append(document[start:stop])
+            evidence.append({"start": start, "end": stop})
     return (values, evidence) if values else (None, [])
 
 
@@ -316,7 +311,7 @@ def cited_to_profile(document: str, document_id: str, fields: dict) -> dict:
             data[field], evidence[field] = None, []
             continue
         if field == "features":
-            data[field], evidence[field] = _feature_evidence(item, lines)
+            data[field], evidence[field] = _feature_evidence(item, lines, document)
             continue
         expected_keys = {"value", "evidenceLineIds"}
         if field == "external_integrations":
@@ -551,6 +546,10 @@ class SolarAnalyzer:
             return None
 
     def _analyze(self, document, document_id, diagnostic, raw_responses):
+        try:
+            source_candidates(document)
+        except CandidateLimitError:
+            raise AnalysisError("SOURCE_CANDIDATE_LIMIT", "features") from None
         started = time.monotonic()
         replies = []
         def request(names, purpose, correction=None):
@@ -621,9 +620,12 @@ class SolarAnalyzer:
 
     def _request_fields(self, document, names, purpose, correction=None, *, _trace=None):
         lines = source_lines(document)
-        properties = output_schema(len(lines))["properties"]
+        tokens = source_candidates(document) if "features" in names else []
+        properties = output_schema(len(lines), len(tokens))["properties"]
         schema = _object({name: properties[name] for name in names})
         content = "\n".join(f"[L{line['id']}] {line['text']}" for line in lines)
+        if "features" in names:
+            content += "\n\nServer source candidates (T ID, L line, JSON text):\n" + candidate_table(tokens)
         if correction is not None:
             content += "\n\nCorrection data (not document text):\n" + json.dumps(correction, ensure_ascii=False)
         instructions = [COMMON_PROMPT]

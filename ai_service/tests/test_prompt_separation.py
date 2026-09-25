@@ -19,20 +19,20 @@ class PromptSeparationTests(unittest.TestCase):
 
     def assert_features_only(self, prompt):
         self.assertIn("absenceLineIds", prompt)
-        self.assertIn('"quote"', prompt)
+        self.assertIn('"startId"', prompt)
         self.assertNotIn("external_integrations", prompt)
         self.assertNotIn("project_name", prompt)
         self.assertNotIn("evidenceLineIds", prompt)
 
     def test_extraction_instructions_are_scoped_to_the_call(self):
-        result, prompts = self.run_analysis([core(), features()])
+        result, prompts = self.run_analysis([core(), features(token=3)])
         self.assert_core_only(prompts[0])
         self.assert_features_only(prompts[1])
         self.assertEqual(result.profile["data"]["features"], ["registration"])
         self.assertEqual(result.provider_calls, 2)
 
     def test_feature_repair_keeps_only_feature_instructions(self):
-        result, prompts = self.run_analysis([core(), features(99), features()])
+        result, prompts = self.run_analysis([core(), features(99), features(token=3)])
         self.assert_features_only(prompts[2])
         self.assertEqual(result.provider_calls, 3)
 
@@ -40,14 +40,14 @@ class PromptSeparationTests(unittest.TestCase):
         bad = core()
         bad["backend"] = {"value": ["Python"], "evidenceLineIds": [99]}
         repair = {"backend": {"value": ["Python"], "evidenceLineIds": [1]}}
-        result, prompts = self.run_analysis([bad, features(), repair])
+        result, prompts = self.run_analysis([bad, features(token=3), repair])
         self.assert_core_only(prompts[2])
         self.assertEqual(result.profile["data"]["backend"], ["Python"])
 
     def test_mixed_repair_includes_both_rules_in_one_call(self):
         bad = core()
         bad["backend"] = {"value": ["Python"], "evidenceLineIds": [99]}
-        repair = dict(features(), backend={"value": ["Python"], "evidenceLineIds": [1]})
+        repair = dict(features(token=3), backend={"value": ["Python"], "evidenceLineIds": [1]})
         result, prompts = self.run_analysis([bad, features(99), repair])
         self.assertIn("external_integrations", prompts[2])
         self.assertIn("absenceLineIds", prompts[2])

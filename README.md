@@ -70,3 +70,13 @@ python -m agentfit_ai.diagnostics --directory ../output/diagnostics
 **전체 품질 기준은 아직 충족하지 못했습니다.** 현재 기능 브랜치는 실험 단계이며, 운영 적용을 위한 검증이 완료되지 않았습니다.
 
 [검증 결과와 남은 오류](specs/ai-developer/04-analysis-provider/role-classification/validation.md)
+
+## 원문 후보 ID 선택 실험 — profile-v23
+
+서버가 원문에 부여한 ID 범위를 Solar가 선택하고, 서버가 기능명과 근거 위치를 복원하도록 구현했습니다. 공개 Profile 형식은 유지합니다.
+
+단위 테스트 110/110건과 실호출 40/40건의 최종 구조 검증을 통과했지만, 의미 품질은 기존 합성 18/24건, 추가 기능 1/2건, 역할 분류 3/8건, 기존 실제 문서 2/4건, README 0/2건으로 기준에 미달했습니다. 이전 버전보다 의미 정확도가 낮아지고 입력 토큰이 늘어 **운영 적용을 권장하지 않습니다.**
+
+후보가 12,000개를 넘으면 API 호출 전에 SOURCE_CANDIDATE_LIMIT으로 실패합니다. 후보를 일부만 잘라서 분석하지 않습니다.
+
+[후보 ID 실험 결과와 제약](specs/ai-developer/04-analysis-provider/source-candidates/validation.md)

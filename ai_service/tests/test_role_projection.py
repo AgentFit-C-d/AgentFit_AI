@@ -6,10 +6,10 @@ class RoleProjectionTests(unittest.TestCase):
     def test_feature_roles_keep_actions_and_exclude_development(self):
         fields = dict.fromkeys(FIELDS)
         fields["features"] = {"spans": [
-            {"lineId": 1, "occurrence": 1, "quote": "search", "role": "user_action"},
-            {"lineId": 2, "occurrence": 1, "quote": "backup", "role": "operational_action"},
-            {"lineId": 3, "occurrence": 1, "quote": "write tests", "role": "development_task"},
-            {"lineId": 4, "occurrence": 1, "quote": "server directory", "role": "technical_description"},
+            {"lineId": 1, "startId": 1, "endId": 1, "role": "user_action"},
+            {"lineId": 2, "startId": 2, "endId": 2, "role": "operational_action"},
+            {"lineId": 3, "startId": 3, "endId": 4, "role": "development_task"},
+            {"lineId": 4, "startId": 5, "endId": 6, "role": "technical_description"},
         ], "absenceLineIds": []}
         result = cited_to_profile("search\nbackup\nwrite tests\nserver directory", "doc", fields)
         self.assertEqual(result["data"]["features"], ["search", "backup"])
@@ -18,7 +18,7 @@ class RoleProjectionTests(unittest.TestCase):
     def test_only_excluded_candidates_means_unknown_not_explicit_none(self):
         fields = dict.fromkeys(FIELDS)
         fields["features"] = {"spans": [
-            {"lineId": 1, "occurrence": 1, "quote": "write tests", "role": "development_task"},
+            {"lineId": 1, "startId": 1, "endId": 2, "role": "development_task"},
         ], "absenceLineIds": []}
         result = cited_to_profile("write tests", "doc", fields)
         self.assertIsNone(result["data"]["features"])
@@ -27,7 +27,7 @@ class RoleProjectionTests(unittest.TestCase):
     def test_selected_action_still_needs_exact_evidence(self):
         fields = dict.fromkeys(FIELDS)
         fields["features"] = {"spans": [
-            {"lineId": 1, "occurrence": 1, "quote": "invented", "role": "user_action"},
+            {"lineId": 1, "startId": 99, "endId": 99, "role": "user_action"},
         ], "absenceLineIds": []}
         with self.assertRaises(AnalysisError):
             cited_to_profile("search", "doc", fields)
@@ -56,28 +56,28 @@ class RoleProjectionTests(unittest.TestCase):
     def test_unknown_role_is_rejected(self):
         fields = dict.fromkeys(FIELDS)
         fields["features"] = {"spans": [
-            {"lineId": 1, "occurrence": 1, "quote": "search", "role": "unrecognized"},
+            {"lineId": 1, "startId": 1, "endId": 1, "role": "unrecognized"},
         ], "absenceLineIds": []}
         with self.assertRaises(AnalysisError):
             cited_to_profile("search", "doc", fields)
 
 
 class ExplicitEvidenceTests(unittest.TestCase):
-    def test_explicit_occurrence_selects_repeated_quote(self):
+    def test_explicit_ids_select_repeated_word(self):
         fields = dict.fromkeys(FIELDS)
         fields["features"] = {"spans": [
-            {"lineId": 1, "role": "user_action", "quote": "backup", "occurrence": 2},
+            {"lineId": 1, "role": "user_action", "startId": 3, "endId": 3},
         ], "absenceLineIds": []}
         result = cited_to_profile("backup then backup", "doc", fields)
         self.assertEqual(result["evidence"]["features"][0]["start"], 12)
 
-    def test_invalid_occurrence_is_rejected(self):
-        for occurrence in (0, 3, True):
+    def test_invalid_candidate_id_is_rejected(self):
+        for candidate_id in (0, 4, True):
             fields = dict.fromkeys(FIELDS)
             fields["features"] = {"spans": [
-                {"lineId": 1, "role": "user_action", "quote": "backup", "occurrence": occurrence},
+                {"lineId": 1, "role": "user_action", "startId": candidate_id, "endId": candidate_id},
             ], "absenceLineIds": []}
-            with self.subTest(occurrence=occurrence), self.assertRaises(AnalysisError):
+            with self.subTest(candidate_id=candidate_id), self.assertRaises(AnalysisError):
                 cited_to_profile("backup then backup", "doc", fields)
 
     def test_empty_candidates_without_absence_quote_mean_unknown(self):
