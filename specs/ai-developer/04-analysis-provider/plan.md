@@ -33,3 +33,6 @@ VIII: 텍스트 분석 경로만 추가. IX: 사전 정답과 실제/Mock 분리
 ai_service에서 python -m unittest discover -s tests -v
 실제 합성 평가: python -m agentfit_ai.evaluate --live
 키는 UPSTAGE_API_KEY 환경변수 또는 저장소 루트 .env에서 읽으며 화면/파일에 출력하지 않는다.
+
+## 최신 구현
+위 v2 설정은 최초 기능 기록이다. 안정화 후 profile-v4, reasoning_effort=none, 필드별 null/known 응답을 사용한다. stability/plan.md 및 stability/validation.md 참조.

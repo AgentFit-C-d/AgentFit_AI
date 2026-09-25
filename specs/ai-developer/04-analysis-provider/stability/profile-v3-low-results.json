@@ -1,0 +1,317 @@
+{
+  "attempts": 24,
+  "distinct_cases": 12,
+  "repeats": 2,
+  "retries": 0,
+  "passed": 17,
+  "name_passed": 17,
+  "prompt_version": "profile-v3",
+  "prompt_sha256": "b454fdc0bee7f9dbb8bbd57893e3a1f58fc82c54049fe092abeb182b8f91bf77",
+  "fixtures_sha256": "15d3244622cbf2c10ec27f0d1870b4bdd89bdd749cdbabd0a77270f08079e7da",
+  "model_requested": "solar-pro4",
+  "reasoning_effort": "low",
+  "temperature": 0,
+  "max_tokens": 4096,
+  "workers": 2,
+  "cases": [
+    {
+      "id": "TEXT-FACT-001",
+      "repeat": 1,
+      "passed": false,
+      "name_passed": false,
+      "error": "UNKNOWN_HAS_EVIDENCE",
+      "elapsed_ms": 26844
+    },
+    {
+      "id": "TEXT-SEM-001",
+      "repeat": 1,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": {
+        "start": 0,
+        "end": 5
+      },
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 655,
+      "completion_tokens": 1800,
+      "elapsed_ms": 18656
+    },
+    {
+      "id": "TEXT-SEM-002",
+      "repeat": 1,
+      "passed": false,
+      "name_passed": false,
+      "error": "PROVIDER_TIMEOUT",
+      "elapsed_ms": 40063
+    },
+    {
+      "id": "TEXT-SEM-003",
+      "repeat": 1,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": {
+        "start": 7,
+        "end": 12
+      },
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 660,
+      "completion_tokens": 1757,
+      "elapsed_ms": 14422
+    },
+    {
+      "id": "TEXT-SEM-004",
+      "repeat": 1,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": {
+        "start": 7,
+        "end": 10
+      },
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 675,
+      "completion_tokens": 3322,
+      "elapsed_ms": 30250
+    },
+    {
+      "id": "TEXT-SEM-005",
+      "repeat": 1,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": {
+        "start": 7,
+        "end": 12
+      },
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 670,
+      "completion_tokens": 2870,
+      "elapsed_ms": 27406
+    },
+    {
+      "id": "NAME-001",
+      "repeat": 1,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": {
+        "start": 8,
+        "end": 15
+      },
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 644,
+      "completion_tokens": 1375,
+      "elapsed_ms": 9890
+    },
+    {
+      "id": "NAME-002",
+      "repeat": 1,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": {
+        "start": 20,
+        "end": 25
+      },
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 650,
+      "completion_tokens": 1738,
+      "elapsed_ms": 11797
+    },
+    {
+      "id": "NAME-003",
+      "repeat": 1,
+      "passed": false,
+      "name_passed": false,
+      "error": "PROVIDER_TIMEOUT",
+      "elapsed_ms": 40078
+    },
+    {
+      "id": "NAME-004",
+      "repeat": 1,
+      "passed": false,
+      "name_passed": false,
+      "error": "PROVIDER_TIMEOUT",
+      "elapsed_ms": 40094
+    },
+    {
+      "id": "NAME-005",
+      "repeat": 1,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": null,
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 659,
+      "completion_tokens": 1527,
+      "elapsed_ms": 32781
+    },
+    {
+      "id": "NAME-006",
+      "repeat": 1,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": {
+        "start": 0,
+        "end": 7
+      },
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 647,
+      "completion_tokens": 2514,
+      "elapsed_ms": 17625
+    },
+    {
+      "id": "TEXT-FACT-001",
+      "repeat": 2,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": {
+        "start": 0,
+        "end": 5
+      },
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 663,
+      "completion_tokens": 2490,
+      "elapsed_ms": 19812
+    },
+    {
+      "id": "TEXT-SEM-001",
+      "repeat": 2,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": {
+        "start": 0,
+        "end": 5
+      },
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 655,
+      "completion_tokens": 2559,
+      "elapsed_ms": 16375
+    },
+    {
+      "id": "TEXT-SEM-002",
+      "repeat": 2,
+      "passed": false,
+      "name_passed": false,
+      "error": "PROVIDER_TIMEOUT",
+      "elapsed_ms": 40032
+    },
+    {
+      "id": "TEXT-SEM-003",
+      "repeat": 2,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": {
+        "start": 7,
+        "end": 12
+      },
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 660,
+      "completion_tokens": 2715,
+      "elapsed_ms": 15625
+    },
+    {
+      "id": "TEXT-SEM-004",
+      "repeat": 2,
+      "passed": false,
+      "name_passed": false,
+      "error": "UNKNOWN_HAS_EVIDENCE",
+      "elapsed_ms": 14344
+    },
+    {
+      "id": "TEXT-SEM-005",
+      "repeat": 2,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": {
+        "start": 7,
+        "end": 12
+      },
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 670,
+      "completion_tokens": 3158,
+      "elapsed_ms": 42281
+    },
+    {
+      "id": "NAME-001",
+      "repeat": 2,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": {
+        "start": 8,
+        "end": 15
+      },
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 644,
+      "completion_tokens": 1337,
+      "elapsed_ms": 10781
+    },
+    {
+      "id": "NAME-002",
+      "repeat": 2,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": {
+        "start": 20,
+        "end": 25
+      },
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 650,
+      "completion_tokens": 2285,
+      "elapsed_ms": 23250
+    },
+    {
+      "id": "NAME-003",
+      "repeat": 2,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": null,
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 650,
+      "completion_tokens": 1121,
+      "elapsed_ms": 14094
+    },
+    {
+      "id": "NAME-004",
+      "repeat": 2,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": null,
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 652,
+      "completion_tokens": 1761,
+      "elapsed_ms": 12360
+    },
+    {
+      "id": "NAME-005",
+      "repeat": 2,
+      "passed": true,
+      "name_passed": true,
+      "mismatch_fields": [],
+      "name_span": null,
+      "model": "solar-pro4-260806",
+      "prompt_tokens": 659,
+      "completion_tokens": 1048,
+      "elapsed_ms": 18609
+    },
+    {
+      "id": "NAME-006",
+      "repeat": 2,
+      "passed": false,
+      "name_passed": false,
+      "error": "PROVIDER_TIMEOUT",
+      "elapsed_ms": 40593
+    }
+  ]
+}

@@ -5,7 +5,7 @@ import os
 import time
 from pathlib import Path
 
-from .solar import AnalysisError, SolarAnalyzer, PROMPT_VERSION
+from .solar import AnalysisError, SolarAnalyzer, PROMPT_VERSION, REASONING_EFFORT
 from .profile import FIELDS
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -58,7 +58,7 @@ def main():
         print(json.dumps(row), flush=True)
     report = {"case_count": len(rows), "passed": sum(row["passed"] for row in rows),
               "retries": 0, "prompt_version": PROMPT_VERSION, "model_requested": "solar-pro4",
-              "reasoning_effort": "medium", "temperature": 0, "max_tokens": 4096, "cases": rows}
+              "reasoning_effort": REASONING_EFFORT, "temperature": 0, "max_tokens": 4096, "cases": rows}
     if args.report:
         args.report.parent.mkdir(parents=True, exist_ok=True)
         args.report.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

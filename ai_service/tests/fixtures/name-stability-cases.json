@@ -1,0 +1,100 @@
+[
+  {
+    "id": "NAME-001",
+    "document": "프로젝트명은 '달빛 프로젝트'다.",
+    "expected": {
+      "project_name": "달빛 프로젝트",
+      "project_type": null,
+      "domain": null,
+      "frontend": null,
+      "backend": null,
+      "ai": null,
+      "database": null,
+      "deployment": null,
+      "features": null,
+      "external_integrations": null
+    }
+  },
+  {
+    "id": "NAME-002",
+    "document": "이전 서비스는 바다 지도였다. 이번 별빛 기록 프로젝트를 개발한다.",
+    "expected": {
+      "project_name": "별빛 기록",
+      "project_type": null,
+      "domain": null,
+      "frontend": null,
+      "backend": null,
+      "ai": null,
+      "database": null,
+      "deployment": null,
+      "features": null,
+      "external_integrations": null
+    }
+  },
+  {
+    "id": "NAME-003",
+    "document": "프로젝트 이름은 아직 정하지 않았다. 백엔드는 FastAPI로 확정했다.",
+    "expected": {
+      "project_name": null,
+      "project_type": null,
+      "domain": null,
+      "frontend": null,
+      "backend": [
+        "FastAPI"
+      ],
+      "ai": null,
+      "database": null,
+      "deployment": null,
+      "features": null,
+      "external_integrations": null
+    }
+  },
+  {
+    "id": "NAME-004",
+    "document": "프로젝트 이름 후보는 온도 일기와 계절 노트다. 이름은 아직 결정하지 않았다.",
+    "expected": {
+      "project_name": null,
+      "project_type": null,
+      "domain": null,
+      "frontend": null,
+      "backend": null,
+      "ai": null,
+      "database": null,
+      "deployment": null,
+      "features": null,
+      "external_integrations": null
+    }
+  },
+  {
+    "id": "NAME-005",
+    "document": "프로젝트명을 새벽 노트로 확정했다는 기록과 저녁 노트로 확정했다는 기록이 있다. 최종 합의나 우선순위는 없다.",
+    "expected": {
+      "project_name": null,
+      "project_type": null,
+      "domain": null,
+      "frontend": null,
+      "backend": null,
+      "ai": null,
+      "database": null,
+      "deployment": null,
+      "features": null,
+      "external_integrations": null
+    }
+  },
+  {
+    "id": "NAME-006",
+    "document": "독서 기록 앱을 만든다. 데이터베이스는 아직 미정이다.",
+    "expected": {
+      "project_name": "독서 기록 앱",
+      "project_type": null,
+      "domain": null,
+      "frontend": null,
+      "backend": null,
+      "ai": null,
+      "database": null,
+      "deployment": null,
+      "features": null,
+      "external_integrations": null
+    }
+  }
+]

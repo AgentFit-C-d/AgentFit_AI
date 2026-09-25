@@ -10,3 +10,6 @@
 - [보완 평가 5/6](live-results-v2.json)
 
 실행 방법은 저장소 README를 참조한다. HTTP/PDF/Spring 저장 및 실패 응답 7일 보관은 아직 포함하지 않는다.
+
+## 후속 안정화
+최종 profile-v4는 필드별 null 또는 값·근거 묶음으로 생성한다. [안정화 명세](stability/spec.md), [승인한 내부 계약](stability/response-contract-proposal.md), [최종24/24 검증과 과거 실패](stability/validation.md)를 참조한다.

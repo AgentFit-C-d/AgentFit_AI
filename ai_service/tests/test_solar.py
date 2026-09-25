@@ -4,17 +4,15 @@ from unittest.mock import patch, MagicMock
 from urllib.error import HTTPError, URLError
 
 from agentfit_ai.profile import FIELDS
-from agentfit_ai.solar import SolarAnalyzer, AnalysisError, post_solar
+from agentfit_ai.solar import SolarAnalyzer, AnalysisError, post_solar, candidate_to_profile
 
 KEY = "synthetic-local-test-key"
 
 
 def candidate(text="Alpha"):
-    data = dict.fromkeys(FIELDS)
-    data["project_name"] = text
-    quotes = {field: [] for field in FIELDS}
-    quotes["project_name"] = [text]
-    return {"data": data, "evidenceQuotes": quotes}
+    fields = dict.fromkeys(FIELDS)
+    fields["project_name"] = {"value": text, "evidenceQuotes": [text]}
+    return fields
 
 
 def envelope(value=None, finish="stop", refusal=None):
@@ -53,7 +51,7 @@ class SolarTests(unittest.TestCase):
         self.assertNotIn(KEY, json.dumps(payload))
         schema = payload["response_format"]["json_schema"]
         self.assertTrue(schema["strict"])
-        self.assertEqual(set(schema["schema"]["properties"]["data"]["required"]), set(FIELDS))
+        self.assertEqual(set(schema["schema"]["required"]), set(FIELDS))
         self.assertEqual(len(calls), 1)
         self.assertNotIn("tools", payload)
 
@@ -76,18 +74,33 @@ class SolarTests(unittest.TestCase):
 
     def test_bad_structure_never_becomes_success(self):
         for value in ([], {"data": {}}, candidate()):
-            if isinstance(value, dict) and "evidenceQuotes" in value:
-                value["data"]["backend"] = ["Python"]
+            if isinstance(value, dict) and "project_name" in value:
+                value["backend"] = {"value": ["Python"], "evidenceQuotes": []}
             with self.subTest(value_type=type(value).__name__):
                 with self.assertRaises(AnalysisError):
                     self.run_with(envelope(value))
 
-    def test_unknown_quotes_are_rejected(self):
+    def test_null_cannot_be_hidden_in_known_object(self):
         value = candidate()
-        value["evidenceQuotes"]["database"] = ["Alpha"]
+        value["database"] = {"value": None, "evidenceQuotes": ["Alpha"]}
         with self.assertRaises(AnalysisError) as caught:
             self.run_with(envelope(value))
+        self.assertEqual(caught.exception.code, "INVALID_RESPONSE")
+
+    def test_legacy_validator_still_rejects_unknown_evidence(self):
+        value = {"data": dict.fromkeys(FIELDS), "evidenceQuotes": {f: [] for f in FIELDS}}
+        value["evidenceQuotes"]["database"] = ["Alpha"]
+        with self.assertRaises(AnalysisError) as caught:
+            candidate_to_profile("Alpha", "doc-1", value)
         self.assertEqual(caught.exception.code, "UNKNOWN_HAS_EVIDENCE")
+
+    def test_old_wire_shape_and_extra_known_keys_rejected(self):
+        for value in ({"data": dict.fromkeys(FIELDS), "evidenceQuotes": {}}, candidate()):
+            if "project_name" in value:
+                value["project_name"]["extra"] = "unexpected"
+            with self.assertRaises(AnalysisError) as caught:
+                self.run_with(envelope(value))
+            self.assertEqual(caught.exception.code, "INVALID_RESPONSE")
 
     def test_truncated_or_refused_output_rejected(self):
         for reply, code in ((envelope(finish="length"), "INCOMPLETE_RESPONSE"),

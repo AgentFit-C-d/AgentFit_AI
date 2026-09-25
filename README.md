@@ -30,4 +30,12 @@ This makes six billable calls using UPSTAGE_API_KEY from the environment or root
 
 The Python module agentfit_ai.solar.SolarAnalyzer accepts document text and a generated document ID, returning a validated draft Profile with evidence positions. It does not persist results.
 
-Spec, plan, tasks and measured limitations: [Solar analysis](specs/ai-developer/04-analysis-provider/README.md). Latest development evaluation: 5/6; production quality is not established. HTTP endpoints, PDF extraction and Spring integration remain future work.
+Spec, plan, tasks and measured limitations: [Solar analysis](specs/ai-developer/04-analysis-provider/README.md). Latest stability evaluation: 12 synthetic cases, two runs each, 24/24 passed; production quality is not established. HTTP endpoints, PDF extraction and Spring integration remain future work.
+
+Fixed stability evaluation (24 billable calls, no retries; use a new report filename each time):
+
+```text
+python -m agentfit_ai.name_stability --live --report ../output/name-stability.json
+```
+
+[Stability spec and evidence](specs/ai-developer/04-analysis-provider/stability/validation.md).

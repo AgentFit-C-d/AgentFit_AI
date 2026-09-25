@@ -1,0 +1,42 @@
+{
+  "prompt_version": "profile-v2",
+  "attempts": 5,
+  "retries": 0,
+  "cases": [
+    {
+      "run": 1,
+      "actual_name": "\uc608\uc57d \uad00\ub9ac \ud504\ub85c\uc81d\ud2b8",
+      "expected_name": "\uc608\uc57d \uad00\ub9ac",
+      "passed": false,
+      "elapsed_ms": 23078
+    },
+    {
+      "run": 2,
+      "actual_name": "\uc608\uc57d \uad00\ub9ac \ud504\ub85c\uc81d\ud2b8",
+      "expected_name": "\uc608\uc57d \uad00\ub9ac",
+      "passed": false,
+      "elapsed_ms": 25828
+    },
+    {
+      "run": 3,
+      "actual_name": "\uc608\uc57d \uad00\ub9ac \ud504\ub85c\uc81d\ud2b8",
+      "expected_name": "\uc608\uc57d \uad00\ub9ac",
+      "passed": false,
+      "elapsed_ms": 25766
+    },
+    {
+      "run": 4,
+      "actual_name": "\uc608\uc57d \uad00\ub9ac \ud504\ub85c\uc81d\ud2b8",
+      "expected_name": "\uc608\uc57d \uad00\ub9ac",
+      "passed": false,
+      "elapsed_ms": 16141
+    },
+    {
+      "run": 5,
+      "actual_name": "\uc608\uc57d \uad00\ub9ac \ud504\ub85c\uc81d\ud2b8",
+      "expected_name": "\uc608\uc57d \uad00\ub9ac",
+      "passed": false,
+      "elapsed_ms": 31296
+    }
+  ]
+}
