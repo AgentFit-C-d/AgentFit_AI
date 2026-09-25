@@ -7,7 +7,9 @@
 - [x] T005 [US2] ai_service/agentfit_ai/solar.py에 고정 API 전송·크기 제한·redirect 차단·안전한 오류를 구현한다.
 - [x] T006 [US3] ai_service/tests/fixtures/solar-cases.json과 ai_service/agentfit_ai/evaluate.py로 합성 6건을 평가한다.
 - [x] T007 전체 단위 테스트 및 실제 결과를 specs/ai-developer/04-analysis-provider/validation.md에 기록한다.
-- [ ] T008 관련 파일만 커밋하고 feature/solar-profile-analysis를 push한다.
+- [x] T008 관련 파일만 커밋하고 feature/solar-profile-analysis를 push한다.
 
 의존: T001 → T002/T003 → T004/T005 → T006 → T007 → T008.
 SDD는 기존 기능별 폴더에서 수행하며 전역 .specify/feature.json은 다른 전체 Feature를 가리키므로 변경하지 않는다. 자동 Spec Kit CLI 전체를 실행했다고 표시하지 않는다.
+
+Implementation commit: 44f77e2. Feature branch push succeeded on 2026-09-25. Semantic quality limitation remains documented in validation.md.
