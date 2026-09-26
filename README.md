@@ -123,3 +123,12 @@ Solar 검토·제한된 수정·재검토와 실패 응답 보관을 구현했�
 분석기 생성자에 model="solar-mini4"를 지정하면 추출·통합·검토·수정에 모두 Mini를 사용합니다. 기본 모델은 solar-pro4입니다. API 키는 기존 Upstage 키를 사용합니다.
 
 동일 section-v2 조건의7사례에서 Mini도 정답0/7이었습니다. 모델 교체만으로 품질 개선은 확인되지 않았습니다. 전체168테스트는 통과했습니다. [모델별 결과 및 한계](specs/ai-developer/04-analysis-provider/solar-mini4/validation.md)
+
+## Solar Jev 역할 판정 실험
+
+단일 후보를 운영/개발/미정/예시/과거/미언급으로 구분하는 독립 합성 실험입니다. 기존 분석기에 연결하지 않았습니다.
+
+12사례를 선택지 정순·역순으로24회 호출해21/24 정답, 순서 일관성11/12쌍, 운영 오탐0건을 기록했습니다. 중앙값274ms이며 사전 통과 기준에는 미달했습니다. 전체 문서 추출 평가와 직접 비교할 수 없습니다.
+
+실행(ai_service에서): python -m agentfit_ai.jev_evaluation --live --output ../output/jev-new-run
+출력 디렉터리는 새 경로여야 하며 기존 결과를 덮어쓰지 않습니다. [명세 및 검증 결과](specs/ai-developer/04-analysis-provider/solar-jev/validation.md)
