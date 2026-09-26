@@ -5,6 +5,7 @@ from .sections import split_sections, batch_sections, SectionError
 from .evidence import ROLES, EvidenceError, resolve_quote
 from .profile import FIELDS, ARRAY_FIELDS, validate_profile, ProfileValidationError
 from .semantic_review import validate_review, ReviewValidationError
+from .jev_merge import post_jev, request_decisions
 
 VERSION = "section-v2"
 STATUSES = ("confirmed","tentative","negated","historical","absent")
@@ -127,12 +128,16 @@ def merge_profile(document,document_id,reply,pool):
 
 class SectionAnalyzer(SolarAnalyzer):
     """Opt-in experiment; no legacy fallback, retries or source selection."""
-    def __init__(self,api_key,*,transport=post_solar,diagnostics_store=None,clock=None,model="solar-pro4"):
+    def __init__(self,api_key,*,transport=post_solar,diagnostics_store=None,clock=None,model="solar-pro4",jev_merge=False,jev_transport=post_jev):
         super().__init__(api_key,transport=transport,diagnostics_store=diagnostics_store,clock=clock,model=model)
+        if type(jev_merge) is not bool:raise ValueError("jev_merge must be boolean")
+        self._jev_merge=jev_merge
+        self._jev_transport=jev_transport
 
     def _analyze(self,document,document_id,diagnostic,raw_responses,deadline):
         started=self._clock()
-        diagnostic.update(prompt_version=VERSION,evidence_contract="section-decisions-v2",sections_covered=0)
+        version=VERSION+"-jev" if self._jev_merge else VERSION
+        diagnostic.update(prompt_version=version,evidence_contract="section-decisions-v2",sections_covered=0)
         try:
             sections=split_sections(document)
             batches=batch_sections(sections)
@@ -147,7 +152,9 @@ class SectionAnalyzer(SolarAnalyzer):
                   "outcome":"started","response_bytes":None,"prompt_tokens":None,"completion_tokens":None,"model":None}
             diagnostic["calls"].append(call);trace={};call_started=self._clock()
             try:
-                if profile is not None:
+                if self._jev_merge and stage in ("merge","semantic_repair"):
+                    reply=request_decisions(document,content,self._key,self._jev_transport,min(20,remaining),trace)
+                elif profile is not None:
                     reply=self._request_review(document,profile,_trace=trace,timeout=remaining)
                 else:
                     payload={"model":self._model,"messages":[{"role":"system","content":prompt},
@@ -182,7 +189,11 @@ class SectionAnalyzer(SolarAnalyzer):
         candidates=[{k:v for k,v in fact.items() if k!="span"} for fact in pool]
         def merge(value):
             return value,merge_profile(document,document_id,value,pool)
-        previous,profile=request("merge",MERGE_PROMPT,{"candidates":candidates},merge_schema(pool),merge)
+        if self._jev_merge and not pool:
+            previous={"decisions":{}}
+            profile=merge_profile(document,document_id,previous,pool)
+        else:
+            previous,profile=request("merge",MERGE_PROMPT,{"candidates":candidates},merge_schema(pool),merge)
         def review(profile,stage):
             def check(value):
                 try:return validate_review(value,profile,len(document.splitlines()))
@@ -197,6 +208,7 @@ class SectionAnalyzer(SolarAnalyzer):
         issues=review(profile,"semantic_review")
         repaired=()
         if issues:
+            if self._jev_merge and not pool:raise AnalysisError("SEMANTIC_REJECTED")
             repaired=tuple(FIELDS)
             previous,profile=request("semantic_repair",MERGE_PROMPT,
                 {"candidates":candidates,"previous":previous,"issues":issues},merge_schema(pool),merge)
@@ -207,5 +219,5 @@ class SectionAnalyzer(SolarAnalyzer):
         models={reply[1] for reply in replies}
         return AnalysisResult(profile,models.pop() if len(models)==1 else "unknown",
                               total(2),total(3),round((self._clock()-started)*1000),
-                              prompt_version=VERSION,provider_calls=len(replies),
+                              prompt_version=version,provider_calls=len(replies),
                               repaired_fields=repaired,first_pass_validated=not repaired,semantic_reviewed=True)

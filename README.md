@@ -132,3 +132,9 @@ Solar 검토·제한된 수정·재검토와 실패 응답 보관을 구현했�
 
 실행(ai_service에서): python -m agentfit_ai.jev_evaluation --live --output ../output/jev-new-run
 출력 디렉터리는 새 경로여야 하며 기존 결과를 덮어쓰지 않습니다. [명세 및 검증 결과](specs/ai-developer/04-analysis-provider/solar-jev/validation.md)
+
+## Mini4 + Jev 구역 분석 통합 실험
+
+SectionAnalyzer(key, model="solar-mini4", jev_merge=True)로 Jev가 후보 통합과 의미 수정을 맡도록 선택할 수 있습니다. 추출/최종 검토는 Mini4이며 기본 동작은 바뀌지 않습니다.
+
+동일7사례에서 기존 Mini4 0/7 → 통합1/7 정답을 관측했습니다. 추출 응답도 달라져 Jev 단독 효과로 확정할 수 없습니다. 실패6건 중5건은 Jev 이전 추출 오류였고 실제 문서2개는 모두 실패했습니다. 전체179테스트 통과. [단계별 결과와 제약](specs/ai-developer/04-analysis-provider/jev-integration/validation.md)
