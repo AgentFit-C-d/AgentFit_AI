@@ -150,3 +150,33 @@ class SectionAnalysisTests(unittest.TestCase):
             fact("features","refund","user_action")),
             {"decisions":{"F0002":"selected","F0001":"selected"}},verdict()])
         self.assertEqual(a.analyze(doc,"doc") .profile["data"]["features"],["checkout","refund"])
+
+    def test_mini_model_is_used_by_every_stage_and_reported(self):
+        import json
+        doc="# Name\nAlpha\n# Features\ncheckout"
+        chosen=selection({"project_name":["F0001"],"features":["F0002"]})
+        replies=[extraction("S0001",fact("project_name","Alpha")),
+                 extraction("S0002",fact("features","checkout","user_action")),
+                 chosen,verdict([issue("overbroad")]),chosen,verdict()]
+        payloads=[]
+        def transport(payload,key,timeout):
+            payloads.append(payload)
+            envelope=json.loads(response(replies[len(payloads)-1]))
+            envelope["model"]="solar-mini4-260922"
+            return json.dumps(envelope).encode()
+        try:
+            analyzer=SectionAnalyzer("synthetic-key",model="solar-mini4",transport=transport)
+        except TypeError:
+            self.fail("Mini model selection is not supported")
+        result=analyzer.analyze(doc,"doc")
+        self.assertEqual(result.profile["data"]["features"],["checkout"])
+        self.assertEqual(result.model,"solar-mini4-260922")
+        self.assertEqual(len(payloads),6)
+        self.assertTrue(all(p["model"]=="solar-mini4" for p in payloads))
+        self.assertEqual([p["reasoning_effort"] for p in payloads],
+                         ["none","none","none","medium","none","medium"])
+
+    def test_invalid_model_is_rejected_before_transport(self):
+        for model in ["other-model","",None,[], "solar-mini4-untrusted"]:
+            with self.subTest(model=model),self.assertRaises(ValueError):
+                SectionAnalyzer("synthetic-key",model=model)

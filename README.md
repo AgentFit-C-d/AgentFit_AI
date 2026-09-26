@@ -117,3 +117,9 @@ Solar 검토·제한된 수정·재검토와 실패 응답 보관을 구현했�
 구역 분석기의 통합 응답을 후보ID별 판정 하나로 바꿨습니다. 선택/제외를 동시에 출력하는 모순을 없애고 기존 역할·충돌 검증을 유지합니다.
 
 전체166테스트는 통과했지만 고정7사례는 모두 추출 단계에서 실패했습니다. 수작업 후보 통합2회도 실패했으며, 계측한 두 번째 호출에서 잘못된 역할 선택을 확인했습니다. **의미 품질 개선은 입증되지 않았으며 기본 분석기를 유지합니다.** [검증 결과와 다음 과제](specs/ai-developer/04-analysis-provider/section-decisions/validation.md)
+
+## Solar Mini 4 비교
+
+분석기 생성자에 model="solar-mini4"를 지정하면 추출·통합·검토·수정에 모두 Mini를 사용합니다. 기본 모델은 solar-pro4입니다. API 키는 기존 Upstage 키를 사용합니다.
+
+동일 section-v2 조건의7사례에서 Mini도 정답0/7이었습니다. 모델 교체만으로 품질 개선은 확인되지 않았습니다. 전체168테스트는 통과했습니다. [모델별 결과 및 한계](specs/ai-developer/04-analysis-provider/solar-mini4/validation.md)

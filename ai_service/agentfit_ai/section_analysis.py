@@ -127,8 +127,8 @@ def merge_profile(document,document_id,reply,pool):
 
 class SectionAnalyzer(SolarAnalyzer):
     """Opt-in experiment; no legacy fallback, retries or source selection."""
-    def __init__(self,api_key,*,transport=post_solar,diagnostics_store=None,clock=None):
-        super().__init__(api_key,transport=transport,diagnostics_store=diagnostics_store,clock=clock)
+    def __init__(self,api_key,*,transport=post_solar,diagnostics_store=None,clock=None,model="solar-pro4"):
+        super().__init__(api_key,transport=transport,diagnostics_store=diagnostics_store,clock=clock,model=model)
 
     def _analyze(self,document,document_id,diagnostic,raw_responses,deadline):
         started=self._clock()
@@ -150,7 +150,7 @@ class SectionAnalyzer(SolarAnalyzer):
                 if profile is not None:
                     reply=self._request_review(document,profile,_trace=trace,timeout=remaining)
                 else:
-                    payload={"model":"solar-pro4","messages":[{"role":"system","content":prompt},
+                    payload={"model":self._model,"messages":[{"role":"system","content":prompt},
                              {"role":"user","content":json.dumps(content,ensure_ascii=False)}],
                              "response_format":{"type":"json_schema","json_schema":{"name":"agentfit_sections","strict":True,"schema":schema}},
                              "reasoning_effort":"none","frequency_penalty":0,"temperature":0,"max_tokens":4096,"stream":False}
