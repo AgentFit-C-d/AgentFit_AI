@@ -4,4 +4,4 @@
 - [x] 단위 테스트 211건
 - [x] 별칭 32회 및 추출 12회 비교
 - [x] 결과 기록
-- [ ] commit/push
+- [x] commit/push: 구현 및 결과 8fe3980, feature/api-contract-probe
