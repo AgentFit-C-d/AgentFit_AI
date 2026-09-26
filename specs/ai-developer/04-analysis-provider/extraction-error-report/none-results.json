@@ -1,0 +1,507 @@
+{
+  "model": "solar-mini4",
+  "version": "section-quotes-v3",
+  "scoring_revision": 2,
+  "diagnostic_revision": 1,
+  "planned": 6,
+  "cases_sha256": "3fc74b4f1773e1fa91b22d5dbb5420774d5c0936f6d42ceb6cd00b030bcb5566",
+  "prompt_sha256": "18305a5224598c4d93d902c664ef2005f95f7562401e162322d2086941e204c5",
+  "gate": "all 6 structurally valid and exact criteria passed",
+  "max_tokens": 4096,
+  "reasoning_effort": "none",
+  "temperature": 0,
+  "timeout": 40,
+  "results": [
+    {
+      "id": "Q-001",
+      "structural": true,
+      "passed": true,
+      "candidate_count": 2,
+      "diagnostic": {
+        "revision": 1,
+        "matching": "exact_value",
+        "evaluated_dimensions": [
+          "field",
+          "role",
+          "status",
+          "scope"
+        ],
+        "counts": {
+          "missing_exact": 0,
+          "extra_exact": 0,
+          "field": 0,
+          "role": 0,
+          "status": 0,
+          "scope": 0,
+          "context": 0,
+          "forbidden_confirmed": 0
+        },
+        "groups": [
+          {
+            "expected_indices": [
+              0
+            ],
+            "actual_indices": [
+              0
+            ],
+            "counts": {
+              "missing_exact": 0,
+              "extra_exact": 0,
+              "field": 0,
+              "role": 0,
+              "status": 0,
+              "scope": 0
+            }
+          },
+          {
+            "expected_indices": [
+              1
+            ],
+            "actual_indices": [
+              1
+            ],
+            "counts": {
+              "missing_exact": 0,
+              "extra_exact": 0,
+              "field": 0,
+              "role": 0,
+              "status": 0,
+              "scope": 0
+            }
+          }
+        ],
+        "expected": [
+          {
+            "index": 0,
+            "field": "features",
+            "role": "user_action",
+            "status": "confirmed",
+            "scope": "current"
+          },
+          {
+            "index": 1,
+            "field": "features",
+            "role": "user_action",
+            "status": "confirmed",
+            "scope": "current"
+          }
+        ],
+        "actual": [
+          {
+            "index": 0,
+            "field": "features",
+            "role": "user_action",
+            "status": "confirmed",
+            "scope": "current",
+            "span": {
+              "start": 11,
+              "end": 16
+            }
+          },
+          {
+            "index": 1,
+            "field": "features",
+            "role": "user_action",
+            "status": "confirmed",
+            "scope": "current",
+            "span": {
+              "start": 18,
+              "end": 23
+            }
+          }
+        ]
+      },
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 485,
+      "completion_tokens": 96,
+      "elapsed_ms": 1110
+    },
+    {
+      "id": "Q-002",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 2,
+      "diagnostic": {
+        "revision": 1,
+        "matching": "exact_value",
+        "evaluated_dimensions": [
+          "field",
+          "role",
+          "status",
+          "scope"
+        ],
+        "counts": {
+          "missing_exact": 2,
+          "extra_exact": 2,
+          "field": 0,
+          "role": 0,
+          "status": 0,
+          "scope": 0,
+          "context": 2,
+          "forbidden_confirmed": 0
+        },
+        "groups": [
+          {
+            "expected_indices": [
+              0,
+              1
+            ],
+            "actual_indices": [],
+            "counts": {
+              "missing_exact": 2,
+              "extra_exact": 0,
+              "field": 0,
+              "role": 0,
+              "status": 0,
+              "scope": 0
+            }
+          },
+          {
+            "expected_indices": [],
+            "actual_indices": [
+              0
+            ],
+            "counts": {
+              "missing_exact": 0,
+              "extra_exact": 1,
+              "field": 0,
+              "role": 0,
+              "status": 0,
+              "scope": 0
+            }
+          },
+          {
+            "expected_indices": [],
+            "actual_indices": [
+              1
+            ],
+            "counts": {
+              "missing_exact": 0,
+              "extra_exact": 1,
+              "field": 0,
+              "role": 0,
+              "status": 0,
+              "scope": 0
+            }
+          }
+        ],
+        "expected": [
+          {
+            "index": 0,
+            "field": "features",
+            "role": "user_action",
+            "status": "confirmed",
+            "scope": "current"
+          },
+          {
+            "index": 1,
+            "field": "features",
+            "role": "operational_action",
+            "status": "confirmed",
+            "scope": "current"
+          }
+        ],
+        "actual": [
+          {
+            "index": 0,
+            "field": "features",
+            "role": "user_action",
+            "status": "confirmed",
+            "scope": "current",
+            "span": {
+              "start": 0,
+              "end": 16
+            }
+          },
+          {
+            "index": 1,
+            "field": "features",
+            "role": "operational_action",
+            "status": "confirmed",
+            "scope": "current",
+            "span": {
+              "start": 18,
+              "end": 34
+            }
+          }
+        ]
+      },
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 491,
+      "completion_tokens": 104,
+      "elapsed_ms": 906
+    },
+    {
+      "id": "Q-003",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 1,
+      "diagnostic": {
+        "revision": 1,
+        "matching": "exact_value",
+        "evaluated_dimensions": [
+          "role"
+        ],
+        "counts": {
+          "missing_exact": 1,
+          "extra_exact": 1,
+          "role": 0,
+          "context": 0,
+          "forbidden_confirmed": 0
+        },
+        "groups": [
+          {
+            "expected_indices": [
+              0
+            ],
+            "actual_indices": [],
+            "counts": {
+              "missing_exact": 1,
+              "extra_exact": 0,
+              "role": 0
+            }
+          },
+          {
+            "expected_indices": [],
+            "actual_indices": [
+              0
+            ],
+            "counts": {
+              "missing_exact": 0,
+              "extra_exact": 1,
+              "role": 0
+            }
+          }
+        ],
+        "expected": [
+          {
+            "index": 0,
+            "field": "unassessed",
+            "role": "client",
+            "status": "unassessed",
+            "scope": "unassessed"
+          }
+        ],
+        "actual": [
+          {
+            "index": 0,
+            "field": "features",
+            "role": "user_action",
+            "status": "confirmed",
+            "scope": "current",
+            "span": {
+              "start": 0,
+              "end": 25
+            }
+          }
+        ]
+      },
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 497,
+      "completion_tokens": 64,
+      "elapsed_ms": 625
+    },
+    {
+      "id": "Q-004",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 1,
+      "diagnostic": {
+        "revision": 1,
+        "matching": "field",
+        "evaluated_dimensions": [
+          "role",
+          "status",
+          "scope"
+        ],
+        "counts": {
+          "missing_exact": 0,
+          "extra_exact": 0,
+          "role": 1,
+          "status": 1,
+          "scope": 0,
+          "context": 0,
+          "forbidden_confirmed": 0,
+          "absence_value": 1
+        },
+        "groups": [
+          {
+            "expected_indices": [
+              0
+            ],
+            "actual_indices": [
+              0
+            ],
+            "counts": {
+              "missing_exact": 0,
+              "extra_exact": 0,
+              "role": 1,
+              "status": 1,
+              "scope": 0,
+              "absence_value": 1
+            }
+          }
+        ],
+        "expected": [
+          {
+            "index": 0,
+            "field": "external_integrations",
+            "role": "unassessed",
+            "status": "absent",
+            "scope": "current"
+          }
+        ],
+        "actual": [
+          {
+            "index": 0,
+            "field": "external_integrations",
+            "role": "product_fact",
+            "status": "confirmed",
+            "scope": "current",
+            "span": {
+              "start": 0,
+              "end": 20
+            }
+          }
+        ]
+      },
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 477,
+      "completion_tokens": 62,
+      "elapsed_ms": 594
+    },
+    {
+      "id": "Q-005",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 1,
+      "diagnostic": {
+        "revision": 1,
+        "matching": "exact_value",
+        "evaluated_dimensions": [
+          "field",
+          "role",
+          "status",
+          "scope"
+        ],
+        "counts": {
+          "missing_exact": 0,
+          "extra_exact": 1,
+          "field": 0,
+          "role": 0,
+          "status": 0,
+          "scope": 0,
+          "context": 0,
+          "forbidden_confirmed": 0
+        },
+        "groups": [
+          {
+            "expected_indices": [],
+            "actual_indices": [
+              0
+            ],
+            "counts": {
+              "missing_exact": 0,
+              "extra_exact": 1,
+              "field": 0,
+              "role": 0,
+              "status": 0,
+              "scope": 0
+            }
+          }
+        ],
+        "expected": [],
+        "actual": [
+          {
+            "index": 0,
+            "field": "features",
+            "role": "product_fact",
+            "status": "confirmed",
+            "scope": "current",
+            "span": {
+              "start": 0,
+              "end": 14
+            }
+          }
+        ]
+      },
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 479,
+      "completion_tokens": 62,
+      "elapsed_ms": 828
+    },
+    {
+      "id": "Q-006",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 1,
+      "diagnostic": {
+        "revision": 1,
+        "matching": "exact_value",
+        "evaluated_dimensions": [
+          "field",
+          "role",
+          "status",
+          "scope"
+        ],
+        "counts": {
+          "missing_exact": 0,
+          "extra_exact": 0,
+          "field": 0,
+          "role": 1,
+          "status": 0,
+          "scope": 0,
+          "context": 0,
+          "forbidden_confirmed": 0
+        },
+        "groups": [
+          {
+            "expected_indices": [
+              0
+            ],
+            "actual_indices": [
+              0
+            ],
+            "counts": {
+              "missing_exact": 0,
+              "extra_exact": 0,
+              "field": 0,
+              "role": 1,
+              "status": 0,
+              "scope": 0
+            }
+          }
+        ],
+        "expected": [
+          {
+            "index": 0,
+            "field": "features",
+            "role": "user_action",
+            "status": "confirmed",
+            "scope": "current"
+          }
+        ],
+        "actual": [
+          {
+            "index": 0,
+            "field": "features",
+            "role": "product_fact",
+            "status": "confirmed",
+            "scope": "current",
+            "span": {
+              "start": 17,
+              "end": 22
+            }
+          }
+        ]
+      },
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 492,
+      "completion_tokens": 58,
+      "elapsed_ms": 593
+    }
+  ],
+  "passed": 1,
+  "structural": 6,
+  "gate_passed": false
+}

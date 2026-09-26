@@ -10,6 +10,7 @@ from .section_analysis import SectionAnalyzer, QUOTE_EXTRACT_PROMPT, extraction_
 from .sections import split_sections
 from .solar import AnalysisError
 from .evidence import ROLES
+from .extraction_diff import diagnose
 
 CASES=Path(__file__).resolve().parents[1]/"tests/fixtures/quote-extraction-cases.json"
 
@@ -49,7 +50,7 @@ def main():
     cases=json.loads(CASES.read_text(encoding="utf-8"))
     analyzer=SectionAnalyzer(load_api_key(),model="solar-mini4",quote_only=True,jev_merge=True)
     args.output.mkdir(parents=True,exist_ok=False)
-    plan={"model":"solar-mini4","version":"section-quotes-v3","scoring_revision":2,"planned":len(cases),
+    plan={"model":"solar-mini4","version":"section-quotes-v3","scoring_revision":2,"diagnostic_revision":1,"planned":len(cases),
           "cases_sha256":hashlib.sha256(CASES.read_bytes()).hexdigest(),
           "prompt_sha256":hashlib.sha256(QUOTE_EXTRACT_PROMPT.encode()).hexdigest(),
           "gate":"all 6 structurally valid and exact criteria passed","max_tokens":4096,
@@ -71,6 +72,7 @@ def main():
                 reply=analyzer._send_payload(payload,("sections",),_trace=trace,timeout=40)
                 pool=validate_candidates(reply[0],sections,0,quote_only=True)
                 row.update(structural=True,passed=score(pool,case),candidate_count=len(pool),
+                           diagnostic=diagnose(pool,case),
                            model=reply[1],prompt_tokens=reply[2],completion_tokens=reply[3])
             except AnalysisError as error:
                 row.update(structural=False,passed=False,error=error.code,
