@@ -144,3 +144,8 @@ SectionAnalyzer(key, model="solar-mini4", jev_merge=True)로 Jev가 후보 통�
 구역 분석기에 quote_only=True를 지정하면 AI가 값과 인용을 따로 생성하지 않고, 서버가 정확한 인용에서 값을 복원합니다. 인용 불일치·모호함·구역 누락 등은 안전한 세부 원인으로 진단합니다.
 
 짧은 합성6개는 구조검증6/6, 사전 정답기준0/6이었습니다. 추가 확인에서 정확한 기능값에 잘못된 역할을 붙이는 문제가 나왔습니다. 사전 게이트에 따라 전체7문서 평가는 보류했습니다. [결과와 다음 과제](specs/ai-developer/04-analysis-provider/quote-extraction/validation.md)
+
+## Jev 독립 역할·상태 판정
+
+추출 모델의 기존 분류를 제외하고 원문·정확 인용만으로 역할과 상태를 별도 질문하는 합성 실험입니다.
+24호출에서 역할21/24, 상태20/24, 동시정답18/24, 순서일관9/12쌍, 잘못된 제품확정3회를 기록했습니다. 사전 게이트 미통과로 실제 추출 흐름에 연결하지 않았습니다. 전체197테스트 통과. [결과와 한계](specs/ai-developer/04-analysis-provider/independent-classification/validation.md)
