@@ -1,0 +1,92 @@
+{
+  "model": "solar-mini4",
+  "version": "section-quotes-v3",
+  "planned": 6,
+  "cases_sha256": "f6914b12a4770177bf45b3fc302483cb8e8017d8a3f50dec54546e170edec4f6",
+  "prompt_sha256": "18305a5224598c4d93d902c664ef2005f95f7562401e162322d2086941e204c5",
+  "gate": "all 6 structurally valid and exact criteria passed",
+  "max_tokens": 4096,
+  "reasoning_effort": "none",
+  "temperature": 0,
+  "timeout": 40,
+  "results": [
+    {
+      "id": "Q-001",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 2,
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 485,
+      "completion_tokens": 96,
+      "elapsed_ms": 1125
+    },
+    {
+      "id": "Q-002",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 2,
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 491,
+      "completion_tokens": 104,
+      "elapsed_ms": 687
+    },
+    {
+      "id": "Q-003",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 1,
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 497,
+      "completion_tokens": 64,
+      "elapsed_ms": 547
+    },
+    {
+      "id": "Q-004",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 1,
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 477,
+      "completion_tokens": 62,
+      "elapsed_ms": 781
+    },
+    {
+      "id": "Q-005",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 1,
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 479,
+      "completion_tokens": 62,
+      "elapsed_ms": 1969
+    },
+    {
+      "id": "Q-006",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 1,
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 492,
+      "completion_tokens": 58,
+      "elapsed_ms": 3016
+    }
+  ],
+  "passed": 0,
+  "structural": 6,
+  "gate_passed": false,
+  "full_document_evaluation": "not_run_short_gate_failed",
+  "diagnostic_probe": {
+    "id": "Q-001",
+    "additional_calls": 1,
+    "not_a_replacement_for_gate": true,
+    "value_matches_expected": true,
+    "expected_role": "user_action",
+    "actual_roles": [
+      "product_fact",
+      "product_fact"
+    ]
+  },
+  "scoring_revision": 1,
+  "frozen_fixture": "ai_service/tests/fixtures/quote-extraction-cases-v1.json",
+  "post_review": "Scoring revision 2 adds occurrence and absence-role checks; not run live. Original 0/6 unchanged."
+}

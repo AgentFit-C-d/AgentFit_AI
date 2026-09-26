@@ -1,0 +1,77 @@
+[
+  {
+    "id": "Q-001",
+    "document": "필수 사용자 기능은 장소 확인과 후보 선택이다.",
+    "expected": [
+      [
+        "features",
+        "장소 확인",
+        "user_action",
+        "confirmed",
+        "current"
+      ],
+      [
+        "features",
+        "후보 선택",
+        "user_action",
+        "confirmed",
+        "current"
+      ]
+    ]
+  },
+  {
+    "id": "Q-002",
+    "document": "사용자는 회원 승인을 요청한다. 운영자는 회원 승인을 처리한다.",
+    "expected": [
+      [
+        "features",
+        "회원 승인",
+        "user_action",
+        "confirmed",
+        "current"
+      ],
+      [
+        "features",
+        "회원 승인",
+        "operational_action",
+        "confirmed",
+        "current"
+      ]
+    ]
+  },
+  {
+    "id": "Q-003",
+    "document": "NovaClient는 개발 테스트에만 사용한다. 운영 AI 모델은 아직 결정하지 않았다.",
+    "expected_roles": {
+      "NovaClient": "client"
+    },
+    "forbidden_confirmed_fields": [
+      "ai"
+    ]
+  },
+  {
+    "id": "Q-004",
+    "document": "외부 연동 서비스는 사용하지 않는다.",
+    "expected_absent": [
+      "external_integrations"
+    ]
+  },
+  {
+    "id": "Q-005",
+    "document": "오늘 회의는 오후 세 시다.",
+    "expected": []
+  },
+  {
+    "id": "Q-006",
+    "document": "# 기능\r\n필수 사용자 기능: 일정 추천\r\n",
+    "expected": [
+      [
+        "features",
+        "일정 추천",
+        "user_action",
+        "confirmed",
+        "current"
+      ]
+    ]
+  }
+]

@@ -138,3 +138,9 @@ Solar 검토·제한된 수정·재검토와 실패 응답 보관을 구현했�
 SectionAnalyzer(key, model="solar-mini4", jev_merge=True)로 Jev가 후보 통합과 의미 수정을 맡도록 선택할 수 있습니다. 추출/최종 검토는 Mini4이며 기본 동작은 바뀌지 않습니다.
 
 동일7사례에서 기존 Mini4 0/7 → 통합1/7 정답을 관측했습니다. 추출 응답도 달라져 Jev 단독 효과로 확정할 수 없습니다. 실패6건 중5건은 Jev 이전 추출 오류였고 실제 문서2개는 모두 실패했습니다. 전체179테스트 통과. [단계별 결과와 제약](specs/ai-developer/04-analysis-provider/jev-integration/validation.md)
+
+## 단일 인용 추출 실험
+
+구역 분석기에 quote_only=True를 지정하면 AI가 값과 인용을 따로 생성하지 않고, 서버가 정확한 인용에서 값을 복원합니다. 인용 불일치·모호함·구역 누락 등은 안전한 세부 원인으로 진단합니다.
+
+짧은 합성6개는 구조검증6/6, 사전 정답기준0/6이었습니다. 추가 확인에서 정확한 기능값에 잘못된 역할을 붙이는 문제가 나왔습니다. 사전 게이트에 따라 전체7문서 평가는 보류했습니다. [결과와 다음 과제](specs/ai-developer/04-analysis-provider/quote-extraction/validation.md)
