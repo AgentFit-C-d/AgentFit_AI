@@ -1,0 +1,42 @@
+{
+  "schema-none": {
+    "calls": 8,
+    "valid": 8,
+    "quote_correct": 8,
+    "role_correct": 7,
+    "status_correct": 8,
+    "passed": 7,
+    "errors": 0,
+    "consistent": 3
+  },
+  "schema-reverse-none": {
+    "calls": 8,
+    "valid": 8,
+    "quote_correct": 8,
+    "role_correct": 6,
+    "status_correct": 8,
+    "passed": 6,
+    "errors": 0,
+    "consistent": 4
+  },
+  "json-object-none": {
+    "calls": 8,
+    "valid": 8,
+    "quote_correct": 8,
+    "role_correct": 6,
+    "status_correct": 8,
+    "passed": 6,
+    "errors": 0,
+    "consistent": 2
+  },
+  "schema-low": {
+    "calls": 8,
+    "valid": 8,
+    "quote_correct": 8,
+    "role_correct": 8,
+    "status_correct": 8,
+    "passed": 8,
+    "errors": 0,
+    "consistent": 4
+  }
+}

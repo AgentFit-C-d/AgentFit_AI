@@ -1,0 +1,78 @@
+{
+  "model": "solar-mini4",
+  "version": "section-quotes-v3",
+  "scoring_revision": 2,
+  "planned": 6,
+  "cases_sha256": "3fc74b4f1773e1fa91b22d5dbb5420774d5c0936f6d42ceb6cd00b030bcb5566",
+  "prompt_sha256": "18305a5224598c4d93d902c664ef2005f95f7562401e162322d2086941e204c5",
+  "gate": "all 6 structurally valid and exact criteria passed",
+  "max_tokens": 4096,
+  "reasoning_effort": "none",
+  "temperature": 0,
+  "timeout": 40,
+  "results": [
+    {
+      "id": "Q-001",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 2,
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 485,
+      "completion_tokens": 96,
+      "elapsed_ms": 797
+    },
+    {
+      "id": "Q-002",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 2,
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 491,
+      "completion_tokens": 104,
+      "elapsed_ms": 906
+    },
+    {
+      "id": "Q-003",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 1,
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 497,
+      "completion_tokens": 63,
+      "elapsed_ms": 594
+    },
+    {
+      "id": "Q-004",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 1,
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 477,
+      "completion_tokens": 62,
+      "elapsed_ms": 531
+    },
+    {
+      "id": "Q-005",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 1,
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 479,
+      "completion_tokens": 62,
+      "elapsed_ms": 782
+    },
+    {
+      "id": "Q-006",
+      "structural": true,
+      "passed": false,
+      "candidate_count": 1,
+      "model": "solar-mini4-260922",
+      "prompt_tokens": 492,
+      "completion_tokens": 58,
+      "elapsed_ms": 1250
+    }
+  ],
+  "passed": 0,
+  "structural": 6,
+  "gate_passed": false
+}

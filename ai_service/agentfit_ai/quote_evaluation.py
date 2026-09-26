@@ -33,9 +33,16 @@ def score(pool,case):
             and not any(x["field"] in case["forbidden_confirmed_fields"] and x["status"]=="confirmed" for x in pool))
 
 
+def reasoning_effort(value):
+    if value not in ("none", "low"):
+        raise ValueError("unsupported probe reasoning")
+    return value
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live",action="store_true")
+    parser.add_argument("--reasoning",type=reasoning_effort,default="none")
     parser.add_argument("--output",type=Path,required=True)
     args=parser.parse_args()
     if not args.live:parser.error("--live is required")
@@ -46,7 +53,7 @@ def main():
           "cases_sha256":hashlib.sha256(CASES.read_bytes()).hexdigest(),
           "prompt_sha256":hashlib.sha256(QUOTE_EXTRACT_PROMPT.encode()).hexdigest(),
           "gate":"all 6 structurally valid and exact criteria passed","max_tokens":4096,
-          "reasoning_effort":"none","temperature":0,"timeout":40}
+          "reasoning_effort":args.reasoning,"temperature":0,"timeout":40}
     (args.output/"plan.json").write_text(json.dumps(plan,indent=2),encoding="utf-8")
     rows=[]
     with (args.output/"attempts.jsonl").open("x",encoding="utf-8") as log:
@@ -58,7 +65,7 @@ def main():
             payload={"model":"solar-mini4","messages":[{"role":"system","content":QUOTE_EXTRACT_PROMPT},
                      {"role":"user","content":json.dumps(content,ensure_ascii=False)}],
                      "response_format":{"type":"json_schema","json_schema":{"name":"agentfit_sections","strict":True,"schema":schema}},
-                     "reasoning_effort":"none","frequency_penalty":0,"temperature":0,"max_tokens":4096,"stream":False}
+                     "reasoning_effort":args.reasoning,"frequency_penalty":0,"temperature":0,"max_tokens":4096,"stream":False}
             row={"id":case["id"]};started=time.monotonic();trace={}
             try:
                 reply=analyzer._send_payload(payload,("sections",),_trace=trace,timeout=40)
