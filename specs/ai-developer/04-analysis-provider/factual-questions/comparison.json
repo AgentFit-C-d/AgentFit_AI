@@ -1,0 +1,2034 @@
+{
+  "model": "solar-jev",
+  "planned_calls": 48,
+  "retries": 0,
+  "timeout": 20,
+  "case_sha256": "0e0198e7daf325ce2e621eac298bac7ab697569b7cff329b028733c53d07206e",
+  "requests_sha256": "baea1737ee6aeb1daf94b584779fb226614f76929aeceb2fb03bfbda433fddfb",
+  "questions": {
+    "current": "지정 인용의 설명은 현재 대상 제품에 관한 것인가? 다른 제품/가상 예시/공격 문구이면 아니오.",
+    "adopted": "현재 대상 제품의 실제 운영 또는 사용자/운영 기능으로 지정 후보를 사용하거나 제공한다고 명시했는가? 개발 전용 사용은 여기에 포함하지 않는다.",
+    "rejected": "현재 대상 제품에서 지정 후보를 사용하지 않거나 제공하지 않거나 철회/중단했다고 명시했는가?",
+    "development_only": "현재 대상 제품에서 지정 후보가 개발/테스트/시연 전용이라고 명시했는가?"
+  },
+  "criteria": {
+    "yes": "질문이 참임을 원문에서 명시적으로 확인할 수 있다.",
+    "no": "질문의 반대가 참임을 원문에서 명시적으로 확인할 수 있다.",
+    "unknown": "관련 사실이 미언급이거나 모호하거나 아직 결정되지 않아 판단할 수 없다."
+  },
+  "gate": "factual>=22/24, questions>=88/96, consistent12/12, falseadopt0, better than baseline",
+  "summary": {
+    "baseline": {
+      "calls": 24,
+      "passed": 19,
+      "consistent_pairs": 10,
+      "false_adopted": 4,
+      "errors": 0,
+      "elapsed_ms": 8283
+    },
+    "factual": {
+      "calls": 24,
+      "passed": 16,
+      "consistent_pairs": 10,
+      "false_adopted": 0,
+      "errors": 0,
+      "elapsed_ms": 9857
+    },
+    "question_correct": 60,
+    "gate_passed": false
+  },
+  "results": [
+    {
+      "id": "FQ-001",
+      "order": "forward",
+      "mode": "baseline",
+      "expected_decision": "adopt",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "product_function",
+          "probabilities": {
+            "development": 0.007573,
+            "example": 0.043579,
+            "operating_technology": 0.195308,
+            "product_function": 0.681691,
+            "unknown": 0.07185
+          },
+          "confidence": 0.414146
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.021701,
+            "confirmed": 0.922732,
+            "tentative": 0.019151,
+            "unknown": 0.031574,
+            "withdrawn": 0.004842
+          },
+          "confidence": 0.771358
+        }
+      },
+      "decision": "adopt",
+      "passed": true,
+      "elapsed_ms": 469
+    },
+    {
+      "id": "FQ-001",
+      "order": "forward",
+      "mode": "factual",
+      "expected_decision": "adopt",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.114762,
+            "unknown": 0.037258,
+            "yes": 0.847981
+          },
+          "confidence": 0.535003
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.058428,
+            "unknown": 0.0276,
+            "yes": 0.913972
+          },
+          "confidence": 0.683936
+        },
+        "development_only": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.340689,
+            "unknown": 0.097609,
+            "yes": 0.561702
+          },
+          "confidence": 0.16445
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.256934,
+            "unknown": 0.044648,
+            "yes": 0.698418
+          },
+          "confidence": 0.327648
+        }
+      },
+      "decision": "unknown",
+      "passed": false,
+      "question_correct": 2,
+      "elapsed_ms": 250
+    },
+    {
+      "id": "FQ-001",
+      "order": "reverse",
+      "mode": "factual",
+      "expected_decision": "adopt",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.020241,
+            "unknown": 0.004516,
+            "yes": 0.975243
+          },
+          "confidence": 0.883694
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.029122,
+            "unknown": 0.006498,
+            "yes": 0.96438
+          },
+          "confidence": 0.844635
+        },
+        "development_only": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.145773,
+            "unknown": 0.015364,
+            "yes": 0.838863
+          },
+          "confidence": 0.551919
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.14627,
+            "unknown": 0.012007,
+            "yes": 0.841724
+          },
+          "confidence": 0.56372
+        }
+      },
+      "decision": "unknown",
+      "passed": false,
+      "question_correct": 2,
+      "elapsed_ms": 218
+    },
+    {
+      "id": "FQ-001",
+      "order": "reverse",
+      "mode": "baseline",
+      "expected_decision": "adopt",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "product_function",
+          "probabilities": {
+            "development": 0.007819,
+            "example": 0.016552,
+            "operating_technology": 0.25892,
+            "product_function": 0.703818,
+            "unknown": 0.012891
+          },
+          "confidence": 0.528423
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.007485,
+            "confirmed": 0.980316,
+            "tentative": 0.00454,
+            "unknown": 0.00312,
+            "withdrawn": 0.00454
+          },
+          "confidence": 0.923506
+        }
+      },
+      "decision": "adopt",
+      "passed": true,
+      "elapsed_ms": 203
+    },
+    {
+      "id": "FQ-002",
+      "order": "forward",
+      "mode": "factual",
+      "expected_decision": "adopt",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.142023,
+            "unknown": 0.04069,
+            "yes": 0.817287
+          },
+          "confidence": 0.479
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.112053,
+            "unknown": 0.059978,
+            "yes": 0.827969
+          },
+          "confidence": 0.480865
+        },
+        "development_only": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.320401,
+            "unknown": 0.528252,
+            "yes": 0.151347
+          },
+          "confidence": 0.101079
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.293815,
+            "unknown": 0.084179,
+            "yes": 0.622006
+          },
+          "confidence": 0.213985
+        }
+      },
+      "decision": "unknown",
+      "passed": false,
+      "question_correct": 2,
+      "elapsed_ms": 985
+    },
+    {
+      "id": "FQ-002",
+      "order": "forward",
+      "mode": "baseline",
+      "expected_decision": "adopt",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "operating_technology",
+          "probabilities": {
+            "development": 0.012821,
+            "example": 0.018654,
+            "operating_technology": 0.898822,
+            "product_function": 0.034851,
+            "unknown": 0.034851
+          },
+          "confidence": 0.7142
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.009295,
+            "confirmed": 0.948108,
+            "tentative": 0.015325,
+            "unknown": 0.022297,
+            "withdrawn": 0.004975
+          },
+          "confidence": 0.832721
+        }
+      },
+      "decision": "adopt",
+      "passed": true,
+      "elapsed_ms": 406
+    },
+    {
+      "id": "FQ-002",
+      "order": "reverse",
+      "mode": "baseline",
+      "expected_decision": "adopt",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "operating_technology",
+          "probabilities": {
+            "development": 0.087399,
+            "example": 0.05301,
+            "operating_technology": 0.829216,
+            "product_function": 0.015188,
+            "unknown": 0.015188
+          },
+          "confidence": 0.595387
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.007487,
+            "confirmed": 0.980605,
+            "tentative": 0.004008,
+            "unknown": 0.002754,
+            "withdrawn": 0.005146
+          },
+          "confidence": 0.924618
+        }
+      },
+      "decision": "adopt",
+      "passed": true,
+      "elapsed_ms": 453
+    },
+    {
+      "id": "FQ-002",
+      "order": "reverse",
+      "mode": "factual",
+      "expected_decision": "adopt",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.037139,
+            "unknown": 0.005026,
+            "yes": 0.957834
+          },
+          "confidence": 0.826899
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.032775,
+            "unknown": 0.00939,
+            "yes": 0.957834
+          },
+          "confidence": 0.820567
+        },
+        "development_only": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.293815,
+            "unknown": 0.084179,
+            "yes": 0.622006
+          },
+          "confidence": 0.213985
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.146036,
+            "unknown": 0.013583,
+            "yes": 0.84038
+          },
+          "confidence": 0.558083
+        }
+      },
+      "decision": "unknown",
+      "passed": false,
+      "question_correct": 2,
+      "elapsed_ms": 953
+    },
+    {
+      "id": "FQ-003",
+      "order": "forward",
+      "mode": "baseline",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "development",
+          "probabilities": {
+            "development": 0.96506,
+            "example": 0.002711,
+            "operating_technology": 0.022696,
+            "product_function": 0.005064,
+            "unknown": 0.004469
+          },
+          "confidence": 0.883681
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.009322,
+            "confirmed": 0.950866,
+            "tentative": 0.013563,
+            "unknown": 0.022362,
+            "withdrawn": 0.003886
+          },
+          "confidence": 0.840708
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "elapsed_ms": 172
+    },
+    {
+      "id": "FQ-003",
+      "order": "forward",
+      "mode": "factual",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.667104,
+            "unknown": 0.017778,
+            "yes": 0.315118
+          },
+          "confidence": 0.357743
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.17803,
+            "unknown": 0.024094,
+            "yes": 0.797876
+          },
+          "confidence": 0.474632
+        },
+        "development_only": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.036978,
+            "unknown": 0.009349,
+            "yes": 0.953673
+          },
+          "confidence": 0.808072
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.263802,
+            "unknown": 0.01911,
+            "yes": 0.717088
+          },
+          "confidence": 0.394116
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "question_correct": 4,
+      "elapsed_ms": 219
+    },
+    {
+      "id": "FQ-003",
+      "order": "reverse",
+      "mode": "factual",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.556447,
+            "unknown": 0.010192,
+            "yes": 0.433361
+          },
+          "confidence": 0.33071
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.075177,
+            "unknown": 0.008979,
+            "yes": 0.915844
+          },
+          "confidence": 0.71111
+        },
+        "development_only": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.017905,
+            "unknown": 0.004527,
+            "yes": 0.977568
+          },
+          "confidence": 0.89201
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.221212,
+            "unknown": 0.00668,
+            "yes": 0.772107
+          },
+          "confidence": 0.484006
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "question_correct": 4,
+      "elapsed_ms": 203
+    },
+    {
+      "id": "FQ-003",
+      "order": "reverse",
+      "mode": "baseline",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "development",
+          "probabilities": {
+            "development": 0.913881,
+            "example": 0.021492,
+            "operating_technology": 0.058422,
+            "product_function": 0.002909,
+            "unknown": 0.003296
+          },
+          "confidence": 0.772232
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.009553,
+            "confirmed": 0.974403,
+            "tentative": 0.004512,
+            "unknown": 0.003101,
+            "withdrawn": 0.00843
+          },
+          "confidence": 0.905407
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "elapsed_ms": 172
+    },
+    {
+      "id": "FQ-004",
+      "order": "forward",
+      "mode": "factual",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.873256,
+            "unknown": 0.008561,
+            "yes": 0.118182
+          },
+          "confidence": 0.625449
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.145139,
+            "unknown": 0.019642,
+            "yes": 0.835218
+          },
+          "confidence": 0.537858
+        },
+        "development_only": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.029122,
+            "unknown": 0.006498,
+            "yes": 0.96438
+          },
+          "confidence": 0.844635
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.066935,
+            "unknown": 0.009059,
+            "yes": 0.924007
+          },
+          "confidence": 0.72999
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "question_correct": 4,
+      "elapsed_ms": 250
+    },
+    {
+      "id": "FQ-004",
+      "order": "forward",
+      "mode": "baseline",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "development",
+          "probabilities": {
+            "development": 0.942213,
+            "example": 0.011861,
+            "operating_technology": 0.017257,
+            "product_function": 0.015229,
+            "unknown": 0.01344
+          },
+          "confidence": 0.81336
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.049392,
+            "confirmed": 0.875499,
+            "tentative": 0.029958,
+            "unknown": 0.038467,
+            "withdrawn": 0.006685
+          },
+          "confidence": 0.671396
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "elapsed_ms": 187
+    },
+    {
+      "id": "FQ-004",
+      "order": "reverse",
+      "mode": "baseline",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "development",
+          "probabilities": {
+            "development": 0.90297,
+            "example": 0.035012,
+            "operating_technology": 0.044956,
+            "product_function": 0.01288,
+            "unknown": 0.004182
+          },
+          "confidence": 0.734106
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.035292,
+            "confirmed": 0.910189,
+            "tentative": 0.016671,
+            "unknown": 0.002557,
+            "withdrawn": 0.035292
+          },
+          "confidence": 0.748234
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "elapsed_ms": 157
+    },
+    {
+      "id": "FQ-004",
+      "order": "reverse",
+      "mode": "factual",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.618684,
+            "unknown": 0.006065,
+            "yes": 0.375251
+          },
+          "confidence": 0.36662
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.075177,
+            "unknown": 0.008979,
+            "yes": 0.915844
+          },
+          "confidence": 0.71111
+        },
+        "development_only": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.010948,
+            "unknown": 0.003554,
+            "yes": 0.985498
+          },
+          "confidence": 0.923661
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.094899,
+            "unknown": 0.004725,
+            "yes": 0.900376
+          },
+          "confidence": 0.687542
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "question_correct": 4,
+      "elapsed_ms": 218
+    },
+    {
+      "id": "FQ-005",
+      "order": "forward",
+      "mode": "baseline",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "operating_technology",
+          "probabilities": {
+            "development": 0.017873,
+            "example": 0.132067,
+            "operating_technology": 0.358996,
+            "product_function": 0.132067,
+            "unknown": 0.358996
+          },
+          "confidence": 0.166045
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.202791,
+            "confirmed": 0.70781,
+            "tentative": 0.03524,
+            "unknown": 0.045249,
+            "withdrawn": 0.00891
+          },
+          "confidence": 0.460555
+        }
+      },
+      "decision": "adopt",
+      "passed": false,
+      "elapsed_ms": 235
+    },
+    {
+      "id": "FQ-005",
+      "order": "forward",
+      "mode": "factual",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.806911,
+            "unknown": 0.013043,
+            "yes": 0.180046
+          },
+          "confidence": 0.509917
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.264922,
+            "unknown": 0.014946,
+            "yes": 0.720132
+          },
+          "confidence": 0.407291
+        },
+        "development_only": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.568546,
+            "unknown": 0.162891,
+            "yes": 0.268562
+          },
+          "confidence": 0.117334
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.181144,
+            "unknown": 0.007024,
+            "yes": 0.811832
+          },
+          "confidence": 0.532555
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "question_correct": 3,
+      "elapsed_ms": 187
+    },
+    {
+      "id": "FQ-005",
+      "order": "reverse",
+      "mode": "factual",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.496873,
+            "unknown": 0.006255,
+            "yes": 0.496873
+          },
+          "confidence": 0.338451
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.117896,
+            "unknown": 0.010966,
+            "yes": 0.871138
+          },
+          "confidence": 0.616132
+        },
+        "development_only": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.366192,
+            "unknown": 0.030059,
+            "yes": 0.603749
+          },
+          "confidence": 0.291953
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.14709,
+            "unknown": 0.006463,
+            "yes": 0.846447
+          },
+          "confidence": 0.585275
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "question_correct": 3,
+      "elapsed_ms": 250
+    },
+    {
+      "id": "FQ-005",
+      "order": "reverse",
+      "mode": "baseline",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "operating_technology",
+          "probabilities": {
+            "development": 0.024938,
+            "example": 0.236603,
+            "operating_technology": 0.390093,
+            "product_function": 0.111763,
+            "unknown": 0.236603
+          },
+          "confidence": 0.13867
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.144521,
+            "confirmed": 0.831662,
+            "tentative": 0.005604,
+            "unknown": 0.00635,
+            "withdrawn": 0.011863
+          },
+          "confidence": 0.660358
+        }
+      },
+      "decision": "adopt",
+      "passed": false,
+      "elapsed_ms": 188
+    },
+    {
+      "id": "FQ-006",
+      "order": "forward",
+      "mode": "factual",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.560055,
+            "unknown": 0.003774,
+            "yes": 0.436171
+          },
+          "confidence": 0.355886
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.146659,
+            "unknown": 0.009376,
+            "yes": 0.843965
+          },
+          "confidence": 0.573564
+        },
+        "development_only": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.584136,
+            "unknown": 0.061567,
+            "yes": 0.354296
+          },
+          "confidence": 0.223296
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.047083,
+            "unknown": 0.00722,
+            "yes": 0.945696
+          },
+          "confidence": 0.788566
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "question_correct": 3,
+      "elapsed_ms": 531
+    },
+    {
+      "id": "FQ-006",
+      "order": "forward",
+      "mode": "baseline",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "operating_technology",
+          "probabilities": {
+            "development": 0.101416,
+            "example": 0.032925,
+            "operating_technology": 0.749368,
+            "product_function": 0.037309,
+            "unknown": 0.078983
+          },
+          "confidence": 0.450811
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.014129,
+            "confirmed": 0.600771,
+            "tentative": 0.009711,
+            "unknown": 0.011004,
+            "withdrawn": 0.364386
+          },
+          "confidence": 0.485045
+        }
+      },
+      "decision": "adopt",
+      "passed": false,
+      "elapsed_ms": 422
+    },
+    {
+      "id": "FQ-006",
+      "order": "reverse",
+      "mode": "baseline",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "development",
+          "probabilities": {
+            "development": 0.503296,
+            "example": 0.053047,
+            "operating_technology": 0.391967,
+            "product_function": 0.032175,
+            "unknown": 0.019515
+          },
+          "confidence": 0.343977
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.047018,
+            "confirmed": 0.735484,
+            "tentative": 0.004956,
+            "unknown": 0.001823,
+            "withdrawn": 0.21072
+          },
+          "confidence": 0.54292
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "elapsed_ms": 516
+    },
+    {
+      "id": "FQ-006",
+      "order": "reverse",
+      "mode": "factual",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.436171,
+            "unknown": 0.003774,
+            "yes": 0.560055
+          },
+          "confidence": 0.355886
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.067006,
+            "unknown": 0.008003,
+            "yes": 0.924991
+          },
+          "confidence": 0.734324
+        },
+        "development_only": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.373285,
+            "unknown": 0.011272,
+            "yes": 0.615443
+          },
+          "confidence": 0.347227
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.014037,
+            "unknown": 0.0019,
+            "yes": 0.984063
+          },
+          "confidence": 0.920268
+        }
+      },
+      "decision": "unknown",
+      "passed": false,
+      "question_correct": 2,
+      "elapsed_ms": 437
+    },
+    {
+      "id": "FQ-007",
+      "order": "forward",
+      "mode": "baseline",
+      "expected_decision": "unknown",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "operating_technology",
+          "probabilities": {
+            "development": 0.013476,
+            "example": 0.028529,
+            "operating_technology": 0.446268,
+            "product_function": 0.347554,
+            "unknown": 0.164173
+          },
+          "confidence": 0.264639
+        },
+        "status": {
+          "choice": "tentative",
+          "probabilities": {
+            "absent": 0.006103,
+            "confirmed": 0.027352,
+            "tentative": 0.905759,
+            "unknown": 0.057903,
+            "withdrawn": 0.002883
+          },
+          "confidence": 0.750822
+        }
+      },
+      "decision": "unknown",
+      "passed": true,
+      "elapsed_ms": 375
+    },
+    {
+      "id": "FQ-007",
+      "order": "forward",
+      "mode": "factual",
+      "expected_decision": "unknown",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.138371,
+            "unknown": 0.796268,
+            "yes": 0.065362
+          },
+          "confidence": 0.42348
+        },
+        "current": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.112719,
+            "unknown": 0.648654,
+            "yes": 0.238627
+          },
+          "confidence": 0.209238
+        },
+        "development_only": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.170953,
+            "unknown": 0.766157,
+            "yes": 0.06289
+          },
+          "confidence": 0.381017
+        },
+        "rejected": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.159732,
+            "unknown": 0.715869,
+            "yes": 0.124399
+          },
+          "confidence": 0.279495
+        }
+      },
+      "decision": "unknown",
+      "passed": true,
+      "question_correct": 3,
+      "elapsed_ms": 500
+    },
+    {
+      "id": "FQ-007",
+      "order": "reverse",
+      "mode": "factual",
+      "expected_decision": "unknown",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.044648,
+            "unknown": 0.698418,
+            "yes": 0.256934
+          },
+          "confidence": 0.327648
+        },
+        "current": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.055938,
+            "unknown": 0.530729,
+            "yes": 0.413332
+          },
+          "confidence": 0.214739
+        },
+        "development_only": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.088997,
+            "unknown": 0.398858,
+            "yes": 0.512144
+          },
+          "confidence": 0.158385
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.138723,
+            "unknown": 0.377087,
+            "yes": 0.48419
+          },
+          "confidence": 0.096175
+        }
+      },
+      "decision": "exclude",
+      "passed": false,
+      "question_correct": 1,
+      "elapsed_ms": 469
+    },
+    {
+      "id": "FQ-007",
+      "order": "reverse",
+      "mode": "baseline",
+      "expected_decision": "unknown",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "product_function",
+          "probabilities": {
+            "development": 0.044883,
+            "example": 0.095017,
+            "operating_technology": 0.156657,
+            "product_function": 0.546786,
+            "unknown": 0.156657
+          },
+          "confidence": 0.208527
+        },
+        "status": {
+          "choice": "tentative",
+          "probabilities": {
+            "absent": 0.005013,
+            "confirmed": 0.028849,
+            "tentative": 0.955336,
+            "unknown": 0.009366,
+            "withdrawn": 0.001436
+          },
+          "confidence": 0.859806
+        }
+      },
+      "decision": "unknown",
+      "passed": true,
+      "elapsed_ms": 390
+    },
+    {
+      "id": "FQ-008",
+      "order": "forward",
+      "mode": "factual",
+      "expected_decision": "unknown",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.124399,
+            "unknown": 0.715869,
+            "yes": 0.159732
+          },
+          "confidence": 0.279495
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.088997,
+            "unknown": 0.398858,
+            "yes": 0.512144
+          },
+          "confidence": 0.158385
+        },
+        "development_only": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.154281,
+            "unknown": 0.691438,
+            "yes": 0.154281
+          },
+          "confidence": 0.242842
+        },
+        "rejected": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.131602,
+            "unknown": 0.589798,
+            "yes": 0.278601
+          },
+          "confidence": 0.149537
+        }
+      },
+      "decision": "unknown",
+      "passed": true,
+      "question_correct": 4,
+      "elapsed_ms": 469
+    },
+    {
+      "id": "FQ-008",
+      "order": "forward",
+      "mode": "baseline",
+      "expected_decision": "unknown",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "operating_technology",
+          "probabilities": {
+            "development": 0.002715,
+            "example": 0.003077,
+            "operating_technology": 0.966632,
+            "product_function": 0.013788,
+            "unknown": 0.013788
+          },
+          "confidence": 0.88519
+        },
+        "status": {
+          "choice": "tentative",
+          "probabilities": {
+            "absent": 0.008735,
+            "confirmed": 0.327774,
+            "tentative": 0.540408,
+            "unknown": 0.120581,
+            "withdrawn": 0.002503
+          },
+          "confidence": 0.372655
+        }
+      },
+      "decision": "unknown",
+      "passed": true,
+      "elapsed_ms": 406
+    },
+    {
+      "id": "FQ-008",
+      "order": "reverse",
+      "mode": "baseline",
+      "expected_decision": "unknown",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "operating_technology",
+          "probabilities": {
+            "development": 0.052657,
+            "example": 0.031938,
+            "operating_technology": 0.823691,
+            "product_function": 0.004898,
+            "unknown": 0.086816
+          },
+          "confidence": 0.588053
+        },
+        "status": {
+          "choice": "tentative",
+          "probabilities": {
+            "absent": 0.01654,
+            "confirmed": 0.426567,
+            "tentative": 0.547723,
+            "unknown": 0.007813,
+            "withdrawn": 0.001358
+          },
+          "confidence": 0.498044
+        }
+      },
+      "decision": "unknown",
+      "passed": true,
+      "elapsed_ms": 454
+    },
+    {
+      "id": "FQ-008",
+      "order": "reverse",
+      "mode": "factual",
+      "expected_decision": "unknown",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.121952,
+            "unknown": 0.331499,
+            "yes": 0.546549
+          },
+          "confidence": 0.132717
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.084949,
+            "unknown": 0.109077,
+            "yes": 0.805974
+          },
+          "confidence": 0.431107
+        },
+        "development_only": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.119001,
+            "unknown": 0.196199,
+            "yes": 0.684801
+          },
+          "confidence": 0.242566
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.307196,
+            "unknown": 0.186324,
+            "yes": 0.50648
+          },
+          "confidence": 0.071382
+        }
+      },
+      "decision": "unknown",
+      "passed": true,
+      "question_correct": 1,
+      "elapsed_ms": 484
+    },
+    {
+      "id": "FQ-009",
+      "order": "forward",
+      "mode": "baseline",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "example",
+          "probabilities": {
+            "development": 0.029845,
+            "example": 0.599461,
+            "operating_technology": 0.283165,
+            "product_function": 0.038322,
+            "unknown": 0.049207
+          },
+          "confidence": 0.352545
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.115607,
+            "confirmed": 0.665274,
+            "tentative": 0.025795,
+            "unknown": 0.190604,
+            "withdrawn": 0.002719
+          },
+          "confidence": 0.41165
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "elapsed_ms": 391
+    },
+    {
+      "id": "FQ-009",
+      "order": "forward",
+      "mode": "factual",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.128956,
+            "unknown": 0.742089,
+            "yes": 0.128956
+          },
+          "confidence": 0.317656
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.377087,
+            "unknown": 0.138723,
+            "yes": 0.48419
+          },
+          "confidence": 0.096175
+        },
+        "development_only": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.088758,
+            "unknown": 0.842116,
+            "yes": 0.069125
+          },
+          "confidence": 0.504506
+        },
+        "rejected": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.154281,
+            "unknown": 0.691438,
+            "yes": 0.154281
+          },
+          "confidence": 0.242842
+        }
+      },
+      "decision": "unknown",
+      "passed": false,
+      "question_correct": 2,
+      "elapsed_ms": 468
+    },
+    {
+      "id": "FQ-009",
+      "order": "reverse",
+      "mode": "factual",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.112719,
+            "unknown": 0.238627,
+            "yes": 0.648654
+          },
+          "confidence": 0.209238
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.173364,
+            "unknown": 0.04967,
+            "yes": 0.776966
+          },
+          "confidence": 0.409257
+        },
+        "development_only": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.131602,
+            "unknown": 0.278601,
+            "yes": 0.589798
+          },
+          "confidence": 0.149537
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.131602,
+            "unknown": 0.278601,
+            "yes": 0.589798
+          },
+          "confidence": 0.149537
+        }
+      },
+      "decision": "unknown",
+      "passed": false,
+      "question_correct": 0,
+      "elapsed_ms": 438
+    },
+    {
+      "id": "FQ-009",
+      "order": "reverse",
+      "mode": "baseline",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "example",
+          "probabilities": {
+            "development": 0.02782,
+            "example": 0.717475,
+            "operating_technology": 0.16009,
+            "product_function": 0.035721,
+            "unknown": 0.058894
+          },
+          "confidence": 0.430258
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.051695,
+            "confirmed": 0.916318,
+            "tentative": 0.014811,
+            "unknown": 0.006996,
+            "withdrawn": 0.010179
+          },
+          "confidence": 0.765742
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "elapsed_ms": 375
+    },
+    {
+      "id": "FQ-010",
+      "order": "forward",
+      "mode": "factual",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.628532,
+            "unknown": 0.231224,
+            "yes": 0.140244
+          },
+          "confidence": 0.17536
+        },
+        "current": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.560304,
+            "unknown": 0.003332,
+            "yes": 0.436365
+          },
+          "confidence": 0.357878
+        },
+        "development_only": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.561702,
+            "unknown": 0.340689,
+            "yes": 0.097609
+          },
+          "confidence": 0.16445
+        },
+        "rejected": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.604455,
+            "unknown": 0.173179,
+            "yes": 0.222366
+          },
+          "confidence": 0.14231
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "question_correct": 2,
+      "elapsed_ms": 219
+    },
+    {
+      "id": "FQ-010",
+      "order": "forward",
+      "mode": "baseline",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "example",
+          "probabilities": {
+            "development": 0.012232,
+            "example": 0.667867,
+            "operating_technology": 0.149021,
+            "product_function": 0.054822,
+            "unknown": 0.116058
+          },
+          "confidence": 0.368547
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.052161,
+            "confirmed": 0.815934,
+            "tentative": 0.019189,
+            "unknown": 0.110425,
+            "withdrawn": 0.002292
+          },
+          "confidence": 0.594183
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "elapsed_ms": 218
+    },
+    {
+      "id": "FQ-010",
+      "order": "reverse",
+      "mode": "baseline",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "example",
+          "probabilities": {
+            "development": 0.011727,
+            "example": 0.498624,
+            "operating_technology": 0.235533,
+            "product_function": 0.111258,
+            "unknown": 0.142858
+          },
+          "confidence": 0.215883
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.093007,
+            "confirmed": 0.882422,
+            "tentative": 0.006737,
+            "unknown": 0.012587,
+            "withdrawn": 0.005247
+          },
+          "confidence": 0.721902
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "elapsed_ms": 203
+    },
+    {
+      "id": "FQ-010",
+      "order": "reverse",
+      "mode": "factual",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.522429,
+            "unknown": 0.070703,
+            "yes": 0.406868
+          },
+          "confidence": 0.187712
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.370575,
+            "unknown": 0.01845,
+            "yes": 0.610975
+          },
+          "confidence": 0.324092
+        },
+        "development_only": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.398858,
+            "unknown": 0.088997,
+            "yes": 0.512144
+          },
+          "confidence": 0.158385
+        },
+        "rejected": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.484513,
+            "unknown": 0.030974,
+            "yes": 0.484513
+          },
+          "confidence": 0.262898
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "question_correct": 1,
+      "elapsed_ms": 219
+    },
+    {
+      "id": "FQ-011",
+      "order": "forward",
+      "mode": "baseline",
+      "expected_decision": "unknown",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "unknown",
+          "probabilities": {
+            "development": 0.004331,
+            "example": 0.00714,
+            "operating_technology": 0.036259,
+            "product_function": 0.017128,
+            "unknown": 0.935142
+          },
+          "confidence": 0.806458
+        },
+        "status": {
+          "choice": "unknown",
+          "probabilities": {
+            "absent": 0.014866,
+            "confirmed": 0.141046,
+            "tentative": 0.031472,
+            "unknown": 0.811665,
+            "withdrawn": 0.00095
+          },
+          "confidence": 0.612498
+        }
+      },
+      "decision": "unknown",
+      "passed": true,
+      "elapsed_ms": 375
+    },
+    {
+      "id": "FQ-011",
+      "order": "forward",
+      "mode": "factual",
+      "expected_decision": "unknown",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.0461,
+            "unknown": 0.925939,
+            "yes": 0.027961
+          },
+          "confidence": 0.714996
+        },
+        "current": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.088758,
+            "unknown": 0.842116,
+            "yes": 0.069125
+          },
+          "confidence": 0.504506
+        },
+        "development_only": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.046387,
+            "unknown": 0.931702,
+            "yes": 0.021912
+          },
+          "confidence": 0.734146
+        },
+        "rejected": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.090137,
+            "unknown": 0.855193,
+            "yes": 0.054671
+          },
+          "confidence": 0.53616
+        }
+      },
+      "decision": "unknown",
+      "passed": true,
+      "question_correct": 4,
+      "elapsed_ms": 469
+    },
+    {
+      "id": "FQ-011",
+      "order": "reverse",
+      "mode": "factual",
+      "expected_decision": "unknown",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.021459,
+            "unknown": 0.912444,
+            "yes": 0.066097
+          },
+          "confidence": 0.685418
+        },
+        "current": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.017375,
+            "unknown": 0.837151,
+            "yes": 0.145475
+          },
+          "confidence": 0.545191
+        },
+        "development_only": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.021323,
+            "unknown": 0.800141,
+            "yes": 0.178536
+          },
+          "confidence": 0.482924
+        },
+        "rejected": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.05165,
+            "unknown": 0.807949,
+            "yes": 0.1404
+          },
+          "confidence": 0.45295
+        }
+      },
+      "decision": "unknown",
+      "passed": true,
+      "question_correct": 4,
+      "elapsed_ms": 437
+    },
+    {
+      "id": "FQ-011",
+      "order": "reverse",
+      "mode": "baseline",
+      "expected_decision": "unknown",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "unknown",
+          "probabilities": {
+            "development": 0.013457,
+            "example": 0.022187,
+            "operating_technology": 0.01048,
+            "product_function": 0.01048,
+            "unknown": 0.943396
+          },
+          "confidence": 0.81796
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.061981,
+            "confirmed": 0.588064,
+            "tentative": 0.131215,
+            "unknown": 0.216337,
+            "withdrawn": 0.002403
+          },
+          "confidence": 0.318548
+        }
+      },
+      "decision": "unknown",
+      "passed": true,
+      "elapsed_ms": 391
+    },
+    {
+      "id": "FQ-012",
+      "order": "forward",
+      "mode": "factual",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.406868,
+            "unknown": 0.522429,
+            "yes": 0.070703
+          },
+          "confidence": 0.187712
+        },
+        "current": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.628532,
+            "unknown": 0.140244,
+            "yes": 0.231224
+          },
+          "confidence": 0.17536
+        },
+        "development_only": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.437349,
+            "unknown": 0.437349,
+            "yes": 0.125303
+          },
+          "confidence": 0.104641
+        },
+        "rejected": {
+          "choice": "unknown",
+          "probabilities": {
+            "no": 0.320401,
+            "unknown": 0.528252,
+            "yes": 0.151347
+          },
+          "confidence": 0.101079
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "question_correct": 3,
+      "elapsed_ms": 469
+    },
+    {
+      "id": "FQ-012",
+      "order": "forward",
+      "mode": "baseline",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "operating_technology",
+          "probabilities": {
+            "development": 0.015446,
+            "example": 0.041987,
+            "operating_technology": 0.511506,
+            "product_function": 0.032699,
+            "unknown": 0.398361
+          },
+          "confidence": 0.366898
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.060848,
+            "confirmed": 0.577309,
+            "tentative": 0.010574,
+            "unknown": 0.350155,
+            "withdrawn": 0.001114
+          },
+          "confidence": 0.434197
+        }
+      },
+      "decision": "adopt",
+      "passed": false,
+      "elapsed_ms": 750
+    },
+    {
+      "id": "FQ-012",
+      "order": "reverse",
+      "mode": "baseline",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "role": {
+          "choice": "unknown",
+          "probabilities": {
+            "development": 0.060433,
+            "example": 0.127937,
+            "operating_technology": 0.34777,
+            "product_function": 0.017314,
+            "unknown": 0.446545
+          },
+          "confidence": 0.235623
+        },
+        "status": {
+          "choice": "confirmed",
+          "probabilities": {
+            "absent": 0.071938,
+            "confirmed": 0.876388,
+            "tentative": 0.026465,
+            "unknown": 0.020611,
+            "withdrawn": 0.004599
+          },
+          "confidence": 0.685696
+        }
+      },
+      "decision": "unknown",
+      "passed": false,
+      "elapsed_ms": 375
+    },
+    {
+      "id": "FQ-012",
+      "order": "reverse",
+      "mode": "factual",
+      "expected_decision": "exclude",
+      "model": "solar-jev",
+      "answers": {
+        "adopted": {
+          "choice": "no",
+          "probabilities": {
+            "no": 0.528252,
+            "unknown": 0.151347,
+            "yes": 0.320401
+          },
+          "confidence": 0.101079
+        },
+        "current": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.422635,
+            "unknown": 0.034692,
+            "yes": 0.542673
+          },
+          "confidence": 0.260605
+        },
+        "development_only": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.348207,
+            "unknown": 0.077696,
+            "yes": 0.574097
+          },
+          "confidence": 0.194937
+        },
+        "rejected": {
+          "choice": "yes",
+          "probabilities": {
+            "no": 0.398858,
+            "unknown": 0.088997,
+            "yes": 0.512144
+          },
+          "confidence": 0.158385
+        }
+      },
+      "decision": "exclude",
+      "passed": true,
+      "question_correct": 0,
+      "elapsed_ms": 515
+    }
+  ]
+}

@@ -149,3 +149,9 @@ SectionAnalyzer(key, model="solar-mini4", jev_merge=True)로 Jev가 후보 통�
 
 추출 모델의 기존 분류를 제외하고 원문·정확 인용만으로 역할과 상태를 별도 질문하는 합성 실험입니다.
 24호출에서 역할21/24, 상태20/24, 동시정답18/24, 순서일관9/12쌍, 잘못된 제품확정3회를 기록했습니다. 사전 게이트 미통과로 실제 추출 흐름에 연결하지 않았습니다. 전체197테스트 통과. [결과와 한계](specs/ai-developer/04-analysis-provider/independent-classification/validation.md)
+
+## 튜닝 실험 종료
+
+마지막 동일사례 비교에서 기존 Jev2축은19/24, 신규4질문은16/24 정답이었습니다. 신규 방식은 오채택0건이지만 정상채택4회도 모두미정으로 남아 통과 기준에 미달했습니다. 계획에 따라 추가 튜닝과 실제 문서 확대를 중단했습니다.
+
+**자동 확정 Profile의 품질은 아직 확보되지 않았습니다.** 전체206코드테스트 통과와 내용 정확도는 별개입니다. [종료 정리 및 확보한 범위](specs/ai-developer/04-analysis-provider/tuning-conclusion.md)
