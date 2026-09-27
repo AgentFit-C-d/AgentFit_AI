@@ -1,0 +1,79 @@
+[
+  {
+    "id": "Q-001",
+    "error": "INCOMPLETE_RESPONSE",
+    "elapsed_ms": 20609
+  },
+  {
+    "id": "Q-002",
+    "validation": "SECTION_MERGE",
+    "merge_error": {
+      "reason": "SELECTED_SCOPE",
+      "field": "external_integrations"
+    },
+    "decisions": {
+      "F0001": {
+        "decision": "selected",
+        "field": "external_integrations",
+        "role": "client",
+        "scope": "example",
+        "status": "confirmed"
+      },
+      "F0002": {
+        "decision": "selected",
+        "field": "external_integrations",
+        "role": "client",
+        "scope": "example",
+        "status": "confirmed"
+      }
+    },
+    "prompt_tokens": 392,
+    "completion_tokens": 2887,
+    "model": "solar-mini4-260922",
+    "elapsed_ms": 15859
+  },
+  {
+    "id": "Q-003",
+    "error": "INCOMPLETE_RESPONSE",
+    "elapsed_ms": 22172
+  },
+  {
+    "id": "Q-004",
+    "error": "INCOMPLETE_RESPONSE",
+    "elapsed_ms": 25157
+  },
+  {
+    "id": "Q-005",
+    "validation": "accepted",
+    "decisions": {
+      "F0001": {
+        "decision": "irrelevant"
+      }
+    },
+    "prompt_tokens": 354,
+    "completion_tokens": 690,
+    "model": "solar-mini4-260922",
+    "elapsed_ms": 4390
+  },
+  {
+    "id": "Q-006",
+    "validation": "SECTION_MERGE",
+    "merge_error": {
+      "reason": "SELECTED_SCOPE",
+      "field": "features"
+    },
+    "decisions": {
+      "F0001": {
+        "decision": "selected",
+        "field": "features",
+        "role": "user_action",
+        "scope": "other",
+        "status": "confirmed"
+      }
+    },
+    "prompt_tokens": 359,
+    "completion_tokens": 2547,
+    "model": "solar-mini4-260922",
+    "elapsed_ms": 20485
+  }
+]

@@ -130,7 +130,12 @@ def merge_schema(pool):
     return _object({"decisions":_object({x["id"]:decision for x in pool})})
 
 def merge_profile(document,document_id,reply,pool):
-    def fail():raise AnalysisError("SECTION_MERGE")
+    field=None
+    def fail(reason="INVALID_DECISIONS"):
+        error=AnalysisError("SECTION_MERGE")
+        error.merge_detail={"reason":reason}
+        if field is not None:error.merge_detail["field"]=field
+        raise error
     if type(reply) is not dict or set(reply)!={"decisions"}:fail()
     decisions=reply["decisions"]
     known={x["id"]:x for x in pool}
@@ -142,27 +147,30 @@ def merge_profile(document,document_id,reply,pool):
     for field in FIELDS:
         refs=chosen[field]
         if not refs:continue
-        if type(refs) is not list or not 1<=len(refs)<=(30 if field in ARRAY_FIELDS else 1):fail()
+        if type(refs) is not list or not 1<=len(refs)<=(30 if field in ARRAY_FIELDS else 1):fail("SELECTED_COUNT")
         values=[];spans=[];absence=False
         eligible=[x for x in pool if x["field"]==field and x["scope"]=="current"
                   and x["status"] in ("confirmed","absent") and x["role"] in ROLES[field]]
         confirmed={x["value"] for x in eligible if x["status"]=="confirmed"}
-        if (field not in ARRAY_FIELDS and len(confirmed)>1) or (confirmed and any(x["status"]=="absent" for x in eligible)):fail()
+        if (field not in ARRAY_FIELDS and len(confirmed)>1) or (confirmed and any(x["status"]=="absent" for x in eligible)):fail("CONFLICTING_FACTS")
         for ref in refs:
             if type(ref) is not str or ref not in known:fail()
             fact=known[ref]
-            if fact not in eligible:fail()
+            if fact["scope"]!="current":fail("SELECTED_SCOPE")
+            if fact["status"] not in ("confirmed","absent"):fail("SELECTED_STATUS")
+            if fact["role"] not in ROLES[field]:fail("SELECTED_ROLE")
             if fact["status"]=="absent":
-                if len(refs)!=1:fail()
+                if len(refs)!=1:fail("ABSENCE_MULTIPLE")
                 absence=True
             else:
-                if fact["value"] in values:fail()
+                if fact["value"] in values:fail("DUPLICATE_VALUE")
                 values.append(fact["value"])
             if fact["span"] not in spans:spans.append(fact["span"])
         data[field]=[] if absence else values if field in ARRAY_FIELDS else values[0]
         evidence[field]=spans
+    field=None  # Whole-profile validation does not identify a single field.
     try:profile=validate_profile(document,document_id,{"data":data,"evidence":evidence})
-    except ProfileValidationError:fail()
+    except ProfileValidationError:fail("PROFILE_INVALID")
     _reject_unconfirmed(document,profile)
     return profile
 

@@ -1,0 +1,1 @@
+{"stage": "judgment_only", "reasoning_effort": "low", "model": "solar-mini4", "max_tokens": 4096, "candidate_source": "anchored-failure-probe-v1", "source_sha256": "bbe17d91ff187b5f55596dee18466baba5256c5ffe8be00b65723bba17653700", "script_sha256": "9b80274192b18582e7ebc660053ecfa45d48d0a4983c33ff2a3c64e5caf5f655", "planned": 6}

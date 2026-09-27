@@ -76,6 +76,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
                 return result
             except AnalysisError as error:
                 if hasattr(error,"candidate_detail"):call["candidate_error"]=error.candidate_detail
+                if hasattr(error,"merge_detail"):call["merge_error"]=error.merge_detail
                 call.update(outcome="validation_failed" if call["outcome"]=="response_received" else "failed",error=error.code)
                 raise
             finally:

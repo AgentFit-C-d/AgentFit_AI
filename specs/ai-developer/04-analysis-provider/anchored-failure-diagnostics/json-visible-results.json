@@ -1,0 +1,116 @@
+[
+  {
+    "id": "Q-001",
+    "validation": "accepted",
+    "decisions": {
+      "F0001": {
+        "field": "features",
+        "role": "user_action",
+        "status": "confirmed",
+        "scope": "current",
+        "decision": "selected"
+      }
+    },
+    "prompt_tokens": 508,
+    "completion_tokens": 58,
+    "model": "solar-mini4-260922",
+    "elapsed_ms": 1000
+  },
+  {
+    "id": "Q-002",
+    "validation": "accepted",
+    "decisions": {
+      "F0001": {
+        "field": "features",
+        "role": "user_action",
+        "status": "confirmed",
+        "scope": "current",
+        "decision": "selected"
+      },
+      "F0002": {
+        "field": "features",
+        "role": "operational_action",
+        "status": "confirmed",
+        "scope": "current",
+        "decision": "selected"
+      }
+    },
+    "prompt_tokens": 540,
+    "completion_tokens": 105,
+    "model": "solar-mini4-260922",
+    "elapsed_ms": 844
+  },
+  {
+    "id": "Q-003",
+    "validation": "ANCHORED_JUDGMENT",
+    "merge_error": null,
+    "decisions": {
+      "F0001": {
+        "field": "features",
+        "role": "user_action",
+        "status": "confirmed",
+        "scope": "current",
+        "decision": "selected"
+      },
+      "F0002": {
+        "field": "ai",
+        "role": "product_fact",
+        "status": "tentative",
+        "scope": "current",
+        "decision": "not_current"
+      }
+    },
+    "prompt_tokens": 546,
+    "completion_tokens": 107,
+    "model": "solar-mini4-260922",
+    "elapsed_ms": 1922
+  },
+  {
+    "id": "Q-004",
+    "validation": "ANCHORED_JUDGMENT",
+    "merge_error": null,
+    "decisions": {
+      "F0001": {
+        "field": "external_integrations",
+        "role": "product_fact",
+        "status": "confirmed",
+        "scope": "current",
+        "decision": "selected"
+      }
+    },
+    "prompt_tokens": 500,
+    "completion_tokens": 60,
+    "model": "solar-mini4-260922",
+    "elapsed_ms": 1344
+  },
+  {
+    "id": "Q-005",
+    "validation": "accepted",
+    "decisions": {
+      "F0001": {
+        "decision": "irrelevant"
+      }
+    },
+    "prompt_tokens": 502,
+    "completion_tokens": 30,
+    "model": "solar-mini4-260922",
+    "elapsed_ms": 390
+  },
+  {
+    "id": "Q-006",
+    "validation": "accepted",
+    "decisions": {
+      "F0001": {
+        "field": "features",
+        "role": "user_action",
+        "status": "confirmed",
+        "scope": "current",
+        "decision": "selected"
+      }
+    },
+    "prompt_tokens": 507,
+    "completion_tokens": 58,
+    "model": "solar-mini4-260922",
+    "elapsed_ms": 469
+  }
+]

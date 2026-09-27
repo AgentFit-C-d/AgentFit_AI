@@ -1,0 +1,177 @@
+[
+  {
+    "id": "Q-001",
+    "stopped": "SECTION_MERGE",
+    "merge_error": {
+      "reason": "SELECTED_SCOPE",
+      "field": "features"
+    },
+    "candidates": [
+      {
+        "id": "F0001",
+        "span": {
+          "start": 0,
+          "end": 26
+        },
+        "characters": 26,
+        "judgment": {
+          "decision": "selected",
+          "field": "features",
+          "role": "user_action",
+          "scope": "example",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "expected_exact_candidate_present": [
+      false,
+      false
+    ]
+  },
+  {
+    "id": "Q-002",
+    "stopped": "SECTION_MERGE",
+    "merge_error": {
+      "reason": "SELECTED_SCOPE",
+      "field": "features"
+    },
+    "candidates": [
+      {
+        "id": "F0001",
+        "span": {
+          "start": 0,
+          "end": 17
+        },
+        "characters": 17,
+        "judgment": {
+          "decision": "selected",
+          "field": "features",
+          "role": "user_action",
+          "scope": "unclear",
+          "status": "confirmed"
+        }
+      },
+      {
+        "id": "F0002",
+        "span": {
+          "start": 18,
+          "end": 35
+        },
+        "characters": 17,
+        "judgment": {
+          "decision": "selected",
+          "field": "features",
+          "role": "operational_action",
+          "scope": "unclear",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "expected_exact_candidate_present": [
+      false,
+      false
+    ]
+  },
+  {
+    "id": "Q-003",
+    "stopped": "SECTION_MERGE",
+    "merge_error": {
+      "reason": "SELECTED_COUNT",
+      "field": "project_name"
+    },
+    "candidates": [
+      {
+        "id": "F0001",
+        "span": {
+          "start": 0,
+          "end": 26
+        },
+        "characters": 26,
+        "judgment": {
+          "decision": "selected",
+          "field": "project_name",
+          "role": "product_fact",
+          "scope": "current",
+          "status": "confirmed"
+        }
+      },
+      {
+        "id": "F0002",
+        "span": {
+          "start": 27,
+          "end": 49
+        },
+        "characters": 22,
+        "judgment": {
+          "decision": "selected",
+          "field": "project_name",
+          "role": "product_fact",
+          "scope": "current",
+          "status": "confirmed"
+        }
+      }
+    ]
+  },
+  {
+    "id": "Q-004",
+    "stopped": "PROBE_STOP_BEFORE_REVIEW",
+    "merge_error": null,
+    "candidates": [
+      {
+        "id": "F0001",
+        "span": {
+          "start": 0,
+          "end": 20
+        },
+        "characters": 20,
+        "judgment": {
+          "decision": "irrelevant"
+        }
+      }
+    ]
+  },
+  {
+    "id": "Q-005",
+    "stopped": "PROBE_STOP_BEFORE_REVIEW",
+    "merge_error": null,
+    "candidates": [
+      {
+        "id": "F0001",
+        "span": {
+          "start": 0,
+          "end": 15
+        },
+        "characters": 15,
+        "judgment": {
+          "decision": "irrelevant"
+        }
+      }
+    ],
+    "expected_exact_candidate_present": []
+  },
+  {
+    "id": "Q-006",
+    "stopped": "PROBE_STOP_BEFORE_REVIEW",
+    "merge_error": null,
+    "candidates": [
+      {
+        "id": "F0001",
+        "span": {
+          "start": 6,
+          "end": 22
+        },
+        "characters": 16,
+        "judgment": {
+          "decision": "selected",
+          "field": "features",
+          "role": "user_action",
+          "scope": "current",
+          "status": "confirmed"
+        }
+      }
+    ],
+    "expected_exact_candidate_present": [
+      false
+    ]
+  }
+]

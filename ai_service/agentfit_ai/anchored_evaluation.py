@@ -20,6 +20,10 @@ def safe_diagnostics(diagnostic):
   # Error codes are generated locally, never provider text.
   if "error" in call and type(call["error"]) is str and call["error"].isascii() and call["error"].replace("_","").isupper():
    item["error"]=call["error"]
+  detail=call.get("merge_error",{})
+  if detail.get("reason") in ("INVALID_DECISIONS","SELECTED_COUNT","CONFLICTING_FACTS","SELECTED_SCOPE","SELECTED_STATUS","SELECTED_ROLE","ABSENCE_MULTIPLE","DUPLICATE_VALUE","PROFILE_INVALID"):
+   item["merge_error"]={"reason":detail["reason"]}
+   if detail.get("field") in FIELDS:item["merge_error"]["field"]=detail["field"]
   issues=[]
   for issue in call.get("semantic_issues",[]):
    if issue.get("field") in FIELDS and issue.get("kind") in ("unsupported","wrong_role","wrong_scope","uncertainty","missing","overbroad","duplicate"):
