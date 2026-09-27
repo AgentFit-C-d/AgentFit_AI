@@ -1,0 +1,2152 @@
+[
+  {
+    "id": "T07",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1189,
+    "completion_tokens": 18,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8888,
+    "response_bytes": 464,
+    "provider_elapsed_ms": 6234,
+    "elapsed_ms": 6234
+  },
+  {
+    "id": "S01",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1196,
+    "completion_tokens": 18,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8914,
+    "response_bytes": 464,
+    "provider_elapsed_ms": 5266,
+    "elapsed_ms": 5266
+  },
+  {
+    "id": "S02",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1190,
+    "completion_tokens": 20,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 29,
+          "end": 36
+        }
+      ]
+    },
+    "request_bytes": 8788,
+    "response_bytes": 468,
+    "provider_elapsed_ms": 3984,
+    "elapsed_ms": 3984
+  },
+  {
+    "id": "S03",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 1,
+    "profile_returned": true,
+    "prompt_tokens": 1106,
+    "completion_tokens": 14,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "absent",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 0,
+          "end": 28
+        }
+      ]
+    },
+    "request_bytes": 8144,
+    "response_bytes": 450,
+    "provider_elapsed_ms": 3422,
+    "elapsed_ms": 3422
+  },
+  {
+    "id": "S04",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1183,
+    "completion_tokens": 18,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8865,
+    "response_bytes": 464,
+    "provider_elapsed_ms": 1734,
+    "elapsed_ms": 1734
+  },
+  {
+    "id": "S05",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1186,
+    "completion_tokens": 18,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8853,
+    "response_bytes": 464,
+    "provider_elapsed_ms": 9063,
+    "elapsed_ms": 9063
+  },
+  {
+    "id": "S06",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1193,
+    "completion_tokens": 20,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 7,
+          "end": 13
+        }
+      ]
+    },
+    "request_bytes": 8793,
+    "response_bytes": 468,
+    "provider_elapsed_ms": 18406,
+    "elapsed_ms": 18406
+  },
+  {
+    "id": "S07",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": false,
+    "prompt_tokens": 1196,
+    "completion_tokens": 28,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "error": "SECTION_MERGE",
+    "calls": [
+      {
+        "call": 1,
+        "stage": "judgment",
+        "error": "SECTION_MERGE",
+        "merge_error": {
+          "reason": "CONFLICTING_FACTS",
+          "field": "external_integrations"
+        }
+      }
+    ],
+    "request_bytes": 8926,
+    "response_bytes": 511,
+    "provider_elapsed_ms": 37860,
+    "elapsed_ms": 37860
+  },
+  {
+    "id": "S08",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 1,
+    "profile_returned": true,
+    "prompt_tokens": 1106,
+    "completion_tokens": 17,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "absent",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "external_integrations": [
+        {
+          "start": 0,
+          "end": 28
+        }
+      ]
+    },
+    "request_bytes": 8174,
+    "response_bytes": 469,
+    "provider_elapsed_ms": 18094,
+    "elapsed_ms": 18094
+  },
+  {
+    "id": "S09",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 1,
+    "profile_returned": true,
+    "prompt_tokens": 1109,
+    "completion_tokens": 12,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8192,
+    "response_bytes": 445,
+    "provider_elapsed_ms": 8719,
+    "elapsed_ms": 8719
+  },
+  {
+    "id": "S10",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1202,
+    "completion_tokens": 21,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "frontend": [
+        {
+          "start": 34,
+          "end": 40
+        }
+      ]
+    },
+    "request_bytes": 8889,
+    "response_bytes": 474,
+    "provider_elapsed_ms": 9359,
+    "elapsed_ms": 9359
+  },
+  {
+    "id": "S11",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1214,
+    "completion_tokens": 18,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 9084,
+    "response_bytes": 464,
+    "provider_elapsed_ms": 18641,
+    "elapsed_ms": 18641
+  },
+  {
+    "id": "S12",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1196,
+    "completion_tokens": 21,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "features": [
+        {
+          "start": 18,
+          "end": 23
+        }
+      ]
+    },
+    "request_bytes": 8928,
+    "response_bytes": 476,
+    "provider_elapsed_ms": 9953,
+    "elapsed_ms": 9953
+  },
+  {
+    "id": "O01",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1191,
+    "completion_tokens": 20,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 25,
+          "end": 32
+        }
+      ]
+    },
+    "request_bytes": 8761,
+    "response_bytes": 465,
+    "provider_elapsed_ms": 7703,
+    "elapsed_ms": 7719
+  },
+  {
+    "id": "O02",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1194,
+    "completion_tokens": 20,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [
+      "backend",
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": false
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 0,
+        "expected_groups": 1,
+        "exact_groups": 0,
+        "covered_groups": 0
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "backend",
+      "ai"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [
+      "backend"
+    ],
+    "selected_spans": {
+      "backend": [
+        {
+          "start": 7,
+          "end": 14
+        }
+      ]
+    },
+    "request_bytes": 8743,
+    "response_bytes": 470,
+    "provider_elapsed_ms": 7906,
+    "elapsed_ms": 7906
+  },
+  {
+    "id": "O03",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 3,
+    "profile_returned": true,
+    "prompt_tokens": 1317,
+    "completion_tokens": 26,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 45,
+          "end": 52
+        }
+      ]
+    },
+    "request_bytes": 9752,
+    "response_bytes": 487,
+    "provider_elapsed_ms": 7484,
+    "elapsed_ms": 7484
+  },
+  {
+    "id": "O04",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1179,
+    "completion_tokens": 20,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [
+      "backend",
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": false
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 0,
+        "expected_groups": 1,
+        "exact_groups": 0,
+        "covered_groups": 0
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "backend",
+      "ai"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [
+      "backend"
+    ],
+    "selected_spans": {
+      "backend": [
+        {
+          "start": 5,
+          "end": 12
+        }
+      ]
+    },
+    "request_bytes": 8701,
+    "response_bytes": 473,
+    "provider_elapsed_ms": 4797,
+    "elapsed_ms": 4797
+  },
+  {
+    "id": "O05",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 1,
+    "profile_returned": true,
+    "prompt_tokens": 1079,
+    "completion_tokens": 15,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "scalar",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "project_name": [
+        {
+          "start": 7,
+          "end": 16
+        }
+      ]
+    },
+    "request_bytes": 7880,
+    "response_bytes": 456,
+    "provider_elapsed_ms": 6297,
+    "elapsed_ms": 6297
+  },
+  {
+    "id": "O06",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1181,
+    "completion_tokens": 20,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "scalar",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "database": [
+        {
+          "start": 39,
+          "end": 45
+        }
+      ]
+    },
+    "request_bytes": 8675,
+    "response_bytes": 474,
+    "provider_elapsed_ms": 16515,
+    "elapsed_ms": 16515
+  },
+  {
+    "id": "O07",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1189,
+    "completion_tokens": 20,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 21,
+          "end": 23
+        }
+      ]
+    },
+    "request_bytes": 8822,
+    "response_bytes": 468,
+    "provider_elapsed_ms": 4687,
+    "elapsed_ms": 4687
+  },
+  {
+    "id": "O08",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1216,
+    "completion_tokens": 20,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "absent",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 34,
+          "end": 50
+        }
+      ]
+    },
+    "request_bytes": 9107,
+    "response_bytes": 469,
+    "provider_elapsed_ms": 5782,
+    "elapsed_ms": 5782
+  },
+  {
+    "id": "O09",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1190,
+    "completion_tokens": 18,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8826,
+    "response_bytes": 464,
+    "provider_elapsed_ms": 2531,
+    "elapsed_ms": 2531
+  },
+  {
+    "id": "O10",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1189,
+    "completion_tokens": 23,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "external_integrations": [
+        {
+          "start": 30,
+          "end": 39
+        }
+      ]
+    },
+    "request_bytes": 8816,
+    "response_bytes": 487,
+    "provider_elapsed_ms": 1313,
+    "elapsed_ms": 1313
+  },
+  {
+    "id": "O11",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1190,
+    "completion_tokens": 21,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "features": [
+        {
+          "start": 26,
+          "end": 31
+        }
+      ]
+    },
+    "request_bytes": 8869,
+    "response_bytes": 479,
+    "provider_elapsed_ms": 2906,
+    "elapsed_ms": 2906
+  },
+  {
+    "id": "O12",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1184,
+    "completion_tokens": 20,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 37,
+          "end": 41
+        }
+      ]
+    },
+    "request_bytes": 8729,
+    "response_bytes": 465,
+    "provider_elapsed_ms": 3125,
+    "elapsed_ms": 3125
+  },
+  {
+    "id": "O13",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1181,
+    "completion_tokens": 20,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "scalar",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "domain": [
+        {
+          "start": 27,
+          "end": 29
+        }
+      ]
+    },
+    "request_bytes": 8840,
+    "response_bytes": 469,
+    "provider_elapsed_ms": 2625,
+    "elapsed_ms": 2625
+  },
+  {
+    "id": "O14",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": false,
+    "error": "PROVIDER_TIMEOUT",
+    "calls": [
+      {
+        "call": 1,
+        "stage": "judgment",
+        "error": "PROVIDER_TIMEOUT"
+      }
+    ],
+    "request_bytes": 8918,
+    "provider_elapsed_ms": 40109,
+    "elapsed_ms": 40109,
+    "model": "deepseek-ai/deepseek-v4.1-flash"
+  },
+  {
+    "id": "AC01",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": false,
+    "prompt_tokens": 1265,
+    "completion_tokens": 20,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "result_kind": "conflict",
+    "conflict_recognized": true,
+    "request_bytes": 9367,
+    "response_bytes": 472,
+    "provider_elapsed_ms": 8406,
+    "elapsed_ms": 8406
+  },
+  {
+    "id": "AC02",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": false,
+    "prompt_tokens": 1284,
+    "completion_tokens": 20,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "result_kind": "conflict",
+    "conflict_recognized": true,
+    "request_bytes": 9614,
+    "response_bytes": 472,
+    "provider_elapsed_ms": 24500,
+    "elapsed_ms": 24500
+  },
+  {
+    "id": "AC03",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1203,
+    "completion_tokens": 20,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "scalar",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "database": [
+        {
+          "start": 10,
+          "end": 17
+        }
+      ]
+    },
+    "request_bytes": 8881,
+    "response_bytes": 474,
+    "provider_elapsed_ms": 9172,
+    "elapsed_ms": 9172
+  },
+  {
+    "id": "AC04",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1211,
+    "completion_tokens": 18,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 0,
+        "expected_groups": 1,
+        "exact_groups": 0,
+        "covered_groups": 0
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 9028,
+    "response_bytes": 464,
+    "provider_elapsed_ms": 20782,
+    "elapsed_ms": 20782
+  },
+  {
+    "id": "AC05",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1206,
+    "completion_tokens": 18,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 0,
+        "expected_groups": 1,
+        "exact_groups": 0,
+        "covered_groups": 0
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8980,
+    "response_bytes": 464,
+    "provider_elapsed_ms": 10953,
+    "elapsed_ms": 10953
+  },
+  {
+    "id": "AC06",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 1220,
+    "completion_tokens": 18,
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 9045,
+    "response_bytes": 464,
+    "provider_elapsed_ms": 8234,
+    "elapsed_ms": 8234
+  }
+]

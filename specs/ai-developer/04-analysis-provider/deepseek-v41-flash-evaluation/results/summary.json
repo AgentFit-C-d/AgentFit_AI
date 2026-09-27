@@ -1,0 +1,94 @@
+{
+  "solar_historical": {
+    "cases": 33,
+    "all_correct": 19,
+    "profile_correct": 17,
+    "conflicts_correct": 2,
+    "counterexamples_correct": 4,
+    "false_confirmation_cases": [
+      "O10",
+      "O12",
+      "AC04",
+      "AC05"
+    ],
+    "errors": {
+      "SECTION_MERGE": 4
+    },
+    "median_ms": 812,
+    "p95_ms": 6703,
+    "max_ms": 7140,
+    "failed_ids": [
+      "S02",
+      "S07",
+      "O01",
+      "O02",
+      "O03",
+      "O04",
+      "O07",
+      "O08",
+      "O10",
+      "O11",
+      "O12",
+      "O13",
+      "AC04",
+      "AC05"
+    ]
+  },
+  "deepseek_run1": {
+    "cases": 33,
+    "all_correct": 28,
+    "profile_correct": 26,
+    "conflicts_correct": 2,
+    "counterexamples_correct": 4,
+    "false_confirmation_cases": [
+      "O02",
+      "O04"
+    ],
+    "errors": {
+      "SECTION_MERGE": 1
+    },
+    "median_ms": 3563,
+    "p95_ms": 13047,
+    "max_ms": 18281,
+    "failed_ids": [
+      "S07",
+      "O02",
+      "O04",
+      "AC04",
+      "AC05"
+    ]
+  },
+  "deepseek_run2_model_verified": {
+    "cases": 33,
+    "all_correct": 27,
+    "profile_correct": 25,
+    "conflicts_correct": 2,
+    "counterexamples_correct": 4,
+    "false_confirmation_cases": [
+      "O02",
+      "O04"
+    ],
+    "errors": {
+      "SECTION_MERGE": 1,
+      "PROVIDER_TIMEOUT": 1
+    },
+    "median_ms": 7906,
+    "p95_ms": 37860,
+    "max_ms": 40109,
+    "failed_ids": [
+      "S07",
+      "O02",
+      "O04",
+      "O14",
+      "AC04",
+      "AC05"
+    ]
+  },
+  "gate": {
+    "both_runs_profile_gain": true,
+    "both_runs_zero_false_confirmations": false,
+    "both_runs_all_counterexamples": false,
+    "both_runs_no_errors": false,
+    "ready_for_default": false
+  }
+}

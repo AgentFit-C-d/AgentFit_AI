@@ -1,0 +1,16 @@
+{
+  "scope": "frozen_synthetic_atomic_judgment",
+  "model": "deepseek-ai/deepseek-v4.1-flash",
+  "thinking": false,
+  "schema": "atomic",
+  "max_tokens": 4096,
+  "timeout": 40,
+  "planned_cases": 33,
+  "planned_calls": 33,
+  "case_hashes": {
+    "evaluation-cases.json": "4d5c3446dc978ccb354be84020a4e827c4263afdd64f143f21d8a74400bc1404",
+    "counterexamples.json": "c4291ebd1d57cc9a71a1e661dc05da352da151119a4a4d660b1f9295f8342acd",
+    "conflict-gold.json": "907ae9114da59769e2783d65aabcd7833c6156844c2303fc3411f93b51d35329"
+  },
+  "held_out": false
+}
