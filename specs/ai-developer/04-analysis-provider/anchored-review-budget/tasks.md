@@ -3,4 +3,4 @@
 - [x] 설정 단계 격리·메타데이터 보존 테스트 실패 확인
 - [x] 구현 및 전체 248건 통과
 - [x] medium/low 동일 합성 6건 비교
-- [ ] 결과 기록·diff 확인·commit/push
+- [x] 결과 기록·diff 확인·commit/push (8a91168, origin/feature/anchored-review-budget)
