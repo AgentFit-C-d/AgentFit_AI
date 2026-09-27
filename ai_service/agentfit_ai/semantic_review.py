@@ -39,6 +39,7 @@ REVIEW_PROMPT += "\n판정 방향을 반드시 지킨다:\nuncertainty는 원문
 REVIEW_INVALID_REASONS = (
     "ROOT_SHAPE", "CHECKED_FIELDS", "ISSUES_SHAPE", "ISSUE_SHAPE", "ISSUE_ENUM",
     "EVIDENCE_LINES", "MISSING_INDEX", "NULL_NON_MISSING", "ARRAY_INDEX", "SCALAR_INDEX",
+    "DUPLICATE_TARGET",
 )
 
 class ReviewValidationError(ValueError):
