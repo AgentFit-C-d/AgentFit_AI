@@ -11,6 +11,7 @@ from .sections import split_sections
 from .solar import AnalysisError
 from .evidence import ROLES
 from .extraction_diff import diagnose
+from .field_role_schema import compatible, constrain_schema
 
 CASES=Path(__file__).resolve().parents[1]/"tests/fixtures/quote-extraction-cases.json"
 
@@ -43,6 +44,7 @@ def reasoning_effort(value):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live",action="store_true")
+    parser.add_argument("--schema",choices=("flat","field-role"),default="flat")
     parser.add_argument("--model",choices=("solar-mini4","solar-pro4"),default="solar-mini4")
     parser.add_argument("--reasoning",type=reasoning_effort,default="none")
     parser.add_argument("--output",type=Path,required=True)
@@ -51,7 +53,7 @@ def main():
     cases=json.loads(CASES.read_text(encoding="utf-8"))
     analyzer=SectionAnalyzer(load_api_key(),model=args.model,quote_only=True,jev_merge=True)
     args.output.mkdir(parents=True,exist_ok=False)
-    plan={"model":args.model,"version":"section-quotes-v3","scoring_revision":2,"diagnostic_revision":1,"planned":len(cases),
+    plan={"model":args.model,"version":"section-quotes-v3","scoring_revision":2,"diagnostic_revision":1,"schema_mode":args.schema,"planned":len(cases),
           "cases_sha256":hashlib.sha256(CASES.read_bytes()).hexdigest(),
           "prompt_sha256":hashlib.sha256(QUOTE_EXTRACT_PROMPT.encode()).hexdigest(),
           "gate":"all 6 structurally valid and exact criteria passed","max_tokens":4096,
@@ -64,6 +66,7 @@ def main():
             content={"document_context":{"headings":[list(s.path) for s in sections],"opening":sections[0].text},
                      "sections":[{"sectionId":s.id,"headingPath":list(s.path),"text":s.text} for s in sections]}
             schema=extraction_schema(sections,quote_only=True)
+            if args.schema=="field-role":schema=constrain_schema(schema)
             payload={"model":args.model,"messages":[{"role":"system","content":QUOTE_EXTRACT_PROMPT},
                      {"role":"user","content":json.dumps(content,ensure_ascii=False)}],
                      "response_format":{"type":"json_schema","json_schema":{"name":"agentfit_sections","strict":True,"schema":schema}},
@@ -72,6 +75,8 @@ def main():
             try:
                 reply=analyzer._send_payload(payload,("sections",),_trace=trace,timeout=40)
                 pool=validate_candidates(reply[0],sections,0,quote_only=True)
+                if args.schema=="field-role" and not all(compatible(x["field"],x["role"],x["status"]) for x in pool):
+                    raise AnalysisError("FIELD_ROLE_SCHEMA")
                 row.update(structural=True,passed=score(pool,case),candidate_count=len(pool),
                            diagnostic=diagnose(pool,case),
                            model=reply[1],prompt_tokens=reply[2],completion_tokens=reply[3])
