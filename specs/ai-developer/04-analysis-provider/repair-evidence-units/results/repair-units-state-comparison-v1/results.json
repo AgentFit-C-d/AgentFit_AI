@@ -1,0 +1,2504 @@
+[
+  {
+    "id": "T07",
+    "iteration": 1,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2241,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 453
+  },
+  {
+    "id": "S01",
+    "iteration": 1,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2241,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 391
+  },
+  {
+    "id": "S02",
+    "iteration": 1,
+    "passed": false,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      },
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      }
+    ],
+    "error": "SECTION_MERGE",
+    "elapsed_ms": 781
+  },
+  {
+    "id": "S03",
+    "iteration": 1,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": null,
+        "quote_in_context_matches": null
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "absent",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2205,
+    "completion_tokens": 52,
+    "fact_states": [
+      {
+        "role": "operating_model",
+        "status": "absent",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "absent",
+    "selected_spans": [
+      {
+        "start": 0,
+        "end": 28
+      }
+    ],
+    "elapsed_ms": 515
+  },
+  {
+    "id": "S04",
+    "iteration": 1,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2233,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 313
+  },
+  {
+    "id": "S05",
+    "iteration": 1,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2235,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 250
+  },
+  {
+    "id": "S06",
+    "iteration": 1,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2242,
+    "completion_tokens": 51,
+    "fact_states": [
+      {
+        "role": "operating_model",
+        "status": "confirmed",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "known",
+    "selected_spans": [
+      {
+        "start": 7,
+        "end": 13
+      }
+    ],
+    "elapsed_ms": 515
+  },
+  {
+    "id": "S07",
+    "iteration": 1,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2246,
+    "completion_tokens": 53,
+    "fact_states": [
+      {
+        "role": "named_service",
+        "status": "confirmed",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "known",
+    "selected_spans": [
+      {
+        "start": 25,
+        "end": 32
+      }
+    ],
+    "elapsed_ms": 672
+  },
+  {
+    "id": "S08",
+    "iteration": 1,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": null,
+        "quote_in_context_matches": null
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "absent",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2212,
+    "completion_tokens": 51,
+    "fact_states": [
+      {
+        "role": "named_service",
+        "status": "absent",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "absent",
+    "selected_spans": [
+      {
+        "start": 0,
+        "end": 28
+      }
+    ],
+    "elapsed_ms": 547
+  },
+  {
+    "id": "S09",
+    "iteration": 1,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2216,
+    "completion_tokens": 13,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 594
+  },
+  {
+    "id": "S10",
+    "iteration": 1,
+    "passed": false,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      },
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      }
+    ],
+    "mismatch_fields": [
+      "frontend"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 2,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2248,
+    "completion_tokens": 88,
+    "fact_states": [
+      {
+        "role": "product_fact",
+        "status": "confirmed",
+        "scope": "current"
+      },
+      {
+        "role": "product_fact",
+        "status": "confirmed",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "known",
+    "selected_spans": [
+      {
+        "start": 6,
+        "end": 13
+      },
+      {
+        "start": 34,
+        "end": 40
+      }
+    ],
+    "elapsed_ms": 843
+  },
+  {
+    "id": "S11",
+    "iteration": 1,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2239,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 235
+  },
+  {
+    "id": "S12",
+    "iteration": 1,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": null,
+        "quote_in_context_matches": null
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2239,
+    "completion_tokens": 43,
+    "fact_states": [
+      {
+        "role": "user_action",
+        "status": "confirmed",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "known",
+    "selected_spans": [
+      {
+        "start": 18,
+        "end": 23
+      }
+    ],
+    "elapsed_ms": 515
+  },
+  {
+    "id": "T07",
+    "iteration": 2,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2241,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 344
+  },
+  {
+    "id": "S01",
+    "iteration": 2,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2241,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 281
+  },
+  {
+    "id": "S02",
+    "iteration": 2,
+    "passed": false,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      },
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      }
+    ],
+    "error": "SECTION_MERGE",
+    "elapsed_ms": 891
+  },
+  {
+    "id": "S03",
+    "iteration": 2,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": null,
+        "quote_in_context_matches": null
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "absent",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2205,
+    "completion_tokens": 52,
+    "fact_states": [
+      {
+        "role": "operating_model",
+        "status": "absent",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "absent",
+    "selected_spans": [
+      {
+        "start": 0,
+        "end": 28
+      }
+    ],
+    "elapsed_ms": 531
+  },
+  {
+    "id": "S04",
+    "iteration": 2,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2233,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 266
+  },
+  {
+    "id": "S05",
+    "iteration": 2,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2235,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 328
+  },
+  {
+    "id": "S06",
+    "iteration": 2,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2242,
+    "completion_tokens": 51,
+    "fact_states": [
+      {
+        "role": "operating_model",
+        "status": "confirmed",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "known",
+    "selected_spans": [
+      {
+        "start": 7,
+        "end": 13
+      }
+    ],
+    "elapsed_ms": 500
+  },
+  {
+    "id": "S07",
+    "iteration": 2,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2246,
+    "completion_tokens": 53,
+    "fact_states": [
+      {
+        "role": "named_service",
+        "status": "confirmed",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "known",
+    "selected_spans": [
+      {
+        "start": 25,
+        "end": 32
+      }
+    ],
+    "elapsed_ms": 781
+  },
+  {
+    "id": "S08",
+    "iteration": 2,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": null,
+        "quote_in_context_matches": null
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "absent",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2212,
+    "completion_tokens": 51,
+    "fact_states": [
+      {
+        "role": "named_service",
+        "status": "absent",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "absent",
+    "selected_spans": [
+      {
+        "start": 0,
+        "end": 28
+      }
+    ],
+    "elapsed_ms": 532
+  },
+  {
+    "id": "S09",
+    "iteration": 2,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2216,
+    "completion_tokens": 13,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 359
+  },
+  {
+    "id": "S10",
+    "iteration": 2,
+    "passed": false,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      },
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      }
+    ],
+    "mismatch_fields": [
+      "frontend"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 2,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2248,
+    "completion_tokens": 88,
+    "fact_states": [
+      {
+        "role": "product_fact",
+        "status": "confirmed",
+        "scope": "current"
+      },
+      {
+        "role": "product_fact",
+        "status": "confirmed",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "known",
+    "selected_spans": [
+      {
+        "start": 6,
+        "end": 13
+      },
+      {
+        "start": 34,
+        "end": 40
+      }
+    ],
+    "elapsed_ms": 1047
+  },
+  {
+    "id": "S11",
+    "iteration": 2,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2239,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 250
+  },
+  {
+    "id": "S12",
+    "iteration": 2,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": null,
+        "quote_in_context_matches": null
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2239,
+    "completion_tokens": 43,
+    "fact_states": [
+      {
+        "role": "user_action",
+        "status": "confirmed",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "known",
+    "selected_spans": [
+      {
+        "start": 18,
+        "end": 23
+      }
+    ],
+    "elapsed_ms": 437
+  },
+  {
+    "id": "T07",
+    "iteration": 3,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2241,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 281
+  },
+  {
+    "id": "S01",
+    "iteration": 3,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2241,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 235
+  },
+  {
+    "id": "S02",
+    "iteration": 3,
+    "passed": false,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      },
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      }
+    ],
+    "error": "SECTION_MERGE",
+    "elapsed_ms": 718
+  },
+  {
+    "id": "S03",
+    "iteration": 3,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": null,
+        "quote_in_context_matches": null
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "absent",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2205,
+    "completion_tokens": 52,
+    "fact_states": [
+      {
+        "role": "operating_model",
+        "status": "absent",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "absent",
+    "selected_spans": [
+      {
+        "start": 0,
+        "end": 28
+      }
+    ],
+    "elapsed_ms": 485
+  },
+  {
+    "id": "S04",
+    "iteration": 3,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2233,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 235
+  },
+  {
+    "id": "S05",
+    "iteration": 3,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2235,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 812
+  },
+  {
+    "id": "S06",
+    "iteration": 3,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2242,
+    "completion_tokens": 51,
+    "fact_states": [
+      {
+        "role": "operating_model",
+        "status": "confirmed",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "known",
+    "selected_spans": [
+      {
+        "start": 7,
+        "end": 13
+      }
+    ],
+    "elapsed_ms": 563
+  },
+  {
+    "id": "S07",
+    "iteration": 3,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2246,
+    "completion_tokens": 53,
+    "fact_states": [
+      {
+        "role": "named_service",
+        "status": "confirmed",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "known",
+    "selected_spans": [
+      {
+        "start": 25,
+        "end": 32
+      }
+    ],
+    "elapsed_ms": 484
+  },
+  {
+    "id": "S08",
+    "iteration": 3,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": null,
+        "quote_in_context_matches": null
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "absent",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2212,
+    "completion_tokens": 51,
+    "fact_states": [
+      {
+        "role": "named_service",
+        "status": "absent",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "absent",
+    "selected_spans": [
+      {
+        "start": 0,
+        "end": 28
+      }
+    ],
+    "elapsed_ms": 625
+  },
+  {
+    "id": "S09",
+    "iteration": 3,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2216,
+    "completion_tokens": 13,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 312
+  },
+  {
+    "id": "S10",
+    "iteration": 3,
+    "passed": false,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      },
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": 1,
+        "quote_in_context_matches": 1
+      }
+    ],
+    "mismatch_fields": [
+      "frontend"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 2,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2248,
+    "completion_tokens": 88,
+    "fact_states": [
+      {
+        "role": "product_fact",
+        "status": "confirmed",
+        "scope": "current"
+      },
+      {
+        "role": "product_fact",
+        "status": "confirmed",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "known",
+    "selected_spans": [
+      {
+        "start": 6,
+        "end": 13
+      },
+      {
+        "start": 34,
+        "end": 40
+      }
+    ],
+    "elapsed_ms": 797
+  },
+  {
+    "id": "S11",
+    "iteration": 3,
+    "passed": true,
+    "quote_observations": [],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2239,
+    "completion_tokens": 11,
+    "fact_states": [],
+    "actual_state": "unknown",
+    "selected_spans": [],
+    "elapsed_ms": 234
+  },
+  {
+    "id": "S12",
+    "iteration": 3,
+    "passed": true,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 1,
+        "context_matches": null,
+        "quote_in_context_matches": null
+      }
+    ],
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 2239,
+    "completion_tokens": 43,
+    "fact_states": [
+      {
+        "role": "user_action",
+        "status": "confirmed",
+        "scope": "current"
+      }
+    ],
+    "actual_state": "known",
+    "selected_spans": [
+      {
+        "start": 18,
+        "end": 23
+      }
+    ],
+    "elapsed_ms": 562
+  }
+]

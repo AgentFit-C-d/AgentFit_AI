@@ -1,0 +1,91 @@
+[
+  {
+    "id": "U01",
+    "document": "개발 시험은 Lynx로 한다. 운영 AI도 Lynx로 확정했다.",
+    "field": "ai",
+    "gold": {
+      "ai": [
+        [
+          "Lynx"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "U02",
+    "document": "개발에서는 Lark를 검증한다. 운영 모델은 아직 미정이다.",
+    "field": "ai",
+    "gold": {}
+  },
+  {
+    "id": "U03",
+    "document": "운영 환경에서 AI 모델을 사용하지 않기로 했다.",
+    "field": "ai",
+    "gold": {
+      "ai": []
+    }
+  },
+  {
+    "id": "U04",
+    "document": "외부 인증은 쓰지 않는다. 결제는 ChargeBee를 연동한다.",
+    "field": "external_integrations",
+    "gold": {
+      "external_integrations": [
+        [
+          "ChargeBee"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "U05",
+    "document": "운영 배포 환경은 Fly.io로 정했다. 개발 PC와는 별개다.",
+    "field": "deployment",
+    "gold": {
+      "deployment": "Fly.io"
+    }
+  },
+  {
+    "id": "U06",
+    "document": "제품 이름은 Dr. Atlas다.",
+    "field": "project_name",
+    "gold": {
+      "project_name": "Dr. Atlas"
+    }
+  },
+  {
+    "id": "U07",
+    "document": "# 예시\r\n예시 DB는 SQLite다.\r\n# 현재 제품\r\n제품 DB는 DuckDB다.",
+    "field": "database",
+    "gold": {
+      "database": "DuckDB"
+    }
+  },
+  {
+    "id": "U08",
+    "document": "필수 기능은 수강 신청과 성적 조회다.",
+    "field": "features",
+    "gold": {
+      "features": [
+        [
+          "수강 신청"
+        ],
+        [
+          "성적 조회"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "U09",
+    "document": "운영 AI는 Falcon이고 개발 검증 도구도 Falcon이다.",
+    "field": "ai",
+    "gold": {
+      "ai": [
+        [
+          "Falcon"
+        ]
+      ]
+    }
+  }
+]

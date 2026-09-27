@@ -5,6 +5,7 @@ from .source_repair import SOURCE_REPAIR_PROMPT, repair_schema, apply_repairs
 from .repair_examples import REPAIR_EXAMPLES
 from .repair_value import VALUE_BOUNDARY, VALUE_BOUNDARY_V2
 from .repair_state import STATE_GROUNDING, STATE_GROUNDING_V2
+from .repair_units import split_repair_units
 from .anchored_candidates import units
 from .profile import FIELDS, validate_profile
 from .solar import SolarAnalyzer, AnalysisError
@@ -60,7 +61,10 @@ def main():
     parser.add_argument("--boundary-revision",choices=("v1","v2"),default="v1")
     parser.add_argument("--transfer",action="store_true")
     parser.add_argument("--state-cases",action="store_true")
+    parser.add_argument("--unit-transfer",action="store_true")
     parser.add_argument("--state-grounding",action="store_true")
+    parser.add_argument("--evidence-units",action="store_true")
+    parser.add_argument("--effort",choices=("none","low"),default="none")
     parser.add_argument("--state-revision",choices=("v1","v2"),default="v1")
     parser.add_argument("--repeat",type=int,choices=(1,2,3),default=1)
     parser.add_argument("--interval-seconds",type=float,default=0)
@@ -73,6 +77,9 @@ def main():
     if args.state_cases:
         if args.transfer:parser.error("choose one case set")
         case_file=case_file.parent.parent/"repair-state-grounding/cases.json"
+    if args.unit_transfer:
+        if args.transfer or args.state_cases:parser.error("choose one case set")
+        case_file=case_file.parent.parent/"repair-evidence-units/transfer-cases.json"
     cases=json.loads(case_file.read_text(encoding="utf-8"))
     if args.case_ids:
         if len(set(args.case_ids))!=len(args.case_ids) or not set(args.case_ids)<=set(c["id"] for c in cases):parser.error("invalid case ids")
@@ -80,8 +87,8 @@ def main():
     prompt=SOURCE_REPAIR_PROMPT+REPAIR_EXAMPLES+((VALUE_BOUNDARY if args.boundary_revision=="v1" else VALUE_BOUNDARY_V2) if args.value_boundary else "")
     if args.state_grounding:prompt+=STATE_GROUNDING if args.state_revision=="v1" else STATE_GROUNDING_V2
     args.output.mkdir(parents=True,exist_ok=False)
-    plan={"scope":"isolated_source_repair","model":"solar-mini4","effort":"none","max_tokens":4096,"timeout":40,
-          "state_revision":args.state_revision,"state_cases":args.state_cases,"state_grounding":args.state_grounding,"value_boundary":args.value_boundary,"boundary_revision":args.boundary_revision,"transfer":args.transfer,"planned":len(cases)*args.repeat,"case_ids":[c["id"] for c in cases],"repeat":args.repeat,"interval_seconds":args.interval_seconds,
+    plan={"scope":"isolated_source_repair","model":"solar-mini4","effort":args.effort,"max_tokens":4096,"timeout":40,
+          "evidence_units":args.evidence_units,"state_revision":args.state_revision,"unit_transfer":args.unit_transfer,"state_cases":args.state_cases,"state_grounding":args.state_grounding,"value_boundary":args.value_boundary,"boundary_revision":args.boundary_revision,"transfer":args.transfer,"planned":len(cases)*args.repeat,"case_ids":[c["id"] for c in cases],"repeat":args.repeat,"interval_seconds":args.interval_seconds,
           "cases_sha256":hashlib.sha256(case_file.read_bytes()).hexdigest(),
           "prompt_sha256":hashlib.sha256(prompt.encode()).hexdigest(),
           "script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
@@ -90,13 +97,14 @@ def main():
     for case,iteration in ((c,i) for i in range(1,args.repeat+1) for c in cases):
         if rows and args.interval_seconds:time.sleep(args.interval_seconds)
         doc=case["document"];field=case["field"];sections=units(doc)
+        if args.evidence_units:sections=split_repair_units(sections)
         previous=validate_profile(doc,case["id"],{"data":dict.fromkeys(FIELDS),"evidence":{f:[] for f in FIELDS}})
         content={"document":doc,"requestedFields":[field],"previous":previous,
                  "issues":[{"field":field,"kind":"missing","itemIndex":None,"evidenceLineIds":list(range(1,len(doc.splitlines())+1))}],
                  "units":[{"unitId":s.id,"text":s.text,"headingPath":list(s.path)} for s in sections]}
         payload={"model":"solar-mini4","messages":[{"role":"system","content":prompt},{"role":"user","content":json.dumps(content,ensure_ascii=False)}],
                  "response_format":{"type":"json_schema","json_schema":{"name":"agentfit_sections","strict":True,"schema":repair_schema([field],sections)}},
-                 "reasoning_effort":"none","temperature":0,"frequency_penalty":0,"max_tokens":4096,"stream":False}
+                 "reasoning_effort":args.effort,"temperature":0,"frequency_penalty":0,"max_tokens":4096,"stream":False}
         row={"id":case["id"],"iteration":iteration,"passed":False};trace={};started=time.monotonic()
         try:
             reply,model,pt,ct=analyzer._send_payload(payload,("repairs",),_trace=trace,timeout=40)
@@ -116,6 +124,7 @@ def main():
                     "suffix_characters":len(actual)-actual.find(expected)-len(expected) if type(actual) is str and expected in actual else None}
         except AnalysisError as error:
             row["error"]=error.code
+            if hasattr(error,"merge_detail"):row["merge_error"]=error.merge_detail
             if error.code=="INVALID_RESPONSE":row["response_observation"]=response_format_observation(trace.get("raw"))
         finally:trace.pop("raw",None)
         row["elapsed_ms"]=round((time.monotonic()-started)*1000);rows.append(row)

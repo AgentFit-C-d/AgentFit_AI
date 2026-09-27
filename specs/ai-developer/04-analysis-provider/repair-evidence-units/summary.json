@@ -1,0 +1,103 @@
+[
+  {
+    "run": "repair-units-state-comparison-v1",
+    "passed": 33,
+    "total": 39,
+    "median_ms": 500,
+    "p95_ms": 891,
+    "failed": [
+      {
+        "id": "S02",
+        "iteration": 1,
+        "error": "SECTION_MERGE"
+      },
+      {
+        "id": "S10",
+        "iteration": 1
+      },
+      {
+        "id": "S02",
+        "iteration": 2,
+        "error": "SECTION_MERGE"
+      },
+      {
+        "id": "S10",
+        "iteration": 2
+      },
+      {
+        "id": "S02",
+        "iteration": 3,
+        "error": "SECTION_MERGE"
+      },
+      {
+        "id": "S10",
+        "iteration": 3
+      }
+    ]
+  },
+  {
+    "run": "repair-units-low-diagnostic-v1",
+    "passed": 4,
+    "total": 4,
+    "median_ms": 4093.5,
+    "p95_ms": 23500,
+    "failed": []
+  },
+  {
+    "run": "repair-units-state-low-v1",
+    "passed": 39,
+    "total": 39,
+    "median_ms": 4828,
+    "p95_ms": 28438,
+    "failed": []
+  },
+  {
+    "run": "repair-original-units-low-diagnostic-v1",
+    "passed": 4,
+    "total": 4,
+    "median_ms": 4140.5,
+    "p95_ms": 21718,
+    "failed": []
+  },
+  {
+    "run": "repair-original-units-transfer-low-v1",
+    "passed": 9,
+    "total": 9,
+    "median_ms": 4063,
+    "p95_ms": 11000,
+    "failed": []
+  },
+  {
+    "run": "repair-split-units-transfer-low-v1",
+    "passed": 7,
+    "total": 9,
+    "median_ms": 5828,
+    "p95_ms": 33438,
+    "failed": [
+      {
+        "id": "U06",
+        "iteration": 1,
+        "error": "INCOMPLETE_RESPONSE"
+      },
+      {
+        "id": "U09",
+        "iteration": 1,
+        "error": "SOURCE_REPAIR_INVALID"
+      }
+    ]
+  },
+  {
+    "run": "repair-original-units-full-low-v1",
+    "passed": 11,
+    "total": 12,
+    "median_ms": 14133.0,
+    "p95_ms": 44594,
+    "max_calls": 5,
+    "failed": [
+      {
+        "id": "N-004",
+        "error": "INCOMPLETE_RESPONSE"
+      }
+    ]
+  }
+]
