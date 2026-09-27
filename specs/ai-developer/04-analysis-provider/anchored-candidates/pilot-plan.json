@@ -1,0 +1,49 @@
+{
+  "model": "solar-mini4",
+  "cases_sha256": "3fc74b4f1773e1fa91b22d5dbb5420774d5c0936f6d42ceb6cd00b030bcb5566",
+  "gold": [
+    {
+      "features": [
+        [
+          "장소 확인"
+        ],
+        [
+          "후보 선택"
+        ]
+      ]
+    },
+    {
+      "features": [
+        [
+          "회원 승인을 요청",
+          "회원 승인을 요청한다",
+          "사용자는 회원 승인을 요청한다",
+          "사용자는 회원 승인을 요청한다."
+        ],
+        [
+          "회원 승인을 처리",
+          "회원 승인을 처리한다",
+          "운영자는 회원 승인을 처리한다",
+          "운영자는 회원 승인을 처리한다."
+        ]
+      ]
+    },
+    {},
+    {
+      "external_integrations": []
+    },
+    {},
+    {
+      "features": [
+        [
+          "일정 추천"
+        ]
+      ]
+    }
+  ],
+  "candidate_prompt_sha256": "beb96ded4af34b579250402dde4438c0da3c4314c0dbf9ce5daad298e8b8019d",
+  "judgment_prompt_sha256": "a35436577d85dbe4752494edd665932085368a69a877c3eed8bbe169dc6a7f64",
+  "semantic_scoring_revision": 1,
+  "planned": 6,
+  "rule": "all six semantic profiles match, no provider or validation error; only then repeat twice"
+}

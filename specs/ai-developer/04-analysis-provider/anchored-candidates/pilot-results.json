@@ -1,0 +1,139 @@
+{
+  "planned": 6,
+  "passed": 1,
+  "rows": [
+    {
+      "id": "Q-001",
+      "passed": false,
+      "error": "PROVIDER_TIMEOUT",
+      "calls": [
+        {
+          "stage": "candidate_generation",
+          "outcome": "validated"
+        },
+        {
+          "stage": "judgment",
+          "outcome": "semantic_failed"
+        },
+        {
+          "stage": "semantic_review",
+          "outcome": "semantic_failed"
+        },
+        {
+          "stage": "semantic_repair",
+          "outcome": "validated"
+        },
+        {
+          "stage": "semantic_recheck",
+          "outcome": "failed",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ]
+    },
+    {
+      "id": "Q-002",
+      "passed": false,
+      "error": "PROVIDER_TIMEOUT",
+      "calls": [
+        {
+          "stage": "candidate_generation",
+          "outcome": "validated"
+        },
+        {
+          "stage": "judgment",
+          "outcome": "validated"
+        },
+        {
+          "stage": "semantic_review",
+          "outcome": "failed",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ]
+    },
+    {
+      "id": "Q-003",
+      "passed": false,
+      "error": "SECTION_MERGE",
+      "calls": [
+        {
+          "stage": "candidate_generation",
+          "outcome": "validated"
+        },
+        {
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "error": "SECTION_MERGE"
+        }
+      ]
+    },
+    {
+      "id": "Q-004",
+      "passed": false,
+      "error": "PROVIDER_TIMEOUT",
+      "calls": [
+        {
+          "stage": "candidate_generation",
+          "outcome": "validated"
+        },
+        {
+          "stage": "judgment",
+          "outcome": "semantic_failed"
+        },
+        {
+          "stage": "semantic_review",
+          "outcome": "semantic_failed"
+        },
+        {
+          "stage": "semantic_repair",
+          "outcome": "validated"
+        },
+        {
+          "stage": "semantic_recheck",
+          "outcome": "failed",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ]
+    },
+    {
+      "id": "Q-005",
+      "passed": true,
+      "mismatch_fields": [],
+      "provider_calls": 3,
+      "elapsed_ms": 10000,
+      "model": "solar-mini4-260922",
+      "first_pass": true
+    },
+    {
+      "id": "Q-006",
+      "passed": false,
+      "error": "PROVIDER_TIMEOUT",
+      "calls": [
+        {
+          "stage": "candidate_generation",
+          "outcome": "validated"
+        },
+        {
+          "stage": "candidate_generation",
+          "outcome": "validated"
+        },
+        {
+          "stage": "judgment",
+          "outcome": "semantic_failed"
+        },
+        {
+          "stage": "semantic_review",
+          "outcome": "semantic_failed"
+        },
+        {
+          "stage": "semantic_repair",
+          "outcome": "validated"
+        },
+        {
+          "stage": "semantic_recheck",
+          "outcome": "failed",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ]
+    }
+  ]
+}

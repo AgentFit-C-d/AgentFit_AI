@@ -1,6 +1,6 @@
 # 원문 단위 후보 생성·판단 분리 — 구현 전 검토안
 
-상태: 설계 작성, 사용자 확인 대기. 목표의 완료 기준은 draft-readiness를 유지한다.
+상태: 사용자 설계 승인 후 opt-in 구현 및 첫 파일럿 진행. 목표의 완료 기준은 draft-readiness를 유지한다.
 
 ## 근거
 현재 quote-only 추출도 한 번에 field/quote/context/role/status/scope를 정한다. Jev 실험은 이렇게 이미 잘못 분류된 후보를 선택하는 방식이라 앞 단계 오류를 복구할 수 없었다.

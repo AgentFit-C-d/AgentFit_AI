@@ -17,7 +17,7 @@ _ATX = re.compile(r"^ {0,3}(#{1,6})[ \t]+(.*?)(?:[ \t]+#+[ \t]*)?$")
 _SETEXT = re.compile(r"^ {0,3}(=+|-+)[ \t]*$")
 _FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
 
-def split_sections(document, max_chars=12000):
+def split_sections(document, max_chars=12000, *, preserve_blocks=False):
     if type(document) is not str or not document.strip() or type(max_chars) is not int or max_chars<1:
         raise SectionError("SECTION_LIMIT")
     lines=document.splitlines(keepends=True)
@@ -77,6 +77,8 @@ def split_sections(document, max_chars=12000):
         if start is not None:
             result.append(Section("S"+str(len(result)+1).zfill(4),start,end,path,document[start:end]))
     for a,b,h in blocks:
+        if preserve_blocks and start is not None:
+            flush();start=None
         if b-a>max_chars:raise SectionError("SECTION_LIMIT")
         if h:
             flush();start=None
