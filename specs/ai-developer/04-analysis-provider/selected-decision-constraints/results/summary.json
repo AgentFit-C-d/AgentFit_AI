@@ -1,0 +1,68 @@
+{
+  "baseline": {
+    "total": 27,
+    "passed": 15,
+    "errors": {
+      "SECTION_MERGE": 4
+    },
+    "merge_reasons": {
+      "DUPLICATE_VALUE": 3,
+      "SELECTED_STATUS": 1
+    },
+    "unknown_false_cases": [
+      "S01",
+      "O04"
+    ],
+    "median_ms": 1266,
+    "p95_ms": 9453,
+    "failed_ids": [
+      "S01",
+      "S02",
+      "S03",
+      "S08",
+      "S12",
+      "O01",
+      "O04",
+      "O07",
+      "O08",
+      "O10",
+      "O11",
+      "O13"
+    ],
+    "prompt_tokens": 24129,
+    "completion_tokens": 2064
+  },
+  "constrained": {
+    "total": 27,
+    "passed": 15,
+    "errors": {
+      "SECTION_MERGE": 3
+    },
+    "merge_reasons": {
+      "DUPLICATE_VALUE": 2,
+      "SELECTED_COUNT": 1
+    },
+    "unknown_false_cases": [
+      "S01",
+      "O01"
+    ],
+    "median_ms": 1391,
+    "p95_ms": 7203,
+    "failed_ids": [
+      "S01",
+      "S02",
+      "S03",
+      "S08",
+      "S12",
+      "O01",
+      "O03",
+      "O07",
+      "O08",
+      "O10",
+      "O11",
+      "O13"
+    ],
+    "prompt_tokens": 24129,
+    "completion_tokens": 2140
+  }
+}

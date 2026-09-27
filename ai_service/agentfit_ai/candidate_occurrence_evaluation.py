@@ -22,6 +22,9 @@ def score_alternatives(profile, alternatives):
 def error_diagnostics(error):
     return safe_diagnostics(getattr(error,"diagnostics",None) or {})
 
+def unknown_confirmations(profile,gold):
+    return [f for f in FIELDS if gold.get(f) is None and profile["data"][f] is not None]
+
 def fixed_pool(case):
     sections=units(case["document"])
     pool=validate_quotes(case["fixed_extraction_reply"],sections,0,expand_occurrences=True)
@@ -30,14 +33,14 @@ def fixed_pool(case):
         raise ValueError("frozen occurrence reference mismatch: "+case["id"])
     return sections,pool
 
-def judge(analyzer,case,focus):
+def judge(analyzer,case,focus,selected_constraints=False):
     sections,pool=fixed_pool(case)
     prompt=JUDGMENT_FOCUS_PROMPT if focus else JUDGMENT_PROMPT_V2
     content={"document":case["document"],"candidates":candidate_views(pool,sections,focus=focus)}
     payload={"model":"solar-pro4","messages":[{"role":"system","content":prompt},
              {"role":"user","content":json.dumps(content,ensure_ascii=False)}],
              "response_format":{"type":"json_schema","json_schema":{"name":"agentfit_sections",
-               "strict":True,"schema":judgment_schema(pool)}},
+               "strict":True,"schema":judgment_schema(pool,selected_constraints=selected_constraints)}},
              "reasoning_effort":"none","temperature":0,"frequency_penalty":0,"max_tokens":4096,"stream":False}
     trace={}
     call={"call":1,"stage":"judgment","outcome":"started","reasoning_effort":"none","max_tokens":4096}
@@ -48,6 +51,7 @@ def judge(analyzer,case,focus):
         return profile,{"provider_calls":1,"candidate_count":len(pool),"prompt_tokens":pt,"completion_tokens":ct}
     except AnalysisError as error:
         call.update(outcome="validation_failed" if call["outcome"]=="response_received" else "failed",error=error.code)
+        if hasattr(error,"merge_detail"):call["merge_error"]=error.merge_detail
         error.diagnostics={"calls":[call],"candidate_count":len(pool)}
         raise
     finally:trace.pop("raw",None)
@@ -57,6 +61,7 @@ def main():
     parser.add_argument("--live",action="store_true")
     parser.add_argument("--mode",choices=("judgment","full"),required=True)
     parser.add_argument("--focus",action="store_true")
+    parser.add_argument("--selected-constraints",action="store_true")
     parser.add_argument("--output",type=Path,required=True)
     args=parser.parse_args()
     if not args.live:parser.error("--live required")
@@ -72,9 +77,9 @@ def main():
     args.output.mkdir(parents=True,exist_ok=False)
     config=dict(model="solar-pro4",prompt_revision="v2",review_effort="low",source_repair=True,
         repair_examples=True,review_examples=True,review_expression=True,repair_value_boundary=True,
-        repair_state_grounding=True,repair_effort="none",candidate_occurrences=args.focus)
+        repair_state_grounding=True,repair_effort="none",candidate_occurrences=args.focus,selected_constraints=args.selected_constraints)
     plan={"scope":"isolated_judgment" if args.mode=="judgment" else "full_flow",
-        "focus":args.focus,"planned":len(cases),"interval_seconds":2,"model":"solar-pro4",
+        "focus":args.focus,"selected_constraints":args.selected_constraints,"planned":len(cases),"interval_seconds":2,"model":"solar-pro4",
         "judgment_effort":"none","max_tokens":4096,"judgment_timeout":40,
         "full_flow_config":config if args.mode=="full" else None,
         "cases_sha256":hashlib.sha256(case_file.read_bytes()).hexdigest(),
@@ -88,7 +93,7 @@ def main():
         row={"id":case["id"],"passed":False};started=time.monotonic()
         try:
             if args.mode=="judgment":
-                profile,diagnostic=judge(analyzer,case,args.focus)
+                profile,diagnostic=judge(analyzer,case,args.focus,args.selected_constraints)
                 row.update(diagnostic)
             else:
                 result=analyzer.analyze(case["document"],case["id"])
@@ -100,6 +105,7 @@ def main():
             row.update(score_profile(profile,case["gold"]),
                 **score_alternatives(profile,case["accepted_evidence_sets"]))
             row["passed"]=row["passed"] and row["evidence_matched"]
+            row["unknown_false_confirmation_fields"]=unknown_confirmations(profile,case["gold"])
             row["selected_spans"]={f:[{"start":s["start"],"end":s["end"]} for s in profile["evidence"][f]]
                 for f in FIELDS if profile["evidence"][f]}
         except AnalysisError as error:

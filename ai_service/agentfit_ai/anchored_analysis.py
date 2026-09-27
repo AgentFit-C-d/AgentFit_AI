@@ -41,7 +41,7 @@ Do not change quotations or add new candidates. If reviewing issues, reconsider 
 
 class AnchoredAnalyzer(SolarAnalyzer):
     """Experimental path; inherits existing diagnostics retention and deadline wrapper."""
-    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, review_examples=False, review_expression=False, repair_value_boundary=False, repair_state_grounding=False, repair_evidence_units=False, repair_effort="none", repair_occurrence_index=False, candidate_occurrences=False, **kwargs):
+    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, review_examples=False, review_expression=False, repair_value_boundary=False, repair_state_grounding=False, repair_evidence_units=False, repair_effort="none", repair_occurrence_index=False, candidate_occurrences=False, selected_constraints=False, **kwargs):
         if review_effort not in ("medium", "low"):
             raise ValueError("unsupported review effort")
         if prompt_revision not in ("v1", "v2"):
@@ -62,6 +62,9 @@ class AnchoredAnalyzer(SolarAnalyzer):
             raise ValueError("repair_occurrence_index requires source_repair and original units")
         if type(candidate_occurrences) is not bool or candidate_occurrences and prompt_revision!="v2":
             raise ValueError("candidate_occurrences requires prompt_revision v2")
+        if type(selected_constraints) is not bool or selected_constraints and prompt_revision!="v2":
+            raise ValueError("selected_constraints requires prompt_revision v2")
+        self._selected_constraints=selected_constraints
         self._candidate_occurrences=candidate_occurrences
         self._repair_occurrence_index=repair_occurrence_index
         self._repair_effort=repair_effort
@@ -86,6 +89,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
     def _analyze(self,document,document_id,diagnostic,raw_responses,deadline):
         started=self._clock()
         version="anchored-"+self._prompt_revision+("+source-repair-v1" if self._source_repair else "")
+        if self._selected_constraints:version+="+selected-constraints-v1"
         if self._repair_examples:version+="+repair-examples-v1"
         if self._review_examples:version+="+review-examples-v1"
         if self._review_expression:version+="+expression-v1"
@@ -160,7 +164,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
             previous={"decisions":{}}
             profile=classify(previous,pool,document,document_id)
         else:
-            previous,profile=request("judgment",judgment_prompt,judgment_content,judgment_schema(pool),merge)
+            previous,profile=request("judgment",judgment_prompt,judgment_content,judgment_schema(pool,selected_constraints=self._selected_constraints),merge)
         def review(profile,stage):
             def check(value):
                 try:return validate_review(value,profile,len(document.splitlines()))
@@ -208,7 +212,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
                 if not pool:raise AnalysisError("SEMANTIC_REJECTED")
                 repaired=tuple(FIELDS)
                 previous,profile=request("semantic_repair",judgment_prompt,
-                    {**judgment_content,"previous":previous,"issues":issues},judgment_schema(pool),merge)
+                    {**judgment_content,"previous":previous,"issues":issues},judgment_schema(pool,selected_constraints=self._selected_constraints),merge)
             if any(fingerprint(field)==value for field,value in before.items()):
                 diagnostic["calls"][-1].update(outcome="semantic_failed",error="ANCHORED_MISSING_CANDIDATE")
                 raise AnalysisError("ANCHORED_MISSING_CANDIDATE")

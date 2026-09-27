@@ -48,7 +48,7 @@ def validate_quotes(reply,batch,start_index,*,expand_occurrences=False):
     if start_index+len(result)>120:raise AnalysisError("SECTION_LIMIT")
     return result
 
-def judgment_schema(pool):
+def judgment_schema(pool,*,selected_constraints=False):
     # Reuse field-role branches; replace quotation properties with a decision.
     from .section_analysis import extraction_schema
     sample=Section("U0001",0,1,(),"x")
@@ -60,6 +60,22 @@ def judgment_schema(pool):
             del props[name]
         props["decision"]={"type":"string","enum":["selected",*EXCLUSIONS]}
         branch["required"]=list(props)
+    if selected_constraints:
+        from copy import deepcopy
+        from .evidence import ROLES
+        selected=[]
+        for branch in branches:
+            props=branch["properties"]
+            props["decision"]["enum"]=list(EXCLUSIONS)
+            eligible=deepcopy(branch)
+            field=props["field"]["enum"][0]
+            chosen=eligible["properties"]
+            chosen["role"]["enum"]=list(ROLES[field])
+            chosen["status"]["enum"]=[s for s in props["status"]["enum"] if s in ("confirmed","absent")]
+            chosen["scope"]["enum"]=["current"]
+            chosen["decision"]["enum"]=["selected"]
+            selected.append(eligible)
+        branches.extend(selected)
     branches.append(_object({"decision":{"type":"string","enum":["irrelevant"]}}))
     return _object({"decisions":_object({item["id"]:{"anyOf":branches} for item in pool})})
 
