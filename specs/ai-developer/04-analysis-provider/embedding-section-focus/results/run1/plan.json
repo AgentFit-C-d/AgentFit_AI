@@ -1,0 +1,9 @@
+{
+  "dataset_sha256": "3683257124db4d4ee9f2cc403dd411f62a27c32f1ea710850abc239d91bd9e2c",
+  "cases": 8,
+  "embedding_model": "nvidia/nemotron-3-embed-1b",
+  "queries": 10,
+  "top_k": 4,
+  "candidate_model": "solar-pro4",
+  "held_out": false
+}

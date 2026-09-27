@@ -1,0 +1,21 @@
+{
+  "cases": 8,
+  "gold_sections": 27,
+  "embedding_top4_recall": 20,
+  "lexical_top4_recall": 19,
+  "all_sections_recall": 27,
+  "embedding_perfect_cases": 1,
+  "candidate_valid_cases": 5,
+  "candidate_gold_in_valid": 17,
+  "candidate_matched_in_valid": 17,
+  "candidate_failures": {
+    "ANCHORED_CANDIDATE": 3
+  },
+  "embedding_median_ms": 1125.0,
+  "candidate_median_ms": 2344.0,
+  "gate": {
+    "embedding_all_gold": false,
+    "candidate_omission_in_valid_response": false,
+    "focus_arm_run": false
+  }
+}

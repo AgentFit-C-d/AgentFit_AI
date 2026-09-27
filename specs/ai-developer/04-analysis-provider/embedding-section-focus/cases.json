@@ -1,0 +1,138 @@
+{
+  "version": "embedding-focus-synthetic-v1",
+  "partition": "tuning",
+  "held_out": false,
+  "cases": [
+    {
+      "id": "E01",
+      "sections": [
+        "회의록: 새 서비스의 이름은 물결 노트다. 내부 일정은 다음 주에 다시 잡는다.",
+        "지난해 만든 지도 앱에서는 Spring Boot와 MySQL을 사용했다. 이번 서비스와 무관하다.",
+        "이번 물결 노트의 서버 구현은 Ktor로 확정했다. API 계약은 다음 회의에서 다듬는다.",
+        "시연 화면에는 임시 로고를 놓는다. 디자인 시안은 아직 결정하지 않았다.",
+        "운영 중 쓰는 AI 모델은 달빛 2로 채택했다. 개발 실험에 쓴 별구름은 제품에 넣지 않는다.",
+        "인증은 외부 서비스 파도ID를 사용한다. 회원 가입 승인 흐름은 별도 문서에서 정리한다."
+      ],
+      "gold": [
+        {"section": 0, "field": "project_name", "quote": "물결 노트"},
+        {"section": 2, "field": "backend", "quote": "Ktor"},
+        {"section": 4, "field": "ai", "quote": "달빛 2"},
+        {"section": 5, "field": "external_integrations", "quote": "파도ID"}
+      ]
+    },
+    {
+      "id": "E02",
+      "sections": [
+        "비교 사례: 보관함 앱은 Vue와 Redis로 운영되었다. 새 제품의 설정은 아니다.",
+        "현재 제품은 사진 정리 CLI로 제공한다. 웹 화면은 이번 범위에 없다.",
+        "일정표에는 회의, 발표, 피드백 수집 날짜만 적어 둔다.",
+        "사용자는 중복 사진을 찾고 앨범을 내보낼 수 있어야 한다.",
+        "프론트엔드 도입 여부는 미정이다. React 시연 코드는 폐기한다.",
+        "운영 데이터는 SQLite에 저장하기로 확정했다. 백업 위치는 아직 고르지 않았다."
+      ],
+      "gold": [
+        {"section": 1, "field": "project_type", "quote": "CLI"},
+        {"section": 3, "field": "features", "quote": "중복 사진을 찾고"},
+        {"section": 5, "field": "database", "quote": "SQLite"}
+      ]
+    },
+    {
+      "id": "E03",
+      "sections": [
+        "과거 실험에서는 컨테이너 없이 로컬 스크립트로만 실행했다.",
+        "이 프로젝트는 도서 예약 서비스를 만든다. 독서 모임 앱과 별개의 제품이다.",
+        "개발팀은 검토용으로 가짜 결제 제공자 코드를 작성한다. 실제 연동 확정은 아니다.",
+        "운영 배포는 Fly.io에 한다. 네트워크 접근 정책은 보안 검토에서 마무리한다.",
+        "이용자가 좌석을 예약하고 예약을 취소할 수 있도록 한다.",
+        "참고 문서에 적힌 Aurora 모델은 이 제품의 운영 모델로 채택하지 않았다."
+      ],
+      "gold": [
+        {"section": 1, "field": "project_type", "quote": "도서 예약 서비스"},
+        {"section": 3, "field": "deployment", "quote": "Fly.io"},
+        {"section": 4, "field": "features", "quote": "좌석을 예약하고"}
+      ]
+    },
+    {
+      "id": "E04",
+      "sections": [
+        "회의 메모: 백업 정책은 확정 전에 법무팀과 검토한다.",
+        "현행 제품의 화면은 SvelteKit으로 구현한다. 옛날 Angular 프로토타입은 버린다.",
+        "예시 고객사는 알림을 SMS로 받고 싶다고 말했다. 계약된 기능은 아니다.",
+        "운영자는 매일 데이터 복구 시험을 실행한다. 장애 보고서 형식은 추후 결정한다.",
+        "서비스 이름 후보는 둘이다. 최종 이름을 아직 고르지 않았다.",
+        "외부 알림 제공자는 구름문자로 확정했다. 시연용 메일 서버는 연동 대상이 아니다."
+      ],
+      "gold": [
+        {"section": 1, "field": "frontend", "quote": "SvelteKit"},
+        {"section": 3, "field": "features", "quote": "데이터 복구 시험"},
+        {"section": 5, "field": "external_integrations", "quote": "구름문자"}
+      ]
+    },
+    {
+      "id": "E05",
+      "sections": [
+        "다른 팀은 번역 앱에서 FastAPI를 사용했다. 이 설계와 연결되지 않는다.",
+        "이번 제품의 분야는 산업 안전 교육이다. 체육 교육 자료를 재활용하지 않는다.",
+        "프론트엔드와 데이터베이스는 품질 검증 뒤에 고른다. 후보 기술은 확정 사실이 아니다.",
+        "서버는 Phoenix로 만든다. 언어는 Elixir를 사용한다.",
+        "강사는 퀴즈를 출제하고 학습자는 정답 해설을 볼 수 있다.",
+        "MCP 클라이언트는 개발 중 테스트에만 사용한다. 운영 AI 모델은 아직 없다."
+      ],
+      "gold": [
+        {"section": 1, "field": "domain", "quote": "산업 안전 교육"},
+        {"section": 3, "field": "backend", "quote": "Phoenix"},
+        {"section": 4, "field": "features", "quote": "퀴즈를 출제하고"}
+      ]
+    },
+    {
+      "id": "E06",
+      "sections": [
+        "업무 배경: 지난 앱은 배송 추적을 제공했지만 종료됐다.",
+        "신규 제품은 API 서비스로 제공한다. 모바일 앱은 후속 사업으로 미룬다.",
+        "작성자는 회의 전에 테스트 데이터를 정리하고 시연 계획을 만든다.",
+        "대상 서버는 Bun 런타임을 채택했다. 이전 Node 시안은 사용하지 않는다.",
+        "운영 모델은 결정을 보류했다. 실험에는 해오름 3을 사용한다.",
+        "외부 객체 저장소는 두리버킷을 쓴다. 저장 파일 정리 정책은 추후 정한다."
+      ],
+      "gold": [
+        {"section": 1, "field": "project_type", "quote": "API 서비스"},
+        {"section": 3, "field": "backend", "quote": "Bun"},
+        {"section": 5, "field": "external_integrations", "quote": "두리버킷"}
+      ]
+    },
+    {
+      "id": "E07",
+      "sections": [
+        "레거시 포털에서는 MariaDB에 모든 고객 기록을 보관했다.",
+        "새 프로젝트의 명칭은 숲길이다. UI 명칭은 추후 검토한다.",
+        "가상 서비스 설명에는 AWS와 MongoDB가 나온다. 현재 프로젝트의 기술 결정은 아니다.",
+        "사용자의 산책 경로 기록과 친구 공유를 필수 기능으로 둔다.",
+        "운영 저장소는 CockroachDB로 정했다. 데이터 보관 기간은 별도 검토한다.",
+        "서비스는 Cloud Run에 배포한다. 배포 자동화 도구는 아직 선택하지 않았다."
+      ],
+      "gold": [
+        {"section": 1, "field": "project_name", "quote": "숲길"},
+        {"section": 3, "field": "features", "quote": "산책 경로 기록"},
+        {"section": 4, "field": "database", "quote": "CockroachDB"},
+        {"section": 5, "field": "deployment", "quote": "Cloud Run"}
+      ]
+    },
+    {
+      "id": "E08",
+      "sections": [
+        "팀 운영 문서: 담당자는 Git 브랜치를 만들고 회의록을 제출한다.",
+        "이 제품은 음식 재고 관리 웹 서비스다. 배달 플랫폼은 다른 사업이다.",
+        "이전 기획에서 추천 AI를 검토했지만 현재 제품에서는 사용하지 않기로 확정했다.",
+        "화면은 Nuxt로 개발한다. 서버 언어는 다음 단계에서 결정한다.",
+        "매장 관리자가 재고를 등록하고 유통기한 알림을 확인한다.",
+        "운영 데이터는 외부 서비스 돌담DB에 저장한다. 개발용 로컬 파일은 폐기한다."
+      ],
+      "gold": [
+        {"section": 1, "field": "project_type", "quote": "웹 서비스"},
+        {"section": 3, "field": "frontend", "quote": "Nuxt"},
+        {"section": 4, "field": "features", "quote": "재고를 등록하고"},
+        {"section": 5, "field": "database", "quote": "돌담DB"}
+      ]
+    }
+  ]
+}
