@@ -1,0 +1,24 @@
+{
+  "scope": "isolated_source_repair",
+  "model": "solar-mini4",
+  "effort": "low",
+  "max_tokens": 8192,
+  "timeout": 40,
+  "evidence_units": false,
+  "state_revision": "v2",
+  "unit_transfer": false,
+  "state_cases": false,
+  "state_grounding": true,
+  "value_boundary": true,
+  "boundary_revision": "v2",
+  "transfer": false,
+  "planned": 3,
+  "case_ids": [
+    "N-004"
+  ],
+  "repeat": 3,
+  "interval_seconds": 2.0,
+  "cases_sha256": "86d9e342e347e33abc2e7794e5ca9245bfc2d60b904393c079094cc6bce60c74",
+  "prompt_sha256": "efb80481a299bcdcbdf49c19fd332b48f3854f43674d9e91afa410d104bf7957",
+  "script_sha256": "59fdf7c9cdd5719db3c7abd25bd33cdeba134f2d373b92e5bc6bc18b3aa45f67"
+}

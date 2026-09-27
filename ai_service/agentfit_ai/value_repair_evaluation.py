@@ -65,6 +65,7 @@ def main():
     parser.add_argument("--state-grounding",action="store_true")
     parser.add_argument("--evidence-units",action="store_true")
     parser.add_argument("--effort",choices=("none","low"),default="none")
+    parser.add_argument("--max-tokens",type=int,choices=(4096,8192),default=4096)
     parser.add_argument("--state-revision",choices=("v1","v2"),default="v1")
     parser.add_argument("--repeat",type=int,choices=(1,2,3),default=1)
     parser.add_argument("--interval-seconds",type=float,default=0)
@@ -87,7 +88,7 @@ def main():
     prompt=SOURCE_REPAIR_PROMPT+REPAIR_EXAMPLES+((VALUE_BOUNDARY if args.boundary_revision=="v1" else VALUE_BOUNDARY_V2) if args.value_boundary else "")
     if args.state_grounding:prompt+=STATE_GROUNDING if args.state_revision=="v1" else STATE_GROUNDING_V2
     args.output.mkdir(parents=True,exist_ok=False)
-    plan={"scope":"isolated_source_repair","model":"solar-mini4","effort":args.effort,"max_tokens":4096,"timeout":40,
+    plan={"scope":"isolated_source_repair","model":"solar-mini4","effort":args.effort,"max_tokens":args.max_tokens,"timeout":40,
           "evidence_units":args.evidence_units,"state_revision":args.state_revision,"unit_transfer":args.unit_transfer,"state_cases":args.state_cases,"state_grounding":args.state_grounding,"value_boundary":args.value_boundary,"boundary_revision":args.boundary_revision,"transfer":args.transfer,"planned":len(cases)*args.repeat,"case_ids":[c["id"] for c in cases],"repeat":args.repeat,"interval_seconds":args.interval_seconds,
           "cases_sha256":hashlib.sha256(case_file.read_bytes()).hexdigest(),
           "prompt_sha256":hashlib.sha256(prompt.encode()).hexdigest(),
@@ -104,7 +105,7 @@ def main():
                  "units":[{"unitId":s.id,"text":s.text,"headingPath":list(s.path)} for s in sections]}
         payload={"model":"solar-mini4","messages":[{"role":"system","content":prompt},{"role":"user","content":json.dumps(content,ensure_ascii=False)}],
                  "response_format":{"type":"json_schema","json_schema":{"name":"agentfit_sections","strict":True,"schema":repair_schema([field],sections)}},
-                 "reasoning_effort":args.effort,"temperature":0,"frequency_penalty":0,"max_tokens":4096,"stream":False}
+                 "reasoning_effort":args.effort,"temperature":0,"frequency_penalty":0,"max_tokens":args.max_tokens,"stream":False}
         row={"id":case["id"],"iteration":iteration,"passed":False};trace={};started=time.monotonic()
         try:
             reply,model,pt,ct=analyzer._send_payload(payload,("repairs",),_trace=trace,timeout=40)

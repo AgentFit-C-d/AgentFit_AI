@@ -1,0 +1,26 @@
+[
+  {
+    "max_tokens": 4096,
+    "passed": 3,
+    "total": 3,
+    "median_ms": 14719,
+    "max_ms": 15718,
+    "completion_tokens": [
+      1718,
+      1543,
+      1999
+    ]
+  },
+  {
+    "max_tokens": 8192,
+    "passed": 3,
+    "total": 3,
+    "median_ms": 33093,
+    "max_ms": 36391,
+    "completion_tokens": [
+      4146,
+      4146,
+      4183
+    ]
+  }
+]
