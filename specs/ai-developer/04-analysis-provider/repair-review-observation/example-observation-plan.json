@@ -1,0 +1,17 @@
+{
+  "scope": "diagnostic_four_cases",
+  "model": "solar-mini4",
+  "prompt_revision": "v2",
+  "source_repair": true,
+  "review_effort": "low",
+  "repair_examples": true,
+  "planned": 4,
+  "cases_sha256": "571a001422a823a02b48547589881a89b645ada3c4d268bbcd26c13f9e04d4dd",
+  "prompt_sha256": [
+    "852cb2f5bdc0ac4350315cd5e044169e46f3f9f2c0f8680b1a4dd7f7ceb1a4ad",
+    "b1de9a71f487e6ffc65ec0d5f27ac22cd160799c389ba922fe0a05626da312bd",
+    "ee4ceb80a97ec8a30891d267c1cce15e7cda7efd947f12debe722589f97b9b19",
+    "1eb1a704a495d3a254fda98a5c0f708be42f27dcb6982433d2ec8fd1445d1631"
+  ],
+  "observer_sha256": "b05a8708156177822f088349c588551a5cd3ac52d4e93f72f3c153912784327f"
+}

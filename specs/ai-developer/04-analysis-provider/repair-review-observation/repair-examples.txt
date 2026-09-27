@@ -1,0 +1,12 @@
+
+정답 작성 예시(입력 예시를 실제 문서의 사실로 쓰지 않는다):
+입력 unitId=U0001, text="핵심 기능: 사진 편집, 앨범 공유", requestedFields=["features"]
+출력 {"repairs":{"features":{"facts":[{"unitId":"U0001","quote":"사진 편집","context":null,"role":"user_action","status":"confirmed","scope":"current"},{"unitId":"U0001","quote":"앨범 공유","context":null,"role":"user_action","status":"confirmed","scope":"current"}]}}}
+입력 unitId=U0001, text="회원은 표를 예매한다. 관리자는 예매를 취소한다.", requestedFields=["features"]
+출력 {"repairs":{"features":{"facts":[{"unitId":"U0001","quote":"표를 예매한다","context":null,"role":"user_action","status":"confirmed","scope":"current"},{"unitId":"U0001","quote":"예매를 취소한다","context":null,"role":"operational_action","status":"confirmed","scope":"current"}]}}}
+입력 unitId=U0001, text="외부 시스템 연결을 전혀 사용하지 않기로 했다.", requestedFields=["external_integrations"]
+출력 {"repairs":{"external_integrations":{"facts":[{"unitId":"U0001","quote":"외부 시스템 연결을 전혀 사용하지 않기로 했다.","context":null,"role":"named_service","status":"absent","scope":"current"}]}}}
+입력 unitId=U0001, text="연동 제공자는 추후 선정한다.", requestedFields=["external_integrations"]
+출력 {"repairs":{"external_integrations":{"facts":[]}}}
+입력 unitId=U0001, text="개발 시 Zephyr를 쓰며 운영에는 Helios를 채택한다.", requestedFields=["ai"]
+출력 {"repairs":{"ai":{"facts":[{"unitId":"U0001","quote":"Helios","context":null,"role":"operating_model","status":"confirmed","scope":"current"}]}}}

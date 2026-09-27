@@ -1,0 +1,104 @@
+[
+  {
+    "id": "R-001",
+    "document": "이용자에게 제공할 기능은 배송 조회와 주소 변경이다.",
+    "requestedFields": [
+      "features"
+    ],
+    "gold": {
+      "features": [
+        [
+          "배송 조회"
+        ],
+        [
+          "주소 변경"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "R-002",
+    "document": "외부 로그인 연동은 하지 않는다. 외부 알림은 Echo 서비스를 쓰기로 했다.",
+    "requestedFields": [
+      "external_integrations"
+    ],
+    "gold": {
+      "external_integrations": [
+        [
+          "Echo"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "R-003",
+    "document": "외부 연동은 필요하지만 아직 제공자를 고르지 않았다.",
+    "requestedFields": [
+      "external_integrations"
+    ],
+    "gold": {}
+  },
+  {
+    "id": "R-004",
+    "document": "제품 운영 AI는 사용하지 않기로 결정했다.",
+    "requestedFields": [
+      "ai"
+    ],
+    "gold": {
+      "ai": []
+    }
+  },
+  {
+    "id": "R-005",
+    "document": "개발 시 Boreal로 테스트한다. 제품 운영 모델은 아직 미정이다.",
+    "requestedFields": [
+      "ai"
+    ],
+    "gold": {}
+  },
+  {
+    "id": "R-006",
+    "document": "기존에는 Atlas 모델을 썼다. 이제 운영 모델은 Vega로 교체하기로 확정했다.",
+    "requestedFields": [
+      "ai"
+    ],
+    "gold": {
+      "ai": [
+        [
+          "Vega"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "R-007",
+    "document": "주요 기능은 게시글 작성 및 첨부파일 삭제다.",
+    "requestedFields": [
+      "features"
+    ],
+    "gold": {
+      "features": [
+        [
+          "게시글 작성"
+        ],
+        [
+          "첨부파일 삭제"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "R-008",
+    "document": "예시 앱 기능은 영상 편집이다. 현재 제품은 이미지 압축을 필수 기능으로 제공한다.",
+    "requestedFields": [
+      "features"
+    ],
+    "gold": {
+      "features": [
+        [
+          "이미지 압축"
+        ]
+      ]
+    }
+  }
+]

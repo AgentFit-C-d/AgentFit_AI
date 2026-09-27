@@ -1,0 +1,23 @@
+{
+  "mode": "isolated_repair_with_fixed_missing_issues",
+  "planned": 16,
+  "case_ids": [
+    "R-001",
+    "R-002",
+    "R-003",
+    "R-004",
+    "R-005",
+    "R-006",
+    "R-007",
+    "R-008"
+  ],
+  "cases_sha256": "5bfd736c2f44a7a46e37d22ae37f53316b75ad2e9052d739d11ce7c790f40866",
+  "model": "solar-mini4",
+  "reasoning_effort": "none",
+  "max_tokens": 4096,
+  "prompt_sha256": {
+    "baseline": "6766ee68b9448cbb7d362cfabaf79d2abf4d137454b7cf7678ccc457040fc5cb",
+    "examples": "ee4ceb80a97ec8a30891d267c1cce15e7cda7efd947f12debe722589f97b9b19"
+  },
+  "script_sha256": "59331d23447aca7dcedc1791df260b4ab9e3891dc392828a0cdafc24f00b67a3"
+}

@@ -3,6 +3,7 @@ import json
 from .solar import SolarAnalyzer, AnalysisError, AnalysisResult
 from .profile import FIELDS
 from .source_repair import SOURCE_REPAIR_PROMPT, repair_schema, apply_repairs
+from .repair_examples import REPAIR_EXAMPLES
 from .anchored_prompts import CANDIDATE_PROMPT_V2, JUDGMENT_PROMPT_V2
 from .sections import batch_sections, SectionError
 from .semantic_review import validate_review, ReviewValidationError
@@ -34,13 +35,16 @@ Do not change quotations or add new candidates. If reviewing issues, reconsider 
 
 class AnchoredAnalyzer(SolarAnalyzer):
     """Experimental path; inherits existing diagnostics retention and deadline wrapper."""
-    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, **kwargs):
+    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, **kwargs):
         if review_effort not in ("medium", "low"):
             raise ValueError("unsupported review effort")
         if prompt_revision not in ("v1", "v2"):
             raise ValueError("unsupported prompt revision")
         if type(source_repair) is not bool:
             raise ValueError("source_repair must be boolean")
+        if type(repair_examples) is not bool or repair_examples and not source_repair:
+            raise ValueError("repair_examples requires source_repair")
+        self._repair_examples=repair_examples
         self._source_repair=source_repair
         super().__init__(*args, **kwargs)
         self._prompt_revision = prompt_revision
@@ -53,6 +57,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
     def _analyze(self,document,document_id,diagnostic,raw_responses,deadline):
         started=self._clock()
         version="anchored-"+self._prompt_revision+("+source-repair-v1" if self._source_repair else "")
+        if self._repair_examples:version+="+repair-examples-v1"
         candidate_prompt=CANDIDATE_PROMPT_V2 if self._prompt_revision=="v2" else CANDIDATE_PROMPT
         judgment_prompt=JUDGMENT_PROMPT_V2 if self._prompt_revision=="v2" else JUDGMENT_PROMPT
         diagnostic.update(prompt_version=version,evidence_contract="anchored-v1",sections_covered=0)
@@ -148,7 +153,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
                 repaired=tuple(f for f in FIELDS if any(issue["field"]==f for issue in issues))
                 content={"document":document,"requestedFields":list(repaired),"previous":profile,"issues":issues,
                          "units":[{"unitId":s.id,"text":s.text,"headingPath":list(s.path)} for s in sections]}
-                profile=request("source_repair",SOURCE_REPAIR_PROMPT,content,repair_schema(repaired,sections),
+                profile=request("source_repair",SOURCE_REPAIR_PROMPT+(REPAIR_EXAMPLES if self._repair_examples else ""),content,repair_schema(repaired,sections),
                     lambda value:apply_repairs(document,document_id,profile,sections,repaired,value))
             else:
                 if not pool:raise AnalysisError("SEMANTIC_REJECTED")

@@ -146,3 +146,17 @@ class SourceRepairTests(unittest.TestCase):
    old["unknownFields"].remove(field)
   with self.assertRaises(AnalysisError):
    apply_repairs(doc,"doc",old,units(doc),("external_integrations",),reply("external_integrations",[fact("item120","named_service")]))
+
+ def test_examples_option_is_sent_only_to_repair(self):
+  missing={"field":"features","kind":"missing","itemIndex":None,"evidenceLineIds":[1]}
+  payloads=[]
+  def transport(payload,*args):
+   payloads.append(payload)
+   values=[{"units":[{"unitId":"U0001","quotes":[]}]},verdict([missing]),reply("features",[fact("search")]),verdict()]
+   return response(values[len(payloads)-1])
+  r=AnchoredAnalyzer("synthetic-key",transport=transport,source_repair=True,repair_examples=True).analyze("search","doc")
+  self.assertEqual(r.profile["data"]["features"],["search"])
+  self.assertIn("repair-examples-v1",r.prompt_version)
+  self.assertIn("Helios",payloads[2]["messages"][0]["content"])
+  self.assertNotIn("Helios",payloads[0]["messages"][0]["content"])
+  self.assertNotIn("Helios",payloads[1]["messages"][0]["content"])
