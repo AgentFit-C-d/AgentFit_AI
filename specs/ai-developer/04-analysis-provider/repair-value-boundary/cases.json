@@ -1,0 +1,143 @@
+[
+  {
+    "id": "Q-006",
+    "document": "# 기능\r\n필수 사용자 기능: 일정 추천\r\n",
+    "field": "features",
+    "gold": {
+      "features": [
+        [
+          "일정 추천"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "N-004",
+    "document": "모델 Orion은 채택하지 않는다. 서비스 운영 모델로 Lyra를 확정했다.",
+    "field": "ai",
+    "gold": {
+      "ai": [
+        [
+          "Lyra"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "V01",
+    "document": "제품 이름은 Orchid다.",
+    "field": "project_name",
+    "gold": {
+      "project_name": "Orchid"
+    }
+  },
+  {
+    "id": "V02",
+    "document": "제품 형태는 업무 관리 웹앱으로 정했다.",
+    "field": "project_type",
+    "gold": {
+      "project_type": "업무 관리 웹앱"
+    }
+  },
+  {
+    "id": "V03",
+    "document": "업무 분야는 물류다.",
+    "field": "domain",
+    "gold": {
+      "domain": "물류"
+    }
+  },
+  {
+    "id": "V04",
+    "document": "프런트엔드는 React를 채택했다.",
+    "field": "frontend",
+    "gold": {
+      "frontend": [
+        [
+          "React"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "V05",
+    "document": "백엔드 프레임워크는 FastAPI다.",
+    "field": "backend",
+    "gold": {
+      "backend": [
+        [
+          "FastAPI"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "V06",
+    "document": "Mosaic는 채택하지 않는다. 운영 AI는 Nimbus로 확정했다.",
+    "field": "ai",
+    "gold": {
+      "ai": [
+        [
+          "Nimbus"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "V07",
+    "document": "서비스 데이터베이스는 PostgreSQL로 확정했다.",
+    "field": "database",
+    "gold": {
+      "database": "PostgreSQL"
+    }
+  },
+  {
+    "id": "V08",
+    "document": "배포 환경은 AWS로 정했다.",
+    "field": "deployment",
+    "gold": {
+      "deployment": "AWS"
+    }
+  },
+  {
+    "id": "V09",
+    "document": "필수 기능: 반환 신청, 진행 조회",
+    "field": "features",
+    "gold": {
+      "features": [
+        [
+          "반환 신청"
+        ],
+        [
+          "진행 조회"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "V10",
+    "document": "외부 알림은 SendGrid 서비스를 사용한다.",
+    "field": "external_integrations",
+    "gold": {
+      "external_integrations": [
+        [
+          "SendGrid"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "V11",
+    "document": "외부 연동을 전혀 사용하지 않기로 했다.",
+    "field": "external_integrations",
+    "gold": {
+      "external_integrations": []
+    }
+  },
+  {
+    "id": "V12",
+    "document": "제품 운영 모델은 아직 결정하지 않았다.",
+    "field": "ai",
+    "gold": {}
+  }
+]

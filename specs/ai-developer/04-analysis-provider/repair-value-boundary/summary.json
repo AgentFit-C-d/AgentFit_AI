@@ -1,0 +1,53 @@
+{
+  "value-repair-baseline-v1": {
+    "planned": 14,
+    "passed": 6
+  },
+  "value-repair-clarified-v1": {
+    "planned": 14,
+    "passed": 12
+  },
+  "value-repair-scalar-diagnostic-v1": {
+    "planned": 2,
+    "passed": 1
+  },
+  "value-repair-clarified-v2": {
+    "planned": 14,
+    "passed": 14
+  },
+  "value-repair-transfer-v1": {
+    "planned": 8,
+    "passed": 5
+  },
+  "value-repair-transfer-v2": {
+    "planned": 8,
+    "passed": 7
+  },
+  "value-repair-full-pilot-v1": {
+    "planned": 12,
+    "passed": 12,
+    "median_ms": 8711.0,
+    "max_ms": 19266
+  },
+  "value-repair-full-pilot-v2": {
+    "planned": 12,
+    "passed": 12,
+    "median_ms": 7851.5,
+    "max_ms": 27031
+  },
+  "value-repair-full-pilot-v3": {
+    "planned": 12,
+    "passed": 12,
+    "median_ms": 10531.0,
+    "max_ms": 16610
+  },
+  "full_aggregate": {
+    "distinct_synthetic_cases": 12,
+    "runs_each": 3,
+    "passed": 36,
+    "median_ms": 8945.5,
+    "p95_nearest_rank_ms": 23625,
+    "max_ms": 27031,
+    "max_calls": 5
+  }
+}

@@ -160,3 +160,22 @@ class SourceRepairTests(unittest.TestCase):
   self.assertIn("Helios",payloads[2]["messages"][0]["content"])
   self.assertNotIn("Helios",payloads[0]["messages"][0]["content"])
   self.assertNotIn("Helios",payloads[1]["messages"][0]["content"])
+
+class ValueBoundaryOptionTests(unittest.TestCase):
+    def test_requires_source_repair_and_preserves_default(self):
+        from agentfit_ai.anchored_analysis import AnchoredAnalyzer
+        with self.assertRaises(ValueError):
+            AnchoredAnalyzer("synthetic-key",repair_value_boundary=True)
+        from unittest.mock import Mock
+        from test_staged_analysis import response
+        from test_semantic_review import verdict
+        for enabled in (False,True):
+            issues=[{"field":"features","kind":"missing","itemIndex":None,"evidenceLineIds":[1]}]
+            t=Mock(side_effect=[response({"units":[{"unitId":"U0001","quotes":[]}]}),
+                response(verdict(issues)),response(reply("features",[fact("search")])),response(verdict())])
+            result=AnchoredAnalyzer("synthetic-key",transport=t,source_repair=True,repair_value_boundary=enabled).analyze("search","doc")
+            self.assertEqual("value-boundary-v2" in result.prompt_version,enabled)
+            prompts=[c.args[0]["messages"][0]["content"] for c in t.call_args_list]
+            self.assertEqual("최종 사용자에게 표시할 값" in prompts[2],enabled)
+            self.assertNotIn("최종 사용자에게 표시할 값",prompts[0])
+            self.assertEqual(result.profile["data"]["features"],["search"])

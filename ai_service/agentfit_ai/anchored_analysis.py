@@ -4,6 +4,7 @@ from .solar import SolarAnalyzer, AnalysisError, AnalysisResult
 from .profile import FIELDS
 from .source_repair import SOURCE_REPAIR_PROMPT, repair_schema, apply_repairs
 from .repair_examples import REPAIR_EXAMPLES
+from .repair_value import VALUE_BOUNDARY_V2
 from .review_examples import REVIEW_EXAMPLES
 from .anchored_prompts import CANDIDATE_PROMPT_V2, JUDGMENT_PROMPT_V2
 from .sections import batch_sections, SectionError
@@ -36,7 +37,7 @@ Do not change quotations or add new candidates. If reviewing issues, reconsider 
 
 class AnchoredAnalyzer(SolarAnalyzer):
     """Experimental path; inherits existing diagnostics retention and deadline wrapper."""
-    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, review_examples=False, review_expression=False, **kwargs):
+    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, review_examples=False, review_expression=False, repair_value_boundary=False, **kwargs):
         if review_effort not in ("medium", "low"):
             raise ValueError("unsupported review effort")
         if prompt_revision not in ("v1", "v2"):
@@ -47,6 +48,9 @@ class AnchoredAnalyzer(SolarAnalyzer):
             raise ValueError("repair_examples requires source_repair")
         if type(review_examples) is not bool:raise ValueError("review_examples must be boolean")
         if type(review_expression) is not bool:raise ValueError("review_expression must be boolean")
+        if type(repair_value_boundary) is not bool or repair_value_boundary and not source_repair:
+            raise ValueError("repair_value_boundary requires source_repair")
+        self._repair_value_boundary=repair_value_boundary
         self._review_expression=review_expression
         self._review_examples=review_examples
         self._repair_examples=repair_examples
@@ -68,6 +72,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
         if self._repair_examples:version+="+repair-examples-v1"
         if self._review_examples:version+="+review-examples-v1"
         if self._review_expression:version+="+expression-v1"
+        if self._repair_value_boundary:version+="+value-boundary-v2"
         candidate_prompt=CANDIDATE_PROMPT_V2 if self._prompt_revision=="v2" else CANDIDATE_PROMPT
         judgment_prompt=JUDGMENT_PROMPT_V2 if self._prompt_revision=="v2" else JUDGMENT_PROMPT
         diagnostic.update(prompt_version=version,evidence_contract="anchored-v1",sections_covered=0)
@@ -167,7 +172,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
                 repaired=tuple(f for f in FIELDS if any(issue["field"]==f for issue in issues))
                 content={"document":document,"requestedFields":list(repaired),"previous":profile,"issues":issues,
                          "units":[{"unitId":s.id,"text":s.text,"headingPath":list(s.path)} for s in sections]}
-                profile=request("source_repair",SOURCE_REPAIR_PROMPT+(REPAIR_EXAMPLES if self._repair_examples else ""),content,repair_schema(repaired,sections),
+                profile=request("source_repair",SOURCE_REPAIR_PROMPT+(REPAIR_EXAMPLES if self._repair_examples else "")+(VALUE_BOUNDARY_V2 if self._repair_value_boundary else ""),content,repair_schema(repaired,sections),
                     lambda value:apply_repairs(document,document_id,profile,sections,repaired,value))
             else:
                 if not pool:raise AnalysisError("SEMANTIC_REJECTED")

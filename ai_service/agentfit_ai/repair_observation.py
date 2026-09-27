@@ -76,6 +76,7 @@ def main():
     from .anchored_prompts import CANDIDATE_PROMPT_V2,JUDGMENT_PROMPT_V2
     from .source_repair import SOURCE_REPAIR_PROMPT
     from .repair_examples import REPAIR_EXAMPLES
+    from .repair_value import VALUE_BOUNDARY_V2
     from .review_examples import REVIEW_EXAMPLES
     from .semantic_review import REVIEW_PROMPT
     from .evaluate import load_api_key
@@ -84,6 +85,7 @@ def main():
     parser.add_argument("--repair-examples",action="store_true")
     parser.add_argument("--review-examples",action="store_true")
     parser.add_argument("--review-expression",action="store_true")
+    parser.add_argument("--repair-value-boundary",action="store_true")
     parser.add_argument("--all-pilot-cases",action="store_true")
     parser.add_argument("--output",type=Path,required=True)
     args=parser.parse_args()
@@ -99,13 +101,13 @@ def main():
     review_prompt=expression_prompt() if args.review_expression else REVIEW_PROMPT
     args.output.mkdir(parents=True,exist_ok=False)
     plan={"scope":"pilot_twelve_cases" if args.all_pilot_cases else "diagnostic_four_cases","model":"solar-mini4","prompt_revision":"v2","source_repair":True,
-          "review_effort":"low","repair_examples":args.repair_examples,"review_examples":args.review_examples,"review_expression":args.review_expression,"planned":len(cases),
+          "review_effort":"low","repair_examples":args.repair_examples,"review_examples":args.review_examples,"review_expression":args.review_expression,"repair_value_boundary":args.repair_value_boundary,"planned":len(cases),
           "cases_sha256":hashlib.sha256(json.dumps(cases,ensure_ascii=False,sort_keys=True).encode()).hexdigest(),
           "prompt_sha256":[hashlib.sha256(p.encode()).hexdigest() for p in
-                          (CANDIDATE_PROMPT_V2,JUDGMENT_PROMPT_V2,SOURCE_REPAIR_PROMPT+(REPAIR_EXAMPLES if args.repair_examples else ""),review_prompt+(REVIEW_EXAMPLES if args.review_examples else ""))],
+                          (CANDIDATE_PROMPT_V2,JUDGMENT_PROMPT_V2,SOURCE_REPAIR_PROMPT+(REPAIR_EXAMPLES if args.repair_examples else "")+(VALUE_BOUNDARY_V2 if args.repair_value_boundary else ""),review_prompt+(REVIEW_EXAMPLES if args.review_examples else ""))],
           "observer_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
     (args.output/"plan.json").write_text(json.dumps(plan,indent=2),encoding="utf-8")
-    analyzer=AnchoredAnalyzer(load_api_key(),model="solar-mini4",prompt_revision="v2",source_repair=True,review_effort="low",repair_examples=args.repair_examples,review_examples=args.review_examples,review_expression=args.review_expression)
+    analyzer=AnchoredAnalyzer(load_api_key(),model="solar-mini4",prompt_revision="v2",source_repair=True,review_effort="low",repair_examples=args.repair_examples,review_examples=args.review_examples,review_expression=args.review_expression,repair_value_boundary=args.repair_value_boundary)
     rows=[]
     for case in cases:
         row={"id":case["id"],**observe_run(analyzer,case["document"],case["id"],case["gold"])}

@@ -1,0 +1,12 @@
+{
+  "scope": "isolated_source_repair",
+  "model": "solar-mini4",
+  "effort": "none",
+  "max_tokens": 4096,
+  "timeout": 40,
+  "value_boundary": false,
+  "planned": 14,
+  "cases_sha256": "86d9e342e347e33abc2e7794e5ca9245bfc2d60b904393c079094cc6bce60c74",
+  "prompt_sha256": "ee4ceb80a97ec8a30891d267c1cce15e7cda7efd947f12debe722589f97b9b19",
+  "script_sha256": "44e069eaf69a184702bbe6aeea5f81298a6b7ed15aa1e1ce380d973607589cb0"
+}

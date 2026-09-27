@@ -1,0 +1,72 @@
+[
+  {
+    "id": "T01",
+    "document": "서비스의 업무 분야는 부동산이다.",
+    "field": "domain",
+    "gold": {
+      "domain": "부동산"
+    }
+  },
+  {
+    "id": "T02",
+    "document": "운영 배포 환경으로 Fly.io를 확정했다.",
+    "field": "deployment",
+    "gold": {
+      "deployment": "Fly.io"
+    }
+  },
+  {
+    "id": "T03",
+    "document": "제품 이름을 Cedar로 정했다.",
+    "field": "project_name",
+    "gold": {
+      "project_name": "Cedar"
+    }
+  },
+  {
+    "id": "T04",
+    "document": "현재 제품 형태는 일정 공유 모바일 앱이다.",
+    "field": "project_type",
+    "gold": {
+      "project_type": "일정 공유 모바일 앱"
+    }
+  },
+  {
+    "id": "T05",
+    "document": "예제에서는 MongoDB를 쓴다. 현재 제품 DB는 MariaDB로 정했다.",
+    "field": "database",
+    "gold": {
+      "database": "MariaDB"
+    }
+  },
+  {
+    "id": "T06",
+    "document": "Vue는 검토 후보였으나 채택하지 않았다. 프런트엔드는 Svelte를 사용한다.",
+    "field": "frontend",
+    "gold": {
+      "frontend": [
+        [
+          "Svelte"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "T07",
+    "document": "개발 검증은 Raven으로 한다. 운영 AI 제공자는 아직 미정이다.",
+    "field": "ai",
+    "gold": {}
+  },
+  {
+    "id": "T08",
+    "document": "외부 로그인은 사용하지 않는다. 외부 결제는 Stripe를 연동한다.",
+    "field": "external_integrations",
+    "gold": {
+      "external_integrations": [
+        [
+          "Stripe"
+        ]
+      ]
+    }
+  }
+]
