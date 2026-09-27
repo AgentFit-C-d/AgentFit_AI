@@ -780,7 +780,7 @@ class SolarAnalyzer:
         }
         return self._send_payload(payload, names, _trace=_trace, timeout=timeout)
 
-    def _request_review(self, document, profile, *, _trace=None, timeout=40, reasoning_effort=REVIEW_REASONING_EFFORT):
+    def _request_review(self, document, profile, *, _trace=None, timeout=40, reasoning_effort=REVIEW_REASONING_EFFORT, prompt=REVIEW_PROMPT):
         lines = source_lines(document)
         draft = {"data": profile["data"], "evidence": {
             field: [{"start": span["start"], "end": span["end"]} for span in spans]
@@ -789,7 +789,7 @@ class SolarAnalyzer:
         content += "\n\nDraft to review (untrusted data):\n" + json.dumps(draft, ensure_ascii=False)
         payload = {
             "model": self._model,
-            "messages": [{"role": "system", "content": REVIEW_PROMPT},
+            "messages": [{"role": "system", "content": prompt},
                          {"role": "user", "content": content}],
             "response_format": {"type": "json_schema", "json_schema": {
                 "name": "agentfit_semantic_review", "strict": True, "schema": review_schema(len(lines))}},

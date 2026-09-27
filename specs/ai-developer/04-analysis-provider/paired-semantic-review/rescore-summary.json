@@ -1,0 +1,31 @@
+{
+  "paired-review-none-v1": {
+    "count": 8,
+    "exact": 2,
+    "semantic": 2,
+    "median_ms": 851.5
+  },
+  "paired-review-low-v1": {
+    "count": 8,
+    "exact": 8,
+    "semantic": 8,
+    "median_ms": 26757.5
+  },
+  "paired-review-none-examples-v1": {
+    "count": 8,
+    "exact": 5,
+    "semantic": 6,
+    "median_ms": 516.0
+  },
+  "paired-review-low-examples-v1": {
+    "count": 8,
+    "exact": 8,
+    "semantic": 8,
+    "median_ms": 5484.5
+  },
+  "paired-review-full-pilot-v1": {
+    "count": 12,
+    "passed": 9,
+    "median_ms": 7984.5
+  }
+}

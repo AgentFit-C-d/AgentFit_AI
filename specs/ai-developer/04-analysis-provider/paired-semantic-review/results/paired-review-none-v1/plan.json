@@ -1,0 +1,11 @@
+{
+  "scope": "paired_review_only",
+  "planned": 8,
+  "effort": "none",
+  "max_tokens": 8192,
+  "timeout": 40,
+  "model": "solar-mini4",
+  "cases_sha256": "c0edd44c779a5897923f930c970b04ca666073df5303a3b1c34d71ff68063720",
+  "prompt_sha256": "1eb1a704a495d3a254fda98a5c0f708be42f27dcb6982433d2ec8fd1445d1631",
+  "script_sha256": "dd527238d3015ec93d4a1d02fc7322aba6755b2f59ba52791a7ebcaf52929104"
+}

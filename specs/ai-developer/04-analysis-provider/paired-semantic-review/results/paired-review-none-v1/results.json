@@ -1,0 +1,272 @@
+[
+  {
+    "id": "Q-001-correct",
+    "matched": false,
+    "false_acceptance": false,
+    "false_rejection": true,
+    "issues": [
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "project_name",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "project_type",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "domain",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "frontend",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "backend",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "ai",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "database",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "deployment",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "features",
+        "itemIndex": 0,
+        "kind": "overbroad"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "features",
+        "itemIndex": 1,
+        "kind": "overbroad"
+      }
+    ],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1073,
+    "completion_tokens": 314,
+    "elapsed_ms": 2532
+  },
+  {
+    "id": "Q-001-missing",
+    "matched": true,
+    "false_acceptance": false,
+    "false_rejection": false,
+    "issues": [
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "features",
+        "itemIndex": null,
+        "kind": "missing"
+      }
+    ],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1040,
+    "completion_tokens": 73,
+    "elapsed_ms": 672
+  },
+  {
+    "id": "Q-002-correct",
+    "matched": false,
+    "false_acceptance": false,
+    "false_rejection": true,
+    "issues": [
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "features",
+        "itemIndex": 0,
+        "kind": "wrong_scope"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "features",
+        "itemIndex": 1,
+        "kind": "wrong_scope"
+      }
+    ],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1077,
+    "completion_tokens": 103,
+    "elapsed_ms": 656
+  },
+  {
+    "id": "Q-002-missing",
+    "matched": true,
+    "false_acceptance": false,
+    "false_rejection": false,
+    "issues": [
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "features",
+        "itemIndex": null,
+        "kind": "missing"
+      }
+    ],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1042,
+    "completion_tokens": 70,
+    "elapsed_ms": 625
+  },
+  {
+    "id": "Q-004-correct",
+    "matched": false,
+    "false_acceptance": false,
+    "false_rejection": true,
+    "issues": [
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "project_name",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "project_type",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "domain",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "frontend",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "backend",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "ai",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "database",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "deployment",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "features",
+        "itemIndex": null,
+        "kind": "missing"
+      },
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "external_integrations",
+        "itemIndex": null,
+        "kind": "wrong_scope"
+      }
+    ],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1048,
+    "completion_tokens": 310,
+    "elapsed_ms": 1703
+  },
+  {
+    "id": "Q-004-missing",
+    "matched": false,
+    "error": "SEMANTIC_REVIEW_INVALID",
+    "elapsed_ms": 531
+  },
+  {
+    "id": "N-004-correct",
+    "matched": false,
+    "error": "SEMANTIC_REVIEW_INVALID",
+    "elapsed_ms": 2016
+  },
+  {
+    "id": "N-004-missing",
+    "matched": false,
+    "error": "SEMANTIC_REVIEW_INVALID",
+    "elapsed_ms": 1031
+  }
+]
