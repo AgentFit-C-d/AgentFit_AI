@@ -1,0 +1,137 @@
+{
+  "groups": {
+    "full": {
+      "baseline": {
+        "valid": 7,
+        "passed": 7,
+        "matched": 70,
+        "total_valid": 70,
+        "total_planned": 120,
+        "false_confirmations": 0,
+        "errors": {
+          "PROVIDER_TIMEOUT": 2,
+          "ANCHORED_MISSING_CANDIDATE": 1,
+          "SECTION_MERGE": 1,
+          "SEMANTIC_REVIEW_INVALID": 1
+        },
+        "max_calls": 5,
+        "median_ms": 12765.5,
+        "p95_ms": 60078
+      },
+      "new": {
+        "valid": 7,
+        "passed": 6,
+        "matched": 69,
+        "total_valid": 70,
+        "total_planned": 120,
+        "false_confirmations": 1,
+        "errors": {
+          "SECTION_MERGE": 2,
+          "PROVIDER_TIMEOUT": 1,
+          "SEMANTIC_REVIEW_INVALID": 1,
+          "SEMANTIC_REJECTED": 1
+        },
+        "max_calls": 6,
+        "median_ms": 11304.5,
+        "p95_ms": 60078
+      },
+      "paired_cases": 6,
+      "paired": {
+        "baseline": {
+          "valid": 6,
+          "passed": 6,
+          "matched": 60,
+          "total_valid": 60,
+          "total_planned": 60,
+          "false_confirmations": 0,
+          "errors": {},
+          "max_calls": 3,
+          "median_ms": 11867.0,
+          "p95_ms": 35609
+        },
+        "new": {
+          "valid": 6,
+          "passed": 5,
+          "matched": 59,
+          "total_valid": 60,
+          "total_planned": 60,
+          "false_confirmations": 1,
+          "errors": {},
+          "max_calls": 3,
+          "median_ms": 10437.5,
+          "p95_ms": 25313
+        }
+      }
+    },
+    "focus": {
+      "baseline": {
+        "valid": 0,
+        "passed": 0,
+        "matched": 0,
+        "total_valid": 0,
+        "total_planned": 27,
+        "false_confirmations": 0,
+        "errors": {
+          "SECTION_MERGE": 4,
+          "SEMANTIC_REJECTED": 1,
+          "ANCHORED_CANDIDATE": 1,
+          "PROVIDER_TIMEOUT": 2
+        },
+        "max_calls": 6,
+        "median_ms": 15844.0,
+        "p95_ms": 60063
+      },
+      "new": {
+        "valid": 1,
+        "passed": 1,
+        "matched": 3,
+        "total_valid": 3,
+        "total_planned": 27,
+        "false_confirmations": 0,
+        "errors": {
+          "PROVIDER_TIMEOUT": 5,
+          "SECTION_MERGE": 1,
+          "ANCHORED_MISSING_CANDIDATE": 1
+        },
+        "max_calls": 6,
+        "median_ms": 60062.0,
+        "p95_ms": 60140
+      },
+      "paired_cases": 0,
+      "paired": {
+        "baseline": {
+          "valid": 0,
+          "passed": 0,
+          "matched": 0,
+          "total_valid": 0,
+          "total_planned": 0,
+          "false_confirmations": 0,
+          "errors": {},
+          "max_calls": 0,
+          "median_ms": 0,
+          "p95_ms": 0
+        },
+        "new": {
+          "valid": 0,
+          "passed": 0,
+          "matched": 0,
+          "total_valid": 0,
+          "total_planned": 0,
+          "false_confirmations": 0,
+          "errors": {},
+          "max_calls": 0,
+          "median_ms": 0,
+          "p95_ms": 0
+        }
+      }
+    }
+  },
+  "gate": {
+    "same_cases": true,
+    "budget": false,
+    "false_confirmations_no_increase": false,
+    "validation_errors_no_increase": true,
+    "errors_no_increase": true
+  },
+  "passed": false
+}

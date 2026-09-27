@@ -1,0 +1,2547 @@
+[
+  {
+    "id": "Q-001",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "baseline",
+      "new"
+    ],
+    "baseline": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "elapsed_ms": 12062,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 625,
+          "provider_elapsed_ms": 625,
+          "request_bytes": 4125,
+          "response_bytes": 603,
+          "prompt_tokens": 442,
+          "completion_tokens": 24,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 4250,
+          "provider_elapsed_ms": 4250,
+          "request_bytes": 25514,
+          "response_bytes": 929,
+          "prompt_tokens": 889,
+          "completion_tokens": 105,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 7187,
+          "provider_elapsed_ms": 7172,
+          "request_bytes": 10398,
+          "response_bytes": 4955,
+          "prompt_tokens": 1063,
+          "completion_tokens": 1228,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    },
+    "new": {
+      "passed": false,
+      "matched": 9,
+      "total": 10,
+      "mismatch_fields": [
+        "features"
+      ],
+      "false_confirmations": 1,
+      "provider_calls": 3,
+      "elapsed_ms": 7703,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 453,
+          "provider_elapsed_ms": 453,
+          "request_bytes": 4016,
+          "response_bytes": 578,
+          "prompt_tokens": 443,
+          "completion_tokens": 17,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1094,
+          "provider_elapsed_ms": 1094,
+          "request_bytes": 16455,
+          "response_bytes": 679,
+          "prompt_tokens": 817,
+          "completion_tokens": 44,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 6156,
+          "provider_elapsed_ms": 6141,
+          "request_bytes": 10369,
+          "response_bytes": 5844,
+          "prompt_tokens": 1048,
+          "completion_tokens": 1066,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Q-002",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "new",
+      "baseline"
+    ],
+    "new": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "elapsed_ms": 25313,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 547,
+          "provider_elapsed_ms": 547,
+          "request_bytes": 4104,
+          "response_bytes": 639,
+          "prompt_tokens": 449,
+          "completion_tokens": 24,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1703,
+          "provider_elapsed_ms": 1703,
+          "request_bytes": 25760,
+          "response_bytes": 937,
+          "prompt_tokens": 902,
+          "completion_tokens": 105,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 23063,
+          "provider_elapsed_ms": 23063,
+          "request_bytes": 10555,
+          "response_bytes": 7228,
+          "prompt_tokens": 1072,
+          "completion_tokens": 1314,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    },
+    "baseline": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "elapsed_ms": 11672,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 594,
+          "provider_elapsed_ms": 594,
+          "request_bytes": 4213,
+          "response_bytes": 663,
+          "prompt_tokens": 448,
+          "completion_tokens": 31,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1281,
+          "provider_elapsed_ms": 1281,
+          "request_bytes": 25760,
+          "response_bytes": 937,
+          "prompt_tokens": 902,
+          "completion_tokens": 105,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 9797,
+          "provider_elapsed_ms": 9797,
+          "request_bytes": 10555,
+          "response_bytes": 8052,
+          "prompt_tokens": 1072,
+          "completion_tokens": 1462,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Q-003",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "baseline",
+      "new"
+    ],
+    "baseline": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 3,
+      "elapsed_ms": 60062,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 640,
+          "provider_elapsed_ms": 640,
+          "request_bytes": 4241,
+          "response_bytes": 673,
+          "prompt_tokens": 454,
+          "completion_tokens": 34,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 938,
+          "provider_elapsed_ms": 938,
+          "request_bytes": 16693,
+          "response_bytes": 682,
+          "prompt_tokens": 837,
+          "completion_tokens": 47,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 58484,
+          "provider_elapsed_ms": 58484,
+          "request_bytes": 10340,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "failed",
+          "reasoning_effort": "medium",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ]
+    },
+    "new": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "elapsed_ms": 24360,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 1657,
+          "provider_elapsed_ms": 1657,
+          "request_bytes": 4132,
+          "response_bytes": 649,
+          "prompt_tokens": 455,
+          "completion_tokens": 27,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 5875,
+          "provider_elapsed_ms": 5875,
+          "request_bytes": 16693,
+          "response_bytes": 608,
+          "prompt_tokens": 837,
+          "completion_tokens": 30,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 16813,
+          "provider_elapsed_ms": 16813,
+          "request_bytes": 10340,
+          "response_bytes": 6770,
+          "prompt_tokens": 1036,
+          "completion_tokens": 1318,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Q-004",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "new",
+      "baseline"
+    ],
+    "new": {
+      "error": "SECTION_MERGE",
+      "provider_calls": 2,
+      "elapsed_ms": 1547,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 531,
+          "provider_elapsed_ms": 531,
+          "request_bytes": 3964,
+          "response_bytes": 598,
+          "prompt_tokens": 435,
+          "completion_tokens": 17,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1016,
+          "provider_elapsed_ms": 1000,
+          "request_bytes": 16441,
+          "response_bytes": 692,
+          "prompt_tokens": 807,
+          "completion_tokens": 47,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "external_integrations"
+          }
+        }
+      ]
+    },
+    "baseline": {
+      "error": "ANCHORED_MISSING_CANDIDATE",
+      "provider_calls": 2,
+      "elapsed_ms": 13265,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 2546,
+          "provider_elapsed_ms": 2546,
+          "request_bytes": 4073,
+          "response_bytes": 568,
+          "prompt_tokens": 434,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 10719,
+          "provider_elapsed_ms": 10704,
+          "request_bytes": 10256,
+          "response_bytes": 4369,
+          "prompt_tokens": 1026,
+          "completion_tokens": 790,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "external_integrations",
+              "kind": "missing"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "Q-005",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "baseline",
+      "new"
+    ],
+    "baseline": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 2,
+      "elapsed_ms": 2969,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 547,
+          "provider_elapsed_ms": 547,
+          "request_bytes": 4013,
+          "response_bytes": 568,
+          "prompt_tokens": 436,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 2422,
+          "provider_elapsed_ms": 2422,
+          "request_bytes": 10226,
+          "response_bytes": 2189,
+          "prompt_tokens": 1027,
+          "completion_tokens": 356,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    },
+    "new": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 2,
+      "elapsed_ms": 5219,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 437,
+          "provider_elapsed_ms": 437,
+          "request_bytes": 3904,
+          "response_bytes": 544,
+          "prompt_tokens": 437,
+          "completion_tokens": 12,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 4782,
+          "provider_elapsed_ms": 4766,
+          "request_bytes": 10226,
+          "response_bytes": 1857,
+          "prompt_tokens": 1027,
+          "completion_tokens": 286,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    }
+  },
+  {
+    "id": "Q-006",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "new",
+      "baseline"
+    ],
+    "new": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 6,
+      "elapsed_ms": 60078,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 500,
+          "provider_elapsed_ms": 500,
+          "request_bytes": 3943,
+          "response_bytes": 544,
+          "prompt_tokens": 446,
+          "completion_tokens": 12,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 515,
+          "provider_elapsed_ms": 515,
+          "request_bytes": 3943,
+          "response_bytes": 586,
+          "prompt_tokens": 445,
+          "completion_tokens": 18,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 875,
+          "provider_elapsed_ms": 875,
+          "request_bytes": 16417,
+          "response_bytes": 679,
+          "prompt_tokens": 819,
+          "completion_tokens": 44,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 16250,
+          "provider_elapsed_ms": 16250,
+          "request_bytes": 10353,
+          "response_bytes": 13885,
+          "prompt_tokens": 1051,
+          "completion_tokens": 2819,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "overbroad"
+            }
+          ]
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 766,
+          "provider_elapsed_ms": 766,
+          "request_bytes": 16704,
+          "response_bytes": 668,
+          "prompt_tokens": 897,
+          "completion_tokens": 33,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 6,
+          "elapsed_ms": 41172,
+          "provider_elapsed_ms": 41172,
+          "request_bytes": 10353,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 8192,
+          "stage": "semantic_recheck",
+          "outcome": "failed",
+          "reasoning_effort": "medium",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ]
+    },
+    "baseline": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 4,
+      "elapsed_ms": 16547,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 4844,
+          "provider_elapsed_ms": 4844,
+          "request_bytes": 4052,
+          "response_bytes": 568,
+          "prompt_tokens": 445,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 500,
+          "provider_elapsed_ms": 500,
+          "request_bytes": 4052,
+          "response_bytes": 585,
+          "prompt_tokens": 444,
+          "completion_tokens": 21,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 906,
+          "provider_elapsed_ms": 906,
+          "request_bytes": 16371,
+          "response_bytes": 679,
+          "prompt_tokens": 816,
+          "completion_tokens": 44,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 10282,
+          "provider_elapsed_ms": 10282,
+          "request_bytes": 10308,
+          "response_bytes": 3081,
+          "prompt_tokens": 1048,
+          "completion_tokens": 583,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    }
+  },
+  {
+    "id": "N-001",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "baseline",
+      "new"
+    ],
+    "baseline": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "elapsed_ms": 10390,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 547,
+          "provider_elapsed_ms": 547,
+          "request_bytes": 4307,
+          "response_bytes": 579,
+          "prompt_tokens": 458,
+          "completion_tokens": 22,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 750,
+          "provider_elapsed_ms": 750,
+          "request_bytes": 16587,
+          "response_bytes": 578,
+          "prompt_tokens": 832,
+          "completion_tokens": 20,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 9093,
+          "provider_elapsed_ms": 9093,
+          "request_bytes": 10373,
+          "response_bytes": 5590,
+          "prompt_tokens": 1038,
+          "completion_tokens": 1073,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    },
+    "new": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "elapsed_ms": 20828,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 516,
+          "provider_elapsed_ms": 516,
+          "request_bytes": 4198,
+          "response_bytes": 643,
+          "prompt_tokens": 459,
+          "completion_tokens": 27,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1016,
+          "provider_elapsed_ms": 1016,
+          "request_bytes": 25902,
+          "response_bytes": 621,
+          "prompt_tokens": 921,
+          "completion_tokens": 34,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 19296,
+          "provider_elapsed_ms": 19296,
+          "request_bytes": 10373,
+          "response_bytes": 3011,
+          "prompt_tokens": 1038,
+          "completion_tokens": 445,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    }
+  },
+  {
+    "id": "N-002",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "new",
+      "baseline"
+    ],
+    "new": {
+      "error": "SECTION_MERGE",
+      "provider_calls": 2,
+      "elapsed_ms": 5907,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 891,
+          "provider_elapsed_ms": 891,
+          "request_bytes": 4052,
+          "response_bytes": 621,
+          "prompt_tokens": 441,
+          "completion_tokens": 20,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 5016,
+          "provider_elapsed_ms": 5016,
+          "request_bytes": 16573,
+          "response_bytes": 750,
+          "prompt_tokens": 816,
+          "completion_tokens": 61,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "external_integrations"
+          }
+        }
+      ]
+    },
+    "baseline": {
+      "error": "SECTION_MERGE",
+      "provider_calls": 4,
+      "elapsed_ms": 35750,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 578,
+          "provider_elapsed_ms": 578,
+          "request_bytes": 4161,
+          "response_bytes": 645,
+          "prompt_tokens": 440,
+          "completion_tokens": 27,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1125,
+          "provider_elapsed_ms": 1125,
+          "request_bytes": 16573,
+          "response_bytes": 697,
+          "prompt_tokens": 816,
+          "completion_tokens": 49,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 32922,
+          "provider_elapsed_ms": 32922,
+          "request_bytes": 10300,
+          "response_bytes": 8008,
+          "prompt_tokens": 1029,
+          "completion_tokens": 1499,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "external_integrations",
+              "kind": "missing"
+            }
+          ]
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 1125,
+          "provider_elapsed_ms": 1125,
+          "request_bytes": 16892,
+          "response_bytes": 750,
+          "prompt_tokens": 899,
+          "completion_tokens": 61,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "external_integrations"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "N-003",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "baseline",
+      "new"
+    ],
+    "baseline": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "elapsed_ms": 12078,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 547,
+          "provider_elapsed_ms": 547,
+          "request_bytes": 4199,
+          "response_bytes": 658,
+          "prompt_tokens": 442,
+          "completion_tokens": 31,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 890,
+          "provider_elapsed_ms": 890,
+          "request_bytes": 16630,
+          "response_bytes": 699,
+          "prompt_tokens": 819,
+          "completion_tokens": 49,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 10641,
+          "provider_elapsed_ms": 10641,
+          "request_bytes": 10319,
+          "response_bytes": 3792,
+          "prompt_tokens": 1030,
+          "completion_tokens": 663,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    },
+    "new": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "elapsed_ms": 13109,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 484,
+          "provider_elapsed_ms": 484,
+          "request_bytes": 4090,
+          "response_bytes": 631,
+          "prompt_tokens": 443,
+          "completion_tokens": 21,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1750,
+          "provider_elapsed_ms": 1734,
+          "request_bytes": 16630,
+          "response_bytes": 699,
+          "prompt_tokens": 819,
+          "completion_tokens": 49,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 10875,
+          "provider_elapsed_ms": 10860,
+          "request_bytes": 10319,
+          "response_bytes": 5251,
+          "prompt_tokens": 1030,
+          "completion_tokens": 953,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    }
+  },
+  {
+    "id": "N-004",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "new",
+      "baseline"
+    ],
+    "new": {
+      "error": "SEMANTIC_REVIEW_INVALID",
+      "provider_calls": 3,
+      "elapsed_ms": 9500,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 594,
+          "provider_elapsed_ms": 594,
+          "request_bytes": 4088,
+          "response_bytes": 640,
+          "prompt_tokens": 451,
+          "completion_tokens": 25,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1266,
+          "provider_elapsed_ms": 1250,
+          "request_bytes": 25728,
+          "response_bytes": 929,
+          "prompt_tokens": 906,
+          "completion_tokens": 108,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 7640,
+          "provider_elapsed_ms": 7640,
+          "request_bytes": 10435,
+          "response_bytes": 5848,
+          "prompt_tokens": 1055,
+          "completion_tokens": 1161,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validation_failed",
+          "reasoning_effort": "medium",
+          "error": "SEMANTIC_REVIEW_INVALID",
+          "review_error": {
+            "reason": "ARRAY_INDEX"
+          }
+        }
+      ]
+    },
+    "baseline": {
+      "error": "SEMANTIC_REVIEW_INVALID",
+      "provider_calls": 3,
+      "elapsed_ms": 12266,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 594,
+          "provider_elapsed_ms": 594,
+          "request_bytes": 4197,
+          "response_bytes": 660,
+          "prompt_tokens": 450,
+          "completion_tokens": 32,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 969,
+          "provider_elapsed_ms": 969,
+          "request_bytes": 16627,
+          "response_bytes": 735,
+          "prompt_tokens": 831,
+          "completion_tokens": 58,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 10703,
+          "provider_elapsed_ms": 10703,
+          "request_bytes": 10504,
+          "response_bytes": 4149,
+          "prompt_tokens": 1060,
+          "completion_tokens": 805,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validation_failed",
+          "reasoning_effort": "medium",
+          "error": "SEMANTIC_REVIEW_INVALID",
+          "review_error": {
+            "reason": "ARRAY_INDEX"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "N-005",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "baseline",
+      "new"
+    ],
+    "baseline": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "elapsed_ms": 35609,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 6578,
+          "provider_elapsed_ms": 6578,
+          "request_bytes": 4079,
+          "response_bytes": 603,
+          "prompt_tokens": 441,
+          "completion_tokens": 24,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1625,
+          "provider_elapsed_ms": 1625,
+          "request_bytes": 25445,
+          "response_bytes": 823,
+          "prompt_tokens": 886,
+          "completion_tokens": 82,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 27406,
+          "provider_elapsed_ms": 27406,
+          "request_bytes": 10375,
+          "response_bytes": 5704,
+          "prompt_tokens": 1063,
+          "completion_tokens": 1216,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    },
+    "new": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "elapsed_ms": 7766,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 500,
+          "provider_elapsed_ms": 500,
+          "request_bytes": 3970,
+          "response_bytes": 579,
+          "prompt_tokens": 442,
+          "completion_tokens": 17,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1328,
+          "provider_elapsed_ms": 1313,
+          "request_bytes": 25445,
+          "response_bytes": 823,
+          "prompt_tokens": 886,
+          "completion_tokens": 82,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 5938,
+          "provider_elapsed_ms": 5938,
+          "request_bytes": 10375,
+          "response_bytes": 3170,
+          "prompt_tokens": 1063,
+          "completion_tokens": 573,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    }
+  },
+  {
+    "id": "N-006",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "new",
+      "baseline"
+    ],
+    "new": {
+      "error": "SEMANTIC_REJECTED",
+      "provider_calls": 5,
+      "elapsed_ms": 18750,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 578,
+          "provider_elapsed_ms": 578,
+          "request_bytes": 4158,
+          "response_bytes": 654,
+          "prompt_tokens": 453,
+          "completion_tokens": 26,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1062,
+          "provider_elapsed_ms": 1062,
+          "request_bytes": 25868,
+          "response_bytes": 799,
+          "prompt_tokens": 910,
+          "completion_tokens": 77,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 6969,
+          "provider_elapsed_ms": 6969,
+          "request_bytes": 10485,
+          "response_bytes": 5833,
+          "prompt_tokens": 1056,
+          "completion_tokens": 1110,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "overbroad"
+            }
+          ]
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 922,
+          "provider_elapsed_ms": 922,
+          "request_bytes": 26198,
+          "response_bytes": 672,
+          "prompt_tokens": 1002,
+          "completion_tokens": 49,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 9219,
+          "provider_elapsed_ms": 9219,
+          "request_bytes": 10353,
+          "response_bytes": 4267,
+          "prompt_tokens": 1035,
+          "completion_tokens": 776,
+          "max_tokens": 8192,
+          "stage": "semantic_recheck",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "missing"
+            }
+          ]
+        }
+      ]
+    },
+    "baseline": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 5,
+      "elapsed_ms": 60078,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 5765,
+          "provider_elapsed_ms": 5765,
+          "request_bytes": 4267,
+          "response_bytes": 625,
+          "prompt_tokens": 452,
+          "completion_tokens": 27,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1235,
+          "provider_elapsed_ms": 1235,
+          "request_bytes": 25770,
+          "response_bytes": 799,
+          "prompt_tokens": 905,
+          "completion_tokens": 77,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 40469,
+          "provider_elapsed_ms": 40469,
+          "request_bytes": 10420,
+          "response_bytes": 13749,
+          "prompt_tokens": 1051,
+          "completion_tokens": 3050,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "overbroad"
+            }
+          ]
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 1171,
+          "provider_elapsed_ms": 1171,
+          "request_bytes": 26100,
+          "response_bytes": 723,
+          "prompt_tokens": 997,
+          "completion_tokens": 58,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 11422,
+          "provider_elapsed_ms": 11422,
+          "request_bytes": 10420,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 8192,
+          "stage": "semantic_recheck",
+          "outcome": "failed",
+          "reasoning_effort": "medium",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ]
+    }
+  },
+  {
+    "id": "E01",
+    "kind": "focus",
+    "gold_total": 4,
+    "order": [
+      "baseline",
+      "new"
+    ],
+    "baseline": {
+      "error": "SECTION_MERGE",
+      "provider_calls": 3,
+      "elapsed_ms": 16750,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 11328,
+          "provider_elapsed_ms": 11328,
+          "request_bytes": 5905,
+          "response_bytes": 692,
+          "prompt_tokens": 669,
+          "completion_tokens": 56,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1000,
+          "provider_elapsed_ms": 1000,
+          "request_bytes": 6012,
+          "response_bytes": 1000,
+          "prompt_tokens": 688,
+          "completion_tokens": 106,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 4406,
+          "provider_elapsed_ms": 4406,
+          "request_bytes": 100620,
+          "response_bytes": 2490,
+          "prompt_tokens": 1750,
+          "completion_tokens": 495,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "CONFLICTING_FACTS",
+            "field": "features"
+          }
+        }
+      ]
+    },
+    "new": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 4,
+      "elapsed_ms": 60078,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 922,
+          "provider_elapsed_ms": 922,
+          "request_bytes": 6012,
+          "response_bytes": 904,
+          "prompt_tokens": 704,
+          "completion_tokens": 78,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 937,
+          "provider_elapsed_ms": 937,
+          "request_bytes": 6119,
+          "response_bytes": 927,
+          "prompt_tokens": 723,
+          "completion_tokens": 87,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 12437,
+          "provider_elapsed_ms": 12437,
+          "request_bytes": 92018,
+          "response_bytes": 1771,
+          "prompt_tokens": 1703,
+          "completion_tokens": 328,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 45766,
+          "provider_elapsed_ms": 45766,
+          "request_bytes": 12153,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "failed",
+          "reasoning_effort": "medium",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ]
+    }
+  },
+  {
+    "id": "E02",
+    "kind": "focus",
+    "gold_total": 3,
+    "order": [
+      "new",
+      "baseline"
+    ],
+    "new": {
+      "error": "SECTION_MERGE",
+      "provider_calls": 3,
+      "elapsed_ms": 8188,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 1172,
+          "provider_elapsed_ms": 1172,
+          "request_bytes": 5723,
+          "response_bytes": 798,
+          "prompt_tokens": 684,
+          "completion_tokens": 64,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 3500,
+          "provider_elapsed_ms": 3500,
+          "request_bytes": 5711,
+          "response_bytes": 847,
+          "prompt_tokens": 667,
+          "completion_tokens": 66,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 3500,
+          "provider_elapsed_ms": 3500,
+          "request_bytes": 72868,
+          "response_bytes": 1639,
+          "prompt_tokens": 1444,
+          "completion_tokens": 291,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "frontend"
+          }
+        }
+      ]
+    },
+    "baseline": {
+      "error": "SEMANTIC_REJECTED",
+      "provider_calls": 6,
+      "elapsed_ms": 52234,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 1031,
+          "provider_elapsed_ms": 1031,
+          "request_bytes": 5616,
+          "response_bytes": 916,
+          "prompt_tokens": 649,
+          "completion_tokens": 91,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1047,
+          "provider_elapsed_ms": 1047,
+          "request_bytes": 5604,
+          "response_bytes": 919,
+          "prompt_tokens": 632,
+          "completion_tokens": 85,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 2828,
+          "provider_elapsed_ms": 2828,
+          "request_bytes": 63845,
+          "response_bytes": 1449,
+          "prompt_tokens": 1373,
+          "completion_tokens": 242,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 29797,
+          "provider_elapsed_ms": 29797,
+          "request_bytes": 11795,
+          "response_bytes": 16218,
+          "prompt_tokens": 1227,
+          "completion_tokens": 3461,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "project_type",
+              "kind": "overbroad"
+            },
+            {
+              "field": "database",
+              "kind": "overbroad"
+            }
+          ]
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 2656,
+          "provider_elapsed_ms": 2656,
+          "request_bytes": 64769,
+          "response_bytes": 1452,
+          "prompt_tokens": 1626,
+          "completion_tokens": 242,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 6,
+          "elapsed_ms": 14875,
+          "provider_elapsed_ms": 14875,
+          "request_bytes": 11795,
+          "response_bytes": 7789,
+          "prompt_tokens": 1227,
+          "completion_tokens": 1547,
+          "max_tokens": 8192,
+          "stage": "semantic_recheck",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "project_type",
+              "kind": "overbroad"
+            },
+            {
+              "field": "database",
+              "kind": "overbroad"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E03",
+    "kind": "focus",
+    "gold_total": 3,
+    "order": [
+      "baseline",
+      "new"
+    ],
+    "baseline": {
+      "error": "SECTION_MERGE",
+      "provider_calls": 3,
+      "elapsed_ms": 8812,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 891,
+          "provider_elapsed_ms": 891,
+          "request_bytes": 5823,
+          "response_bytes": 949,
+          "prompt_tokens": 637,
+          "completion_tokens": 86,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1125,
+          "provider_elapsed_ms": 1125,
+          "request_bytes": 5680,
+          "response_bytes": 927,
+          "prompt_tokens": 623,
+          "completion_tokens": 84,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 6796,
+          "provider_elapsed_ms": 6796,
+          "request_bytes": 64130,
+          "response_bytes": 1441,
+          "prompt_tokens": 1355,
+          "completion_tokens": 239,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "ai"
+          }
+        }
+      ]
+    },
+    "new": {
+      "error": "ANCHORED_MISSING_CANDIDATE",
+      "provider_calls": 5,
+      "elapsed_ms": 53625,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 6829,
+          "provider_elapsed_ms": 6829,
+          "request_bytes": 5930,
+          "response_bytes": 877,
+          "prompt_tokens": 672,
+          "completion_tokens": 67,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 750,
+          "provider_elapsed_ms": 750,
+          "request_bytes": 5787,
+          "response_bytes": 855,
+          "prompt_tokens": 658,
+          "completion_tokens": 65,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 2953,
+          "provider_elapsed_ms": 2953,
+          "request_bytes": 64130,
+          "response_bytes": 1446,
+          "prompt_tokens": 1355,
+          "completion_tokens": 241,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 40750,
+          "provider_elapsed_ms": 40750,
+          "request_bytes": 11910,
+          "response_bytes": 18543,
+          "prompt_tokens": 1222,
+          "completion_tokens": 3716,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "project_name",
+              "kind": "overbroad"
+            },
+            {
+              "field": "project_type",
+              "kind": "missing"
+            },
+            {
+              "field": "deployment",
+              "kind": "overbroad"
+            }
+          ]
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 2343,
+          "provider_elapsed_ms": 2313,
+          "request_bytes": 65153,
+          "response_bytes": 1319,
+          "prompt_tokens": 1633,
+          "completion_tokens": 210,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "error": "ANCHORED_MISSING_CANDIDATE"
+        }
+      ]
+    }
+  },
+  {
+    "id": "E04",
+    "kind": "focus",
+    "gold_total": 3,
+    "order": [
+      "new",
+      "baseline"
+    ],
+    "new": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 4,
+      "elapsed_ms": 60079,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 969,
+          "provider_elapsed_ms": 969,
+          "request_bytes": 5767,
+          "response_bytes": 871,
+          "prompt_tokens": 686,
+          "completion_tokens": 73,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 766,
+          "provider_elapsed_ms": 766,
+          "request_bytes": 5867,
+          "response_bytes": 895,
+          "prompt_tokens": 667,
+          "completion_tokens": 70,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 13844,
+          "provider_elapsed_ms": 13844,
+          "request_bytes": 91341,
+          "response_bytes": 1517,
+          "prompt_tokens": 1608,
+          "completion_tokens": 269,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 44500,
+          "provider_elapsed_ms": 44500,
+          "request_bytes": 11702,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "failed",
+          "reasoning_effort": "medium",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ]
+    },
+    "baseline": {
+      "error": "ANCHORED_CANDIDATE",
+      "provider_calls": 1,
+      "elapsed_ms": 1406,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 1406,
+          "provider_elapsed_ms": 1406,
+          "request_bytes": 5660,
+          "response_bytes": 1048,
+          "prompt_tokens": 651,
+          "completion_tokens": 107,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "ANCHORED_CANDIDATE"
+        }
+      ]
+    }
+  },
+  {
+    "id": "E05",
+    "kind": "focus",
+    "gold_total": 3,
+    "order": [
+      "baseline",
+      "new"
+    ],
+    "baseline": {
+      "error": "SECTION_MERGE",
+      "provider_calls": 3,
+      "elapsed_ms": 8937,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 2015,
+          "provider_elapsed_ms": 2015,
+          "request_bytes": 5823,
+          "response_bytes": 969,
+          "prompt_tokens": 648,
+          "completion_tokens": 92,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 3688,
+          "provider_elapsed_ms": 3688,
+          "request_bytes": 5568,
+          "response_bytes": 895,
+          "prompt_tokens": 636,
+          "completion_tokens": 86,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 3234,
+          "provider_elapsed_ms": 3234,
+          "request_bytes": 64013,
+          "response_bytes": 1432,
+          "prompt_tokens": 1379,
+          "completion_tokens": 238,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "ai"
+          }
+        }
+      ]
+    },
+    "new": {
+      "matched": 3,
+      "total": 3,
+      "false_confirmations": 0,
+      "passed": true,
+      "provider_calls": 4,
+      "elapsed_ms": 29813,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 797,
+          "provider_elapsed_ms": 797,
+          "request_bytes": 5930,
+          "response_bytes": 897,
+          "prompt_tokens": 683,
+          "completion_tokens": 73,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 797,
+          "provider_elapsed_ms": 797,
+          "request_bytes": 5675,
+          "response_bytes": 823,
+          "prompt_tokens": 671,
+          "completion_tokens": 67,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 3453,
+          "provider_elapsed_ms": 3437,
+          "request_bytes": 64013,
+          "response_bytes": 1566,
+          "prompt_tokens": 1379,
+          "completion_tokens": 270,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 24766,
+          "provider_elapsed_ms": 24766,
+          "request_bytes": 11833,
+          "response_bytes": 10820,
+          "prompt_tokens": 1244,
+          "completion_tokens": 2153,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    }
+  },
+  {
+    "id": "E06",
+    "kind": "focus",
+    "gold_total": 3,
+    "order": [
+      "new",
+      "baseline"
+    ],
+    "new": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 6,
+      "elapsed_ms": 60140,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 797,
+          "provider_elapsed_ms": 797,
+          "request_bytes": 5739,
+          "response_bytes": 846,
+          "prompt_tokens": 661,
+          "completion_tokens": 62,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1156,
+          "provider_elapsed_ms": 1156,
+          "request_bytes": 5748,
+          "response_bytes": 856,
+          "prompt_tokens": 674,
+          "completion_tokens": 73,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 2984,
+          "provider_elapsed_ms": 2984,
+          "request_bytes": 73055,
+          "response_bytes": 1522,
+          "prompt_tokens": 1440,
+          "completion_tokens": 262,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 16438,
+          "provider_elapsed_ms": 16438,
+          "request_bytes": 11762,
+          "response_bytes": 12748,
+          "prompt_tokens": 1223,
+          "completion_tokens": 2639,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "project_type",
+              "kind": "overbroad"
+            },
+            {
+              "field": "backend",
+              "kind": "overbroad"
+            },
+            {
+              "field": "external_integrations",
+              "kind": "overbroad"
+            }
+          ]
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 10594,
+          "provider_elapsed_ms": 10578,
+          "request_bytes": 74138,
+          "response_bytes": 1522,
+          "prompt_tokens": 1739,
+          "completion_tokens": 262,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 6,
+          "elapsed_ms": 28171,
+          "provider_elapsed_ms": 28171,
+          "request_bytes": 11762,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 8192,
+          "stage": "semantic_recheck",
+          "outcome": "failed",
+          "reasoning_effort": "medium",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ]
+    },
+    "baseline": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 6,
+      "elapsed_ms": 60047,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 1125,
+          "provider_elapsed_ms": 1125,
+          "request_bytes": 5632,
+          "response_bytes": 903,
+          "prompt_tokens": 626,
+          "completion_tokens": 78,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1063,
+          "provider_elapsed_ms": 1063,
+          "request_bytes": 5641,
+          "response_bytes": 928,
+          "prompt_tokens": 639,
+          "completion_tokens": 92,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 3250,
+          "provider_elapsed_ms": 3234,
+          "request_bytes": 73028,
+          "response_bytes": 1522,
+          "prompt_tokens": 1438,
+          "completion_tokens": 262,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 28094,
+          "provider_elapsed_ms": 28094,
+          "request_bytes": 11762,
+          "response_bytes": 14481,
+          "prompt_tokens": 1223,
+          "completion_tokens": 2994,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "project_type",
+              "kind": "overbroad"
+            },
+            {
+              "field": "backend",
+              "kind": "overbroad"
+            },
+            {
+              "field": "external_integrations",
+              "kind": "overbroad"
+            }
+          ]
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 2937,
+          "provider_elapsed_ms": 2937,
+          "request_bytes": 74111,
+          "response_bytes": 1269,
+          "prompt_tokens": 1737,
+          "completion_tokens": 206,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 6,
+          "elapsed_ms": 23578,
+          "provider_elapsed_ms": 23578,
+          "request_bytes": 11762,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 8192,
+          "stage": "semantic_recheck",
+          "outcome": "failed",
+          "reasoning_effort": "medium",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ]
+    }
+  },
+  {
+    "id": "E07",
+    "kind": "focus",
+    "gold_total": 4,
+    "order": [
+      "baseline",
+      "new"
+    ],
+    "baseline": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 4,
+      "elapsed_ms": 60063,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 9157,
+          "provider_elapsed_ms": 9157,
+          "request_bytes": 5547,
+          "response_bytes": 922,
+          "prompt_tokens": 630,
+          "completion_tokens": 86,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 5031,
+          "provider_elapsed_ms": 5031,
+          "request_bytes": 5640,
+          "response_bytes": 925,
+          "prompt_tokens": 631,
+          "completion_tokens": 85,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 8625,
+          "provider_elapsed_ms": 8625,
+          "request_bytes": 82078,
+          "response_bytes": 1570,
+          "prompt_tokens": 1513,
+          "completion_tokens": 276,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 37250,
+          "provider_elapsed_ms": 37250,
+          "request_bytes": 11895,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "failed",
+          "reasoning_effort": "medium",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ]
+    },
+    "new": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 6,
+      "elapsed_ms": 60062,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 969,
+          "provider_elapsed_ms": 969,
+          "request_bytes": 5654,
+          "response_bytes": 850,
+          "prompt_tokens": 665,
+          "completion_tokens": 67,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 859,
+          "provider_elapsed_ms": 859,
+          "request_bytes": 5747,
+          "response_bytes": 861,
+          "prompt_tokens": 666,
+          "completion_tokens": 66,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 6437,
+          "provider_elapsed_ms": 6437,
+          "request_bytes": 100312,
+          "response_bytes": 1694,
+          "prompt_tokens": 1668,
+          "completion_tokens": 314,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 43125,
+          "provider_elapsed_ms": 43125,
+          "request_bytes": 11696,
+          "response_bytes": 11173,
+          "prompt_tokens": 1228,
+          "completion_tokens": 2245,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "project_name",
+              "kind": "overbroad"
+            },
+            {
+              "field": "database",
+              "kind": "overbroad"
+            },
+            {
+              "field": "deployment",
+              "kind": "overbroad"
+            },
+            {
+              "field": "features",
+              "kind": "overbroad"
+            }
+          ]
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 4047,
+          "provider_elapsed_ms": 4047,
+          "request_bytes": 101602,
+          "response_bytes": 1694,
+          "prompt_tokens": 2028,
+          "completion_tokens": 314,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 6,
+          "elapsed_ms": 4625,
+          "provider_elapsed_ms": 4625,
+          "request_bytes": 11696,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 8192,
+          "stage": "semantic_recheck",
+          "outcome": "failed",
+          "reasoning_effort": "medium",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ]
+    }
+  },
+  {
+    "id": "E08",
+    "kind": "focus",
+    "gold_total": 4,
+    "order": [
+      "new",
+      "baseline"
+    ],
+    "new": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 4,
+      "elapsed_ms": 60062,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 1125,
+          "provider_elapsed_ms": 1125,
+          "request_bytes": 5830,
+          "response_bytes": 944,
+          "prompt_tokens": 666,
+          "completion_tokens": 76,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1656,
+          "provider_elapsed_ms": 1656,
+          "request_bytes": 5768,
+          "response_bytes": 854,
+          "prompt_tokens": 656,
+          "completion_tokens": 66,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 3047,
+          "provider_elapsed_ms": 3047,
+          "request_bytes": 91359,
+          "response_bytes": 1760,
+          "prompt_tokens": 1582,
+          "completion_tokens": 327,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 54234,
+          "provider_elapsed_ms": 54234,
+          "request_bytes": 11805,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "failed",
+          "reasoning_effort": "medium",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ]
+    },
+    "baseline": {
+      "error": "SECTION_MERGE",
+      "provider_calls": 3,
+      "elapsed_ms": 14938,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 1063,
+          "provider_elapsed_ms": 1063,
+          "request_bytes": 5723,
+          "response_bytes": 925,
+          "prompt_tokens": 631,
+          "completion_tokens": 80,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 7531,
+          "provider_elapsed_ms": 7531,
+          "request_bytes": 5661,
+          "response_bytes": 918,
+          "prompt_tokens": 621,
+          "completion_tokens": 85,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 6344,
+          "provider_elapsed_ms": 6344,
+          "request_bytes": 73121,
+          "response_bytes": 1631,
+          "prompt_tokens": 1425,
+          "completion_tokens": 287,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "ai"
+          }
+        }
+      ]
+    }
+  }
+]
