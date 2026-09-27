@@ -10,6 +10,7 @@ from .repair_units import split_repair_units
 from .repair_occurrence import occurrence_prompt
 from .review_examples import REVIEW_EXAMPLES
 from .anchored_prompts import CANDIDATE_PROMPT_V2, JUDGMENT_PROMPT_V2
+from .candidate_occurrences import candidate_views, CANDIDATE_EXPANSION_PROMPT, JUDGMENT_FOCUS_PROMPT
 from .sections import batch_sections, SectionError
 from .semantic_review import validate_review, ReviewValidationError, REVIEW_PROMPT
 from .anchored_candidates import units, candidate_schema, validate_quotes, judgment_schema, classify
@@ -40,7 +41,7 @@ Do not change quotations or add new candidates. If reviewing issues, reconsider 
 
 class AnchoredAnalyzer(SolarAnalyzer):
     """Experimental path; inherits existing diagnostics retention and deadline wrapper."""
-    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, review_examples=False, review_expression=False, repair_value_boundary=False, repair_state_grounding=False, repair_evidence_units=False, repair_effort="none", repair_occurrence_index=False, **kwargs):
+    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, review_examples=False, review_expression=False, repair_value_boundary=False, repair_state_grounding=False, repair_evidence_units=False, repair_effort="none", repair_occurrence_index=False, candidate_occurrences=False, **kwargs):
         if review_effort not in ("medium", "low"):
             raise ValueError("unsupported review effort")
         if prompt_revision not in ("v1", "v2"):
@@ -59,6 +60,9 @@ class AnchoredAnalyzer(SolarAnalyzer):
             raise ValueError("repair_effort requires source_repair")
         if type(repair_occurrence_index) is not bool or repair_occurrence_index and (not source_repair or repair_evidence_units):
             raise ValueError("repair_occurrence_index requires source_repair and original units")
+        if type(candidate_occurrences) is not bool or candidate_occurrences and prompt_revision!="v2":
+            raise ValueError("candidate_occurrences requires prompt_revision v2")
+        self._candidate_occurrences=candidate_occurrences
         self._repair_occurrence_index=repair_occurrence_index
         self._repair_effort=repair_effort
         self._repair_state_grounding=repair_state_grounding
@@ -92,6 +96,10 @@ class AnchoredAnalyzer(SolarAnalyzer):
         if self._repair_effort!="none":version+="+repair-"+self._repair_effort
         candidate_prompt=CANDIDATE_PROMPT_V2 if self._prompt_revision=="v2" else CANDIDATE_PROMPT
         judgment_prompt=JUDGMENT_PROMPT_V2 if self._prompt_revision=="v2" else JUDGMENT_PROMPT
+        if self._candidate_occurrences:
+            version+="+candidate-occurrences-v1"
+            candidate_prompt=CANDIDATE_EXPANSION_PROMPT
+            judgment_prompt=JUDGMENT_FOCUS_PROMPT
         diagnostic.update(prompt_version=version,evidence_contract="anchored-v1",sections_covered=0)
         try:
             sections=units(document)
@@ -140,11 +148,11 @@ class AnchoredAnalyzer(SolarAnalyzer):
                 "next":sections[i+1].text if i+1<len(sections) else None}
                 for s in batch for i in [sections.index(s)]]}
             result=request("candidate_generation",candidate_prompt,content,candidate_schema(batch),
-                           lambda value:validate_quotes(value,batch,len(pool)))
+                           lambda value:validate_quotes(value,batch,len(pool),expand_occurrences=self._candidate_occurrences))
             pool.extend(result)
             diagnostic["sections_covered"]+=len(batch)
         diagnostic["candidate_count"]=len(pool)
-        candidates=[{k:v for k,v in fact.items() if k!="span"} for fact in pool]
+        candidates=candidate_views(pool,sections,focus=self._candidate_occurrences)
         judgment_content={"document":document,"candidates":candidates}
         def merge(value):
             return value,classify(value,pool,document,document_id)

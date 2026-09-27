@@ -1,0 +1,84 @@
+{
+  "judgment-plain-v2": {
+    "total": 27,
+    "passed": 13,
+    "median_ms": 1406,
+    "p95_ms": 6672,
+    "max_ms": 7047,
+    "errors": {
+      "SECTION_MERGE": 6
+    },
+    "max_calls": 1,
+    "failed_ids": [
+      "S01",
+      "S02",
+      "S03",
+      "S08",
+      "S12",
+      "O01",
+      "O03",
+      "O04",
+      "O06",
+      "O07",
+      "O08",
+      "O10",
+      "O11",
+      "O13"
+    ]
+  },
+  "judgment-focus": {
+    "total": 27,
+    "passed": 13,
+    "median_ms": 1516,
+    "p95_ms": 7344,
+    "max_ms": 9375,
+    "errors": {
+      "SECTION_MERGE": 6
+    },
+    "max_calls": 1,
+    "failed_ids": [
+      "T07",
+      "S02",
+      "S03",
+      "S07",
+      "S08",
+      "S12",
+      "O01",
+      "O03",
+      "O04",
+      "O07",
+      "O08",
+      "O10",
+      "O11",
+      "O13"
+    ]
+  },
+  "full-focus": {
+    "total": 27,
+    "passed": 16,
+    "median_ms": 18704,
+    "p95_ms": 60047,
+    "max_ms": 60047,
+    "errors": {
+      "SECTION_MERGE": 3,
+      "PROVIDER_TIMEOUT": 2,
+      "SOURCE_REPAIR_INVALID": 3,
+      "SEMANTIC_REJECTED": 1,
+      "ANCHORED_CANDIDATE": 2
+    },
+    "max_calls": 5,
+    "failed_ids": [
+      "S03",
+      "S08",
+      "O01",
+      "O02",
+      "O04",
+      "O07",
+      "O08",
+      "O10",
+      "O11",
+      "O12",
+      "O13"
+    ]
+  }
+}

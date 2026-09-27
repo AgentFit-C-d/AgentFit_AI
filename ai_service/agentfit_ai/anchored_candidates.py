@@ -15,7 +15,7 @@ def candidate_schema(batch):
         "items":_object({"unitId":{"type":"string","enum":[s.id for s in batch]},
         "quotes":{"type":"array","maxItems":30,"items":{"type":"string","minLength":1,"maxLength":2000}}})}})
 
-def validate_quotes(reply,batch,start_index):
+def validate_quotes(reply,batch,start_index,*,expand_occurrences=False):
     def fail():raise AnalysisError("ANCHORED_CANDIDATE")
     if type(reply) is not dict or set(reply)!={"units"} or type(reply["units"]) is not list:fail()
     groups=reply["units"]
@@ -28,10 +28,23 @@ def validate_quotes(reply,batch,start_index):
         if type(quotes) is not list or len(quotes)>30 or any(type(q) is not str for q in quotes):fail()
         if len(set(quotes))!=len(quotes):fail()
         for quote in quotes:
-            try:span=resolve_quote(unit.text,quote,None)
-            except EvidenceError:fail()
-            result.append({"id":"F"+str(start_index+len(result)+1).zfill(4),"unitId":unit.id,
-                "quote":quote,"span":{"start":unit.start+span["start"],"end":unit.start+span["end"]}})
+            if expand_occurrences:
+                if not quote.strip() or len(quote)>2000:fail()
+                position=unit.text.find(quote)
+                if position<0:fail()
+                while position>=0:
+                    if start_index+len(result)>=120:raise AnalysisError("SECTION_LIMIT")
+                    result.append({"unitId":unit.id,"quote":quote,
+                        "span":{"start":unit.start+position,"end":unit.start+position+len(quote)}})
+                    position=unit.text.find(quote,position+1)
+            else:
+                try:span=resolve_quote(unit.text,quote,None)
+                except EvidenceError:fail()
+                result.append({"id":"F"+str(start_index+len(result)+1).zfill(4),"unitId":unit.id,
+                    "quote":quote,"span":{"start":unit.start+span["start"],"end":unit.start+span["end"]}})
+    if expand_occurrences:
+        result.sort(key=lambda x:(x["span"]["start"],x["span"]["end"],x["quote"]))
+        for index,item in enumerate(result,start_index+1):item["id"]="F"+str(index).zfill(4)
     if start_index+len(result)>120:raise AnalysisError("SECTION_LIMIT")
     return result
 

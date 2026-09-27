@@ -1,4 +1,4 @@
-# 위치별 후보 확장 — 승인 대기
+# 위치별 후보 확장 — 사용자 승인 완료
 ## 목적과 근거
 현재 CANDIDATE_PROMPT_V2는 인용이 unit 안에서 한 번만 등장하도록 요구한다. validate_quotes도 resolve_quote(..., None)를 호출한다. “개발 모델은 Kestrel이다. 운영 모델도 Kestrel이다.”의 quotes=["Kestrel"]이 ANCHORED_CANDIDATE로 거부됨을 로컬 재현했다.
 수정 모델에 등장 순서를 계산시킨 실험도 오판과 지연을 남겼다. 이번에는 초기 단계에서 서버가 모든 위치를 후보 ID로 제공한다.

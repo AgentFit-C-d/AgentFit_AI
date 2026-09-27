@@ -1,0 +1,500 @@
+[
+  {
+    "id": "T07",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "prompt_tokens": 701,
+    "completion_tokens": 80,
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "selected_spans": {},
+    "elapsed_ms": 1687
+  },
+  {
+    "id": "S01",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "prompt_tokens": 701,
+    "completion_tokens": 78,
+    "mismatch_fields": [
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": false
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 22,
+          "end": 41
+        }
+      ]
+    },
+    "elapsed_ms": 1141
+  },
+  {
+    "id": "S02",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "prompt_tokens": 700,
+    "completion_tokens": 105,
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 7,
+          "end": 14
+        }
+      ]
+    },
+    "elapsed_ms": 1672
+  },
+  {
+    "id": "S03",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 1,
+    "prompt_tokens": 666,
+    "completion_tokens": 47,
+    "mismatch_fields": [
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "absent",
+        "matched": false
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "selected_spans": {},
+    "elapsed_ms": 765
+  },
+  {
+    "id": "S04",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "prompt_tokens": 695,
+    "completion_tokens": 111,
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "selected_spans": {},
+    "elapsed_ms": 5719
+  },
+  {
+    "id": "S05",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "prompt_tokens": 696,
+    "completion_tokens": 110,
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "selected_spans": {},
+    "elapsed_ms": 1281
+  },
+  {
+    "id": "S06",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "prompt_tokens": 696,
+    "completion_tokens": 108,
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 7,
+          "end": 13
+        }
+      ]
+    },
+    "elapsed_ms": 1844
+  },
+  {
+    "id": "S07",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "prompt_tokens": 698,
+    "completion_tokens": 112,
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "selected_spans": {
+      "external_integrations": [
+        {
+          "start": 25,
+          "end": 32
+        }
+      ]
+    },
+    "elapsed_ms": 1422
+  }
+]
