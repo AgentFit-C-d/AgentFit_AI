@@ -1,0 +1,149 @@
+[
+  {
+    "run": "repair-occurrence-state-v1",
+    "passed": 12,
+    "total": 13,
+    "median_ms": 1422,
+    "p95_ms": 8203,
+    "failed": [
+      {
+        "id": "S10",
+        "error": "SOURCE_REPAIR_INVALID"
+      }
+    ]
+  },
+  {
+    "run": "repair-occurrence-new-context-v1",
+    "passed": 8,
+    "total": 14,
+    "median_ms": 929.5,
+    "p95_ms": 17078,
+    "failed": [
+      {
+        "id": "O01",
+        "error": "SOURCE_REPAIR_INVALID"
+      },
+      {
+        "id": "O04",
+        "error": "SOURCE_REPAIR_INVALID"
+      },
+      {
+        "id": "O08",
+        "mismatch_fields": [],
+        "evidence_mismatch_fields": [
+          "ai"
+        ]
+      },
+      {
+        "id": "O10",
+        "error": "SOURCE_REPAIR_INVALID"
+      },
+      {
+        "id": "O11",
+        "error": "SOURCE_REPAIR_INVALID"
+      },
+      {
+        "id": "O12",
+        "error": "SOURCE_REPAIR_INVALID"
+      }
+    ]
+  },
+  {
+    "run": "repair-occurrence-new-index-v1",
+    "passed": 7,
+    "total": 14,
+    "median_ms": 914.0,
+    "p95_ms": 2781,
+    "failed": [
+      {
+        "id": "O01",
+        "error": "SOURCE_REPAIR_INVALID"
+      },
+      {
+        "id": "O07",
+        "mismatch_fields": [],
+        "evidence_mismatch_fields": [
+          "ai"
+        ]
+      },
+      {
+        "id": "O08",
+        "error": "SECTION_MERGE"
+      },
+      {
+        "id": "O09",
+        "mismatch_fields": [
+          "ai"
+        ],
+        "evidence_mismatch_fields": [
+          "ai"
+        ]
+      },
+      {
+        "id": "O10",
+        "error": "SECTION_MERGE"
+      },
+      {
+        "id": "O11",
+        "error": "SOURCE_REPAIR_INVALID"
+      },
+      {
+        "id": "O13",
+        "mismatch_fields": [],
+        "evidence_mismatch_fields": [
+          "domain"
+        ]
+      }
+    ]
+  },
+  {
+    "run": "repair-occurrence-new-low-v1",
+    "passed": 11,
+    "total": 14,
+    "median_ms": 5687.5,
+    "p95_ms": 40047,
+    "failed": [
+      {
+        "id": "O08",
+        "mismatch_fields": [],
+        "evidence_mismatch_fields": [
+          "ai"
+        ]
+      },
+      {
+        "id": "O09",
+        "error": "PROVIDER_TIMEOUT"
+      },
+      {
+        "id": "O12",
+        "error": "PROVIDER_TIMEOUT"
+      }
+    ]
+  },
+  {
+    "run": "repair-occurrence-state-evidence-v1",
+    "passed": 10,
+    "total": 13,
+    "median_ms": 1828,
+    "p95_ms": 17422,
+    "failed": [
+      {
+        "id": "S02",
+        "error": "SECTION_MERGE"
+      },
+      {
+        "id": "S10",
+        "error": "SOURCE_REPAIR_INVALID"
+      },
+      {
+        "id": "S12",
+        "mismatch_fields": [
+          "features"
+        ],
+        "evidence_mismatch_fields": [
+          "features"
+        ]
+      }
+    ]
+  }
+]

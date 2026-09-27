@@ -7,6 +7,7 @@ from .repair_examples import REPAIR_EXAMPLES
 from .repair_value import VALUE_BOUNDARY_V2
 from .repair_state import STATE_GROUNDING_V2
 from .repair_units import split_repair_units
+from .repair_occurrence import occurrence_prompt
 from .review_examples import REVIEW_EXAMPLES
 from .anchored_prompts import CANDIDATE_PROMPT_V2, JUDGMENT_PROMPT_V2
 from .sections import batch_sections, SectionError
@@ -39,7 +40,7 @@ Do not change quotations or add new candidates. If reviewing issues, reconsider 
 
 class AnchoredAnalyzer(SolarAnalyzer):
     """Experimental path; inherits existing diagnostics retention and deadline wrapper."""
-    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, review_examples=False, review_expression=False, repair_value_boundary=False, repair_state_grounding=False, repair_evidence_units=False, repair_effort="none", **kwargs):
+    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, review_examples=False, review_expression=False, repair_value_boundary=False, repair_state_grounding=False, repair_evidence_units=False, repair_effort="none", repair_occurrence_index=False, **kwargs):
         if review_effort not in ("medium", "low"):
             raise ValueError("unsupported review effort")
         if prompt_revision not in ("v1", "v2"):
@@ -56,6 +57,9 @@ class AnchoredAnalyzer(SolarAnalyzer):
             if type(value) is not bool or value and not source_repair:raise ValueError(name+" requires source_repair")
         if repair_effort not in ("none","low") or repair_effort!="none" and not source_repair:
             raise ValueError("repair_effort requires source_repair")
+        if type(repair_occurrence_index) is not bool or repair_occurrence_index and (not source_repair or repair_evidence_units):
+            raise ValueError("repair_occurrence_index requires source_repair and original units")
+        self._repair_occurrence_index=repair_occurrence_index
         self._repair_effort=repair_effort
         self._repair_state_grounding=repair_state_grounding
         self._repair_evidence_units=repair_evidence_units
@@ -84,6 +88,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
         if self._repair_value_boundary:version+="+value-boundary-v2"
         if self._repair_state_grounding:version+="+state-grounding-v2"
         if self._repair_evidence_units:version+="+repair-units-v1"
+        if self._repair_occurrence_index:version+="+occurrence-v1"
         if self._repair_effort!="none":version+="+repair-"+self._repair_effort
         candidate_prompt=CANDIDATE_PROMPT_V2 if self._prompt_revision=="v2" else CANDIDATE_PROMPT
         judgment_prompt=JUDGMENT_PROMPT_V2 if self._prompt_revision=="v2" else JUDGMENT_PROMPT
@@ -187,8 +192,10 @@ class AnchoredAnalyzer(SolarAnalyzer):
                 diagnostic["repair_unit_count"]=len(repair_sections)
                 content={"document":document,"requestedFields":list(repaired),"previous":profile,"issues":issues,
                          "units":[{"unitId":s.id,"text":s.text,"headingPath":list(s.path)} for s in repair_sections]}
-                profile=request("source_repair",SOURCE_REPAIR_PROMPT+(REPAIR_EXAMPLES if self._repair_examples else "")+(VALUE_BOUNDARY_V2 if self._repair_value_boundary else "")+(STATE_GROUNDING_V2 if self._repair_state_grounding else ""),content,repair_schema(repaired,repair_sections),
-                    lambda value:apply_repairs(document,document_id,profile,repair_sections,repaired,value))
+                repair_prompt=SOURCE_REPAIR_PROMPT+(REPAIR_EXAMPLES if self._repair_examples else "")+(VALUE_BOUNDARY_V2 if self._repair_value_boundary else "")+(STATE_GROUNDING_V2 if self._repair_state_grounding else "")
+                if self._repair_occurrence_index:repair_prompt=occurrence_prompt(repair_prompt)
+                profile=request("source_repair",repair_prompt,content,repair_schema(repaired,repair_sections,occurrence_index=self._repair_occurrence_index),
+                    lambda value:apply_repairs(document,document_id,profile,repair_sections,repaired,value,occurrence_index=self._repair_occurrence_index))
             else:
                 if not pool:raise AnalysisError("SEMANTIC_REJECTED")
                 repaired=tuple(FIELDS)

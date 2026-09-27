@@ -1,0 +1,244 @@
+[
+  {
+    "id": "O01",
+    "document": "개발 도구는 Kestrel이다. 운영 모델도 Kestrel로 확정했다.",
+    "field": "ai",
+    "gold": {
+      "ai": [
+        [
+          "Kestrel"
+        ]
+      ]
+    },
+    "evidence_spans": {
+      "ai": [
+        {
+          "start": 25,
+          "end": 32
+        }
+      ]
+    }
+  },
+  {
+    "id": "O02",
+    "document": "운영 모델은 Kestrel이다. 개발 검증에도 Kestrel을 쓴다.",
+    "field": "ai",
+    "gold": {
+      "ai": [
+        [
+          "Kestrel"
+        ]
+      ]
+    },
+    "evidence_spans": {
+      "ai": [
+        {
+          "start": 7,
+          "end": 14
+        }
+      ]
+    }
+  },
+  {
+    "id": "O03",
+    "document": "예시 모델은 Kestrel이다. 과거에는 Kestrel이었다. 현재 운영 모델도 Kestrel로 확정했다.",
+    "field": "ai",
+    "gold": {
+      "ai": [
+        [
+          "Kestrel"
+        ]
+      ]
+    },
+    "evidence_spans": {
+      "ai": [
+        {
+          "start": 45,
+          "end": 52
+        }
+      ]
+    }
+  },
+  {
+    "id": "O04",
+    "document": "운영에는 Kestrel을 쓰고 개발 도구도 Kestrel이다.",
+    "field": "ai",
+    "gold": {
+      "ai": [
+        [
+          "Kestrel"
+        ]
+      ]
+    },
+    "evidence_spans": {
+      "ai": [
+        {
+          "start": 5,
+          "end": 12
+        }
+      ]
+    }
+  },
+  {
+    "id": "O05",
+    "document": "제품 이름은 Dr. Atlas다.",
+    "field": "project_name",
+    "gold": {
+      "project_name": "Dr. Atlas"
+    },
+    "evidence_spans": {
+      "project_name": [
+        {
+          "start": 7,
+          "end": 16
+        }
+      ]
+    }
+  },
+  {
+    "id": "O06",
+    "document": "# 예시\r\n예시 DB는 SQLite다.\r\n# 우리 제품\r\n운영 DB는 SQLite로 정했다.",
+    "field": "database",
+    "gold": {
+      "database": "SQLite"
+    },
+    "evidence_spans": {
+      "database": [
+        {
+          "start": 39,
+          "end": 45
+        }
+      ]
+    }
+  },
+  {
+    "id": "O07",
+    "document": "🦉 개발 도구는 제비다. 운영 모델도 제비로 확정했다.",
+    "field": "ai",
+    "gold": {
+      "ai": [
+        [
+          "제비"
+        ]
+      ]
+    },
+    "evidence_spans": {
+      "ai": [
+        {
+          "start": 21,
+          "end": 23
+        }
+      ]
+    }
+  },
+  {
+    "id": "O08",
+    "document": "예시 정책: 운영 AI를 사용하지 않는다. 현재 제품 정책: 운영 AI를 사용하지 않는다.",
+    "field": "ai",
+    "gold": {
+      "ai": []
+    },
+    "evidence_spans": {
+      "ai": [
+        {
+          "start": 34,
+          "end": 50
+        }
+      ]
+    }
+  },
+  {
+    "id": "O09",
+    "document": "과거 운영 모델은 Kestrel이었다. 현재 모델은 미정이다.",
+    "field": "ai",
+    "gold": {
+      "ai": null
+    },
+    "evidence_spans": {}
+  },
+  {
+    "id": "O10",
+    "document": "예시 결제는 ChargeBee다. 우리 서비스 결제도 ChargeBee를 확정했다.",
+    "field": "external_integrations",
+    "gold": {
+      "external_integrations": [
+        [
+          "ChargeBee"
+        ]
+      ]
+    },
+    "evidence_spans": {
+      "external_integrations": [
+        {
+          "start": 30,
+          "end": 39
+        }
+      ]
+    }
+  },
+  {
+    "id": "O11",
+    "document": "과거 기능은 출석 조회였다. 현재 필수 기능도 출석 조회다.",
+    "field": "features",
+    "gold": {
+      "features": [
+        [
+          "출석 조회"
+        ]
+      ]
+    },
+    "evidence_spans": {
+      "features": [
+        {
+          "start": 26,
+          "end": 31
+        }
+      ]
+    }
+  },
+  {
+    "id": "O12",
+    "document": "# 다른 제품\n운영 모델은 Lark다.\n# 현재 제품\n운영 모델은 Lark로 확정했다.",
+    "field": "ai",
+    "gold": {
+      "ai": [
+        [
+          "Lark"
+        ]
+      ]
+    },
+    "evidence_spans": {
+      "ai": [
+        {
+          "start": 37,
+          "end": 41
+        }
+      ]
+    }
+  },
+  {
+    "id": "O13",
+    "document": "예시 분야는 교육이다. 우리 제품의 업무 분야도 교육이다.",
+    "field": "domain",
+    "gold": {
+      "domain": "교육"
+    },
+    "evidence_spans": {
+      "domain": [
+        {
+          "start": 27,
+          "end": 29
+        }
+      ]
+    }
+  },
+  {
+    "id": "O14",
+    "document": "운영 AI 모델은 아직 선정하지 않았다. 개발 검증만 Lark로 한다.",
+    "field": "ai",
+    "gold": {
+      "ai": null
+    },
+    "evidence_spans": {}
+  }
+]

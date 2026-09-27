@@ -6,6 +6,7 @@ from .repair_examples import REPAIR_EXAMPLES
 from .repair_value import VALUE_BOUNDARY, VALUE_BOUNDARY_V2
 from .repair_state import STATE_GROUNDING, STATE_GROUNDING_V2
 from .repair_units import split_repair_units
+from .repair_occurrence import occurrence_prompt
 from .anchored_candidates import units
 from .profile import FIELDS, validate_profile
 from .solar import SolarAnalyzer, AnalysisError
@@ -29,6 +30,10 @@ def quote_observations(reply, field, sections):
             "quote_matches":text.count(quote) if text is not None and good_quote else None,
             "context_matches":text.count(context) if text is not None and good_context else None,
             "quote_in_context_matches":context.count(quote) if good_quote and good_context else None})
+        if "occurrenceIndex" in fact:
+            index=fact["occurrenceIndex"]
+            result[-1]["occurrence_index"]=index if type(index) is int and -1<=index<=24001 else None
+            result[-1]["occurrence_index_type_valid"]=type(index) is int
     return result
 
 def response_format_observation(raw):
@@ -53,6 +58,10 @@ def response_format_observation(raw):
     if type(body) is not dict or set(body)!={"repairs"}:return {"reason":"ROOT_SHAPE"}
     return {"reason":"EXPECTED_SHAPE"}
 
+def score_evidence(profile, expected):
+    wrong=[field for field in FIELDS if sorted((e["start"],e["end"]) for e in profile["evidence"][field])!=sorted((e["start"],e["end"]) for e in expected.get(field,[]))]
+    return {"evidence_matched":not wrong,"evidence_mismatch_fields":wrong}
+
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument("--live",action="store_true")
@@ -62,7 +71,10 @@ def main():
     parser.add_argument("--boundary-revision",choices=("v1","v2"),default="v1")
     parser.add_argument("--transfer",action="store_true")
     parser.add_argument("--state-cases",action="store_true")
+    parser.add_argument("--state-evidence",action="store_true")
     parser.add_argument("--unit-transfer",action="store_true")
+    parser.add_argument("--occurrence-cases",action="store_true")
+    parser.add_argument("--occurrence-index",action="store_true")
     parser.add_argument("--state-grounding",action="store_true")
     parser.add_argument("--evidence-units",action="store_true")
     parser.add_argument("--effort",choices=("none","low"),default="none")
@@ -82,15 +94,27 @@ def main():
     if args.unit_transfer:
         if args.transfer or args.state_cases:parser.error("choose one case set")
         case_file=case_file.parent.parent/"repair-evidence-units/transfer-cases.json"
+    if args.occurrence_cases:
+        if args.transfer or args.state_cases or args.unit_transfer:parser.error("choose one case set")
+        case_file=case_file.parent.parent/"repair-occurrence-index/cases.json"
+    if args.occurrence_index and args.evidence_units:parser.error("occurrence_index requires original units")
     cases=json.loads(case_file.read_text(encoding="utf-8"))
+    evidence_hash=None
+    if args.state_evidence:
+        if not args.state_cases:parser.error("state evidence requires state cases")
+        evidence_file=case_file.parent.parent/"repair-occurrence-index/state-evidence.json"
+        evidence_gold=json.loads(evidence_file.read_text(encoding="utf-8"))
+        evidence_hash=hashlib.sha256(evidence_file.read_bytes()).hexdigest()
+        for case in cases:case["evidence_spans"]=evidence_gold[case["id"]]
     if args.case_ids:
         if len(set(args.case_ids))!=len(args.case_ids) or not set(args.case_ids)<=set(c["id"] for c in cases):parser.error("invalid case ids")
         cases=[c for c in cases if c["id"] in args.case_ids]
     prompt=SOURCE_REPAIR_PROMPT+REPAIR_EXAMPLES+((VALUE_BOUNDARY if args.boundary_revision=="v1" else VALUE_BOUNDARY_V2) if args.value_boundary else "")
     if args.state_grounding:prompt+=STATE_GROUNDING if args.state_revision=="v1" else STATE_GROUNDING_V2
+    if args.occurrence_index:prompt=occurrence_prompt(prompt)
     args.output.mkdir(parents=True,exist_ok=False)
     plan={"scope":"isolated_source_repair","model":args.model,"effort":args.effort,"max_tokens":args.max_tokens,"timeout":40,
-          "evidence_units":args.evidence_units,"state_revision":args.state_revision,"unit_transfer":args.unit_transfer,"state_cases":args.state_cases,"state_grounding":args.state_grounding,"value_boundary":args.value_boundary,"boundary_revision":args.boundary_revision,"transfer":args.transfer,"planned":len(cases)*args.repeat,"case_ids":[c["id"] for c in cases],"repeat":args.repeat,"interval_seconds":args.interval_seconds,
+          "state_evidence_sha256":evidence_hash,"occurrence_index":args.occurrence_index,"occurrence_cases":args.occurrence_cases,"evidence_units":args.evidence_units,"state_revision":args.state_revision,"unit_transfer":args.unit_transfer,"state_cases":args.state_cases,"state_grounding":args.state_grounding,"value_boundary":args.value_boundary,"boundary_revision":args.boundary_revision,"transfer":args.transfer,"planned":len(cases)*args.repeat,"case_ids":[c["id"] for c in cases],"repeat":args.repeat,"interval_seconds":args.interval_seconds,
           "cases_sha256":hashlib.sha256(case_file.read_bytes()).hexdigest(),
           "prompt_sha256":hashlib.sha256(prompt.encode()).hexdigest(),
           "script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
@@ -105,14 +129,17 @@ def main():
                  "issues":[{"field":field,"kind":"missing","itemIndex":None,"evidenceLineIds":list(range(1,len(doc.splitlines())+1))}],
                  "units":[{"unitId":s.id,"text":s.text,"headingPath":list(s.path)} for s in sections]}
         payload={"model":args.model,"messages":[{"role":"system","content":prompt},{"role":"user","content":json.dumps(content,ensure_ascii=False)}],
-                 "response_format":{"type":"json_schema","json_schema":{"name":"agentfit_sections","strict":True,"schema":repair_schema([field],sections)}},
+                 "response_format":{"type":"json_schema","json_schema":{"name":"agentfit_sections","strict":True,"schema":repair_schema([field],sections,occurrence_index=args.occurrence_index)}},
                  "reasoning_effort":args.effort,"temperature":0,"frequency_penalty":0,"max_tokens":args.max_tokens,"stream":False}
         row={"id":case["id"],"iteration":iteration,"passed":False};trace={};started=time.monotonic()
         try:
             reply,model,pt,ct=analyzer._send_payload(payload,("repairs",),_trace=trace,timeout=40)
             row["quote_observations"]=quote_observations(reply,field,sections)
-            repaired=apply_repairs(doc,case["id"],previous,sections,[field],reply)
+            repaired=apply_repairs(doc,case["id"],previous,sections,[field],reply,occurrence_index=args.occurrence_index)
             row.update(score_profile(repaired,case["gold"]),model=model,prompt_tokens=pt,completion_tokens=ct)
+            if "evidence_spans" in case:
+                row.update(score_evidence(repaired,case["evidence_spans"]))
+                row["passed"]=row["passed"] and row["evidence_matched"]
             expected=case["gold"].get(field);actual=repaired["data"][field]
             # apply_repairs has validated these enums. Never persist quotations/context.
             row["fact_states"]=[{k:fact[k] for k in ("role","status","scope")} for fact in reply["repairs"][field]["facts"]]

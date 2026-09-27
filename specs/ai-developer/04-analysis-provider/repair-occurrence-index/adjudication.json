@@ -1,0 +1,18 @@
+{
+  "case_id": "O08",
+  "frozen_expected_span": {
+    "start": 34,
+    "end": 50
+  },
+  "observed_span": {
+    "start": 24,
+    "end": 50
+  },
+  "decision": "valid_current_absence_with_prefix",
+  "applies_to": [
+    "repair-occurrence-new-context-v1",
+    "repair-occurrence-new-low-v1"
+  ],
+  "strict_scores_unchanged": true,
+  "not_proof_of_repeated_quote_counting": true
+}

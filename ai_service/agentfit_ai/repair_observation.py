@@ -78,11 +78,14 @@ def main():
     from .repair_examples import REPAIR_EXAMPLES
     from .repair_value import VALUE_BOUNDARY_V2
     from .repair_state import STATE_GROUNDING_V2
+    from .repair_occurrence import occurrence_prompt
     from .review_examples import REVIEW_EXAMPLES
     from .semantic_review import REVIEW_PROMPT
     from .evaluate import load_api_key
     parser=argparse.ArgumentParser(description="Fixed four-case repair/review observation; not a readiness gate.")
     parser.add_argument("--live",action="store_true")
+    parser.add_argument("--model",choices=("solar-mini4","solar-pro4"),default="solar-mini4")
+    parser.add_argument("--repair-occurrence-index",action="store_true")
     parser.add_argument("--repair-examples",action="store_true")
     parser.add_argument("--review-examples",action="store_true")
     parser.add_argument("--review-expression",action="store_true")
@@ -104,14 +107,16 @@ def main():
     from .expression_review import expression_prompt
     review_prompt=expression_prompt() if args.review_expression else REVIEW_PROMPT
     args.output.mkdir(parents=True,exist_ok=False)
-    plan={"scope":"pilot_twelve_cases" if args.all_pilot_cases else "diagnostic_four_cases","model":"solar-mini4","prompt_revision":"v2","source_repair":True,
-          "review_effort":"low","repair_examples":args.repair_examples,"review_examples":args.review_examples,"review_expression":args.review_expression,"repair_value_boundary":args.repair_value_boundary,"repair_state_grounding":args.repair_state_grounding,"repair_evidence_units":args.repair_evidence_units,"repair_effort":args.repair_effort,"planned":len(cases),
+    repair_prompt=SOURCE_REPAIR_PROMPT+(REPAIR_EXAMPLES if args.repair_examples else "")+(VALUE_BOUNDARY_V2 if args.repair_value_boundary else "")+(STATE_GROUNDING_V2 if args.repair_state_grounding else "")
+    if args.repair_occurrence_index:repair_prompt=occurrence_prompt(repair_prompt)
+    plan={"scope":"pilot_twelve_cases" if args.all_pilot_cases else "diagnostic_four_cases","model":args.model,"prompt_revision":"v2","source_repair":True,
+          "review_effort":"low","repair_examples":args.repair_examples,"review_examples":args.review_examples,"review_expression":args.review_expression,"repair_value_boundary":args.repair_value_boundary,"repair_state_grounding":args.repair_state_grounding,"repair_evidence_units":args.repair_evidence_units,"repair_occurrence_index":args.repair_occurrence_index,"repair_effort":args.repair_effort,"planned":len(cases),
           "cases_sha256":hashlib.sha256(json.dumps(cases,ensure_ascii=False,sort_keys=True).encode()).hexdigest(),
           "prompt_sha256":[hashlib.sha256(p.encode()).hexdigest() for p in
-                          (CANDIDATE_PROMPT_V2,JUDGMENT_PROMPT_V2,SOURCE_REPAIR_PROMPT+(REPAIR_EXAMPLES if args.repair_examples else "")+(VALUE_BOUNDARY_V2 if args.repair_value_boundary else "")+(STATE_GROUNDING_V2 if args.repair_state_grounding else ""),review_prompt+(REVIEW_EXAMPLES if args.review_examples else ""))],
+                          (CANDIDATE_PROMPT_V2,JUDGMENT_PROMPT_V2,repair_prompt,review_prompt+(REVIEW_EXAMPLES if args.review_examples else ""))],
           "observer_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
     (args.output/"plan.json").write_text(json.dumps(plan,indent=2),encoding="utf-8")
-    analyzer=AnchoredAnalyzer(load_api_key(),model="solar-mini4",prompt_revision="v2",source_repair=True,review_effort="low",repair_examples=args.repair_examples,review_examples=args.review_examples,review_expression=args.review_expression,repair_value_boundary=args.repair_value_boundary,repair_state_grounding=args.repair_state_grounding,repair_evidence_units=args.repair_evidence_units,repair_effort=args.repair_effort)
+    analyzer=AnchoredAnalyzer(load_api_key(),model=args.model,prompt_revision="v2",source_repair=True,review_effort="low",repair_examples=args.repair_examples,review_examples=args.review_examples,review_expression=args.review_expression,repair_value_boundary=args.repair_value_boundary,repair_state_grounding=args.repair_state_grounding,repair_evidence_units=args.repair_evidence_units,repair_effort=args.repair_effort,repair_occurrence_index=args.repair_occurrence_index)
     rows=[]
     for case in cases:
         row={"id":case["id"],**observe_run(analyzer,case["document"],case["id"],case["gold"])}

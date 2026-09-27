@@ -1,5 +1,6 @@
 """Opt-in targeted repair from original source, with atomic field replacement."""
 from copy import deepcopy
+from .repair_occurrence import resolve_occurrence
 from .solar import AnalysisError, _object
 from .profile import FIELDS, ARRAY_FIELDS, validate_profile, ProfileValidationError
 from .evidence import ROLES, resolve_quote, EvidenceError
@@ -25,7 +26,7 @@ current confirmed만 최종값으로 사용된다. 개발·테스트 도구를 �
 목록 전체와 원문 문맥을 확인하고 반복·상충 후보를 임의 선택하지 않는다.
 """
 
-def repair_schema(fields, sections):
+def repair_schema(fields, sections, *, occurrence_index=False):
     properties={}
     for field in fields:
         fact=_object({
@@ -36,10 +37,14 @@ def repair_schema(fields, sections):
             "status":{"type":"string","enum":list(STATUSES if field in ARRAY_FIELDS else STATUSES[:-1])},
             "scope":{"type":"string","enum":list(SCOPES)},
         })
+        if occurrence_index:
+            del fact["properties"]["context"]
+            fact["properties"]["occurrenceIndex"]={"type":"integer","minimum":1,"maximum":24000}
+            fact["required"]=[k for k in fact["required"] if k!="context"]+["occurrenceIndex"]
         properties[field]=_object({"facts":{"type":"array","maxItems":30,"items":fact}})
     return _object({"repairs":_object(properties)})
 
-def apply_repairs(document,document_id,profile,sections,fields,reply):
+def apply_repairs(document,document_id,profile,sections,fields,reply, *, occurrence_index=False):
     def fail():raise AnalysisError("SOURCE_REPAIR_INVALID")
     if not fields or len(set(fields))!=len(fields) or any(f not in FIELDS for f in fields):fail()
     if type(reply) is not dict or set(reply)!={"repairs"}:fail()
@@ -50,14 +55,14 @@ def apply_repairs(document,document_id,profile,sections,fields,reply):
         patch=patches[field]
         if type(patch) is not dict or set(patch)!={"facts"} or type(patch["facts"]) is not list or len(patch["facts"])>30:fail()
         for fact in patch["facts"]:
-            if type(fact) is not dict or set(fact)!={"unitId","quote","context","role","status","scope"}:fail()
+            if type(fact) is not dict or set(fact)!={"unitId","quote","occurrenceIndex" if occurrence_index else "context","role","status","scope"}:fail()
             if any(type(fact[k]) is not str for k in ("unitId","quote","role","status","scope")):fail()
             if fact["unitId"] not in mapping or fact["scope"] not in SCOPES or not compatible(field,fact["role"],fact["status"]):fail()
-            quote=fact["quote"];context=fact["context"]
+            quote=fact["quote"];context=fact.get("context")
             if not 1<=len(quote)<=2000 or fact["status"]!="absent" and len(quote)>200:fail()
             if context is not None and (type(context) is not str or not 1<=len(context)<=4000):fail()
             unit=mapping[fact["unitId"]]
-            try:local=resolve_quote(unit.text,quote,context)
+            try:local=resolve_occurrence(unit.text,quote,fact["occurrenceIndex"]) if occurrence_index else resolve_quote(unit.text,quote,context)
             except EvidenceError:fail()
             span={"start":unit.start+local["start"],"end":unit.start+local["end"]}
             key=(field,span["start"],span["end"])
