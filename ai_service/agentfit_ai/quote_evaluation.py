@@ -43,14 +43,15 @@ def reasoning_effort(value):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live",action="store_true")
+    parser.add_argument("--model",choices=("solar-mini4","solar-pro4"),default="solar-mini4")
     parser.add_argument("--reasoning",type=reasoning_effort,default="none")
     parser.add_argument("--output",type=Path,required=True)
     args=parser.parse_args()
     if not args.live:parser.error("--live is required")
     cases=json.loads(CASES.read_text(encoding="utf-8"))
-    analyzer=SectionAnalyzer(load_api_key(),model="solar-mini4",quote_only=True,jev_merge=True)
+    analyzer=SectionAnalyzer(load_api_key(),model=args.model,quote_only=True,jev_merge=True)
     args.output.mkdir(parents=True,exist_ok=False)
-    plan={"model":"solar-mini4","version":"section-quotes-v3","scoring_revision":2,"diagnostic_revision":1,"planned":len(cases),
+    plan={"model":args.model,"version":"section-quotes-v3","scoring_revision":2,"diagnostic_revision":1,"planned":len(cases),
           "cases_sha256":hashlib.sha256(CASES.read_bytes()).hexdigest(),
           "prompt_sha256":hashlib.sha256(QUOTE_EXTRACT_PROMPT.encode()).hexdigest(),
           "gate":"all 6 structurally valid and exact criteria passed","max_tokens":4096,
@@ -63,7 +64,7 @@ def main():
             content={"document_context":{"headings":[list(s.path) for s in sections],"opening":sections[0].text},
                      "sections":[{"sectionId":s.id,"headingPath":list(s.path),"text":s.text} for s in sections]}
             schema=extraction_schema(sections,quote_only=True)
-            payload={"model":"solar-mini4","messages":[{"role":"system","content":QUOTE_EXTRACT_PROMPT},
+            payload={"model":args.model,"messages":[{"role":"system","content":QUOTE_EXTRACT_PROMPT},
                      {"role":"user","content":json.dumps(content,ensure_ascii=False)}],
                      "response_format":{"type":"json_schema","json_schema":{"name":"agentfit_sections","strict":True,"schema":schema}},
                      "reasoning_effort":args.reasoning,"frequency_penalty":0,"temperature":0,"max_tokens":4096,"stream":False}
