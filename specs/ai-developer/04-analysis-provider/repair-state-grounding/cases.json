@@ -1,0 +1,114 @@
+[
+  {
+    "id": "T07",
+    "document": "개발 검증은 Raven으로 한다. 운영 AI 제공자는 아직 미정이다.",
+    "field": "ai",
+    "gold": {}
+  },
+  {
+    "id": "S01",
+    "document": "개발 실험은 Seabird로 진행한다. 운영 AI는 아직 선택하지 않았다.",
+    "field": "ai",
+    "gold": {}
+  },
+  {
+    "id": "S02",
+    "document": "개발 실험은 Seabird로 진행한다. 운영 AI도 Seabird를 채택했다.",
+    "field": "ai",
+    "gold": {
+      "ai": [
+        [
+          "Seabird"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "S03",
+    "document": "제품 운영에 AI 모델을 사용하지 않기로 확정했다.",
+    "field": "ai",
+    "gold": {
+      "ai": []
+    }
+  },
+  {
+    "id": "S04",
+    "document": "Quartz 모델은 거부했다. 운영 제공자는 나중에 결정한다.",
+    "field": "ai",
+    "gold": {}
+  },
+  {
+    "id": "S05",
+    "document": "과거에는 Amber를 사용했다. 새 운영 모델은 검토 중이다.",
+    "field": "ai",
+    "gold": {}
+  },
+  {
+    "id": "S06",
+    "document": "운영 AI는 Indigo를 사용한다. Jade는 향후 검토 후보일 뿐이다.",
+    "field": "ai",
+    "gold": {
+      "ai": [
+        [
+          "Indigo"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "S07",
+    "document": "외부 로그인은 사용하지 않는다. 외부 알림은 Courier를 연동한다.",
+    "field": "external_integrations",
+    "gold": {
+      "external_integrations": [
+        [
+          "Courier"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "S08",
+    "document": "외부 연동 서비스 전체를 사용하지 않기로 확정했다.",
+    "field": "external_integrations",
+    "gold": {
+      "external_integrations": []
+    }
+  },
+  {
+    "id": "S09",
+    "document": "외부 결제가 필요하지만 제공자는 아직 고르지 않았다.",
+    "field": "external_integrations",
+    "gold": {}
+  },
+  {
+    "id": "S10",
+    "document": "예시 앱은 Angular를 사용한다. 현재 제품 프런트엔드는 Preact로 확정했다.",
+    "field": "frontend",
+    "gold": {
+      "frontend": [
+        [
+          "Preact"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "S11",
+    "document": "개발팀은 테스트 코드를 정리한다. 제품의 사용자 기능은 아직 미정이다.",
+    "field": "features",
+    "gold": {}
+  },
+  {
+    "id": "S12",
+    "document": "현재 제품의 필수 사용자 기능은 반품 조회다. 아직 구현 전이다.",
+    "field": "features",
+    "gold": {
+      "features": [
+        [
+          "반품 조회"
+        ]
+      ]
+    }
+  }
+]

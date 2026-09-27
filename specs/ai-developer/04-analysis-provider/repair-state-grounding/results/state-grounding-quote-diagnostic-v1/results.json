@@ -1,0 +1,17 @@
+[
+  {
+    "id": "S02",
+    "iteration": 1,
+    "passed": false,
+    "quote_observations": [
+      {
+        "known_unit": true,
+        "quote_matches": 2,
+        "context_matches": null,
+        "quote_in_context_matches": null
+      }
+    ],
+    "error": "SOURCE_REPAIR_INVALID",
+    "elapsed_ms": 750
+  }
+]
