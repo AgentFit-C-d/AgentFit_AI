@@ -780,7 +780,7 @@ class SolarAnalyzer:
         }
         return self._send_payload(payload, names, _trace=_trace, timeout=timeout)
 
-    def _request_review(self, document, profile, *, _trace=None, timeout=40):
+    def _request_review(self, document, profile, *, _trace=None, timeout=40, reasoning_effort=REVIEW_REASONING_EFFORT):
         lines = source_lines(document)
         draft = {"data": profile["data"], "evidence": {
             field: [{"start": span["start"], "end": span["end"]} for span in spans]
@@ -793,7 +793,7 @@ class SolarAnalyzer:
                          {"role": "user", "content": content}],
             "response_format": {"type": "json_schema", "json_schema": {
                 "name": "agentfit_semantic_review", "strict": True, "schema": review_schema(len(lines))}},
-            "reasoning_effort": REVIEW_REASONING_EFFORT, "frequency_penalty": FREQUENCY_PENALTY,
+            "reasoning_effort": reasoning_effort, "frequency_penalty": FREQUENCY_PENALTY,
             "temperature": 0, "max_tokens": REVIEW_MAX_TOKENS, "stream": False,
         }
         return self._send_payload(payload, ("checkedFields", "issues"), _trace=_trace, timeout=timeout)

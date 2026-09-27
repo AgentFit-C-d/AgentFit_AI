@@ -32,6 +32,16 @@ Do not change quotations or add new candidates. If reviewing issues, reconsider 
 
 class AnchoredAnalyzer(SolarAnalyzer):
     """Experimental path; inherits existing diagnostics retention and deadline wrapper."""
+    def __init__(self, *args, review_effort="medium", **kwargs):
+        if review_effort not in ("medium", "low"):
+            raise ValueError("unsupported review effort")
+        super().__init__(*args, **kwargs)
+        self._review_effort = review_effort
+
+    def _request_review(self, document, profile, *, _trace=None, timeout=40):
+        return super()._request_review(document, profile, _trace=_trace, timeout=timeout,
+                                       reasoning_effort=self._review_effort)
+
     def _analyze(self,document,document_id,diagnostic,raw_responses,deadline):
         started=self._clock()
         version="anchored-v1"
