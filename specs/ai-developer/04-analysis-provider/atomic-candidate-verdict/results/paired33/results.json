@@ -1,0 +1,4255 @@
+[
+  {
+    "id": "T07",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 909,
+    "completion_tokens": 80,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 37094,
+    "response_bytes": 802,
+    "provider_elapsed_ms": 1313,
+    "elapsed_ms": 1313
+  },
+  {
+    "id": "T07",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 882,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8846,
+    "response_bytes": 577,
+    "provider_elapsed_ms": 5140,
+    "elapsed_ms": 5140
+  },
+  {
+    "id": "S01",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 882,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8872,
+    "response_bytes": 577,
+    "provider_elapsed_ms": 625,
+    "elapsed_ms": 625
+  },
+  {
+    "id": "S01",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 909,
+    "completion_tokens": 78,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": false
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [
+      "ai"
+    ],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 22,
+          "end": 41
+        }
+      ]
+    },
+    "request_bytes": 37120,
+    "response_bytes": 794,
+    "provider_elapsed_ms": 1016,
+    "elapsed_ms": 1016
+  },
+  {
+    "id": "S02",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 914,
+    "completion_tokens": 105,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [
+      "ai"
+    ],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 7,
+          "end": 14
+        }
+      ]
+    },
+    "request_bytes": 36994,
+    "response_bytes": 927,
+    "provider_elapsed_ms": 8625,
+    "elapsed_ms": 8640
+  },
+  {
+    "id": "S02",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 887,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 0,
+        "expected_groups": 1,
+        "exact_groups": 0,
+        "covered_groups": 0
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8746,
+    "response_bytes": 577,
+    "provider_elapsed_ms": 547,
+    "elapsed_ms": 547
+  },
+  {
+    "id": "S03",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 1,
+    "profile_returned": true,
+    "prompt_tokens": 786,
+    "completion_tokens": 18,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "absent",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 0,
+          "end": 28
+        }
+      ]
+    },
+    "request_bytes": 8102,
+    "response_bytes": 561,
+    "provider_elapsed_ms": 719,
+    "elapsed_ms": 719
+  },
+  {
+    "id": "S03",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 1,
+    "profile_returned": true,
+    "prompt_tokens": 813,
+    "completion_tokens": 47,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "absent",
+        "matched": false
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 22265,
+    "response_bytes": 680,
+    "provider_elapsed_ms": 969,
+    "elapsed_ms": 969
+  },
+  {
+    "id": "S04",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 893,
+    "completion_tokens": 111,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 37071,
+    "response_bytes": 934,
+    "provider_elapsed_ms": 1375,
+    "elapsed_ms": 1375
+  },
+  {
+    "id": "S04",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 866,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8823,
+    "response_bytes": 577,
+    "provider_elapsed_ms": 671,
+    "elapsed_ms": 671
+  },
+  {
+    "id": "S05",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 871,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8811,
+    "response_bytes": 577,
+    "provider_elapsed_ms": 579,
+    "elapsed_ms": 579
+  },
+  {
+    "id": "S05",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 898,
+    "completion_tokens": 87,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 37059,
+    "response_bytes": 830,
+    "provider_elapsed_ms": 1109,
+    "elapsed_ms": 1109
+  },
+  {
+    "id": "S06",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 905,
+    "completion_tokens": 108,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 7,
+          "end": 13
+        }
+      ]
+    },
+    "request_bytes": 36999,
+    "response_bytes": 931,
+    "provider_elapsed_ms": 2312,
+    "elapsed_ms": 2328
+  },
+  {
+    "id": "S06",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 878,
+    "completion_tokens": 27,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 7,
+          "end": 13
+        }
+      ]
+    },
+    "request_bytes": 8751,
+    "response_bytes": 581,
+    "provider_elapsed_ms": 563,
+    "elapsed_ms": 563
+  },
+  {
+    "id": "S07",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": false,
+    "prompt_tokens": 876,
+    "completion_tokens": 42,
+    "model": "solar-pro4-260806",
+    "error": "SECTION_MERGE",
+    "calls": [
+      {
+        "call": 1,
+        "stage": "judgment",
+        "error": "SECTION_MERGE",
+        "merge_error": {
+          "reason": "CONFLICTING_FACTS",
+          "field": "external_integrations"
+        }
+      }
+    ],
+    "request_bytes": 8884,
+    "response_bytes": 645,
+    "provider_elapsed_ms": 6703,
+    "elapsed_ms": 6703
+  },
+  {
+    "id": "S07",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 903,
+    "completion_tokens": 112,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "external_integrations": [
+        {
+          "start": 25,
+          "end": 32
+        }
+      ]
+    },
+    "request_bytes": 37132,
+    "response_bytes": 963,
+    "provider_elapsed_ms": 1265,
+    "elapsed_ms": 1265
+  },
+  {
+    "id": "S08",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 1,
+    "profile_returned": true,
+    "prompt_tokens": 813,
+    "completion_tokens": 49,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "external_integrations"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "absent",
+        "matched": false
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "external_integrations"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 22295,
+    "response_bytes": 697,
+    "provider_elapsed_ms": 1407,
+    "elapsed_ms": 1407
+  },
+  {
+    "id": "S08",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 1,
+    "profile_returned": true,
+    "prompt_tokens": 786,
+    "completion_tokens": 20,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "absent",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "external_integrations": [
+        {
+          "start": 0,
+          "end": 28
+        }
+      ]
+    },
+    "request_bytes": 8132,
+    "response_bytes": 580,
+    "provider_elapsed_ms": 609,
+    "elapsed_ms": 609
+  },
+  {
+    "id": "S09",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 1,
+    "profile_returned": true,
+    "prompt_tokens": 792,
+    "completion_tokens": 15,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8150,
+    "response_bytes": 556,
+    "provider_elapsed_ms": 484,
+    "elapsed_ms": 484
+  },
+  {
+    "id": "S09",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 1,
+    "profile_returned": true,
+    "prompt_tokens": 819,
+    "completion_tokens": 20,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 22313,
+    "response_bytes": 578,
+    "provider_elapsed_ms": 750,
+    "elapsed_ms": 750
+  },
+  {
+    "id": "S10",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 909,
+    "completion_tokens": 78,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "frontend": [
+        {
+          "start": 34,
+          "end": 40
+        }
+      ]
+    },
+    "request_bytes": 37095,
+    "response_bytes": 800,
+    "provider_elapsed_ms": 1375,
+    "elapsed_ms": 1375
+  },
+  {
+    "id": "S10",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 882,
+    "completion_tokens": 36,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "frontend": [
+        {
+          "start": 34,
+          "end": 40
+        }
+      ]
+    },
+    "request_bytes": 8847,
+    "response_bytes": 608,
+    "provider_elapsed_ms": 546,
+    "elapsed_ms": 546
+  },
+  {
+    "id": "S11",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 878,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 9042,
+    "response_bytes": 577,
+    "provider_elapsed_ms": 641,
+    "elapsed_ms": 641
+  },
+  {
+    "id": "S11",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 905,
+    "completion_tokens": 34,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 37290,
+    "response_bytes": 621,
+    "provider_elapsed_ms": 1453,
+    "elapsed_ms": 1453
+  },
+  {
+    "id": "S12",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 902,
+    "completion_tokens": 111,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "features"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 0,
+        "expected_groups": 1,
+        "exact_groups": 0,
+        "covered_groups": 0
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "features"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 37134,
+    "response_bytes": 940,
+    "provider_elapsed_ms": 4515,
+    "elapsed_ms": 4515
+  },
+  {
+    "id": "S12",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 875,
+    "completion_tokens": 36,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "features": [
+        {
+          "start": 18,
+          "end": 23
+        }
+      ]
+    },
+    "request_bytes": 8886,
+    "response_bytes": 613,
+    "provider_elapsed_ms": 954,
+    "elapsed_ms": 954
+  },
+  {
+    "id": "O01",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 874,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 0,
+        "expected_groups": 1,
+        "exact_groups": 0,
+        "covered_groups": 0
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8719,
+    "response_bytes": 577,
+    "provider_elapsed_ms": 828,
+    "elapsed_ms": 828
+  },
+  {
+    "id": "O01",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 901,
+    "completion_tokens": 105,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "backend"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": false
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "backend"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [
+      "backend"
+    ],
+    "selected_spans": {
+      "backend": [
+        {
+          "start": 7,
+          "end": 14
+        }
+      ],
+      "ai": [
+        {
+          "start": 25,
+          "end": 32
+        }
+      ]
+    },
+    "request_bytes": 36967,
+    "response_bytes": 928,
+    "provider_elapsed_ms": 1938,
+    "elapsed_ms": 1938
+  },
+  {
+    "id": "O02",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 901,
+    "completion_tokens": 82,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 7,
+          "end": 14
+        }
+      ]
+    },
+    "request_bytes": 36949,
+    "response_bytes": 820,
+    "provider_elapsed_ms": 1250,
+    "elapsed_ms": 1250
+  },
+  {
+    "id": "O02",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 874,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 0,
+        "expected_groups": 1,
+        "exact_groups": 0,
+        "covered_groups": 0
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8701,
+    "response_bytes": 577,
+    "provider_elapsed_ms": 687,
+    "elapsed_ms": 703
+  },
+  {
+    "id": "O03",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 3,
+    "profile_returned": false,
+    "prompt_tokens": 977,
+    "completion_tokens": 50,
+    "model": "solar-pro4-260806",
+    "error": "SECTION_MERGE",
+    "calls": [
+      {
+        "call": 1,
+        "stage": "judgment",
+        "error": "SECTION_MERGE",
+        "merge_error": {
+          "reason": "DUPLICATE_VALUE",
+          "field": "ai"
+        }
+      }
+    ],
+    "request_bytes": 9710,
+    "response_bytes": 637,
+    "provider_elapsed_ms": 1078,
+    "elapsed_ms": 1078
+  },
+  {
+    "id": "O03",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 3,
+    "profile_returned": false,
+    "prompt_tokens": 1004,
+    "completion_tokens": 154,
+    "model": "solar-pro4-260806",
+    "error": "SECTION_MERGE",
+    "calls": [
+      {
+        "call": 1,
+        "stage": "judgment",
+        "error": "SECTION_MERGE",
+        "merge_error": {
+          "reason": "DUPLICATE_VALUE",
+          "field": "ai"
+        }
+      }
+    ],
+    "request_bytes": 52043,
+    "response_bytes": 1122,
+    "provider_elapsed_ms": 1765,
+    "elapsed_ms": 1781
+  },
+  {
+    "id": "O04",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 898,
+    "completion_tokens": 83,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "frontend"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": false
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "frontend"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [
+      "frontend"
+    ],
+    "selected_spans": {
+      "frontend": [
+        {
+          "start": 24,
+          "end": 31
+        }
+      ],
+      "ai": [
+        {
+          "start": 5,
+          "end": 12
+        }
+      ]
+    },
+    "request_bytes": 36907,
+    "response_bytes": 822,
+    "provider_elapsed_ms": 6641,
+    "elapsed_ms": 6641
+  },
+  {
+    "id": "O04",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 871,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 0,
+        "expected_groups": 1,
+        "exact_groups": 0,
+        "covered_groups": 0
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8659,
+    "response_bytes": 577,
+    "provider_elapsed_ms": 968,
+    "elapsed_ms": 968
+  },
+  {
+    "id": "O05",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 1,
+    "profile_returned": true,
+    "prompt_tokens": 782,
+    "completion_tokens": 18,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "scalar",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "project_name": [
+        {
+          "start": 7,
+          "end": 16
+        }
+      ]
+    },
+    "request_bytes": 7838,
+    "response_bytes": 570,
+    "provider_elapsed_ms": 938,
+    "elapsed_ms": 938
+  },
+  {
+    "id": "O05",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 1,
+    "profile_returned": true,
+    "prompt_tokens": 809,
+    "completion_tokens": 59,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "scalar",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "project_name": [
+        {
+          "start": 7,
+          "end": 16
+        }
+      ]
+    },
+    "request_bytes": 22001,
+    "response_bytes": 742,
+    "provider_elapsed_ms": 3984,
+    "elapsed_ms": 3984
+  },
+  {
+    "id": "O06",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 904,
+    "completion_tokens": 77,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "scalar",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "database": [
+        {
+          "start": 39,
+          "end": 45
+        }
+      ]
+    },
+    "request_bytes": 36881,
+    "response_bytes": 800,
+    "provider_elapsed_ms": 1297,
+    "elapsed_ms": 1297
+  },
+  {
+    "id": "O06",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 877,
+    "completion_tokens": 27,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "scalar",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "database": [
+        {
+          "start": 39,
+          "end": 45
+        }
+      ]
+    },
+    "request_bytes": 8633,
+    "response_bytes": 587,
+    "provider_elapsed_ms": 828,
+    "elapsed_ms": 828
+  },
+  {
+    "id": "O07",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 877,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 0,
+        "expected_groups": 1,
+        "exact_groups": 0,
+        "covered_groups": 0
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8780,
+    "response_bytes": 577,
+    "provider_elapsed_ms": 1015,
+    "elapsed_ms": 1015
+  },
+  {
+    "id": "O07",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 904,
+    "completion_tokens": 105,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "backend"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": false
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "backend"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [
+      "backend"
+    ],
+    "selected_spans": {
+      "backend": [
+        {
+          "start": 9,
+          "end": 11
+        }
+      ],
+      "ai": [
+        {
+          "start": 21,
+          "end": 23
+        }
+      ]
+    },
+    "request_bytes": 37028,
+    "response_bytes": 928,
+    "provider_elapsed_ms": 1281,
+    "elapsed_ms": 1281
+  },
+  {
+    "id": "O08",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 912,
+    "completion_tokens": 88,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "absent",
+        "matched": false
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 37313,
+    "response_bytes": 826,
+    "provider_elapsed_ms": 1407,
+    "elapsed_ms": 1407
+  },
+  {
+    "id": "O08",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 885,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "ai"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "absent",
+        "matched": false
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 9065,
+    "response_bytes": 577,
+    "provider_elapsed_ms": 515,
+    "elapsed_ms": 515
+  },
+  {
+    "id": "O09",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 869,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8784,
+    "response_bytes": 577,
+    "provider_elapsed_ms": 891,
+    "elapsed_ms": 891
+  },
+  {
+    "id": "O09",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 896,
+    "completion_tokens": 87,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 37032,
+    "response_bytes": 830,
+    "provider_elapsed_ms": 1344,
+    "elapsed_ms": 1344
+  },
+  {
+    "id": "O10",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 904,
+    "completion_tokens": 86,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "external_integrations"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [
+      "external_integrations"
+    ],
+    "selected_spans": {
+      "external_integrations": [
+        {
+          "start": 7,
+          "end": 16
+        }
+      ]
+    },
+    "request_bytes": 37022,
+    "response_bytes": 854,
+    "provider_elapsed_ms": 1156,
+    "elapsed_ms": 1156
+  },
+  {
+    "id": "O10",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 877,
+    "completion_tokens": 37,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "external_integrations"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [
+      "external_integrations"
+    ],
+    "selected_spans": {
+      "external_integrations": [
+        {
+          "start": 7,
+          "end": 16
+        }
+      ]
+    },
+    "request_bytes": 8774,
+    "response_bytes": 621,
+    "provider_elapsed_ms": 1469,
+    "elapsed_ms": 1469
+  },
+  {
+    "id": "O11",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": false,
+    "prompt_tokens": 871,
+    "completion_tokens": 31,
+    "model": "solar-pro4-260806",
+    "error": "SECTION_MERGE",
+    "calls": [
+      {
+        "call": 1,
+        "stage": "judgment",
+        "error": "SECTION_MERGE",
+        "merge_error": {
+          "reason": "DUPLICATE_VALUE",
+          "field": "features"
+        }
+      }
+    ],
+    "request_bytes": 8827,
+    "response_bytes": 607,
+    "provider_elapsed_ms": 687,
+    "elapsed_ms": 687
+  },
+  {
+    "id": "O11",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 898,
+    "completion_tokens": 82,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "features"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [
+      "features"
+    ],
+    "selected_spans": {
+      "features": [
+        {
+          "start": 7,
+          "end": 12
+        }
+      ]
+    },
+    "request_bytes": 37075,
+    "response_bytes": 824,
+    "provider_elapsed_ms": 4328,
+    "elapsed_ms": 4328
+  },
+  {
+    "id": "O12",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 900,
+    "completion_tokens": 58,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 37,
+          "end": 41
+        }
+      ]
+    },
+    "request_bytes": 36935,
+    "response_bytes": 720,
+    "provider_elapsed_ms": 1125,
+    "elapsed_ms": 1125
+  },
+  {
+    "id": "O12",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 873,
+    "completion_tokens": 27,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "ai",
+      "deployment"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 0,
+        "expected_groups": 1,
+        "exact_groups": 0,
+        "covered_groups": 0
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": false
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai",
+      "deployment"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [
+      "deployment"
+    ],
+    "selected_spans": {
+      "deployment": [
+        {
+          "start": 37,
+          "end": 41
+        }
+      ]
+    },
+    "request_bytes": 8687,
+    "response_bytes": 589,
+    "provider_elapsed_ms": 766,
+    "elapsed_ms": 766
+  },
+  {
+    "id": "O13",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": false,
+    "prompt_tokens": 869,
+    "completion_tokens": 29,
+    "model": "solar-pro4-260806",
+    "error": "SECTION_MERGE",
+    "calls": [
+      {
+        "call": 1,
+        "stage": "judgment",
+        "error": "SECTION_MERGE",
+        "merge_error": {
+          "reason": "SELECTED_COUNT",
+          "field": "domain"
+        }
+      }
+    ],
+    "request_bytes": 8798,
+    "response_bytes": 593,
+    "provider_elapsed_ms": 7140,
+    "elapsed_ms": 7140
+  },
+  {
+    "id": "O13",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": false,
+    "prompt_tokens": 896,
+    "completion_tokens": 105,
+    "model": "solar-pro4-260806",
+    "error": "SECTION_MERGE",
+    "calls": [
+      {
+        "call": 1,
+        "stage": "judgment",
+        "error": "SECTION_MERGE",
+        "merge_error": {
+          "reason": "SELECTED_COUNT",
+          "field": "domain"
+        }
+      }
+    ],
+    "request_bytes": 37046,
+    "response_bytes": 928,
+    "provider_elapsed_ms": 2313,
+    "elapsed_ms": 2313
+  },
+  {
+    "id": "O14",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 910,
+    "completion_tokens": 49,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 37124,
+    "response_bytes": 670,
+    "provider_elapsed_ms": 5187,
+    "elapsed_ms": 5187
+  },
+  {
+    "id": "O14",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 883,
+    "completion_tokens": 33,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 8876,
+    "response_bytes": 598,
+    "provider_elapsed_ms": 1813,
+    "elapsed_ms": 1813
+  },
+  {
+    "id": "AC01",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": false,
+    "prompt_tokens": 942,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "result_kind": "conflict",
+    "conflict_recognized": true,
+    "request_bytes": 9325,
+    "response_bytes": 585,
+    "provider_elapsed_ms": 2063,
+    "elapsed_ms": 2063
+  },
+  {
+    "id": "AC01",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": false,
+    "prompt_tokens": 969,
+    "completion_tokens": 105,
+    "model": "solar-pro4-260806",
+    "error": "SECTION_MERGE",
+    "calls": [
+      {
+        "call": 1,
+        "stage": "judgment",
+        "error": "SECTION_MERGE",
+        "merge_error": {
+          "reason": "SELECTED_COUNT",
+          "field": "database"
+        }
+      }
+    ],
+    "request_bytes": 37573,
+    "response_bytes": 932,
+    "provider_elapsed_ms": 1625,
+    "elapsed_ms": 1625
+  },
+  {
+    "id": "AC02",
+    "arm": "baseline",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": false,
+    "prompt_tokens": 959,
+    "completion_tokens": 108,
+    "model": "solar-pro4-260806",
+    "result_kind": "conflict",
+    "conflict_recognized": false,
+    "request_bytes": 37820,
+    "response_bytes": 929,
+    "provider_elapsed_ms": 2500,
+    "elapsed_ms": 2500
+  },
+  {
+    "id": "AC02",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": false,
+    "prompt_tokens": 932,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "result_kind": "conflict",
+    "conflict_recognized": true,
+    "request_bytes": 9572,
+    "response_bytes": 585,
+    "provider_elapsed_ms": 516,
+    "elapsed_ms": 516
+  },
+  {
+    "id": "AC03",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 902,
+    "completion_tokens": 27,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "scalar",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "database": [
+        {
+          "start": 10,
+          "end": 17
+        }
+      ]
+    },
+    "request_bytes": 8839,
+    "response_bytes": 587,
+    "provider_elapsed_ms": 1219,
+    "elapsed_ms": 1219
+  },
+  {
+    "id": "AC03",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 929,
+    "completion_tokens": 82,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "scalar",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "database": [
+        {
+          "start": 10,
+          "end": 17
+        }
+      ]
+    },
+    "request_bytes": 37087,
+    "response_bytes": 827,
+    "provider_elapsed_ms": 1390,
+    "elapsed_ms": 1390
+  },
+  {
+    "id": "AC04",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 914,
+    "completion_tokens": 107,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 45,
+          "end": 51
+        }
+      ]
+    },
+    "request_bytes": 37234,
+    "response_bytes": 932,
+    "provider_elapsed_ms": 1360,
+    "elapsed_ms": 1360
+  },
+  {
+    "id": "AC04",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 887,
+    "completion_tokens": 27,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "ai",
+      "deployment"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 0,
+        "expected_groups": 1,
+        "exact_groups": 0,
+        "covered_groups": 0
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": false
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai",
+      "deployment"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [
+      "deployment"
+    ],
+    "selected_spans": {
+      "deployment": [
+        {
+          "start": 45,
+          "end": 51
+        }
+      ]
+    },
+    "request_bytes": 8986,
+    "response_bytes": 589,
+    "provider_elapsed_ms": 859,
+    "elapsed_ms": 859
+  },
+  {
+    "id": "AC05",
+    "arm": "atomic",
+    "passed": false,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 882,
+    "completion_tokens": 27,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [
+      "ai",
+      "deployment"
+    ],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": false,
+        "actual_items": 0,
+        "expected_groups": 1,
+        "exact_groups": 0,
+        "covered_groups": 0
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": false
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": false,
+    "evidence_alternative": null,
+    "evidence_mismatch_fields": [
+      "ai",
+      "deployment"
+    ],
+    "result_kind": "profile",
+    "false_confirmation_fields": [
+      "deployment"
+    ],
+    "selected_spans": {
+      "deployment": [
+        {
+          "start": 39,
+          "end": 45
+        }
+      ]
+    },
+    "request_bytes": 8938,
+    "response_bytes": 589,
+    "provider_elapsed_ms": 812,
+    "elapsed_ms": 812
+  },
+  {
+    "id": "AC05",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 909,
+    "completion_tokens": 77,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "array",
+        "matched": true,
+        "actual_items": 1,
+        "expected_groups": 1,
+        "exact_groups": 1,
+        "covered_groups": 1
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {
+      "ai": [
+        {
+          "start": 39,
+          "end": 45
+        }
+      ]
+    },
+    "request_bytes": 37186,
+    "response_bytes": 797,
+    "provider_elapsed_ms": 1141,
+    "elapsed_ms": 1141
+  },
+  {
+    "id": "AC06",
+    "arm": "baseline",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 913,
+    "completion_tokens": 80,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 37251,
+    "response_bytes": 802,
+    "provider_elapsed_ms": 1125,
+    "elapsed_ms": 1125
+  },
+  {
+    "id": "AC06",
+    "arm": "atomic",
+    "passed": true,
+    "provider_calls": 1,
+    "candidate_count": 2,
+    "profile_returned": true,
+    "prompt_tokens": 886,
+    "completion_tokens": 25,
+    "model": "solar-pro4-260806",
+    "mismatch_fields": [],
+    "fields": {
+      "project_name": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "project_type": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "domain": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "frontend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "backend": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "ai": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "database": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "deployment": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "features": {
+        "expected_state": "unknown",
+        "matched": true
+      },
+      "external_integrations": {
+        "expected_state": "unknown",
+        "matched": true
+      }
+    },
+    "evidence_matched": true,
+    "evidence_alternative": 0,
+    "evidence_mismatch_fields": [],
+    "result_kind": "profile",
+    "false_confirmation_fields": [],
+    "selected_spans": {},
+    "request_bytes": 9003,
+    "response_bytes": 577,
+    "provider_elapsed_ms": 656,
+    "elapsed_ms": 656
+  }
+]

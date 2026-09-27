@@ -1,0 +1,34 @@
+{
+  "AC01": {
+    "F0001": {
+      "field": "database",
+      "role": "product_fact",
+      "status": "confirmed",
+      "scope": "current",
+      "decision": "conflict"
+    },
+    "F0002": {
+      "field": "database",
+      "role": "product_fact",
+      "status": "confirmed",
+      "scope": "current",
+      "decision": "conflict"
+    }
+  },
+  "AC02": {
+    "F0001": {
+      "field": "ai",
+      "role": "operating_model",
+      "status": "confirmed",
+      "scope": "current",
+      "decision": "conflict"
+    },
+    "F0002": {
+      "field": "ai",
+      "role": "operating_model",
+      "status": "absent",
+      "scope": "current",
+      "decision": "conflict"
+    }
+  }
+}

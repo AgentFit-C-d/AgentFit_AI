@@ -41,7 +41,7 @@ Do not change quotations or add new candidates. If reviewing issues, reconsider 
 
 class AnchoredAnalyzer(SolarAnalyzer):
     """Experimental path; inherits existing diagnostics retention and deadline wrapper."""
-    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, review_examples=False, review_expression=False, repair_value_boundary=False, repair_state_grounding=False, repair_evidence_units=False, repair_effort="none", repair_occurrence_index=False, candidate_occurrences=False, selected_constraints=False, **kwargs):
+    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, review_examples=False, review_expression=False, repair_value_boundary=False, repair_state_grounding=False, repair_evidence_units=False, repair_effort="none", repair_occurrence_index=False, candidate_occurrences=False, selected_constraints=False, atomic_verdict=False, **kwargs):
         if review_effort not in ("medium", "low"):
             raise ValueError("unsupported review effort")
         if prompt_revision not in ("v1", "v2"):
@@ -64,6 +64,9 @@ class AnchoredAnalyzer(SolarAnalyzer):
             raise ValueError("candidate_occurrences requires prompt_revision v2")
         if type(selected_constraints) is not bool or selected_constraints and prompt_revision!="v2":
             raise ValueError("selected_constraints requires prompt_revision v2")
+        if type(atomic_verdict) is not bool or atomic_verdict and (prompt_revision!="v2" or not candidate_occurrences or selected_constraints):
+            raise ValueError("atomic_verdict requires v2, candidate_occurrences and no selected_constraints")
+        self._atomic_verdict=atomic_verdict
         self._selected_constraints=selected_constraints
         self._candidate_occurrences=candidate_occurrences
         self._repair_occurrence_index=repair_occurrence_index
@@ -89,6 +92,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
     def _analyze(self,document,document_id,diagnostic,raw_responses,deadline):
         started=self._clock()
         version="anchored-"+self._prompt_revision+("+source-repair-v1" if self._source_repair else "")
+        if self._atomic_verdict:version+="+atomic-verdict-v1"
         if self._selected_constraints:version+="+selected-constraints-v1"
         if self._repair_examples:version+="+repair-examples-v1"
         if self._review_examples:version+="+review-examples-v1"
@@ -104,6 +108,9 @@ class AnchoredAnalyzer(SolarAnalyzer):
             version+="+candidate-occurrences-v1"
             candidate_prompt=CANDIDATE_EXPANSION_PROMPT
             judgment_prompt=JUDGMENT_FOCUS_PROMPT
+        if self._atomic_verdict:
+            from .atomic_verdict import ATOMIC_PROMPT, atomic_schema, classify_atomic
+            judgment_prompt=ATOMIC_PROMPT
         diagnostic.update(prompt_version=version,evidence_contract="anchored-v1",sections_covered=0)
         try:
             sections=units(document)
@@ -158,13 +165,15 @@ class AnchoredAnalyzer(SolarAnalyzer):
         diagnostic["candidate_count"]=len(pool)
         candidates=candidate_views(pool,sections,focus=self._candidate_occurrences)
         judgment_content={"document":document,"candidates":candidates}
+        schema=atomic_schema(pool) if self._atomic_verdict else judgment_schema(pool,selected_constraints=self._selected_constraints)
+        classify_reply=classify_atomic if self._atomic_verdict else classify
         def merge(value):
-            return value,classify(value,pool,document,document_id)
+            return value,classify_reply(value,pool,document,document_id)
         if not pool:
             previous={"decisions":{}}
-            profile=classify(previous,pool,document,document_id)
+            profile=classify_reply(previous,pool,document,document_id)
         else:
-            previous,profile=request("judgment",judgment_prompt,judgment_content,judgment_schema(pool,selected_constraints=self._selected_constraints),merge)
+            previous,profile=request("judgment",judgment_prompt,judgment_content,schema,merge)
         def review(profile,stage):
             def check(value):
                 try:return validate_review(value,profile,len(document.splitlines()))
@@ -212,7 +221,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
                 if not pool:raise AnalysisError("SEMANTIC_REJECTED")
                 repaired=tuple(FIELDS)
                 previous,profile=request("semantic_repair",judgment_prompt,
-                    {**judgment_content,"previous":previous,"issues":issues},judgment_schema(pool,selected_constraints=self._selected_constraints),merge)
+                    {**judgment_content,"previous":previous,"issues":issues},schema,merge)
             if any(fingerprint(field)==value for field,value in before.items()):
                 diagnostic["calls"][-1].update(outcome="semantic_failed",error="ANCHORED_MISSING_CANDIDATE")
                 raise AnalysisError("ANCHORED_MISSING_CANDIDATE")
