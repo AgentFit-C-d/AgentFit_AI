@@ -1,0 +1,194 @@
+[
+  {
+    "id": "E01",
+    "gold_count": 4,
+    "order": [
+      "baseline",
+      "new"
+    ],
+    "baseline": {
+      "matched": 0,
+      "total": 4,
+      "error": "ANCHORED_CANDIDATE",
+      "calls": 2,
+      "elapsed_ms": 2047
+    },
+    "new": {
+      "matched": 4,
+      "total": 4,
+      "candidate_count": 9,
+      "calls": 2,
+      "elapsed_ms": 1813,
+      "remapped": 0,
+      "deduplicated": 0
+    }
+  },
+  {
+    "id": "E02",
+    "gold_count": 3,
+    "order": [
+      "new",
+      "baseline"
+    ],
+    "new": {
+      "matched": 3,
+      "total": 3,
+      "candidate_count": 6,
+      "calls": 2,
+      "elapsed_ms": 1859,
+      "remapped": 0,
+      "deduplicated": 0
+    },
+    "baseline": {
+      "matched": 2,
+      "total": 3,
+      "candidate_count": 3,
+      "calls": 2,
+      "elapsed_ms": 1641
+    }
+  },
+  {
+    "id": "E03",
+    "gold_count": 3,
+    "order": [
+      "baseline",
+      "new"
+    ],
+    "baseline": {
+      "matched": 0,
+      "total": 3,
+      "error": "ANCHORED_CANDIDATE",
+      "calls": 1,
+      "elapsed_ms": 1953
+    },
+    "new": {
+      "matched": 3,
+      "total": 3,
+      "candidate_count": 8,
+      "calls": 2,
+      "elapsed_ms": 1781,
+      "remapped": 2,
+      "deduplicated": 0
+    }
+  },
+  {
+    "id": "E04",
+    "gold_count": 3,
+    "order": [
+      "new",
+      "baseline"
+    ],
+    "new": {
+      "matched": 3,
+      "total": 3,
+      "candidate_count": 9,
+      "calls": 2,
+      "elapsed_ms": 5609,
+      "remapped": 2,
+      "deduplicated": 2
+    },
+    "baseline": {
+      "matched": 0,
+      "total": 3,
+      "error": "ANCHORED_CANDIDATE",
+      "calls": 1,
+      "elapsed_ms": 1141
+    }
+  },
+  {
+    "id": "E05",
+    "gold_count": 3,
+    "order": [
+      "baseline",
+      "new"
+    ],
+    "baseline": {
+      "matched": 3,
+      "total": 3,
+      "candidate_count": 6,
+      "calls": 2,
+      "elapsed_ms": 12000
+    },
+    "new": {
+      "matched": 3,
+      "total": 3,
+      "candidate_count": 6,
+      "calls": 2,
+      "elapsed_ms": 1828,
+      "remapped": 0,
+      "deduplicated": 0
+    }
+  },
+  {
+    "id": "E06",
+    "gold_count": 3,
+    "order": [
+      "new",
+      "baseline"
+    ],
+    "new": {
+      "matched": 3,
+      "total": 3,
+      "candidate_count": 7,
+      "calls": 2,
+      "elapsed_ms": 1938,
+      "remapped": 0,
+      "deduplicated": 0
+    },
+    "baseline": {
+      "matched": 3,
+      "total": 3,
+      "candidate_count": 7,
+      "calls": 2,
+      "elapsed_ms": 2781
+    }
+  },
+  {
+    "id": "E07",
+    "gold_count": 4,
+    "order": [
+      "baseline",
+      "new"
+    ],
+    "baseline": {
+      "matched": 4,
+      "total": 4,
+      "candidate_count": 8,
+      "calls": 2,
+      "elapsed_ms": 2312
+    },
+    "new": {
+      "matched": 4,
+      "total": 4,
+      "candidate_count": 8,
+      "calls": 2,
+      "elapsed_ms": 3875,
+      "remapped": 0,
+      "deduplicated": 0
+    }
+  },
+  {
+    "id": "E08",
+    "gold_count": 4,
+    "order": [
+      "new",
+      "baseline"
+    ],
+    "new": {
+      "matched": 4,
+      "total": 4,
+      "candidate_count": 9,
+      "calls": 2,
+      "elapsed_ms": 4844,
+      "remapped": 0,
+      "deduplicated": 0
+    },
+    "baseline": {
+      "matched": 0,
+      "total": 4,
+      "error": "ANCHORED_CANDIDATE",
+      "calls": 1,
+      "elapsed_ms": 1078
+    }
+  }
+]

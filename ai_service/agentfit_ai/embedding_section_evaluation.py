@@ -153,7 +153,34 @@ def load_key(name):
     return key
 
 
-def candidate_recall(case, key):
+def _baseline_failure_reason(reply, batch, source_units):
+    """Classify a rejected in-memory reply without retaining source or response."""
+    if type(reply) is not dict or set(reply) != {"units"} or type(reply["units"]) is not list:
+        return "invalid_shape"
+    groups = reply["units"]
+    if any(type(group) is not dict or set(group) != {"unitId", "quotes"}
+           or type(group["unitId"]) is not str for group in groups):
+        return "invalid_shape"
+    ids = [group["unitId"] for group in groups]
+    if len(ids) != len(set(ids)) or set(ids) != {section.id for section in batch}:
+        return "id_coverage"
+    mapping = {section.id: section for section in batch}
+    for group in groups:
+        quotes = group["quotes"]
+        if (type(quotes) is not list or len(quotes) > 30 or
+                any(type(quote) is not str or not quote.strip() or len(quote) > 2000
+                    for quote in quotes)):
+            return "invalid_quote"
+        if len(quotes) != len(set(quotes)):
+            return "duplicate_quote"
+        for quote in quotes:
+            if quote not in mapping[group["unitId"]].text:
+                matches = sum(quote in section.text for section in source_units)
+                return "not_in_source" if matches == 0 else "wrong_unit" if matches == 1 else "ambiguous_unit"
+    return "other"
+
+
+def candidate_recall(case, key, *, diagnose=False):
     source_units = units(case["document"])
     batches = batch_sections(source_units)
     analyzer = SolarAnalyzer(key, model="solar-pro4")
@@ -180,15 +207,23 @@ def candidate_recall(case, key):
                 reply, _, _, _ = analyzer._send_payload(payload, ("units",), _trace=trace, timeout=40)
             finally:
                 trace.pop("raw", None)
-            found = validate_quotes(reply, batch, len(spans), expand_occurrences=True)
+            try:
+                found = validate_quotes(reply, batch, len(spans), expand_occurrences=True)
+            except AnalysisError as error:
+                if diagnose and error.code == "ANCHORED_CANDIDATE":
+                    error.candidate_detail = {"reason": _baseline_failure_reason(reply, batch, source_units)}
+                raise
             spans.extend(found)
         present = [any(item["span"]["start"] <= a and item["span"]["end"] >= b for item in spans)
                    for a, b in gold_spans(case)]
         return {"matched": sum(present), "total": len(present), "candidate_count": len(spans),
                 "calls": calls, "elapsed_ms": round((time.monotonic()-started)*1000)}
     except AnalysisError as error:
-        return {"matched": 0, "total": len(case["gold"]), "error": error.code,
-                "calls": calls, "elapsed_ms": round((time.monotonic()-started)*1000)}
+        result = {"matched": 0, "total": len(case["gold"]), "error": error.code,
+                  "calls": calls, "elapsed_ms": round((time.monotonic()-started)*1000)}
+        if diagnose and hasattr(error, "candidate_detail"):
+            result["reason"] = error.candidate_detail["reason"]
+        return result
 
 
 def main():

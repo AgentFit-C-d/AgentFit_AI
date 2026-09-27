@@ -1,0 +1,14 @@
+{
+  "dataset_sha256": "3683257124db4d4ee9f2cc403dd411f62a27c32f1ea710850abc239d91bd9e2c",
+  "cases": 8,
+  "model": "solar-pro4",
+  "order": "even=baseline,new; odd=new,baseline",
+  "held_out": false,
+  "gate": {
+    "new_valid_cases": 8,
+    "new_gold_matched": 27,
+    "new_max_calls": 2,
+    "no_source_errors": true,
+    "no_regression_vs_baseline": true
+  }
+}

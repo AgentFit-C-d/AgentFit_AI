@@ -70,6 +70,46 @@ class EmbeddingSectionEvaluationTests(unittest.TestCase):
         self.assertEqual((result["matched"], result["error"], result["calls"]),
                          (0, "ANCHORED_CANDIDATE", 1))
 
+    def test_baseline_diagnostic_classifies_duplicate_ids_without_raw_response(self):
+        case = load_cases()[0][0]
+
+        class FakeAnalyzer:
+            def __init__(self, *args, **kwargs):
+                self.calls = 0
+
+            def _send_payload(self, payload, names, **kwargs):
+                self.calls += 1
+                content = json.loads(payload["messages"][1]["content"])
+                if self.calls == 2:
+                    ids = ["U0004", "U0004", "U0005"]
+                else:
+                    ids = [unit["unitId"] for unit in content["units"]]
+                return {"units": [{"unitId": uid, "quotes": []} for uid in ids]}, "solar-pro4", 1, 1
+
+        with patch("agentfit_ai.embedding_section_evaluation.SolarAnalyzer", FakeAnalyzer):
+            result = candidate_recall(case, "dummy", diagnose=True)
+        self.assertEqual((result["error"], result["reason"], result["calls"]),
+                         ("ANCHORED_CANDIDATE", "id_coverage", 2))
+        self.assertNotIn("raw", result)
+
+    def test_baseline_diagnostic_classifies_exact_quote_from_other_unit(self):
+        case = next(case for case in load_cases()[0] if case["id"] == "E03")
+
+        class FakeAnalyzer:
+            def __init__(self, *args, **kwargs):
+                pass
+
+            def _send_payload(self, payload, names, **kwargs):
+                content = json.loads(payload["messages"][1]["content"])
+                return {"units": [{"unitId": unit["unitId"],
+                                   "quotes": ["Fly.io"] if unit["unitId"] == "U0003" else []}
+                                  for unit in content["units"]]}, "solar-pro4", 1, 1
+
+        with patch("agentfit_ai.embedding_section_evaluation.SolarAnalyzer", FakeAnalyzer):
+            result = candidate_recall(case, "dummy", diagnose=True)
+        self.assertEqual((result["error"], result["reason"], result["calls"]),
+                         ("ANCHORED_CANDIDATE", "wrong_unit", 1))
+
 
 if __name__ == "__main__":
     unittest.main()

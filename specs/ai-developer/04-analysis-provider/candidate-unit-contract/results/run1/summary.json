@@ -1,0 +1,32 @@
+{
+  "cases": 8,
+  "gold": 27,
+  "baseline": {
+    "valid_cases": 4,
+    "matched_in_valid": 12,
+    "gold_in_valid": 13,
+    "errors": {
+      "ANCHORED_CANDIDATE": 4
+    },
+    "max_calls": 2,
+    "median_ms": 2000.0,
+    "p95_ms": 12000
+  },
+  "new": {
+    "valid_cases": 8,
+    "matched_in_valid": 27,
+    "gold_in_valid": 27,
+    "errors": {},
+    "max_calls": 2,
+    "median_ms": 1898.5,
+    "p95_ms": 5609
+  },
+  "gate": {
+    "new_valid_all": true,
+    "new_all_gold": true,
+    "new_no_source_errors": true,
+    "new_call_budget": true,
+    "no_regression_vs_baseline": true
+  },
+  "passed": true
+}
