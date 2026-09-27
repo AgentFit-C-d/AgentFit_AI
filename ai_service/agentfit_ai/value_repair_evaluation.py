@@ -56,6 +56,7 @@ def response_format_observation(raw):
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument("--live",action="store_true")
+    parser.add_argument("--model",choices=("solar-mini4","solar-pro4"),default="solar-mini4")
     parser.add_argument("--value-boundary",action="store_true")
     parser.add_argument("--case-ids",nargs="+")
     parser.add_argument("--boundary-revision",choices=("v1","v2"),default="v1")
@@ -88,13 +89,13 @@ def main():
     prompt=SOURCE_REPAIR_PROMPT+REPAIR_EXAMPLES+((VALUE_BOUNDARY if args.boundary_revision=="v1" else VALUE_BOUNDARY_V2) if args.value_boundary else "")
     if args.state_grounding:prompt+=STATE_GROUNDING if args.state_revision=="v1" else STATE_GROUNDING_V2
     args.output.mkdir(parents=True,exist_ok=False)
-    plan={"scope":"isolated_source_repair","model":"solar-mini4","effort":args.effort,"max_tokens":args.max_tokens,"timeout":40,
+    plan={"scope":"isolated_source_repair","model":args.model,"effort":args.effort,"max_tokens":args.max_tokens,"timeout":40,
           "evidence_units":args.evidence_units,"state_revision":args.state_revision,"unit_transfer":args.unit_transfer,"state_cases":args.state_cases,"state_grounding":args.state_grounding,"value_boundary":args.value_boundary,"boundary_revision":args.boundary_revision,"transfer":args.transfer,"planned":len(cases)*args.repeat,"case_ids":[c["id"] for c in cases],"repeat":args.repeat,"interval_seconds":args.interval_seconds,
           "cases_sha256":hashlib.sha256(case_file.read_bytes()).hexdigest(),
           "prompt_sha256":hashlib.sha256(prompt.encode()).hexdigest(),
           "script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
     (args.output/"plan.json").write_text(json.dumps(plan,indent=2),encoding="utf-8")
-    analyzer=SolarAnalyzer(load_api_key(),model="solar-mini4");rows=[]
+    analyzer=SolarAnalyzer(load_api_key(),model=args.model);rows=[]
     for case,iteration in ((c,i) for i in range(1,args.repeat+1) for c in cases):
         if rows and args.interval_seconds:time.sleep(args.interval_seconds)
         doc=case["document"];field=case["field"];sections=units(doc)
@@ -103,7 +104,7 @@ def main():
         content={"document":doc,"requestedFields":[field],"previous":previous,
                  "issues":[{"field":field,"kind":"missing","itemIndex":None,"evidenceLineIds":list(range(1,len(doc.splitlines())+1))}],
                  "units":[{"unitId":s.id,"text":s.text,"headingPath":list(s.path)} for s in sections]}
-        payload={"model":"solar-mini4","messages":[{"role":"system","content":prompt},{"role":"user","content":json.dumps(content,ensure_ascii=False)}],
+        payload={"model":args.model,"messages":[{"role":"system","content":prompt},{"role":"user","content":json.dumps(content,ensure_ascii=False)}],
                  "response_format":{"type":"json_schema","json_schema":{"name":"agentfit_sections","strict":True,"schema":repair_schema([field],sections)}},
                  "reasoning_effort":args.effort,"temperature":0,"frequency_penalty":0,"max_tokens":args.max_tokens,"stream":False}
         row={"id":case["id"],"iteration":iteration,"passed":False};trace={};started=time.monotonic()

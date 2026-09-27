@@ -1,0 +1,60 @@
+[
+  {
+    "run": "repair-actual-request-replay-v1",
+    "passed": 1,
+    "total": 3,
+    "median_ms": 29453,
+    "max_ms": 32922,
+    "failed": [
+      {
+        "iteration": 2,
+        "error": "INCOMPLETE_RESPONSE"
+      },
+      {
+        "iteration": 3,
+        "error": "INCOMPLETE_RESPONSE"
+      }
+    ]
+  },
+  {
+    "run": "repair-actual-request-pro4-v1",
+    "passed": 3,
+    "total": 3,
+    "median_ms": 8890,
+    "max_ms": 22500,
+    "failed": []
+  },
+  {
+    "run": "repair-pro4-state-v1",
+    "passed": 11,
+    "total": 13,
+    "median_ms": 5750,
+    "max_ms": 40297,
+    "failed": [
+      {
+        "id": "S04",
+        "iteration": 1,
+        "error": "PROVIDER_TIMEOUT"
+      },
+      {
+        "id": "S05",
+        "iteration": 1,
+        "error": "PROVIDER_TIMEOUT"
+      }
+    ]
+  },
+  {
+    "run": "repair-pro4-state-none-v1",
+    "passed": 12,
+    "total": 13,
+    "median_ms": 844,
+    "max_ms": 2360,
+    "failed": [
+      {
+        "id": "S02",
+        "iteration": 1,
+        "error": "SOURCE_REPAIR_INVALID"
+      }
+    ]
+  }
+]

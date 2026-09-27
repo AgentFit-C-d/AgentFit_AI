@@ -1,0 +1,15 @@
+{
+  "scope": "synthetic_actual_request_replay",
+  "case_id": "N-004",
+  "case_sha256": "bbef6186f252b528d611951031e132ce00ceefa255e6689ab6659b095eae39e0",
+  "model": "solar-mini4",
+  "replay_model": "solar-pro4",
+  "max_tokens": 4096,
+  "effort": "low",
+  "replay_count": 3,
+  "replay_timeout": 40,
+  "interval_seconds": 2,
+  "full_flow_limit_seconds": 60,
+  "full_flow_limit_calls": 6,
+  "script_sha256": "4ed2b178c7bb509d3f30f93a9a248142e0395923c294e380e141907323d0e9e5"
+}
