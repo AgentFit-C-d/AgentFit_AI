@@ -1,0 +1,192 @@
+{
+  "groups": {
+    "full": {
+      "sixty": {
+        "valid": 5,
+        "passed": 5,
+        "matched": 50,
+        "total_valid": 50,
+        "total_planned": 120,
+        "false_confirmations": 0,
+        "errors": {
+          "SEMANTIC_REJECTED": 2,
+          "PROVIDER_TIMEOUT": 2,
+          "SECTION_MERGE": 2,
+          "SEMANTIC_REVIEW_INVALID": 1
+        },
+        "max_calls": 5,
+        "median_ms": 20250.0,
+        "p95_ms": 46250
+      },
+      "one_twenty": {
+        "valid": 6,
+        "passed": 6,
+        "matched": 60,
+        "total_valid": 60,
+        "total_planned": 120,
+        "false_confirmations": 0,
+        "errors": {
+          "SEMANTIC_REJECTED": 2,
+          "ANCHORED_MISSING_CANDIDATE": 1,
+          "SECTION_MERGE": 2,
+          "SEMANTIC_REVIEW_INVALID": 1
+        },
+        "max_calls": 5,
+        "median_ms": 18773.0,
+        "p95_ms": 33984
+      },
+      "paired_cases": 5,
+      "paired": {
+        "sixty": {
+          "valid": 5,
+          "passed": 5,
+          "matched": 50,
+          "total_valid": 50,
+          "total_planned": 50,
+          "false_confirmations": 0,
+          "errors": {},
+          "max_calls": 4,
+          "median_ms": 20031,
+          "p95_ms": 42328
+        },
+        "one_twenty": {
+          "valid": 5,
+          "passed": 5,
+          "matched": 50,
+          "total_valid": 50,
+          "total_planned": 50,
+          "false_confirmations": 0,
+          "errors": {},
+          "max_calls": 4,
+          "median_ms": 16860,
+          "p95_ms": 33984
+        }
+      },
+      "timeout_stages": {
+        "sixty": {
+          "candidate_generation": 0,
+          "judgment": 0,
+          "semantic_review": 2,
+          "semantic_repair": 0,
+          "source_repair": 0,
+          "semantic_recheck": 0,
+          "null": 0
+        },
+        "one_twenty": {
+          "candidate_generation": 0,
+          "judgment": 0,
+          "semantic_review": 0,
+          "semantic_repair": 0,
+          "source_repair": 0,
+          "semantic_recheck": 0,
+          "null": 0
+        }
+      }
+    },
+    "focus": {
+      "sixty": {
+        "valid": 0,
+        "passed": 0,
+        "matched": 0,
+        "total_valid": 0,
+        "total_planned": 27,
+        "false_confirmations": 0,
+        "errors": {
+          "PROVIDER_TIMEOUT": 4,
+          "SEMANTIC_REJECTED": 1,
+          "SECTION_MERGE": 1,
+          "SEMANTIC_REVIEW_INVALID": 1,
+          "ANCHORED_CANDIDATE": 1
+        },
+        "max_calls": 6,
+        "median_ms": 50109.5,
+        "p95_ms": 60063
+      },
+      "one_twenty": {
+        "valid": 0,
+        "passed": 0,
+        "matched": 0,
+        "total_valid": 0,
+        "total_planned": 27,
+        "false_confirmations": 0,
+        "errors": {
+          "SEMANTIC_REVIEW_INVALID": 1,
+          "SEMANTIC_REJECTED": 1,
+          "SECTION_MERGE": 2,
+          "PROVIDER_TIMEOUT": 4
+        },
+        "max_calls": 6,
+        "median_ms": 50765.5,
+        "p95_ms": 78047
+      },
+      "paired_cases": 0,
+      "paired": {
+        "sixty": {
+          "valid": 0,
+          "passed": 0,
+          "matched": 0,
+          "total_valid": 0,
+          "total_planned": 0,
+          "false_confirmations": 0,
+          "errors": {},
+          "max_calls": 0,
+          "median_ms": 0,
+          "p95_ms": 0
+        },
+        "one_twenty": {
+          "valid": 0,
+          "passed": 0,
+          "matched": 0,
+          "total_valid": 0,
+          "total_planned": 0,
+          "false_confirmations": 0,
+          "errors": {},
+          "max_calls": 0,
+          "median_ms": 0,
+          "p95_ms": 0
+        }
+      },
+      "timeout_stages": {
+        "sixty": {
+          "candidate_generation": 0,
+          "judgment": 0,
+          "semantic_review": 4,
+          "semantic_repair": 0,
+          "source_repair": 0,
+          "semantic_recheck": 0,
+          "null": 0
+        },
+        "one_twenty": {
+          "candidate_generation": 0,
+          "judgment": 0,
+          "semantic_review": 2,
+          "semantic_repair": 0,
+          "source_repair": 0,
+          "semantic_recheck": 2,
+          "null": 0
+        }
+      }
+    }
+  },
+  "gate": {
+    "same_cases": true,
+    "successes_increase": true,
+    "false_confirmations_no_increase": true,
+    "validation_errors_no_increase": false,
+    "six_call_limit": true,
+    "observed_120s_limit": true
+  },
+  "passed": false,
+  "total_passed": {
+    "sixty": 5,
+    "one_twenty": 6
+  },
+  "total_false_confirmations": {
+    "sixty": 0,
+    "one_twenty": 0
+  },
+  "total_validation_errors": {
+    "sixty": 9,
+    "one_twenty": 10
+  }
+}

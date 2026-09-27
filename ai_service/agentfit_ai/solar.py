@@ -510,7 +510,7 @@ class AnalysisResult:
 
 
 class SolarAnalyzer:
-    def __init__(self, api_key: str, *, transport: Callable = post_solar, diagnostics_store=None, semantic_review=True, clock=None, evidence_contract=True, model="solar-pro4"):
+    def __init__(self, api_key: str, *, transport: Callable = post_solar, diagnostics_store=None, semantic_review=True, clock=None, evidence_contract=True, model="solar-pro4", analysis_timeout_seconds=60):
         if type(api_key) is not str or not api_key.strip() or not api_key.isascii() or any(c.isspace() for c in api_key):
             raise AnalysisError("MISSING_OR_INVALID_KEY")
         if type(semantic_review) is not bool:
@@ -519,7 +519,10 @@ class SolarAnalyzer:
             raise ValueError("evidence_contract must be boolean")
         if type(model) is not str or model not in ("solar-pro4","solar-pro4-260806","solar-mini4","solar-mini4-260922"):
             raise ValueError("unsupported Solar model")
+        if type(analysis_timeout_seconds) is not int or not 1 <= analysis_timeout_seconds <= 120:
+            raise ValueError("analysis_timeout_seconds must be an integer from 1 to 120")
         self._model = model
+        self._analysis_timeout_seconds = analysis_timeout_seconds
         self._evidence_contract = evidence_contract
         self._semantic_review = semantic_review
         self._clock = clock or time.monotonic
@@ -543,7 +546,8 @@ class SolarAnalyzer:
                       "storage": "disabled" if self._diagnostics_store is None else "pending"}
         raw_responses = {}
         try:
-            result = self._analyze(document, document_id, diagnostic, raw_responses, started + 60)
+            result = self._analyze(document, document_id, diagnostic, raw_responses,
+                                   started + self._analysis_timeout_seconds)
         except AnalysisError as error:
             error.provider_calls = len(diagnostic["calls"])
             error.repaired_fields = tuple(field for field in FIELDS if any(
