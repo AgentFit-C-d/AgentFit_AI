@@ -2,6 +2,7 @@
 import json
 from .solar import SolarAnalyzer, AnalysisError, AnalysisResult
 from .profile import FIELDS
+from .anchored_prompts import CANDIDATE_PROMPT_V2, JUDGMENT_PROMPT_V2
 from .sections import batch_sections, SectionError
 from .semantic_review import validate_review, ReviewValidationError
 from .anchored_candidates import units, candidate_schema, validate_quotes, judgment_schema, classify
@@ -32,10 +33,13 @@ Do not change quotations or add new candidates. If reviewing issues, reconsider 
 
 class AnchoredAnalyzer(SolarAnalyzer):
     """Experimental path; inherits existing diagnostics retention and deadline wrapper."""
-    def __init__(self, *args, review_effort="medium", **kwargs):
+    def __init__(self, *args, review_effort="medium", prompt_revision="v1", **kwargs):
         if review_effort not in ("medium", "low"):
             raise ValueError("unsupported review effort")
+        if prompt_revision not in ("v1", "v2"):
+            raise ValueError("unsupported prompt revision")
         super().__init__(*args, **kwargs)
+        self._prompt_revision = prompt_revision
         self._review_effort = review_effort
 
     def _request_review(self, document, profile, *, _trace=None, timeout=40):
@@ -44,7 +48,9 @@ class AnchoredAnalyzer(SolarAnalyzer):
 
     def _analyze(self,document,document_id,diagnostic,raw_responses,deadline):
         started=self._clock()
-        version="anchored-v1"
+        version="anchored-"+self._prompt_revision
+        candidate_prompt=CANDIDATE_PROMPT_V2 if self._prompt_revision=="v2" else CANDIDATE_PROMPT
+        judgment_prompt=JUDGMENT_PROMPT_V2 if self._prompt_revision=="v2" else JUDGMENT_PROMPT
         diagnostic.update(prompt_version=version,evidence_contract="anchored-v1",sections_covered=0)
         try:
             sections=units(document)
@@ -91,7 +97,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
                 "previous":sections[i-1].text if i else None,
                 "next":sections[i+1].text if i+1<len(sections) else None}
                 for s in batch for i in [sections.index(s)]]}
-            result=request("candidate_generation",CANDIDATE_PROMPT,content,candidate_schema(batch),
+            result=request("candidate_generation",candidate_prompt,content,candidate_schema(batch),
                            lambda value:validate_quotes(value,batch,len(pool)))
             pool.extend(result)
             diagnostic["sections_covered"]+=len(batch)
@@ -104,7 +110,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
             previous={"decisions":{}}
             profile=classify(previous,pool,document,document_id)
         else:
-            previous,profile=request("judgment",JUDGMENT_PROMPT,judgment_content,judgment_schema(pool),merge)
+            previous,profile=request("judgment",judgment_prompt,judgment_content,judgment_schema(pool),merge)
         def review(profile,stage):
             def check(value):
                 try:return validate_review(value,profile,len(document.splitlines()))
@@ -136,7 +142,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
             before={issue["field"]:fingerprint(issue["field"]) for issue in missing}
             if not pool:raise AnalysisError("SEMANTIC_REJECTED")
             repaired=tuple(FIELDS)
-            previous,profile=request("semantic_repair",JUDGMENT_PROMPT,
+            previous,profile=request("semantic_repair",judgment_prompt,
                 {**judgment_content,"previous":previous,"issues":issues},judgment_schema(pool),merge)
             if any(fingerprint(field)==value for field,value in before.items()):
                 raise AnalysisError("ANCHORED_MISSING_CANDIDATE")

@@ -1,0 +1,106 @@
+{
+  "planned": 4,
+  "draft_passed": 0,
+  "rows": [
+    {
+      "id": "Q-001",
+      "draft_passed": false,
+      "mismatch_fields": [
+        "features"
+      ],
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 563,
+          "provider_elapsed_ms": 563,
+          "request_bytes": 3914,
+          "response_bytes": 569,
+          "prompt_tokens": 434,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        }
+      ],
+      "elapsed_ms": 563,
+      "candidate_spans": [],
+      "decisions": []
+    },
+    {
+      "id": "Q-004",
+      "draft_passed": false,
+      "mismatch_fields": [
+        "external_integrations"
+      ],
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 343,
+          "provider_elapsed_ms": 343,
+          "request_bytes": 3862,
+          "response_bytes": 569,
+          "prompt_tokens": 426,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        }
+      ],
+      "elapsed_ms": 343,
+      "candidate_spans": [],
+      "decisions": []
+    },
+    {
+      "id": "N-004",
+      "draft_passed": false,
+      "mismatch_fields": [
+        "ai"
+      ],
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 578,
+          "provider_elapsed_ms": 578,
+          "request_bytes": 3986,
+          "response_bytes": 569,
+          "prompt_tokens": 442,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        }
+      ],
+      "elapsed_ms": 578,
+      "candidate_spans": [],
+      "decisions": []
+    },
+    {
+      "id": "N-005",
+      "draft_passed": false,
+      "mismatch_fields": [
+        "features"
+      ],
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 282,
+          "provider_elapsed_ms": 282,
+          "request_bytes": 3868,
+          "response_bytes": 569,
+          "prompt_tokens": 433,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        }
+      ],
+      "elapsed_ms": 282,
+      "candidate_spans": [],
+      "decisions": []
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "mode": "draft_only_no_semantic_review",
+  "revision": "v1",
+  "model": "solar-mini4",
+  "planned": 12,
+  "cases_sha256": "e984c761e546df8d155fcfbc0279ffb0664ca9d380ee64c1820a2865f441eb78",
+  "prompt_sha256": [
+    "beb96ded4af34b579250402dde4438c0da3c4314c0dbf9ce5daad298e8b8019d",
+    "a35436577d85dbe4752494edd665932085368a69a877c3eed8bbe169dc6a7f64"
+  ],
+  "script_sha256": "b71f00436ad9ef9ea73d606cf4c36f9ad618db1dacb12faab7f412205856e6a5"
+}
