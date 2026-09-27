@@ -4,7 +4,7 @@ from .anchored_analysis import AnchoredAnalyzer,CANDIDATE_PROMPT,JUDGMENT_PROMPT
 from .evaluate import load_api_key
 from .solar import AnalysisError
 from .profile import FIELDS
-from .semantic_review import REVIEW_PROMPT, REVIEW_MAX_TOKENS
+from .semantic_review import REVIEW_PROMPT, REVIEW_MAX_TOKENS, REVIEW_INVALID_REASONS
 
 def safe_diagnostics(diagnostic):
  numeric=("call","elapsed_ms","provider_elapsed_ms","request_bytes","response_bytes","prompt_tokens","completion_tokens","max_tokens")
@@ -24,6 +24,9 @@ def safe_diagnostics(diagnostic):
   if detail.get("reason") in ("INVALID_DECISIONS","SELECTED_COUNT","CONFLICTING_FACTS","SELECTED_SCOPE","SELECTED_STATUS","SELECTED_ROLE","ABSENCE_MULTIPLE","DUPLICATE_VALUE","PROFILE_INVALID"):
    item["merge_error"]={"reason":detail["reason"]}
    if detail.get("field") in FIELDS:item["merge_error"]["field"]=detail["field"]
+  review_detail=call.get("review_error",{})
+  if type(review_detail) is dict and review_detail.get("reason") in REVIEW_INVALID_REASONS:
+   item["review_error"]={"reason":review_detail["reason"]}
   issues=[]
   for issue in call.get("semantic_issues",[]):
    if issue.get("field") in FIELDS and issue.get("kind") in ("unsupported","wrong_role","wrong_scope","uncertainty","missing","overbroad","duplicate"):

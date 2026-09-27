@@ -36,8 +36,15 @@ uncertainty(확정/미정/없음), missing(필수사실누락), overbroad(과도
 
 REVIEW_PROMPT += "\n판정 방향을 반드시 지킨다:\nuncertainty는 원문이 미정이라는 사실을 알리는 분류가 아니다. 초안의 값이 원문의 확정 상태와 다를 때만 오류다.\n원문 '아직 결정하지 않았다'에 초안 null은 정답이다. null에 uncertainty/wrong_role/unsupported를 붙이지 않는다.\nmissing은 원문에 현재 제품의 확정된 구체적 값이나 동작이 실제로 있는데 초안이 빠뜨린 경우뿐이다.\n스택·사용자 기능·연동이 미정이라고 적혔으면 해당 null을 missing으로 표시하지 않는다.\n문서가 외부 연동 자체를 쓰지 않기로 확정했고 초안 []이면 정답이다. [] 자체를 미정으로 바꾸라고 요구하지 않는다.\n\n대조 예시(실제 문서가 아님):\n[L1] 제품 운영 모델은 검토 중이다. 지도 데이터는 필요하지만 제공자는 정하지 않았다.\n초안 ai=null, external_integrations=null: 오류 없음.\n같은 원문에 ai=[\"Lumen\"] 또는 external_integrations=[]: 원문과 다른 확정이므로 오류.\n[L1] 이번 주는 API 계약과 테스트 폴더만 정리한다. 제품 사용자 기능과 기술 스택은 아직 미정이다.\n초안 features=null, backend=null: 오류 없음. 개발 업무를 넣도록 missing을 만들지 않는다.\n[L1] 외부 연동은 사용하지 않기로 확정했다.\n초안 external_integrations=[]: 오류 없음.\n[L1] 필수 기능은 주문 조회다.\n초안 features=null: missing. 초안 features=[\"주문 조회\"]: 오류 없음.\n"
 
+REVIEW_INVALID_REASONS = (
+    "ROOT_SHAPE", "CHECKED_FIELDS", "ISSUES_SHAPE", "ISSUE_SHAPE", "ISSUE_ENUM",
+    "EVIDENCE_LINES", "MISSING_INDEX", "NULL_NON_MISSING", "ARRAY_INDEX", "SCALAR_INDEX",
+)
+
 class ReviewValidationError(ValueError):
-    pass
+    def __init__(self, reason):
+        super().__init__("SEMANTIC_REVIEW_INVALID")
+        self.reason = reason
 
 def review_schema(line_count):
     def obj(properties):
@@ -54,28 +61,28 @@ def review_schema(line_count):
                 "issues":{"type":"array","maxItems":30,"items":issue}})
 
 def validate_review(review, profile, line_count):
-    def invalid():
-        raise ReviewValidationError("SEMANTIC_REVIEW_INVALID")
-    if type(review) is not dict or set(review)!={"checkedFields","issues"}: invalid()
+    def invalid(reason):
+        raise ReviewValidationError(reason)
+    if type(review) is not dict or set(review)!={"checkedFields","issues"}: invalid("ROOT_SHAPE")
     checked=review["checkedFields"]
     if (type(checked) is not list or len(checked)!=len(FIELDS)
-            or any(type(x) is not str for x in checked) or set(checked)!=set(FIELDS)): invalid()
+            or any(type(x) is not str for x in checked) or set(checked)!=set(FIELDS)): invalid("CHECKED_FIELDS")
     issues=review["issues"]
-    if type(issues) is not list or len(issues)>30: invalid()
+    if type(issues) is not list or len(issues)>30: invalid("ISSUES_SHAPE")
     for issue in issues:
-        if type(issue) is not dict or set(issue)!={"field","kind","itemIndex","evidenceLineIds"}: invalid()
+        if type(issue) is not dict or set(issue)!={"field","kind","itemIndex","evidenceLineIds"}: invalid("ISSUE_SHAPE")
         field,kind,index=issue["field"],issue["kind"],issue["itemIndex"]
-        if type(field) is not str or field not in FIELDS or type(kind) is not str or kind not in KINDS: invalid()
+        if type(field) is not str or field not in FIELDS or type(kind) is not str or kind not in KINDS: invalid("ISSUE_ENUM")
         refs=issue["evidenceLineIds"]
         if (type(refs) is not list or not 1<=len(refs)<=30
-                or any(type(ref) is not int or not 1<=ref<=line_count for ref in refs)): invalid()
+                or any(type(ref) is not int or not 1<=ref<=line_count for ref in refs)): invalid("EVIDENCE_LINES")
         value=profile["data"][field]
         if kind=="missing":
-            if index is not None: invalid()
+            if index is not None: invalid("MISSING_INDEX")
         elif value is None:
-            invalid()
+            invalid("NULL_NON_MISSING")
         elif type(value) is list and value:
-            if type(index) is not int or not 0<=index<len(value): invalid()
+            if type(index) is not int or not 0<=index<len(value): invalid("ARRAY_INDEX")
         elif index is not None:
-            invalid()
+            invalid("SCALAR_INDEX")
     return issues

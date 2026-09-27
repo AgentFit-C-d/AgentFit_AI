@@ -97,6 +97,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
             except AnalysisError as error:
                 if hasattr(error,"candidate_detail"):call["candidate_error"]=error.candidate_detail
                 if hasattr(error,"merge_detail"):call["merge_error"]=error.merge_detail
+                if hasattr(error,"review_detail"):call["review_error"]=error.review_detail
                 call.update(outcome="validation_failed" if call["outcome"]=="response_received" else "failed",error=error.code)
                 raise
             finally:
@@ -128,7 +129,10 @@ class AnchoredAnalyzer(SolarAnalyzer):
         def review(profile,stage):
             def check(value):
                 try:return validate_review(value,profile,len(document.splitlines()))
-                except ReviewValidationError:raise AnalysisError("SEMANTIC_REVIEW_INVALID") from None
+                except ReviewValidationError as error:
+                    failure=AnalysisError("SEMANTIC_REVIEW_INVALID")
+                    failure.review_detail={"reason":error.reason}
+                    raise failure from None
             issues=request(stage,validator=check,profile=profile)
             if issues:
                 diagnostic["calls"][-1].update(outcome="semantic_failed",semantic_issues=[{"field":x["field"],"kind":x["kind"]} for x in issues])
