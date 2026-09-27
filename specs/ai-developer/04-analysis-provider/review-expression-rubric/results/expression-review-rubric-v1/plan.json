@@ -1,0 +1,15 @@
+{
+  "scope": "paired_review_only",
+  "scoring_revision": 2,
+  "expression_cases": true,
+  "expression_rubric": true,
+  "planned": 12,
+  "effort": "low",
+  "contract_examples": true,
+  "max_tokens": 8192,
+  "timeout": 40,
+  "model": "solar-mini4",
+  "cases_sha256": "c09fb39185810e24d7869dc599104dcd8e26670535b6daf4f5652cc697ad6e25",
+  "prompt_sha256": "78640249070c021bbd206c18dba41a1c26324926978d0392548be3798684bc55",
+  "script_sha256": "9641640071ec3d13c6ea74e1de8171ed0bb73bbc6d0af32c93abc764779fff3c"
+}

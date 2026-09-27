@@ -1,0 +1,200 @@
+[
+  {
+    "id": "E01-correct",
+    "matched": true,
+    "exact_match": true,
+    "false_acceptance": false,
+    "false_rejection": false,
+    "issues": [],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1818,
+    "completion_tokens": 508,
+    "elapsed_ms": 3891
+  },
+  {
+    "id": "E01-wrong",
+    "matched": true,
+    "exact_match": true,
+    "false_acceptance": false,
+    "false_rejection": false,
+    "issues": [
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "features",
+        "itemIndex": 1,
+        "kind": "duplicate"
+      }
+    ],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1837,
+    "completion_tokens": 990,
+    "elapsed_ms": 7359
+  },
+  {
+    "id": "E02-correct",
+    "matched": true,
+    "exact_match": true,
+    "false_acceptance": false,
+    "false_rejection": false,
+    "issues": [],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1816,
+    "completion_tokens": 484,
+    "elapsed_ms": 3688
+  },
+  {
+    "id": "E02-wrong",
+    "matched": true,
+    "exact_match": true,
+    "false_acceptance": false,
+    "false_rejection": false,
+    "issues": [
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "features",
+        "itemIndex": 0,
+        "kind": "overbroad"
+      }
+    ],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1819,
+    "completion_tokens": 1063,
+    "elapsed_ms": 6312
+  },
+  {
+    "id": "E03-correct",
+    "matched": true,
+    "exact_match": true,
+    "false_acceptance": false,
+    "false_rejection": false,
+    "issues": [],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1835,
+    "completion_tokens": 456,
+    "elapsed_ms": 2797
+  },
+  {
+    "id": "E03-wrong",
+    "matched": true,
+    "exact_match": true,
+    "false_acceptance": false,
+    "false_rejection": false,
+    "issues": [
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "features",
+        "itemIndex": 0,
+        "kind": "overbroad"
+      }
+    ],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1820,
+    "completion_tokens": 1439,
+    "elapsed_ms": 11031
+  },
+  {
+    "id": "E04-correct",
+    "matched": true,
+    "exact_match": true,
+    "false_acceptance": false,
+    "false_rejection": false,
+    "issues": [],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1817,
+    "completion_tokens": 333,
+    "elapsed_ms": 1907
+  },
+  {
+    "id": "E04-wrong",
+    "matched": true,
+    "exact_match": true,
+    "false_acceptance": false,
+    "false_rejection": false,
+    "issues": [
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "ai",
+        "itemIndex": 0,
+        "kind": "overbroad"
+      }
+    ],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1821,
+    "completion_tokens": 812,
+    "elapsed_ms": 4671
+  },
+  {
+    "id": "E05-correct",
+    "matched": true,
+    "exact_match": true,
+    "false_acceptance": false,
+    "false_rejection": false,
+    "issues": [],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1821,
+    "completion_tokens": 857,
+    "elapsed_ms": 5000
+  },
+  {
+    "id": "E05-wrong",
+    "matched": false,
+    "exact_match": false,
+    "false_acceptance": false,
+    "false_rejection": false,
+    "issues": [
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "ai",
+        "itemIndex": 0,
+        "kind": "unsupported"
+      }
+    ],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1837,
+    "completion_tokens": 1959,
+    "elapsed_ms": 10204
+  },
+  {
+    "id": "E06-correct",
+    "matched": true,
+    "exact_match": true,
+    "false_acceptance": false,
+    "false_rejection": false,
+    "issues": [],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1813,
+    "completion_tokens": 678,
+    "elapsed_ms": 4328
+  },
+  {
+    "id": "E06-wrong",
+    "matched": true,
+    "exact_match": true,
+    "false_acceptance": false,
+    "false_rejection": false,
+    "issues": [
+      {
+        "evidenceLineIds": [
+          1
+        ],
+        "field": "external_integrations",
+        "itemIndex": null,
+        "kind": "missing"
+      }
+    ],
+    "model": "solar-mini4-260922",
+    "prompt_tokens": 1801,
+    "completion_tokens": 578,
+    "elapsed_ms": 2922
+  }
+]

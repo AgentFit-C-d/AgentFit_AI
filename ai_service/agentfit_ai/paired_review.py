@@ -49,14 +49,17 @@ def main():
     parser=argparse.ArgumentParser(description="Eight paired review probes; not a readiness gate.")
     parser.add_argument("--live",action="store_true")
     parser.add_argument("--contract-examples",action="store_true")
+    parser.add_argument("--expression-cases",action="store_true")
+    parser.add_argument("--expression-rubric",action="store_true")
     parser.add_argument("--effort",choices=("none","low"),required=True)
     parser.add_argument("--output",type=Path,required=True)
     args=parser.parse_args()
     if not args.live:parser.error("--live required")
-    samples=cases()
-    prompt=REVIEW_PROMPT+(REVIEW_EXAMPLES if args.contract_examples else "")
+    from .expression_review import cases as expression_cases, expression_prompt
+    samples=expression_cases() if args.expression_cases else cases()
+    prompt=(expression_prompt() if args.expression_rubric else REVIEW_PROMPT)+(REVIEW_EXAMPLES if args.contract_examples else "")
     args.output.mkdir(parents=True,exist_ok=False)
-    plan={"scope":"paired_review_only","scoring_revision":2,"planned":len(samples),"effort":args.effort,"contract_examples":args.contract_examples,"max_tokens":8192,"timeout":40,
+    plan={"scope":"paired_review_only","scoring_revision":2,"expression_cases":args.expression_cases,"expression_rubric":args.expression_rubric,"planned":len(samples),"effort":args.effort,"contract_examples":args.contract_examples,"max_tokens":8192,"timeout":40,
           "model":"solar-mini4","cases_sha256":hashlib.sha256(json.dumps(samples,ensure_ascii=False,sort_keys=True).encode()).hexdigest(),
           "prompt_sha256":hashlib.sha256(prompt.encode()).hexdigest(),"script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
     (args.output/"plan.json").write_text(json.dumps(plan,indent=2),encoding="utf-8")
@@ -71,7 +74,9 @@ def main():
             row.update(assess_review(issues,sample["expected"]))
             row.update(issues=issues,model=model,prompt_tokens=pt,completion_tokens=ct)
         except AnalysisError as error:row["error"]=error.code
-        except ReviewValidationError:row["error"]="SEMANTIC_REVIEW_INVALID"
+        except ReviewValidationError as error:
+            row["error"]="SEMANTIC_REVIEW_INVALID"
+            row["review_reason"]=error.reason
         trace.pop("raw",None)
         row["elapsed_ms"]=round((time.monotonic()-started)*1000)
         rows.append(row)

@@ -50,3 +50,15 @@ class PairedReviewTests(unittest.TestCase):
   first,review=[c.args[0] for c in t.call_args_list]
   self.assertNotIn("북마크",first["messages"][0]["content"])
   self.assertIn("북마크",review["messages"][0]["content"])
+
+ def test_expression_rubric_is_opt_in_and_versioned(self):
+  from unittest.mock import Mock
+  from agentfit_ai.anchored_analysis import AnchoredAnalyzer
+  from test_staged_analysis import response
+  from test_semantic_review import verdict
+  for enabled in (False,True):
+   t=Mock(side_effect=[response({"units":[{"unitId":"U0001","quotes":[]}]}),response(verdict())])
+   result=AnchoredAnalyzer("synthetic-key",transport=t,review_expression=enabled).analyze("meeting","doc")
+   sent=t.call_args_list[-1].args[0]["messages"][0]["content"]
+   self.assertEqual("문장이라는 이유만으로" in sent,enabled)
+   self.assertEqual("expression-v1" in result.prompt_version,enabled)
