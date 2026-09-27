@@ -2,6 +2,7 @@
 import json
 from .solar import SolarAnalyzer, AnalysisError, AnalysisResult
 from .profile import FIELDS
+from .source_repair import SOURCE_REPAIR_PROMPT, repair_schema, apply_repairs
 from .anchored_prompts import CANDIDATE_PROMPT_V2, JUDGMENT_PROMPT_V2
 from .sections import batch_sections, SectionError
 from .semantic_review import validate_review, ReviewValidationError
@@ -33,11 +34,14 @@ Do not change quotations or add new candidates. If reviewing issues, reconsider 
 
 class AnchoredAnalyzer(SolarAnalyzer):
     """Experimental path; inherits existing diagnostics retention and deadline wrapper."""
-    def __init__(self, *args, review_effort="medium", prompt_revision="v1", **kwargs):
+    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, **kwargs):
         if review_effort not in ("medium", "low"):
             raise ValueError("unsupported review effort")
         if prompt_revision not in ("v1", "v2"):
             raise ValueError("unsupported prompt revision")
+        if type(source_repair) is not bool:
+            raise ValueError("source_repair must be boolean")
+        self._source_repair=source_repair
         super().__init__(*args, **kwargs)
         self._prompt_revision = prompt_revision
         self._review_effort = review_effort
@@ -48,7 +52,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
 
     def _analyze(self,document,document_id,diagnostic,raw_responses,deadline):
         started=self._clock()
-        version="anchored-"+self._prompt_revision
+        version="anchored-"+self._prompt_revision+("+source-repair-v1" if self._source_repair else "")
         candidate_prompt=CANDIDATE_PROMPT_V2 if self._prompt_revision=="v2" else CANDIDATE_PROMPT
         judgment_prompt=JUDGMENT_PROMPT_V2 if self._prompt_revision=="v2" else JUDGMENT_PROMPT
         diagnostic.update(prompt_version=version,evidence_contract="anchored-v1",sections_covered=0)
@@ -62,7 +66,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
             remaining=deadline-self._clock()
             if remaining<=0:raise AnalysisError("ANALYSIS_DEADLINE")
             if len(diagnostic["calls"])>=6:raise AnalysisError("CALL_LIMIT")
-            call={"call":len(diagnostic["calls"])+1,"stage":stage,"fields":list(FIELDS),
+            call={"call":len(diagnostic["calls"])+1,"stage":stage,"fields":list(content["requestedFields"]) if stage=="source_repair" else list(FIELDS),
                   "outcome":"started","response_bytes":None,"prompt_tokens":None,"completion_tokens":None,"model":None}
             diagnostic["calls"].append(call);trace={};call_started=self._clock()
             try:
@@ -119,7 +123,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
             if issues:
                 diagnostic["calls"][-1].update(outcome="semantic_failed",semantic_issues=[{"field":x["field"],"kind":x["kind"]} for x in issues])
                 for call in reversed(diagnostic["calls"][:-1]):
-                    if call["stage"] in ("judgment","semantic_repair"):
+                    if call["stage"] in ("judgment","semantic_repair","source_repair"):
                         call["outcome"]="semantic_failed";break
             return issues
         issues=review(profile,"semantic_review")
@@ -130,7 +134,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
             offsets=[0]
             for line in lines:offsets.append(offsets[-1]+len(line))
             for issue in missing:
-                if not any(candidate["span"]["start"]<offsets[line]
+                if not self._source_repair and not any(candidate["span"]["start"]<offsets[line]
                            and candidate["span"]["end"]>offsets[line-1]
                            for candidate in pool for line in issue["evidenceLineIds"]):
                     raise AnalysisError("ANCHORED_MISSING_CANDIDATE")
@@ -140,11 +144,19 @@ class AnchoredAnalyzer(SolarAnalyzer):
                 spans=tuple(sorted((e["start"],e["end"]) for e in profile["evidence"][field]))
                 return value,spans
             before={issue["field"]:fingerprint(issue["field"]) for issue in missing}
-            if not pool:raise AnalysisError("SEMANTIC_REJECTED")
-            repaired=tuple(FIELDS)
-            previous,profile=request("semantic_repair",judgment_prompt,
-                {**judgment_content,"previous":previous,"issues":issues},judgment_schema(pool),merge)
+            if self._source_repair:
+                repaired=tuple(f for f in FIELDS if any(issue["field"]==f for issue in issues))
+                content={"document":document,"requestedFields":list(repaired),"previous":profile,"issues":issues,
+                         "units":[{"unitId":s.id,"text":s.text,"headingPath":list(s.path)} for s in sections]}
+                profile=request("source_repair",SOURCE_REPAIR_PROMPT,content,repair_schema(repaired,sections),
+                    lambda value:apply_repairs(document,document_id,profile,sections,repaired,value))
+            else:
+                if not pool:raise AnalysisError("SEMANTIC_REJECTED")
+                repaired=tuple(FIELDS)
+                previous,profile=request("semantic_repair",judgment_prompt,
+                    {**judgment_content,"previous":previous,"issues":issues},judgment_schema(pool),merge)
             if any(fingerprint(field)==value for field,value in before.items()):
+                diagnostic["calls"][-1].update(outcome="semantic_failed",error="ANCHORED_MISSING_CANDIDATE")
                 raise AnalysisError("ANCHORED_MISSING_CANDIDATE")
             if review(profile,"semantic_recheck"):raise AnalysisError("SEMANTIC_REJECTED")
         def total(index):

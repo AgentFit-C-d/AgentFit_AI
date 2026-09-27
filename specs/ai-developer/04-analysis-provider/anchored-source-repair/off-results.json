@@ -1,0 +1,534 @@
+{
+  "planned": 12,
+  "passed": 4,
+  "rows": [
+    {
+      "id": "Q-001",
+      "passed": false,
+      "error": "SEMANTIC_REJECTED",
+      "initial_draft_passed": false,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 1000,
+          "provider_elapsed_ms": 1000,
+          "request_bytes": 3914,
+          "response_bytes": 638,
+          "prompt_tokens": 434,
+          "completion_tokens": 29,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1188,
+          "provider_elapsed_ms": 1188,
+          "request_bytes": 15181,
+          "response_bytes": 680,
+          "prompt_tokens": 679,
+          "completion_tokens": 44,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 19671,
+          "provider_elapsed_ms": 19671,
+          "request_bytes": 10430,
+          "response_bytes": 11389,
+          "prompt_tokens": 1061,
+          "completion_tokens": 2258,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "low",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "overbroad"
+            }
+          ]
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 454,
+          "provider_elapsed_ms": 454,
+          "request_bytes": 15468,
+          "response_bytes": 683,
+          "prompt_tokens": 757,
+          "completion_tokens": 45,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 9375,
+          "provider_elapsed_ms": 9375,
+          "request_bytes": 10280,
+          "response_bytes": 6315,
+          "prompt_tokens": 1039,
+          "completion_tokens": 1189,
+          "max_tokens": 8192,
+          "stage": "semantic_recheck",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "low",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "missing"
+            }
+          ]
+        }
+      ],
+      "elapsed_ms": 31688
+    },
+    {
+      "id": "Q-002",
+      "passed": false,
+      "error": "PROVIDER_TIMEOUT",
+      "initial_draft_passed": false,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 296,
+          "provider_elapsed_ms": 296,
+          "request_bytes": 4002,
+          "response_bytes": 569,
+          "prompt_tokens": 440,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 59766,
+          "provider_elapsed_ms": 59766,
+          "request_bytes": 10324,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "failed",
+          "reasoning_effort": "low",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ],
+      "elapsed_ms": 60062
+    },
+    {
+      "id": "Q-003",
+      "passed": true,
+      "mismatch_fields": [],
+      "first_pass": true,
+      "repaired_fields": [],
+      "model": "solar-mini4-260922",
+      "initial_draft_passed": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 281,
+          "provider_elapsed_ms": 281,
+          "request_bytes": 4030,
+          "response_bytes": 569,
+          "prompt_tokens": 446,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 22469,
+          "provider_elapsed_ms": 22469,
+          "request_bytes": 10338,
+          "response_bytes": 8581,
+          "prompt_tokens": 1045,
+          "completion_tokens": 1652,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "low"
+        }
+      ],
+      "elapsed_ms": 22750
+    },
+    {
+      "id": "Q-004",
+      "passed": false,
+      "error": "ANCHORED_MISSING_CANDIDATE",
+      "initial_draft_passed": false,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 312,
+          "provider_elapsed_ms": 312,
+          "request_bytes": 3862,
+          "response_bytes": 569,
+          "prompt_tokens": 426,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 28703,
+          "provider_elapsed_ms": 28703,
+          "request_bytes": 10254,
+          "response_bytes": 21323,
+          "prompt_tokens": 1035,
+          "completion_tokens": 4200,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "low",
+          "semantic_issues": [
+            {
+              "field": "external_integrations",
+              "kind": "missing"
+            }
+          ]
+        }
+      ],
+      "elapsed_ms": 29015
+    },
+    {
+      "id": "Q-005",
+      "passed": true,
+      "mismatch_fields": [],
+      "first_pass": true,
+      "repaired_fields": [],
+      "model": "solar-mini4-260922",
+      "initial_draft_passed": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 828,
+          "provider_elapsed_ms": 828,
+          "request_bytes": 3802,
+          "response_bytes": 569,
+          "prompt_tokens": 428,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 8360,
+          "provider_elapsed_ms": 8360,
+          "request_bytes": 10224,
+          "response_bytes": 5740,
+          "prompt_tokens": 1036,
+          "completion_tokens": 1097,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "low"
+        }
+      ],
+      "elapsed_ms": 9188
+    },
+    {
+      "id": "Q-006",
+      "passed": false,
+      "error": "ANCHORED_MISSING_CANDIDATE",
+      "initial_draft_passed": false,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 328,
+          "provider_elapsed_ms": 328,
+          "request_bytes": 3841,
+          "response_bytes": 569,
+          "prompt_tokens": 437,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 281,
+          "provider_elapsed_ms": 281,
+          "request_bytes": 3841,
+          "response_bytes": 569,
+          "prompt_tokens": 436,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 7094,
+          "provider_elapsed_ms": 7094,
+          "request_bytes": 10251,
+          "response_bytes": 4765,
+          "prompt_tokens": 1042,
+          "completion_tokens": 894,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "low",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "missing"
+            }
+          ]
+        }
+      ],
+      "elapsed_ms": 7703
+    },
+    {
+      "id": "N-001",
+      "passed": true,
+      "mismatch_fields": [],
+      "first_pass": true,
+      "repaired_fields": [],
+      "model": "solar-mini4-260922",
+      "initial_draft_passed": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 312,
+          "provider_elapsed_ms": 312,
+          "request_bytes": 4096,
+          "response_bytes": 569,
+          "prompt_tokens": 450,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 40141,
+          "provider_elapsed_ms": 40141,
+          "request_bytes": 10371,
+          "response_bytes": 12830,
+          "prompt_tokens": 1047,
+          "completion_tokens": 2488,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "low"
+        }
+      ],
+      "elapsed_ms": 40453
+    },
+    {
+      "id": "N-002",
+      "passed": false,
+      "error": "SEMANTIC_REVIEW_INVALID",
+      "initial_draft_passed": false,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 297,
+          "provider_elapsed_ms": 297,
+          "request_bytes": 3950,
+          "response_bytes": 569,
+          "prompt_tokens": 432,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 24344,
+          "provider_elapsed_ms": 24344,
+          "request_bytes": 10298,
+          "response_bytes": 21695,
+          "prompt_tokens": 1038,
+          "completion_tokens": 4200,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validation_failed",
+          "reasoning_effort": "low",
+          "error": "SEMANTIC_REVIEW_INVALID"
+        }
+      ],
+      "elapsed_ms": 24641
+    },
+    {
+      "id": "N-003",
+      "passed": true,
+      "mismatch_fields": [],
+      "first_pass": true,
+      "repaired_fields": [],
+      "model": "solar-mini4-260922",
+      "initial_draft_passed": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 453,
+          "provider_elapsed_ms": 453,
+          "request_bytes": 3988,
+          "response_bytes": 569,
+          "prompt_tokens": 434,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 41094,
+          "provider_elapsed_ms": 41094,
+          "request_bytes": 10317,
+          "response_bytes": 14867,
+          "prompt_tokens": 1039,
+          "completion_tokens": 2859,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "low"
+        }
+      ],
+      "elapsed_ms": 41547
+    },
+    {
+      "id": "N-004",
+      "passed": false,
+      "error": "ANCHORED_MISSING_CANDIDATE",
+      "initial_draft_passed": false,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 562,
+          "provider_elapsed_ms": 562,
+          "request_bytes": 3986,
+          "response_bytes": 569,
+          "prompt_tokens": 442,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 28813,
+          "provider_elapsed_ms": 28813,
+          "request_bytes": 10316,
+          "response_bytes": 20273,
+          "prompt_tokens": 1043,
+          "completion_tokens": 4198,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "low",
+          "semantic_issues": [
+            {
+              "field": "ai",
+              "kind": "missing"
+            }
+          ]
+        }
+      ],
+      "elapsed_ms": 29375
+    },
+    {
+      "id": "N-005",
+      "passed": false,
+      "error": "ANCHORED_MISSING_CANDIDATE",
+      "initial_draft_passed": false,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 421,
+          "provider_elapsed_ms": 421,
+          "request_bytes": 3868,
+          "response_bytes": 569,
+          "prompt_tokens": 433,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 8172,
+          "provider_elapsed_ms": 8172,
+          "request_bytes": 10257,
+          "response_bytes": 6377,
+          "prompt_tokens": 1039,
+          "completion_tokens": 1256,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "low",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "missing"
+            }
+          ]
+        }
+      ],
+      "elapsed_ms": 8593
+    },
+    {
+      "id": "N-006",
+      "passed": false,
+      "error": "ANCHORED_MISSING_CANDIDATE",
+      "initial_draft_passed": false,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 547,
+          "provider_elapsed_ms": 547,
+          "request_bytes": 4056,
+          "response_bytes": 569,
+          "prompt_tokens": 444,
+          "completion_tokens": 19,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 22016,
+          "provider_elapsed_ms": 22016,
+          "request_bytes": 10351,
+          "response_bytes": 17002,
+          "prompt_tokens": 1044,
+          "completion_tokens": 3349,
+          "max_tokens": 8192,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "low",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "missing"
+            }
+          ]
+        }
+      ],
+      "elapsed_ms": 22563
+    }
+  ]
+}

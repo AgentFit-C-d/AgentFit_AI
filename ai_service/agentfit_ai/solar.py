@@ -547,7 +547,7 @@ class SolarAnalyzer:
         except AnalysisError as error:
             error.provider_calls = len(diagnostic["calls"])
             error.repaired_fields = tuple(field for field in FIELDS if any(
-                call["stage"] in ("repair", "semantic_repair") and field in call["fields"]
+                call["stage"] in ("repair", "semantic_repair", "source_repair") and field in call["fields"]
                 for call in diagnostic["calls"]))
             diagnostic["outcome"] = "failed"
             diagnostic["error"] = safe_code(error.code)

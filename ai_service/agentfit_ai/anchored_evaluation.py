@@ -9,7 +9,7 @@ from .semantic_review import REVIEW_PROMPT, REVIEW_MAX_TOKENS
 def safe_diagnostics(diagnostic):
  numeric=("call","elapsed_ms","provider_elapsed_ms","request_bytes","response_bytes","prompt_tokens","completion_tokens","max_tokens")
  allowed={
-  "stage":{"candidate_generation","judgment","semantic_review","semantic_repair","semantic_recheck"},
+  "stage":{"candidate_generation","judgment","semantic_review","semantic_repair","source_repair","semantic_recheck"},
   "outcome":{"started","response_received","validated","semantic_failed","validation_failed","failed"},
   "reasoning_effort":{"none","low","medium"},
  }

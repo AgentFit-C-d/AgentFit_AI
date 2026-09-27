@@ -1,0 +1,11 @@
+{
+  "recorded": "after_process_start_before_completion",
+  "files": {
+    "ai_service/agentfit_ai/source_repair.py": "5799be592f240eeef91d6e90d528f7a39a8685c2ada94f4280fa7a90deccf3fc",
+    "ai_service/agentfit_ai/anchored_analysis.py": "15397a5009f83a7f507c78263ee9e5015851ee486e7cd0f83cc6809db4ccada7",
+    "ai_service/agentfit_ai/solar.py": "65156a28e310be75c1b378e4df3c7ef7c892ef8141f8f8e77a1ba7f9a218b59d",
+    "ai_service/agentfit_ai/anchored_prompts.py": "0f46d032f8cd59dae98b1726e0bc3abcafe6b116975ac807371647bfc2d28701",
+    "ai_service/agentfit_ai/semantic_review.py": "3f98733b369fb02621716cb0a5aff61f3daa05ef356dd623c23e9f06b875ed37"
+  },
+  "baseline_note": "baseline began before failure-diagnostic fixes; source-repair flag off behavior and prompts unchanged"
+}
