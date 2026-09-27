@@ -1,0 +1,256 @@
+{
+  "version": "atomic-counterexamples-v1",
+  "partition": "tuning",
+  "held_out": false,
+  "existing27_sha256": "4d5c3446dc978ccb354be84020a4e827c4263afdd64f143f21d8a74400bc1404",
+  "cases": [
+    {
+      "id": "AC01",
+      "document": "현재 운영 DB는 하나만 허용한다. 운영 DB는 AsterDB로 확정했다. 운영 DB는 BirchDB로 확정했다. 두 결정 모두 현재 유효하며 대체나 철회는 없다.",
+      "expected_kind": "conflict",
+      "conflict_field": "database",
+      "fixed_extraction_reply": {
+        "units": [
+          {
+            "unitId": "U0001",
+            "quotes": [
+              "AsterDB",
+              "BirchDB"
+            ]
+          }
+        ]
+      },
+      "expected_occurrences": [
+        {
+          "unitId": "U0001",
+          "quote": "AsterDB",
+          "start": 27,
+          "end": 34
+        },
+        {
+          "unitId": "U0001",
+          "quote": "BirchDB",
+          "start": 49,
+          "end": 56
+        }
+      ],
+      "conflict_candidate_ids": [
+        "F0001",
+        "F0002"
+      ]
+    },
+    {
+      "id": "AC02",
+      "document": "현재 제품은 운영 AI로 Oriole을 사용한다고 확정했다. 현재 제품은 운영 AI를 사용하지 않기로 확정했다. 두 결정 모두 현재 유효하며 대체나 철회는 없다.",
+      "expected_kind": "conflict",
+      "conflict_field": "ai",
+      "fixed_extraction_reply": {
+        "units": [
+          {
+            "unitId": "U0001",
+            "quotes": [
+              "Oriole",
+              "현재 제품은 운영 AI를 사용하지 않기로 확정했다."
+            ]
+          }
+        ]
+      },
+      "expected_occurrences": [
+        {
+          "unitId": "U0001",
+          "quote": "Oriole",
+          "start": 14,
+          "end": 20
+        },
+        {
+          "unitId": "U0001",
+          "quote": "현재 제품은 운영 AI를 사용하지 않기로 확정했다.",
+          "start": 34,
+          "end": 62
+        }
+      ],
+      "conflict_candidate_ids": [
+        "F0001",
+        "F0002"
+      ]
+    },
+    {
+      "id": "AC03",
+      "document": "현재 운영 DB는 AspenDB다. 같은 결정을 다시 적는다: 현재 운영 DB는 AspenDB다.",
+      "expected_kind": "profile",
+      "gold": {
+        "database": "AspenDB"
+      },
+      "fixed_extraction_reply": {
+        "units": [
+          {
+            "unitId": "U0001",
+            "quotes": [
+              "AspenDB"
+            ]
+          }
+        ]
+      },
+      "expected_occurrences": [
+        {
+          "unitId": "U0001",
+          "quote": "AspenDB",
+          "start": 10,
+          "end": 17
+        },
+        {
+          "unitId": "U0001",
+          "quote": "AspenDB",
+          "start": 45,
+          "end": 52
+        }
+      ],
+      "accepted_evidence_sets": [
+        {
+          "database": [
+            {
+              "start": 10,
+              "end": 17
+            }
+          ]
+        },
+        {
+          "database": [
+            {
+              "start": 45,
+              "end": 52
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AC04",
+      "document": "과거 운영 모델은 Hawthorn이었다. 이전 결정을 철회하고 현재 운영 모델은 Willow로 확정했다.",
+      "expected_kind": "profile",
+      "gold": {
+        "ai": [
+          [
+            "Willow"
+          ]
+        ]
+      },
+      "fixed_extraction_reply": {
+        "units": [
+          {
+            "unitId": "U0001",
+            "quotes": [
+              "Hawthorn",
+              "Willow"
+            ]
+          }
+        ]
+      },
+      "expected_occurrences": [
+        {
+          "unitId": "U0001",
+          "quote": "Hawthorn",
+          "start": 10,
+          "end": 18
+        },
+        {
+          "unitId": "U0001",
+          "quote": "Willow",
+          "start": 45,
+          "end": 51
+        }
+      ],
+      "accepted_evidence_sets": [
+        {
+          "ai": [
+            {
+              "start": 45,
+              "end": 51
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AC05",
+      "document": "예시 제품의 운영 모델은 Cedar다. 우리 현재 제품의 운영 모델은 Linden으로 확정했다.",
+      "expected_kind": "profile",
+      "gold": {
+        "ai": [
+          [
+            "Linden"
+          ]
+        ]
+      },
+      "fixed_extraction_reply": {
+        "units": [
+          {
+            "unitId": "U0001",
+            "quotes": [
+              "Cedar",
+              "Linden"
+            ]
+          }
+        ]
+      },
+      "expected_occurrences": [
+        {
+          "unitId": "U0001",
+          "quote": "Cedar",
+          "start": 14,
+          "end": 19
+        },
+        {
+          "unitId": "U0001",
+          "quote": "Linden",
+          "start": 39,
+          "end": 45
+        }
+      ],
+      "accepted_evidence_sets": [
+        {
+          "ai": [
+            {
+              "start": 39,
+              "end": 45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AC06",
+      "document": "개발 검증 도구로 Kite를 사용한다. 우리 제품의 운영 AI 모델은 아직 미정이다.",
+      "expected_kind": "profile",
+      "gold": {},
+      "fixed_extraction_reply": {
+        "units": [
+          {
+            "unitId": "U0001",
+            "quotes": [
+              "Kite",
+              "우리 제품의 운영 AI 모델은 아직 미정이다."
+            ]
+          }
+        ]
+      },
+      "expected_occurrences": [
+        {
+          "unitId": "U0001",
+          "quote": "Kite",
+          "start": 10,
+          "end": 14
+        },
+        {
+          "unitId": "U0001",
+          "quote": "우리 제품의 운영 AI 모델은 아직 미정이다.",
+          "start": 22,
+          "end": 47
+        }
+      ],
+      "accepted_evidence_sets": [
+        {}
+      ]
+    }
+  ]
+}
