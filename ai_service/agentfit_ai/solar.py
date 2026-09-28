@@ -2,13 +2,17 @@
 from __future__ import annotations
 
 import json
+import os
 import re
+import subprocess
+import sys
 import time
 from dataclasses import dataclass, replace
+from pathlib import Path
 from uuid import uuid4
 from typing import Callable
-from urllib.error import HTTPError, URLError
-from urllib.request import Request, HTTPRedirectHandler, build_opener
+
+from urllib.request import HTTPRedirectHandler
 
 from .profile import FIELDS, ARRAY_FIELDS, ProfileValidationError, validate_profile
 from .diagnostics import safe_code
@@ -155,32 +159,55 @@ class AnalysisError(ValueError):
 
 
 class _NoRedirect(HTTPRedirectHandler):
+    """Retained for the opt-in Jev transport's redirect policy."""
+
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         return None
 
 
+PROVIDER_WORKER_CODES = frozenset((
+    "PROVIDER_AUTH", "PROVIDER_RATE_LIMIT", "PROVIDER_REDIRECT",
+    "PROVIDER_UNAVAILABLE", "PROVIDER_REQUEST", "PROVIDER_TIMEOUT",
+    "PROVIDER_NETWORK", "RESPONSE_TOO_LARGE", "INVALID_RESPONSE",
+))
+
+
+def _provider_worker_environment() -> dict[str, str]:
+    allowed = ("SystemRoot", "WINDIR", "PATH", "SSL_CERT_FILE", "SSL_CERT_DIR",
+               "HTTPS_PROXY", "HTTP_PROXY", "NO_PROXY", "https_proxy",
+               "http_proxy", "no_proxy")
+    environment = {name: os.environ[name] for name in allowed if name in os.environ}
+    environment["PYTHONIOENCODING"] = "utf-8"
+    return environment
+
+
 def post_solar(payload: dict, api_key: str, timeout: float) -> bytes:
-    request = Request(ENDPOINT, data=json.dumps(payload).encode("utf-8"), headers={
-        "Authorization": "Bearer " + api_key, "Content-Type": "application/json",
-    }, method="POST")
+    """Bound even DNS and slow response parsing by one process deadline."""
+    request = json.dumps({"endpoint": ENDPOINT, "payload": payload,
+                          "key": api_key, "timeout": timeout}).encode("utf-8")
     try:
-        with build_opener(_NoRedirect()).open(request, timeout=timeout) as response:
-            raw = response.read(MAX_RESPONSE_BYTES + 1)
-    except HTTPError as error:
-        status = error.code
-        error.close()
-        code = ("PROVIDER_AUTH" if status in (401, 403) else
-                "PROVIDER_RATE_LIMIT" if status == 429 else
-                "PROVIDER_REDIRECT" if 300 <= status < 400 else
-                "PROVIDER_UNAVAILABLE" if status >= 500 else "PROVIDER_REQUEST")
-        raise AnalysisError(code) from None
-    except (TimeoutError, URLError, OSError) as error:
-        reason = error.reason if isinstance(error, URLError) else error
-        code = "PROVIDER_TIMEOUT" if isinstance(reason, TimeoutError) else "PROVIDER_NETWORK"
-        raise AnalysisError(code) from None
-    if len(raw) > MAX_RESPONSE_BYTES:
+        completed = subprocess.run(
+            [sys.executable, "-m", "agentfit_ai.provider_worker"], input=request,
+            stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+            cwd=Path(__file__).resolve().parents[1],
+            env=_provider_worker_environment(), timeout=timeout, check=False,
+        )
+    except subprocess.TimeoutExpired:
+        raise AnalysisError("PROVIDER_TIMEOUT") from None
+    except OSError:
+        raise AnalysisError("PROVIDER_NETWORK") from None
+    output = completed.stdout
+    if completed.returncode != 0 or not output:
+        raise AnalysisError("PROVIDER_NETWORK")
+    if len(output) > MAX_RESPONSE_BYTES + 1:
         raise AnalysisError("RESPONSE_TOO_LARGE")
-    return raw
+    if output[:1] == b"S":
+        return output[1:]
+    if output[:1] == b"E":
+        code = output[1:].decode("ascii", errors="ignore")
+        if code in PROVIDER_WORKER_CODES:
+            raise AnalysisError(code)
+    raise AnalysisError("PROVIDER_NETWORK")
 
 
 def _object(properties: dict) -> dict:

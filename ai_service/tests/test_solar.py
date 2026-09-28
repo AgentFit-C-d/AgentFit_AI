@@ -1,7 +1,10 @@
 import json
+import gzip
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import threading
+import time
 import unittest
 from unittest.mock import patch, MagicMock
-from urllib.error import HTTPError, URLError
 
 from agentfit_ai.profile import FIELDS
 from agentfit_ai.solar import SolarAnalyzer, AnalysisError, post_solar, candidate_to_profile
@@ -148,34 +151,277 @@ class SolarTests(unittest.TestCase):
 
 
 class HttpTests(unittest.TestCase):
-    @patch("agentfit_ai.solar.build_opener")
-    def test_http_status_mapping_and_no_retry(self, factory):
-        for status, code in ((401, "PROVIDER_AUTH"), (403, "PROVIDER_AUTH"),
-                             (429, "PROVIDER_RATE_LIMIT"), (503, "PROVIDER_UNAVAILABLE"),
-                             (400, "PROVIDER_REQUEST"), (302, "PROVIDER_REDIRECT")):
-            opener = MagicMock()
-            opener.open.side_effect = HTTPError("fixed", status, "private", {}, None)
-            factory.return_value = opener
-            with self.assertRaises(AnalysisError) as caught:
-                post_solar({}, KEY, 40)
-            self.assertEqual(caught.exception.code, code)
-            opener.open.assert_called_once()
+    def test_short_local_http_response_is_returned_intact(self):
+        class ShortHandler(BaseHTTPRequestHandler):
+            def do_POST(self):
+                self.rfile.read(int(self.headers["Content-Length"]))
+                body = b'{"ok":true}'
+                self.send_response(200)
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
 
-    @patch("agentfit_ai.solar.build_opener")
-    def test_network_and_timeout_mapping(self, factory):
-        for reason, code in ((TimeoutError(), "PROVIDER_TIMEOUT"),
-                             (OSError(), "PROVIDER_NETWORK")):
-            factory.return_value.open.side_effect = URLError(reason)
-            with self.assertRaises(AnalysisError) as caught:
-                post_solar({}, KEY, 40)
-            self.assertEqual(caught.exception.code, code)
+            def log_message(self, *_):
+                pass
 
-    @patch("agentfit_ai.solar.build_opener")
-    def test_response_size_limit(self, factory):
-        factory.return_value.open.return_value.__enter__.return_value.read.return_value = b"x" * (1048576 + 1)
-        with self.assertRaises(AnalysisError) as caught:
-            post_solar({}, KEY, 40)
-        self.assertEqual(caught.exception.code, "RESPONSE_TOO_LARGE")
+        server = ThreadingHTTPServer(("127.0.0.1", 0), ShortHandler)
+        worker = threading.Thread(target=server.serve_forever, daemon=True)
+        worker.start()
+        try:
+            with patch("agentfit_ai.solar.ENDPOINT",
+                       f"http://127.0.0.1:{server.server_port}/chat/completions"):
+                self.assertEqual(post_solar({}, KEY, 1), b'{"ok":true}')
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_chunked_local_http_response_is_returned_intact(self):
+        class ChunkedHandler(BaseHTTPRequestHandler):
+            def do_POST(self):
+                self.rfile.read(int(self.headers["Content-Length"]))
+                self.send_response(200)
+                self.send_header("Transfer-Encoding", "chunked")
+                self.end_headers()
+                self.wfile.write(b"3\r\nabc\r\n3\r\ndef\r\n0\r\n\r\n")
+
+            def log_message(self, *_):
+                pass
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), ChunkedHandler)
+        worker = threading.Thread(target=server.serve_forever, daemon=True)
+        worker.start()
+        try:
+            with patch("agentfit_ai.solar.ENDPOINT",
+                       f"http://127.0.0.1:{server.server_port}/chat/completions"):
+                self.assertEqual(post_solar({}, KEY, 1), b"abcdef")
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_compressed_provider_body_is_rejected_before_decode(self):
+        class CompressedHandler(BaseHTTPRequestHandler):
+            def do_POST(self):
+                self.rfile.read(int(self.headers["Content-Length"]))
+                body = gzip.compress(b'{"ok":true}')
+                self.send_response(200)
+                self.send_header("Content-Encoding", "gzip")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+            def log_message(self, *_):
+                pass
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), CompressedHandler)
+        worker = threading.Thread(target=server.serve_forever, daemon=True)
+        worker.start()
+        try:
+            with patch("agentfit_ai.solar.ENDPOINT",
+                       f"http://127.0.0.1:{server.server_port}/"):
+                with self.assertRaises(AnalysisError) as caught:
+                    post_solar({}, KEY, 1)
+            self.assertEqual(caught.exception.code, "INVALID_RESPONSE")
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_slow_stream_cannot_extend_total_call_timeout(self):
+        class DripHandler(BaseHTTPRequestHandler):
+            def do_POST(self):
+                self.rfile.read(int(self.headers["Content-Length"]))
+                self.send_response(200)
+                self.send_header("Content-Length", "12")
+                self.end_headers()
+                try:
+                    for _ in range(12):
+                        self.wfile.write(b"x")
+                        self.wfile.flush()
+                        time.sleep(0.1)
+                except OSError:
+                    pass
+
+            def log_message(self, *_):
+                pass
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), DripHandler)
+        worker = threading.Thread(target=server.serve_forever, daemon=True)
+        worker.start()
+        try:
+            endpoint = f"http://127.0.0.1:{server.server_port}/chat/completions"
+            started = time.monotonic()
+            with patch("agentfit_ai.solar.ENDPOINT", endpoint):
+                with self.assertRaises(AnalysisError) as caught:
+                    post_solar({}, KEY, 0.35)
+            self.assertEqual(caught.exception.code, "PROVIDER_TIMEOUT")
+            self.assertLess(time.monotonic() - started, 0.9)
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_slow_headers_cannot_extend_total_call_timeout(self):
+        class SlowHeaders(BaseHTTPRequestHandler):
+            def do_POST(self):
+                self.rfile.read(int(self.headers["Content-Length"]))
+                try:
+                    self.wfile.write(b"HTTP/1.1 200 OK\r\n")
+                    self.wfile.flush()
+                    for byte in b"Content-Length: 2\r\n\r\nok":
+                        self.wfile.write(bytes([byte]))
+                        self.wfile.flush()
+                        time.sleep(0.05)
+                except OSError:
+                    pass
+
+            def log_message(self, *_):
+                pass
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), SlowHeaders)
+        worker = threading.Thread(target=server.serve_forever, daemon=True)
+        worker.start()
+        try:
+            started = time.monotonic()
+            with patch("agentfit_ai.solar.ENDPOINT",
+                       f"http://127.0.0.1:{server.server_port}/chat/completions"):
+                with self.assertRaises(AnalysisError) as caught:
+                    post_solar({}, KEY, 0.25)
+            self.assertEqual(caught.exception.code, "PROVIDER_TIMEOUT")
+            self.assertLess(time.monotonic() - started, 0.7)
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_early_eof_with_content_length_is_network_failure(self):
+        class Truncated(BaseHTTPRequestHandler):
+            def do_POST(self):
+                self.rfile.read(int(self.headers["Content-Length"]))
+                self.send_response(200)
+                self.send_header("Content-Length", "8")
+                self.end_headers()
+                self.wfile.write(b"abc")
+
+            def log_message(self, *_):
+                pass
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Truncated)
+        worker = threading.Thread(target=server.serve_forever, daemon=True)
+        worker.start()
+        try:
+            with patch("agentfit_ai.solar.ENDPOINT",
+                       f"http://127.0.0.1:{server.server_port}/chat/completions"):
+                with self.assertRaises(AnalysisError) as caught:
+                    post_solar({}, KEY, 1)
+            self.assertEqual(caught.exception.code, "PROVIDER_NETWORK")
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_early_eof_with_chunked_body_is_network_failure(self):
+        class TruncatedChunk(BaseHTTPRequestHandler):
+            def do_POST(self):
+                self.rfile.read(int(self.headers["Content-Length"]))
+                self.send_response(200)
+                self.send_header("Transfer-Encoding", "chunked")
+                self.end_headers()
+                self.wfile.write(b"5\r\nabc")
+
+            def log_message(self, *_):
+                pass
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), TruncatedChunk)
+        worker = threading.Thread(target=server.serve_forever, daemon=True)
+        worker.start()
+        try:
+            with patch("agentfit_ai.solar.ENDPOINT",
+                       f"http://127.0.0.1:{server.server_port}/chat/completions"):
+                with self.assertRaises(AnalysisError) as caught:
+                    post_solar({}, KEY, 1)
+            self.assertEqual(caught.exception.code, "PROVIDER_NETWORK")
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_http_status_mapping_and_no_retry(self):
+        class StatusHandler(BaseHTTPRequestHandler):
+            requests = []
+
+            def do_POST(self):
+                self.rfile.read(int(self.headers["Content-Length"]))
+                self.requests.append(self.path)
+                self.send_response(int(self.path[1:]))
+                self.end_headers()
+
+            def log_message(self, *_):
+                pass
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), StatusHandler)
+        worker = threading.Thread(target=server.serve_forever, daemon=True)
+        worker.start()
+        try:
+            for status, code in ((401, "PROVIDER_AUTH"), (403, "PROVIDER_AUTH"),
+                                 (429, "PROVIDER_RATE_LIMIT"), (503, "PROVIDER_UNAVAILABLE"),
+                                 (400, "PROVIDER_REQUEST"), (302, "PROVIDER_REDIRECT")):
+                with patch("agentfit_ai.solar.ENDPOINT",
+                           f"http://127.0.0.1:{server.server_port}/{status}"):
+                    with self.assertRaises(AnalysisError) as caught:
+                        post_solar({}, KEY, 1)
+                self.assertEqual(caught.exception.code, code)
+            self.assertEqual(StatusHandler.requests,
+                             ["/401", "/403", "/429", "/503", "/400", "/302"])
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_network_failure_is_mapped_without_exception_text(self):
+        class Disconnected(BaseHTTPRequestHandler):
+            def do_POST(self):
+                self.rfile.read(int(self.headers["Content-Length"]))
+                self.connection.close()
+
+            def log_message(self, *_):
+                pass
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Disconnected)
+        worker = threading.Thread(target=server.serve_forever, daemon=True)
+        worker.start()
+        try:
+            with patch("agentfit_ai.solar.ENDPOINT",
+                       f"http://127.0.0.1:{server.server_port}/"):
+                with self.assertRaises(AnalysisError) as caught:
+                    post_solar({}, KEY, 1)
+            self.assertEqual(caught.exception.code, "PROVIDER_NETWORK")
+            self.assertNotIn(KEY, str(caught.exception))
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_response_size_limit(self):
+        class Oversized(BaseHTTPRequestHandler):
+            def do_POST(self):
+                self.rfile.read(int(self.headers["Content-Length"]))
+                body = b"x" * 1_048_577
+                self.send_response(200)
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                try:
+                    self.wfile.write(body)
+                except OSError:
+                    pass
+
+            def log_message(self, *_):
+                pass
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Oversized)
+        worker = threading.Thread(target=server.serve_forever, daemon=True)
+        worker.start()
+        try:
+            with patch("agentfit_ai.solar.ENDPOINT",
+                       f"http://127.0.0.1:{server.server_port}/"):
+                with self.assertRaises(AnalysisError) as caught:
+                    post_solar({}, KEY, 1)
+            self.assertEqual(caught.exception.code, "RESPONSE_TOO_LARGE")
+        finally:
+            server.shutdown()
+            server.server_close()
 
 
 if __name__ == "__main__":
