@@ -7,7 +7,7 @@
 ## 현재 상태
 - `feature/vercel-skills-api-probe`의 독립 worktree에 시험 함수·테스트·명세를 작성했다.
 - 로컬 검증: Node 테스트 9개 통과, `node --check` 성공. 현재 기준인 `origin/main`의 AI 테스트는 0개 수집되어 실행되지 않았다.
-- 실제 Vercel 프로젝트 연결·Preview 배포·skills.sh 호출은 미실행이다. Vercel CLI가 PATH에 없고 프로젝트 접근·OIDC 설정이 확인되지 않았다.
+- `npx vercel` 60.1.3으로 Vercel 프로젝트를 연결하고 Preview 배포를 완료했다. 첫 Preview 요청은 08:20:17 UTC HTTP 503이었다. 재배포 뒤 08:26:24 UTC 무인증 요청은 HTTP 401, 08:29:28 UTC 인증된 skills.sh 검색은 HTTP 200·후보 2건이었다.
 
 ## 결정 및 제약
 - 프로브는 결과 `id`·`name`만 반환하고 검증 Catalog 또는 최종 추천으로 승격하지 않는다.
@@ -16,5 +16,5 @@
 - worktree는 처음에 이전 기능 HEAD에서 출발했으나 커밋 전 `origin/main`으로 재설정했다. 스테이징된 신규 프로브 파일만 남았다.
 
 ## 다음 단계
-- 스테이징된 diff·비밀 파일·테스트를 최종 점검한다.
-- 배포 전 구체적인 영향과 검증 결과를 사용자에게 제시하고 확인받는다. 실제 호출 뒤 `specs/003-vercel-skills-api-probe/validation.md`에 상태·시각·후보 수를 기록한다.
+- 검증 기록과 Vercel CLI가 추가한 `.gitignore`를 점검해 기능 브랜치에 반영한다.
+- 시험이 끝난 뒤 Preview 배포와 `PROBE_KEY` 정리 여부를 사용자와 결정한다.

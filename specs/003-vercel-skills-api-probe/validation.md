@@ -20,7 +20,9 @@
 | `node --check api/search.js` | 성공 |
 | `npm ls --depth=0` | `@vercel/oidc@3.8.9` 설치 확인 |
 | `py -3.12 -m unittest discover -s tests -q` (`ai_service/`) | 현재 기준인 `origin/main`에는 실행할 AI 테스트가 없어 0개 수집, 종료 코드 1. 이전 기능 커밋 기준 작업 공간에서는 372개가 통과했으나 이 기능 브랜치의 검증 결과로 간주하지 않음 |
-| Vercel CLI | PATH에 없음 |
-| Vercel Preview 배포·skills.sh 실호출 | 미실행. 프로젝트 접근·OIDC 설정·Preview 배포가 필요 |
+| Vercel CLI | `npx vercel` 60.1.3으로 프로젝트 연결 및 Preview 배포 성공 |
+| 첫 Preview 무인증 요청 | 2026-09-28 08:20:17 UTC · HTTP 503 · 후보 수 해당 없음 |
+| Vercel Preview 무인증 요청 | 2026-09-28 08:26:24 UTC · HTTP 401 · 후보 수 해당 없음 |
+| Vercel Preview skills.sh 실호출 | 2026-09-28 08:29:28 UTC · HTTP 200 · 후보 수 2 |
 
-SC-001의 실제 인증 성공 여부는 아직 확인하지 못했다. 자동화 테스트는 외부 HTTP와 토큰을 시험 함수로 대체한다.
+SC-001의 실제 OIDC 인증 및 검색 성공을 Preview 실호출로 확인했다. 자동화 테스트는 외부 HTTP와 토큰을 시험 함수로 대체한다.
