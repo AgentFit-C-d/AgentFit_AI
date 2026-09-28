@@ -77,6 +77,24 @@ def _review_detected(observation, stage, field):
     return None
 
 
+def _candidate_capacity_covers(spans, candidates):
+    """Each selected candidate can represent at most one expected item."""
+    owners = {}
+
+    def assign(span_index, seen):
+        start, end = spans[span_index]
+        for index, candidate in enumerate(candidates):
+            if (index not in seen and candidate["start"] <= start
+                    and candidate["end"] >= end):
+                seen.add(index)
+                if index not in owners or assign(owners[index], seen):
+                    owners[index] = span_index
+                    return True
+        return False
+
+    return all(assign(index, set()) for index in range(len(spans)))
+
+
 def diagnose_case(case: dict, result: dict, observation: dict,
                   gold_evidence: dict) -> list[dict]:
     if result.get("outcome") != "complete":
@@ -98,9 +116,7 @@ def diagnose_case(case: dict, result: dict, observation: dict,
             else:
                 review_stage = "semantic_review"
                 spans = annotations.get(field, [])
-                if spans and any(not any(candidate["start"] <= start and
-                                         candidate["end"] >= end for candidate in candidates)
-                                 for start, end in spans):
+                if spans and not _candidate_capacity_covers(spans, candidates):
                     category = "candidate_gap"
                 elif spans or forbidden or case["gold"].get(field) == []:
                     category = "judgment_mismatch"

@@ -55,6 +55,13 @@ class FalseCompleteScoringTests(unittest.TestCase):
         self.assertEqual(rows[0]["first_observed_divergence"], "judgment_mismatch")
         self.assertEqual(rows[0]["review_detected"], False)
 
+    def test_one_broad_candidate_cannot_express_two_distinct_features(self):
+        self.assertIsNotNone(diagnose_case)
+        broad = [{"id": "F0001", "start": 0, "end": 11}]
+        rows = diagnose_case(self.case, {"outcome": "complete", "profile": self.wrong},
+                             observation(broad, self.wrong), self.gold)
+        self.assertEqual(rows[0]["first_observed_divergence"], "candidate_gap")
+
     def test_repair_regression_uses_recheck_issue(self):
         self.assertIsNotNone(diagnose_case)
         reviews = [("semantic_review", [{"field": "ai", "kind": "missing"}]),

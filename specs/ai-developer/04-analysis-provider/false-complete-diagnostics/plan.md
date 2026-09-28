@@ -61,7 +61,7 @@
 
 - [ ] **Step 1: 실패 테스트 작성.** 후보 없는 필수 구간 → `candidate_gap`, 후보가 있으나 첫 판단 오답 → `judgment_mismatch`, 첫 판단 정답·수정 오답 → `repair_regression`, 모호한 주석·중복 필드 → `undetermined`를 고정 입력으로 검증한다. `review_detected` 세 값, focus 금지 문자열, `needs_confirmation` 제외도 검증한다.
 - [ ] **Step 2: 실패 확인.** `rtk proxy C:/Users/fhtkr/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -m unittest tests.test_false_complete_scoring -v`를 `ai_service`에서 실행한다.
-- [ ] **Step 3: 최소 구현.** 기존 `score_profile`, `full_score`, `focus_score`, `gold_spans`의 뜻을 재사용한다. 근거 구간은 후보 `start <= gold.start` 및 `end >= gold.end`일 때만 포괄된 것으로 본다. 필드 매핑 또는 단계 자료가 불충분하면 `undetermined`; 검토 완료 이슈에 필드가 있으면 `true`, 완료·무이슈면 `false`, 미완료면 `null`이다.
+- [ ] **Step 3: 최소 구현.** 기존 `score_profile`, `full_score`, `focus_score`, `gold_spans`의 뜻을 재사용한다. 근거 구간은 후보 `start <= gold.start` 및 `end >= gold.end`일 때 포괄된다. 서로 다른 정답 항목에는 서로 다른 후보가 필요한지 일대일 최대 대응으로 확인한다. 필드 매핑 또는 단계 자료가 불충분하면 `undetermined`; 검토 완료 이슈에 필드가 있으면 `true`, 완료·무이슈면 `false`, 미완료면 `null`이다.
 - [ ] **Step 4: 통과 확인.** 신규 테스트와 `tests.test_keyed_profile_evaluation`을 실행한다.
 - [ ] **Step 5: 커밋.** Task 2의 주석·코드·테스트만 `feat: classify observed false completions`로 기록한다.
 
