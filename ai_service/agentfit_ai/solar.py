@@ -784,7 +784,7 @@ class SolarAnalyzer:
         }
         return self._send_payload(payload, names, _trace=_trace, timeout=timeout)
 
-    def _request_review(self, document, profile, *, _trace=None, timeout=40, reasoning_effort=REVIEW_REASONING_EFFORT, prompt=REVIEW_PROMPT):
+    def _request_review(self, document, profile, *, _trace=None, timeout=40, reasoning_effort=REVIEW_REASONING_EFFORT, prompt=REVIEW_PROMPT, sender=None):
         lines = source_lines(document)
         draft = {"data": profile["data"], "evidence": {
             field: [{"start": span["start"], "end": span["end"]} for span in spans]
@@ -800,7 +800,7 @@ class SolarAnalyzer:
             "reasoning_effort": reasoning_effort, "frequency_penalty": FREQUENCY_PENALTY,
             "temperature": 0, "max_tokens": REVIEW_MAX_TOKENS, "stream": False,
         }
-        return self._send_payload(payload, ("checkedFields", "issues"), _trace=_trace, timeout=timeout)
+        return (sender or self._send_payload)(payload, ("checkedFields", "issues"), _trace=_trace, timeout=timeout)
 
     def _send_payload(self, payload, names, *, _trace=None, timeout=40):
         trace = _trace if _trace is not None else {}

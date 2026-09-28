@@ -50,6 +50,37 @@ class DeepseekEvaluationTests(unittest.TestCase):
             analyzer._send_payload(self.source, ("decisions",), timeout=40)
         self.assertEqual(error.exception.code, "PROVIDER_MODEL")
 
+    def test_glm_and_kimi_payloads_preserve_review_schema_with_supported_options(self):
+        original = copy.deepcopy(self.source)
+        glm = nvidia_payload(self.source, model="z-ai/glm-5.3")
+        kimi = nvidia_payload(self.source, model="moonshotai/kimi-k3")
+        self.assertEqual(self.source, original)
+        for payload, model in ((glm, "z-ai/glm-5.3"), (kimi, "moonshotai/kimi-k3")):
+            self.assertEqual(payload["model"], model)
+            self.assertEqual(payload["messages"], original["messages"])
+            self.assertEqual(payload["response_format"], original["response_format"])
+            self.assertNotIn("frequency_penalty", payload)
+            self.assertEqual(payload["reasoning_effort"], "low")
+        self.assertEqual(glm["chat_template_kwargs"], {"clear_thinking": True})
+        self.assertEqual(glm["temperature"], 0.5)
+        self.assertNotIn("chat_template_kwargs", kimi)
+        self.assertEqual(kimi["temperature"], 1)
+
+    def test_model_specific_parser_rejects_provider_model_mismatch(self):
+        for model in ("z-ai/glm-5.3", "moonshotai/kimi-k3"):
+            with self.subTest(model=model):
+                seen = []
+                def transport(payload, key, timeout):
+                    seen.append(payload["model"])
+                    return json.dumps({"model": model, "choices": [{"finish_reason": "stop",
+                        "message": {"content": '{"issues":[]}'}}], "usage": {}}).encode()
+                got = NvidiaAnalyzer("secret", model=model, transport=transport)._send_payload(
+                    self.source, ("issues",), timeout=40)
+                self.assertEqual(got[1], model)
+                self.assertEqual(seen, [model])
+        with self.assertRaises(ValueError):
+            NvidiaAnalyzer("secret", model="unknown/model")
+
 
 if __name__ == "__main__":
     unittest.main()

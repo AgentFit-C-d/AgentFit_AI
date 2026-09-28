@@ -1,0 +1,26 @@
+[
+  {
+    "model": "deepseek-ai/deepseek-v4.1-flash",
+    "reported_model": "deepseek-ai/deepseek-v4.1-flash",
+    "issue_count": 0,
+    "valid": true,
+    "elapsed_ms": 18406,
+    "provider_elapsed_ms": 18406
+  },
+  {
+    "model": "z-ai/glm-5.3",
+    "error": "PROVIDER_TIMEOUT",
+    "reason": null,
+    "valid": false,
+    "elapsed_ms": 40094,
+    "provider_elapsed_ms": 40094
+  },
+  {
+    "model": "moonshotai/kimi-k3",
+    "error": "PROVIDER_TIMEOUT",
+    "reason": null,
+    "valid": false,
+    "elapsed_ms": 40110,
+    "provider_elapsed_ms": 40110
+  }
+]

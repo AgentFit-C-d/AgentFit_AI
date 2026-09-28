@@ -1,6 +1,6 @@
 """Opt-in unlabeled source candidates followed by independent Solar judgment."""
 import json
-from .solar import SolarAnalyzer, AnalysisError, AnalysisResult
+from .solar import SolarAnalyzer, AnalysisError, AnalysisResult, _reject_sensitive
 from .profile import FIELDS
 from .source_repair import SOURCE_REPAIR_PROMPT, repair_schema, apply_repairs
 from .repair_examples import REPAIR_EXAMPLES
@@ -43,7 +43,7 @@ Do not change quotations or add new candidates. If reviewing issues, reconsider 
 
 class AnchoredAnalyzer(SolarAnalyzer):
     """Experimental path; inherits existing diagnostics retention and deadline wrapper."""
-    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, review_examples=False, review_expression=False, repair_value_boundary=False, repair_state_grounding=False, repair_evidence_units=False, repair_effort="none", repair_occurrence_index=False, candidate_occurrences=False, selected_constraints=False, atomic_verdict=False, keyed_candidates=False, compact_review=False, **kwargs):
+    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, review_examples=False, review_expression=False, repair_value_boundary=False, repair_state_grounding=False, repair_evidence_units=False, repair_effort="none", repair_occurrence_index=False, candidate_occurrences=False, selected_constraints=False, atomic_verdict=False, keyed_candidates=False, compact_review=False, review_model=None, review_api_key=None, **kwargs):
         if review_effort not in ("medium", "low"):
             raise ValueError("unsupported review effort")
         if prompt_revision not in ("v1", "v2"):
@@ -86,23 +86,45 @@ class AnchoredAnalyzer(SolarAnalyzer):
         self._review_examples=review_examples
         self._repair_examples=repair_examples
         self._source_repair=source_repair
+        if (review_model is None) != (review_api_key is None):
+            raise ValueError("review model and key must be provided together")
+        if review_model is not None:
+            from .deepseek_evaluation import NVIDIA_REVIEW_MODELS, NvidiaAnalyzer
+            if type(review_model) is not str or review_model not in NVIDIA_REVIEW_MODELS:
+                raise ValueError("unsupported review model")
+            self._nvidia_reviewer = NvidiaAnalyzer(review_api_key, model=review_model)
+        else:
+            self._nvidia_reviewer = None
+        self._review_model = review_model
+        self._review_api_key = review_api_key
         super().__init__(*args, **kwargs)
         self._prompt_revision = prompt_revision
         self._review_effort = review_effort
 
+    def analyze(self, document, document_id):
+        if self._review_api_key is not None:
+            if type(document) is str:
+                _reject_sensitive(document, self._review_api_key)
+            if type(document_id) is str:
+                _reject_sensitive(document_id, self._review_api_key)
+        return super().analyze(document, document_id)
+
     def _request_review(self, document, profile, *, _trace=None, timeout=40):
+        sender = (self._nvidia_reviewer._send_payload if self._nvidia_reviewer is not None
+                  else self._send_payload)
         if self._compact_review:
             try:payload=review_payload(document,profile,model=self._model,effort=self._review_effort)
             except ReviewValidationError as error:
                 failure=AnalysisError("SEMANTIC_REVIEW_INVALID")
                 failure.review_detail={"reason":error.reason}
                 raise failure from None
-            return self._send_payload(payload,("issues",),_trace=_trace,timeout=timeout)
+            return sender(payload,("issues",),_trace=_trace,timeout=timeout)
         from .expression_review import expression_prompt
         prompt=expression_prompt() if self._review_expression else REVIEW_PROMPT
         return super()._request_review(document, profile, _trace=_trace, timeout=timeout,
                                        reasoning_effort=self._review_effort,
-                                       prompt=prompt+(REVIEW_EXAMPLES if self._review_examples else ""))
+                                       prompt=prompt+(REVIEW_EXAMPLES if self._review_examples else ""),
+                                       sender=sender)
 
     def _analyze(self,document,document_id,diagnostic,raw_responses,deadline):
         started=self._clock()
@@ -127,6 +149,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
             version+="+keyed-candidates-v1"
             candidate_prompt=KEYED_CANDIDATE_PROMPT
         if self._compact_review:version+="+compact-review-v1"
+        if self._review_model:version+="+nvidia-review-v1"
         if self._atomic_verdict:
             from .atomic_verdict import ATOMIC_PROMPT, atomic_schema, classify_atomic
             judgment_prompt=ATOMIC_PROMPT

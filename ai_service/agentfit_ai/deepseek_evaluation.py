@@ -14,15 +14,26 @@ from .candidate_occurrence_evaluation import fixed_pool
 from .solar import AnalysisError, MAX_RESPONSE_BYTES, SolarAnalyzer, _NoRedirect
 
 MODEL = "deepseek-ai/deepseek-v4.1-flash"
+NVIDIA_REVIEW_MODELS = (MODEL, "z-ai/glm-5.3", "moonshotai/kimi-k3")
 ENDPOINT = "https://integrate.api.nvidia.com/v1/chat/completions"
 
 
-def nvidia_payload(source):
+def nvidia_payload(source, *, model=MODEL):
+    if model not in NVIDIA_REVIEW_MODELS:
+        raise ValueError("unsupported NVIDIA model")
     payload = copy.deepcopy(source)
-    payload["model"] = MODEL
-    payload.pop("reasoning_effort", None)
+    payload["model"] = model
     payload.pop("frequency_penalty", None)
-    payload["chat_template_kwargs"] = {"thinking": False}
+    if model == MODEL:
+        payload.pop("reasoning_effort", None)
+        payload["chat_template_kwargs"] = {"thinking": False}
+    elif model == "z-ai/glm-5.3":
+        payload["reasoning_effort"] = "low"
+        payload["chat_template_kwargs"] = {"clear_thinking": True}
+        payload["temperature"] = 0.5
+    else:
+        payload["reasoning_effort"] = "low"
+        payload["temperature"] = 1
     return payload
 
 
@@ -51,11 +62,14 @@ def post_nvidia(payload, api_key, timeout):
 
 
 class NvidiaAnalyzer:
-    def __init__(self, key, transport=post_nvidia):
+    def __init__(self, key, transport=post_nvidia, *, model=MODEL):
+        if model not in NVIDIA_REVIEW_MODELS:
+            raise ValueError("unsupported NVIDIA model")
+        self._model = model
         self._solar_parser = SolarAnalyzer(key, transport=transport)
 
     def _send_payload(self, source, names, *, _trace=None, timeout=40):
-        payload = nvidia_payload(source)
+        payload = nvidia_payload(source, model=self._model)
         # The shared parser expects this trace field and validates the JSON body.
         parser_payload = dict(payload, reasoning_effort="none")
         transport = self._solar_parser._transport
@@ -65,7 +79,7 @@ class NvidiaAnalyzer:
                 reported_model = json.loads(raw).get("model")
             except (TypeError, ValueError, AttributeError):
                 reported_model = None
-            if reported_model != MODEL:
+            if reported_model != self._model:
                 raise AnalysisError("PROVIDER_MODEL")
             return raw
         try:
@@ -74,7 +88,9 @@ class NvidiaAnalyzer:
                 parser_payload, names, _trace=_trace, timeout=timeout)
         finally:
             self._solar_parser._transport = transport
-        return reply, MODEL, pt, ct
+        if _trace is not None:
+            _trace["model"] = self._model
+        return reply, self._model, pt, ct
 
 
 def load_key():

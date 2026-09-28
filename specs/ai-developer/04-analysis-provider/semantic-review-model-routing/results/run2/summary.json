@@ -1,0 +1,179 @@
+{
+  "groups": {
+    "full": {
+      "baseline": {
+        "valid": 7,
+        "passed": 5,
+        "matched": 68,
+        "total_valid": 70,
+        "total_planned": 120,
+        "false_confirmations": 2,
+        "errors": {
+          "SECTION_MERGE": 1,
+          "ANCHORED_MISSING_CANDIDATE": 1,
+          "SEMANTIC_REVIEW_INVALID": 2,
+          "PROVIDER_TIMEOUT": 1
+        },
+        "max_calls": 4,
+        "median_ms": 9398.0,
+        "p95_ms": 43406
+      },
+      "compact": {
+        "valid": 7,
+        "passed": 6,
+        "matched": 69,
+        "total_valid": 70,
+        "total_planned": 120,
+        "false_confirmations": 0,
+        "errors": {
+          "SEMANTIC_REJECTED": 3,
+          "PROVIDER_TIMEOUT": 1,
+          "SECTION_MERGE": 1
+        },
+        "max_calls": 5,
+        "median_ms": 17257.5,
+        "p95_ms": 45406
+      },
+      "paired_cases": 4,
+      "paired": {
+        "baseline": {
+          "valid": 4,
+          "passed": 4,
+          "matched": 40,
+          "total_valid": 40,
+          "total_planned": 40,
+          "false_confirmations": 0,
+          "errors": {},
+          "max_calls": 4,
+          "median_ms": 7171.5,
+          "p95_ms": 11515
+        },
+        "compact": {
+          "valid": 4,
+          "passed": 4,
+          "matched": 40,
+          "total_valid": 40,
+          "total_planned": 40,
+          "false_confirmations": 0,
+          "errors": {},
+          "max_calls": 4,
+          "median_ms": 20977.0,
+          "p95_ms": 26093
+        }
+      }
+    },
+    "focus": {
+      "baseline": {
+        "valid": 2,
+        "passed": 1,
+        "matched": 6,
+        "total_valid": 6,
+        "total_planned": 27,
+        "false_confirmations": 1,
+        "errors": {
+          "SECTION_MERGE": 3,
+          "PROVIDER_TIMEOUT": 3
+        },
+        "max_calls": 6,
+        "median_ms": 34500.0,
+        "p95_ms": 60047
+      },
+      "compact": {
+        "valid": 1,
+        "passed": 1,
+        "matched": 3,
+        "total_valid": 3,
+        "total_planned": 27,
+        "false_confirmations": 0,
+        "errors": {
+          "SECTION_MERGE": 2,
+          "SEMANTIC_REJECTED": 3,
+          "SEMANTIC_REVIEW_INVALID": 1,
+          "ANCHORED_CANDIDATE": 1
+        },
+        "max_calls": 6,
+        "median_ms": 24453.0,
+        "p95_ms": 49844
+      },
+      "paired_cases": 1,
+      "paired": {
+        "baseline": {
+          "valid": 1,
+          "passed": 1,
+          "matched": 3,
+          "total_valid": 3,
+          "total_planned": 3,
+          "false_confirmations": 0,
+          "errors": {},
+          "max_calls": 6,
+          "median_ms": 56531,
+          "p95_ms": 56531
+        },
+        "compact": {
+          "valid": 1,
+          "passed": 1,
+          "matched": 3,
+          "total_valid": 3,
+          "total_planned": 3,
+          "false_confirmations": 0,
+          "errors": {},
+          "max_calls": 4,
+          "median_ms": 28672,
+          "p95_ms": 28672
+        }
+      }
+    }
+  },
+  "review": {
+    "baseline": {
+      "timeouts": {
+        "semantic_review": 2,
+        "semantic_recheck": 2
+      },
+      "invalid_reasons": {
+        "NULL_NON_MISSING": 1,
+        "COMPACT_MISSING_SOURCE_EMPTY": 1
+      },
+      "median_provider_ms": 8906,
+      "median_request_bytes": 5046,
+      "median_completion_tokens": 1103
+    },
+    "compact": {
+      "timeouts": {
+        "semantic_review": 1
+      },
+      "invalid_reasons": {
+        "COMPACT_MISSING_SOURCE_EMPTY": 1
+      },
+      "median_provider_ms": 8657,
+      "median_request_bytes": 5094,
+      "median_completion_tokens": 28.0
+    }
+  },
+  "gate": {
+    "same_cases": true,
+    "full_accuracy_no_regression": true,
+    "full_complete_no_regression": true,
+    "focus_accuracy_no_regression": false,
+    "false_confirmations_no_increase": true,
+    "validation_errors_no_increase": false,
+    "review_timeouts_decrease": true,
+    "review_invalid_decrease": true,
+    "total_successes_increase": true,
+    "six_call_limit": true,
+    "observed_60s_limit": false
+  },
+  "passed": false,
+  "total_passed": {
+    "baseline": 6,
+    "compact": 7
+  },
+  "total_false_confirmations": {
+    "baseline": 3,
+    "compact": 0
+  },
+  "total_validation_errors": {
+    "baseline": 7,
+    "compact": 11
+  }
+}

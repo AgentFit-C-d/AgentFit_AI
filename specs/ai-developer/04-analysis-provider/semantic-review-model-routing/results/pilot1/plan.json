@@ -1,0 +1,14 @@
+{
+  "models": [
+    "deepseek-ai/deepseek-v4.1-flash",
+    "z-ai/glm-5.3",
+    "moonshotai/kimi-k3"
+  ],
+  "synthetic_only": true,
+  "timeout_seconds": 40,
+  "schema": "compact-review-v1",
+  "code_sha256": {
+    "ai_service/agentfit_ai/deepseek_evaluation.py": "bf6dfeb6d9b8cc21aed369e2d5b840e197ff19841ef5627f9042f547aab14e2d",
+    "ai_service/agentfit_ai/compact_review.py": "c78e27b1095e6727a0595607270f646040d3c67e1b0fec12f2653b4e235b8e40"
+  }
+}

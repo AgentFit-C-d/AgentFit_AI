@@ -1,0 +1,28 @@
+{
+  "cases": 20,
+  "dataset_sha256": [
+    "3fc74b4f1773e1fa91b22d5dbb5420774d5c0936f6d42ceb6cd00b030bcb5566",
+    "e98d5b10c92ead4cf6121dd3af991a58a7a75285d9f0f291a4632e0da26bff39",
+    "3683257124db4d4ee9f2cc403dd411f62a27c32f1ea710850abc239d91bd9e2c"
+  ],
+  "arm_labels": {
+    "baseline": "Solar Pro4 review",
+    "compact": "DeepSeek V4.1 Flash review"
+  },
+  "extraction_model": "solar-pro4",
+  "review_model": "deepseek-ai/deepseek-v4.1-flash",
+  "review_contract": "compact-review-v1",
+  "prompt_revision": "v2",
+  "review_effort": "medium on Solar; thinking=false on DeepSeek",
+  "overall_timeout_seconds": 60,
+  "per_call_cap_seconds": 40,
+  "order": "even=baseline,compact; odd=compact,baseline",
+  "held_out": false,
+  "evaluator_sha256": "c4b2ff3112eeb18db77b5dffce26caba93673e44bb3edc75ff070abd3bfd4f46",
+  "code_sha256": {
+    "ai_service/agentfit_ai/anchored_analysis.py": "f401a7a18693b6cb0f825adb892c3ccff432580f307509d703e34a8973cb7575",
+    "ai_service/agentfit_ai/solar.py": "fd9014e2f740fc46cc92c8e2966f53aa0f1550920e788b265683fe472688807a",
+    "ai_service/agentfit_ai/deepseek_evaluation.py": "bf6dfeb6d9b8cc21aed369e2d5b840e197ff19841ef5627f9042f547aab14e2d",
+    "ai_service/agentfit_ai/compact_review.py": "c78e27b1095e6727a0595607270f646040d3c67e1b0fec12f2653b4e235b8e40"
+  }
+}
