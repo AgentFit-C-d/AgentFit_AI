@@ -1,9 +1,11 @@
 """AI-side proposal for Spring Boot's private document analysis endpoint."""
 
+import asyncio
 import hmac
 import os
 import re
 from collections.abc import Callable
+from threading import BoundedSemaphore
 
 from fastapi import FastAPI, Request
 from fastapi.concurrency import run_in_threadpool
@@ -24,6 +26,20 @@ MEDIA_TYPES = {"PDF": "application/pdf", "MARKDOWN": "text/markdown",
 
 def _error(status: int, code: str) -> JSONResponse:
     return JSONResponse(status_code=status, content={"error": code})
+
+
+class _AdmittedResponse(JSONResponse):
+    """Release an analysis slot after the ASGI response finishes or aborts."""
+
+    def __init__(self, *, release, **kwargs):
+        super().__init__(**kwargs)
+        self._release = release
+
+    async def __call__(self, scope, receive, send):
+        try:
+            await super().__call__(scope, receive, send)
+        finally:
+            self._release()
 
 
 def _solar_analysis(document: str, document_id: str) -> dict:
@@ -95,11 +111,28 @@ def _checked_confirmation(outcome: dict, profile: dict) -> tuple[dict, list]:
     return states, questions
 
 
+def _bounded_setting(value: int | None, name: str, default: int, maximum: int) -> int:
+    if value is None:
+        raw = os.environ.get(name, str(default))
+        if not raw.isascii() or not raw.isdecimal() or len(raw) > 2:
+            raise ValueError("invalid service setting: " + name)
+        value = int(raw)
+    if type(value) is not int or not 1 <= value <= maximum:
+        raise ValueError("invalid service setting: " + name)
+    return value
+
+
 def create_app(*, internal_token: str | None = None,
-               analyze: Callable[[str, str], dict] | None = None) -> FastAPI:
+               analyze: Callable[[str, str], dict] | None = None,
+               max_inflight: int | None = None,
+               upload_timeout_seconds: int | None = None) -> FastAPI:
     """Create a process-local adapter; Spring still owns persistence and public success."""
     token = os.environ.get("AGENTFIT_INTERNAL_TOKEN", "") if internal_token is None else internal_token
     analyze_document = _solar_analysis if analyze is None else analyze
+    limit = _bounded_setting(max_inflight, "AGENTFIT_MAX_INFLIGHT_ANALYSES", 2, 8)
+    upload_timeout = _bounded_setting(upload_timeout_seconds,
+                                      "AGENTFIT_UPLOAD_TIMEOUT_SECONDS", 10, 30)
+    slots = BoundedSemaphore(limit)
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 
     @app.get("/healthz")
@@ -147,52 +180,75 @@ def create_app(*, internal_token: str | None = None,
             if int(declared) > MAX_FILE_BYTES:
                 return _error(413, "DOCUMENT_TOO_LARGE")
 
+        if not slots.acquire(blocking=False):
+            return JSONResponse(status_code=503, content={"error": "SERVICE_BUSY"},
+                                headers={"Retry-After": "1"})
+
+        release_here = True
+
+        def finish(status: int, content: dict) -> _AdmittedResponse:
+            nonlocal release_here
+            response = _AdmittedResponse(status_code=status, content=content,
+                                         release=slots.release)
+            release_here = False
+            return response
+
+        def fail(status: int, code: str) -> _AdmittedResponse:
+            return finish(status, {"error": code})
+
         body = bytearray()
         try:
-            async for chunk in request.stream():
-                if len(body) + len(chunk) > MAX_FILE_BYTES:
-                    return _error(413, "DOCUMENT_TOO_LARGE")
-                body.extend(chunk)
+            try:
+                async with asyncio.timeout(upload_timeout):
+                    async for chunk in request.stream():
+                        if len(body) + len(chunk) > MAX_FILE_BYTES:
+                            return fail(413, "DOCUMENT_TOO_LARGE")
+                        body.extend(chunk)
+            except TimeoutError:
+                return fail(408, "DOCUMENT_UPLOAD_TIMEOUT")
             raw = bytes(body)
             if kind == "TEXT":
                 try:
                     content = raw.decode("utf-8-sig")
                 except UnicodeDecodeError:
-                    return _error(422, "DOCUMENT_INVALID_UTF8")
+                    return fail(422, "DOCUMENT_INVALID_UTF8")
             else:
                 content = raw
             extracted = await run_in_threadpool(extract_document, kind, content)
             outcome = await run_in_threadpool(analyze_document, extracted.text, document_id)
             if type(outcome) is not dict or outcome.get("outcome") not in (
                     "complete", "needs_confirmation", "failed"):
-                return _error(500, "INTERNAL_ERROR")
+                return fail(500, "INTERNAL_ERROR")
             if outcome["outcome"] == "failed":
-                return {"requestId": request_id, "outcome": "failed",
-                        "error": safe_code(outcome.get("error"))}
+                return finish(200, {"requestId": request_id, "outcome": "failed",
+                                    "error": safe_code(outcome.get("error"))})
             if type(outcome.get("profile")) is not dict:
-                return _error(502, "INVALID_PROFILE_SHAPE")
+                return fail(502, "INVALID_PROFILE_SHAPE")
             profile = _checked_profile(extracted.text, document_id, outcome["profile"])
             if outcome["outcome"] == "complete":
-                return {"requestId": request_id, "outcome": "complete",
-                        "profile": profile}
+                return finish(200, {"requestId": request_id, "outcome": "complete",
+                                    "profile": profile})
             try:
                 states, questions = _checked_confirmation(outcome, profile)
             except (TypeError, ValueError):
-                return _error(502, "INVALID_ANALYSIS_RESULT")
-            return {"requestId": request_id, "outcome": "needs_confirmation",
-                    "profile": profile,
-                    "fieldStates": states,
-                    "questions": questions,
-                    "error": safe_code(outcome.get("error"))}
+                return fail(502, "INVALID_ANALYSIS_RESULT")
+            return finish(200, {"requestId": request_id, "outcome": "needs_confirmation",
+                                "profile": profile,
+                                "fieldStates": states,
+                                "questions": questions,
+                                "error": safe_code(outcome.get("error"))})
         except DocumentExtractionError as error:
-            return _error(422, error.code)
+            return fail(422, error.code)
         except AnalysisError as error:
             status = 503 if error.code == "MISSING_OR_INVALID_KEY" else 502
-            return _error(status, safe_code(error.code))
+            return fail(status, safe_code(error.code))
         except ProfileValidationError as error:
-            return _error(502, safe_code(error.code))
+            return fail(502, safe_code(error.code))
         except Exception:
-            return _error(500, "INTERNAL_ERROR")
+            return fail(500, "INTERNAL_ERROR")
+        finally:
+            if release_here:
+                slots.release()
 
     return app
 

@@ -20,6 +20,8 @@ python -m uvicorn agentfit_ai.http_service:app --host 127.0.0.1 --port 8000
 
 기본 경로는 SolarAnalyzer를 사용한다. 확인 질문(`needs_confirmation`) 결과는 내부 계약에 대비한 응답 검증만 구현했으며, 실제 선택형 분석기의 운영 적용은 품질 검증 후 결정한다.
 
+동시 분석 수와 업로드 기한은 [수용 제한 명세](../12-analysis-admission-control/spec.md)를 따른다.
+
 ## 검증
 
 `requirements-dev.txt`를 설치한 환경에서 `python -m unittest discover -s tests -q`를 실행한다. 실제 Provider 호출과 Spring 저장 검증은 이 HTTP 경계 테스트에 포함되지 않는다.

@@ -1,8 +1,13 @@
 """Observable internal HTTP boundary behavior using the real ASGI application."""
 
 import unittest
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
+from threading import Event
+from unittest.mock import patch
 
 from fastapi.testclient import TestClient
+from httpx import ASGITransport, AsyncClient
 
 from agentfit_ai.http_service import create_app
 from agentfit_ai.profile import FIELDS, validate_profile
@@ -205,6 +210,155 @@ class InternalAnalysisHttpTests(unittest.TestCase):
 
     def test_health_does_not_claim_provider_readiness(self):
         self.assertEqual(self.client.get("/healthz").json(), {"status": "alive"})
+
+    def test_busy_service_rejects_second_request_before_analysis(self):
+        started = Event()
+        release = Event()
+        analyzed = []
+
+        def analyze(text, document_id):
+            analyzed.append(document_id)
+            if document_id == "first":
+                started.set()
+                release.wait(timeout=3)
+            return {"outcome": "failed", "error": "REVIEW_CONFIRMATION_REQUIRED"}
+
+        app = create_app(internal_token="local-secret", analyze=analyze, max_inflight=1)
+        first_client = TestClient(app)
+        second_client = TestClient(app)
+        headers = {"Authorization": "Bearer local-secret", "X-Request-Id": "req_1",
+                   "X-Document-Kind": "TEXT", "Content-Type": "text/plain"}
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            first = pool.submit(first_client.post, "/internal/v1/analyze", content=b"Alpha",
+                                headers=dict(headers, **{"X-Document-Id": "first"}))
+            try:
+                self.assertTrue(started.wait(timeout=2))
+                def forbidden_body():
+                    raise AssertionError("busy request body was consumed")
+                    yield b"Beta"
+
+                busy = second_client.post("/internal/v1/analyze", content=forbidden_body(),
+                                          headers=dict(headers, **{"X-Document-Id": "second"}))
+                self.assertEqual(busy.status_code, 503)
+                self.assertEqual(busy.json(), {"error": "SERVICE_BUSY"})
+                self.assertEqual(busy.headers["retry-after"], "1")
+                self.assertEqual(analyzed, ["first"])
+            finally:
+                release.set()
+            self.assertEqual(first.result(timeout=2).status_code, 200)
+        after = second_client.post("/internal/v1/analyze", content=b"Gamma",
+                                   headers=dict(headers, **{"X-Document-Id": "third"}))
+        self.assertEqual(after.status_code, 200)
+        self.assertEqual(analyzed, ["first", "third"])
+
+    def test_slow_body_times_out_and_releases_slot(self):
+        analyzed = []
+
+        def analyze(text, document_id):
+            analyzed.append(text)
+            return {"outcome": "failed", "error": "REVIEW_CONFIRMATION_REQUIRED"}
+
+        app = create_app(internal_token="local-secret", analyze=analyze,
+                         max_inflight=1, upload_timeout_seconds=1)
+        headers = {"Authorization": "Bearer local-secret", "X-Document-Id": "doc_1",
+                   "X-Request-Id": "req_1", "X-Document-Kind": "TEXT",
+                   "Content-Type": "text/plain"}
+
+        async def run():
+            async def slow():
+                yield b"Alpha"
+                await asyncio.sleep(1.2)
+                yield b"Beta"
+
+            async with AsyncClient(transport=ASGITransport(app=app),
+                                   base_url="http://test") as client:
+                timeout = await client.post("/internal/v1/analyze", content=slow(),
+                                            headers=headers)
+                accepted = await client.post("/internal/v1/analyze", content=b"Gamma",
+                                             headers=headers)
+            return timeout, accepted
+
+        timeout, accepted = asyncio.run(run())
+        self.assertEqual(timeout.status_code, 408)
+        self.assertEqual(timeout.json(), {"error": "DOCUMENT_UPLOAD_TIMEOUT"})
+        self.assertEqual(accepted.status_code, 200)
+        self.assertEqual(analyzed, ["Gamma"])
+
+    def test_unexpected_analysis_error_releases_slot(self):
+        calls = 0
+
+        def analyze(*_):
+            nonlocal calls
+            calls += 1
+            if calls == 1:
+                raise RuntimeError("private failure")
+            return {"outcome": "failed", "error": "REVIEW_CONFIRMATION_REQUIRED"}
+
+        client = TestClient(create_app(internal_token="local-secret", analyze=analyze,
+                                       max_inflight=1))
+        headers = {"Authorization": "Bearer local-secret", "X-Document-Id": "doc_1",
+                   "X-Request-Id": "req_1", "X-Document-Kind": "TEXT",
+                   "Content-Type": "text/plain"}
+        first = client.post("/internal/v1/analyze", content=b"Alpha", headers=headers)
+        second = client.post("/internal/v1/analyze", content=b"Beta", headers=headers)
+        self.assertEqual(first.status_code, 500)
+        self.assertEqual(second.status_code, 200)
+        self.assertEqual(calls, 2)
+
+    def test_invalid_runtime_limits_fail_at_startup(self):
+        for name, value in (("AGENTFIT_MAX_INFLIGHT_ANALYSES", "0"),
+                            ("AGENTFIT_UPLOAD_TIMEOUT_SECONDS", "31")):
+            with self.subTest(name=name), patch.dict("os.environ", {name: value}):
+                with self.assertRaises(ValueError):
+                    create_app(internal_token="local-secret", analyze=lambda *_: None)
+
+    def test_slot_remains_held_until_asgi_response_send_finishes(self):
+        app = create_app(internal_token="local-secret", max_inflight=1,
+                         analyze=lambda *_: {"outcome": "failed",
+                                             "error": "REVIEW_CONFIRMATION_REQUIRED"})
+
+        async def run():
+            sending = asyncio.Event()
+            finish_send = asyncio.Event()
+
+            async def invoke(document_id, block_send=False):
+                scope = {"type": "http", "asgi": {"version": "3.0"},
+                         "http_version": "1.1", "method": "POST", "scheme": "http",
+                         "path": "/internal/v1/analyze", "raw_path": b"/internal/v1/analyze",
+                         "query_string": b"", "client": ("127.0.0.1", 10000),
+                         "server": ("127.0.0.1", 8000),
+                         "headers": [(b"authorization", b"Bearer local-secret"),
+                                     (b"x-document-id", document_id.encode()),
+                                     (b"x-request-id", b"req_1"),
+                                     (b"x-document-kind", b"TEXT"),
+                                     (b"content-type", b"text/plain")]}
+                messages = []
+
+                async def receive():
+                    return {"type": "http.request", "body": b"AgentFit", "more_body": False}
+
+                async def send(message):
+                    if block_send and message["type"] == "http.response.body":
+                        sending.set()
+                        await finish_send.wait()
+                    messages.append(message)
+
+                await app(scope, receive, send)
+                return messages
+
+            first = asyncio.create_task(invoke("first", block_send=True))
+            try:
+                await asyncio.wait_for(sending.wait(), timeout=2)
+                second = await invoke("second")
+            finally:
+                finish_send.set()
+                await first
+            third = await invoke("third")
+            return second, third
+
+        busy, accepted = asyncio.run(run())
+        self.assertEqual(busy[0]["status"], 503)
+        self.assertEqual(accepted[0]["status"], 200)
 
 
 if __name__ == "__main__":
