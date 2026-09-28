@@ -7,6 +7,12 @@ from .recoverable_analysis import RecoverableAnchoredAnalyzer
 
 
 class ObservedRecoverableAnalyzer(RecoverableAnchoredAnalyzer):
+    _SAFE_MERGE_REASONS = frozenset({
+        "INVALID_DECISIONS", "SELECTED_COUNT", "CONFLICTING_FACTS",
+        "SELECTED_SCOPE", "SELECTED_STATUS", "SELECTED_ROLE",
+        "ABSENCE_MULTIPLE", "DUPLICATE_VALUE", "PROFILE_INVALID",
+    })
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._observation_context = ContextVar("false_complete_observation", default=None)
@@ -18,6 +24,15 @@ class ObservedRecoverableAnalyzer(RecoverableAnchoredAnalyzer):
                 {"id": item["id"], "start": item["span"]["start"],
                  "end": item["span"]["end"]} for item in pool
             ]
+
+    def _observe_judgment_failure(self, reply, pool, document, document_id, error):
+        super()._observe_judgment_failure(reply, pool, document, document_id, error)
+        observation = self._observation_context.get()
+        if observation is not None:
+            detail = getattr(error, "merge_detail", None)
+            reason = detail.get("reason") if type(detail) is dict else None
+            observation["judgment_failure_reason"] = (
+                reason if reason in self._SAFE_MERGE_REASONS else None)
 
     def _observe_profile(self, stage, profile):
         super()._observe_profile(stage, profile)
@@ -34,7 +49,8 @@ class ObservedRecoverableAnalyzer(RecoverableAnchoredAnalyzer):
             ]))
 
     def analyze_observed(self, document: str, document_id: str) -> tuple[dict, dict]:
-        observation = {"candidates": [], "profiles": [], "reviews": []}
+        observation = {"candidates": [], "profiles": [], "reviews": [],
+                       "judgment_failure_reason": None}
         token = self._observation_context.set(observation)
         try:
             result = self.analyze_recoverable(document, document_id)

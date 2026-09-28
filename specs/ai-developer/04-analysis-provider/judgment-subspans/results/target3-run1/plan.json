@@ -1,0 +1,39 @@
+{
+  "model": "solar-pro4",
+  "options": {
+    "model": "solar-pro4",
+    "prompt_revision": "v2",
+    "candidate_occurrences": true,
+    "keyed_candidates": true,
+    "review_effort": "medium",
+    "compact_review": true,
+    "analysis_timeout_seconds": 60
+  },
+  "cases": 3,
+  "require_issue_free_review": true,
+  "candidate_model": "deepseek-ai/deepseek-v4.1-flash",
+  "judgment_subspans": true,
+  "selected_case_ids": [
+    "Q-001",
+    "N-004",
+    "N-006"
+  ],
+  "dataset_sha256": [
+    "3fc74b4f1773e1fa91b22d5dbb5420774d5c0936f6d42ceb6cd00b030bcb5566",
+    "e98d5b10c92ead4cf6121dd3af991a58a7a75285d9f0f291a4632e0da26bff39",
+    "8ca9114b0bb04f7a8ba2f2cf8ac787e66eb170ec5e82b926c2215bbe8f33842a"
+  ],
+  "held_out": false,
+  "one_analysis_per_case": true,
+  "code_sha256": {
+    "ai_service/agentfit_ai/anchored_analysis.py": "ad154a243b481e824ea8a03db3389354451dda9fcd3a39faae820f4e74d12aae",
+    "ai_service/agentfit_ai/recoverable_analysis.py": "713939ebea0a7d6072e9360a7240f4b1887cf376e9531d39c70eae66fc6a0e73",
+    "ai_service/agentfit_ai/diagnostics.py": "a7869c52265519cda64d2a6fa31993e3fca7e92ff3014949c0cc9f2059825ccc",
+    "ai_service/agentfit_ai/deepseek_evaluation.py": "99c13028889015514f20a4a75503563a7f10d5b6d5adb44a9d0b0249ee82115a",
+    "ai_service/agentfit_ai/judgment_subspans.py": "26489c6426da9cd496a7b0924e00a0a0ece1dd08e943624bb721472c74aed430",
+    "ai_service/agentfit_ai/false_complete_observation.py": "5bdef100767232362eaca7fb18ab31ad17ddcc218c5adbf168613bfd10083155",
+    "ai_service/agentfit_ai/false_complete_scoring.py": "53287bae2e2780940df16481ff13627939ec02bdbc34ad00afdb6a03e3e51006",
+    "ai_service/agentfit_ai/false_complete_evaluation.py": "53a6ea17f2f93f649e9a70f699eceb15e72ddea964b0d9da0e80a52a4c9b7fb5",
+    "specs/ai-developer/04-analysis-provider/false-complete-diagnostics/gold-evidence.json": "4dfbdf0b20d783ba18e56c857e0363acf065a597d6e11bc8973b862d24ea64c7"
+  }
+}

@@ -1,0 +1,31 @@
+[
+  {
+    "id": "N-004",
+    "kind": "full",
+    "outcome": "needs_confirmation",
+    "error": "REVIEW_CONFIRMATION_REQUIRED",
+    "analysis_runs": 1,
+    "provider_calls": 5,
+    "elapsed_ms": 38073,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "not_applicable",
+    "review_issue_gate_applied": true,
+    "gated_potential_false_confirmations": 1,
+    "judgment_failure_reason": null,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 0,
+        "end": 19
+      },
+      {
+        "id": "F0002",
+        "start": 20,
+        "end": 42
+      }
+    ]
+  }
+]

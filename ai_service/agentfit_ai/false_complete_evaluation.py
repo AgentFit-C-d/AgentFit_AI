@@ -26,6 +26,7 @@ CODE_PATHS = (
     "ai_service/agentfit_ai/recoverable_analysis.py",
     "ai_service/agentfit_ai/diagnostics.py",
     "ai_service/agentfit_ai/deepseek_evaluation.py",
+    "ai_service/agentfit_ai/judgment_subspans.py",
     "ai_service/agentfit_ai/false_complete_observation.py",
     "ai_service/agentfit_ai/false_complete_scoring.py",
     "ai_service/agentfit_ai/false_complete_evaluation.py",
@@ -41,7 +42,7 @@ def _canonical_evidence():
 
 def run_case(case: dict, key: str, *, provider=post_solar,
              analyzer_factory=ObservedRecoverableAnalyzer,
-             clock=time.monotonic) -> dict:
+             clock=time.monotonic, diagnose_stages=True) -> dict:
     transport = CountingTransport(provider)
     analyzer = analyzer_factory(key, transport=transport, **options())
     started = clock()
@@ -58,6 +59,7 @@ def run_case(case: dict, key: str, *, provider=post_solar,
            "structural_evidence_errors": 0, "scoring_status": "not_applicable",
            "review_issue_gate_applied": review_gate,
            "gated_potential_false_confirmations": 0,
+           "judgment_failure_reason": observation.get("judgment_failure_reason"),
            "candidate_spans": [
                {"id": item["id"], "start": item["start"], "end": item["end"]}
                for item in observation["candidates"]]}
@@ -82,16 +84,24 @@ def run_case(case: dict, key: str, *, provider=post_solar,
     if outcome == "complete":
         row["scoring_status"] = "scored"
     if row["false_confirmations"]:
-        try:
-            row["false_complete_fields"] = diagnose_case(
-                case, result, observation, _canonical_evidence())
-        except (KeyError, TypeError, ValueError, IndexError):
-            row["diagnostic_error"] = "DIAGNOSTIC_UNDETERMINED"
+        if not diagnose_stages:
+            row["diagnostic_error"] = "SUBSPAN_STAGE_UNSUPPORTED"
             row["false_complete_fields"] = [{
                 "field": None, "first_observed_divergence": "undetermined",
                 "review_detected": None, "candidate_ids": [],
                 "candidate_spans": [], "gold_spans": [], "evidence_spans": [],
             }]
+        else:
+            try:
+                row["false_complete_fields"] = diagnose_case(
+                    case, result, observation, _canonical_evidence())
+            except (KeyError, TypeError, ValueError, IndexError):
+                row["diagnostic_error"] = "DIAGNOSTIC_UNDETERMINED"
+                row["false_complete_fields"] = [{
+                    "field": None, "first_observed_divergence": "undetermined",
+                    "review_detected": None, "candidate_ids": [],
+                    "candidate_spans": [], "gold_spans": [], "evidence_spans": [],
+                }]
     return row
 
 
@@ -164,6 +174,7 @@ def main():
     parser.add_argument("--require-issue-free-review", action="store_true")
     parser.add_argument("--candidate-model", choices=NVIDIA_REVIEW_MODELS)
     parser.add_argument("--case-id", action="append")
+    parser.add_argument("--judgment-subspans", action="store_true")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live required")
@@ -183,6 +194,7 @@ def main():
     plan = {"model": "solar-pro4", "options": options(), "cases": len(cases),
             "require_issue_free_review": args.require_issue_free_review,
             "candidate_model": args.candidate_model,
+            "judgment_subspans": args.judgment_subspans,
             "selected_case_ids": [case["id"] for case in cases],
             "dataset_sha256": dataset_hashes, "held_out": False,
             "one_analysis_per_case": True,
@@ -200,9 +212,11 @@ def main():
             key, require_issue_free_review=args.require_issue_free_review,
             candidate_model=args.candidate_model, candidate_api_key=candidate_key,
             candidate_transport=transport if args.candidate_model else None,
+            judgment_subspans=args.judgment_subspans,
             **kwargs)
     for case in cases:
-        row = run_case(case, key, provider=provider, analyzer_factory=analyzer_factory)
+        row = run_case(case, key, provider=provider, analyzer_factory=analyzer_factory,
+                       diagnose_stages=not args.judgment_subspans)
         rows.append(row)
         write_safe_json(args.output / "results.json", rows, forbidden_strings=forbidden)
         print(json.dumps({"id": row["id"], "outcome": row["outcome"],

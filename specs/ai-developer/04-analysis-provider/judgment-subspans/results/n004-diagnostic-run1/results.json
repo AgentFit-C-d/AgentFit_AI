@@ -1,0 +1,31 @@
+[
+  {
+    "id": "N-004",
+    "kind": "full",
+    "outcome": "failed",
+    "error": "SECTION_MERGE",
+    "analysis_runs": 1,
+    "provider_calls": 2,
+    "elapsed_ms": 9770,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "not_applicable",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "judgment_failure_reason": "SELECTED_STATUS",
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 0,
+        "end": 19
+      },
+      {
+        "id": "F0002",
+        "start": 20,
+        "end": 42
+      }
+    ]
+  }
+]

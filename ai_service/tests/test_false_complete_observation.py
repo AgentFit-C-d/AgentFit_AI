@@ -85,6 +85,17 @@ class FalseCompleteObservationTests(unittest.TestCase):
         self.assertEqual(len(second["profiles"]), 1)
         self.assertEqual(transport.call_count, 4)
 
+    def test_judgment_merge_failure_records_only_fixed_reason(self):
+        decisions = {"F0001": chosen("project_name"),
+                     "F0002": chosen("project_name")}
+        transport = Mock(side_effect=[response(item) for item in (
+            candidates("Alpha", "Beta"), {"decisions": decisions})])
+        analyzer = ObservedRecoverableAnalyzer("synthetic-key", transport=transport)
+        result, observation = analyzer.analyze_observed("Alpha Beta", "doc")
+        self.assertNotEqual(result["outcome"], "complete")
+        self.assertEqual(observation["judgment_failure_reason"], "SELECTED_COUNT")
+        self.assertNotIn("Alpha", str(observation["judgment_failure_reason"]))
+
 
 if __name__ == "__main__":
     unittest.main()

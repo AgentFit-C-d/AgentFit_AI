@@ -1,0 +1,28 @@
+{
+  "planned_cases": 3,
+  "evaluated_cases": 3,
+  "complete_cases": 1,
+  "needs_confirmation_cases": 0,
+  "failed_cases": 2,
+  "wrong_auto_confirmations": 0,
+  "unscored_complete_cases": 0,
+  "review_issue_confirmations": 0,
+  "gated_potential_false_confirmations": 0,
+  "first_observed_divergence": {},
+  "review_detected": {},
+  "undetermined": 0,
+  "observed_over_60s": 1,
+  "max_provider_calls": 5,
+  "median_elapsed_ms": 23017,
+  "p95_elapsed_ms": 60071,
+  "gate": {
+    "all_cases_accounted": true,
+    "one_analysis_per_case": true,
+    "six_call_limit": true,
+    "observed_60s_limit": false,
+    "zero_wrong_auto_confirmations": true,
+    "zero_structural_evidence_errors": true
+  },
+  "passed": false,
+  "scoring_note": "Wrong auto confirmations count full mismatched fields or focus forbidden-word hits among scored complete cases; stage counts are unique fields and may differ. Gated potential false confirmations are value errors in downgraded profiles, not automatic confirmations. Unscored profiles are excluded. Semantic evidence remains unverified. Stage labels are observations, not causes."
+}

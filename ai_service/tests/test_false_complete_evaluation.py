@@ -119,6 +119,27 @@ class FalseCompleteEvaluationTests(unittest.TestCase):
         self.assertEqual(summary["unscored_complete_cases"], 1)
         self.assertFalse(summary["gate"]["zero_wrong_auto_confirmations"])
 
+    def test_subspan_mode_marks_stage_unavailable_instead_of_candidate_gap(self):
+        case = {"id": "T01", "kind": "full", "document": "Atlas Beta",
+                "gold": {"project_name": "Atlas"}}
+        wrong = named_profile(case["document"], "Beta", 6)
+
+        class FakeAnalyzer:
+            def __init__(self, key, *, transport, **kwargs):
+                pass
+
+            def analyze_observed(self, document, document_id):
+                return ({"outcome": "complete", "profile": wrong},
+                        {"candidates": [{"id": "F0001", "start": 0, "end": 10}],
+                         "profiles": [("judgment", wrong)], "reviews": []})
+
+        row = run_case(case, "test-key", analyzer_factory=FakeAnalyzer,
+                       diagnose_stages=False)
+        self.assertEqual(row["false_confirmations"], 1)
+        self.assertEqual(row["diagnostic_error"], "SUBSPAN_STAGE_UNSUPPORTED")
+        self.assertEqual(row["false_complete_fields"][0]["first_observed_divergence"],
+                         "undetermined")
+
     def test_fixed_denominator_and_limits(self):
         self.assertIsNotNone(aggregate)
         rows = [
