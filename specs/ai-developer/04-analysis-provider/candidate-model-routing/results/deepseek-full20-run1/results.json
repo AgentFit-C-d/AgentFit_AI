@@ -1,0 +1,918 @@
+[
+  {
+    "id": "Q-001",
+    "kind": "full",
+    "outcome": "complete",
+    "error": null,
+    "analysis_runs": 1,
+    "provider_calls": 3,
+    "elapsed_ms": 18954,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "scored",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 11,
+        "end": 16
+      },
+      {
+        "id": "F0002",
+        "start": 18,
+        "end": 23
+      }
+    ]
+  },
+  {
+    "id": "Q-002",
+    "kind": "full",
+    "outcome": "complete",
+    "error": null,
+    "analysis_runs": 1,
+    "provider_calls": 3,
+    "elapsed_ms": 8501,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "scored",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 0,
+        "end": 17
+      },
+      {
+        "id": "F0002",
+        "start": 18,
+        "end": 35
+      }
+    ]
+  },
+  {
+    "id": "Q-003",
+    "kind": "full",
+    "outcome": "complete",
+    "error": null,
+    "analysis_runs": 1,
+    "provider_calls": 3,
+    "elapsed_ms": 16784,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "scored",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 0,
+        "end": 26
+      },
+      {
+        "id": "F0002",
+        "start": 27,
+        "end": 49
+      }
+    ]
+  },
+  {
+    "id": "Q-004",
+    "kind": "full",
+    "outcome": "failed",
+    "error": "SECTION_MERGE",
+    "analysis_runs": 1,
+    "provider_calls": 2,
+    "elapsed_ms": 4244,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "not_applicable",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 0,
+        "end": 20
+      }
+    ]
+  },
+  {
+    "id": "Q-005",
+    "kind": "full",
+    "outcome": "complete",
+    "error": null,
+    "analysis_runs": 1,
+    "provider_calls": 2,
+    "elapsed_ms": 14883,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "scored",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": []
+  },
+  {
+    "id": "Q-006",
+    "kind": "full",
+    "outcome": "complete",
+    "error": null,
+    "analysis_runs": 1,
+    "provider_calls": 4,
+    "elapsed_ms": 50820,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "scored",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 17,
+        "end": 22
+      }
+    ]
+  },
+  {
+    "id": "N-001",
+    "kind": "full",
+    "outcome": "failed",
+    "error": "SEMANTIC_REVIEW_INVALID",
+    "analysis_runs": 1,
+    "provider_calls": 3,
+    "elapsed_ms": 37613,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "not_applicable",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 9,
+        "end": 22
+      },
+      {
+        "id": "F0002",
+        "start": 24,
+        "end": 34
+      },
+      {
+        "id": "F0003",
+        "start": 36,
+        "end": 51
+      }
+    ]
+  },
+  {
+    "id": "N-002",
+    "kind": "full",
+    "outcome": "failed",
+    "error": "SECTION_MERGE",
+    "analysis_runs": 1,
+    "provider_calls": 2,
+    "elapsed_ms": 2718,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "not_applicable",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 0,
+        "end": 29
+      }
+    ]
+  },
+  {
+    "id": "N-003",
+    "kind": "full",
+    "outcome": "failed",
+    "error": "SEMANTIC_REVIEW_INVALID",
+    "analysis_runs": 1,
+    "provider_calls": 3,
+    "elapsed_ms": 12750,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "not_applicable",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 0,
+        "end": 33
+      }
+    ]
+  },
+  {
+    "id": "N-004",
+    "kind": "full",
+    "outcome": "complete",
+    "error": null,
+    "analysis_runs": 1,
+    "provider_calls": 3,
+    "elapsed_ms": 38944,
+    "false_confirmations": 1,
+    "false_complete_fields": [
+      {
+        "field": "ai",
+        "first_observed_divergence": "judgment_mismatch",
+        "review_detected": false,
+        "candidate_ids": [
+          "F0001",
+          "F0002"
+        ],
+        "candidate_spans": [
+          {
+            "id": "F0001",
+            "start": 0,
+            "end": 19
+          },
+          {
+            "id": "F0002",
+            "start": 20,
+            "end": 42
+          }
+        ],
+        "gold_spans": [
+          {
+            "start": 20,
+            "end": 42
+          }
+        ],
+        "evidence_spans": [
+          {
+            "start": 20,
+            "end": 42
+          }
+        ]
+      }
+    ],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "scored",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 0,
+        "end": 19
+      },
+      {
+        "id": "F0002",
+        "start": 20,
+        "end": 42
+      }
+    ]
+  },
+  {
+    "id": "N-005",
+    "kind": "full",
+    "outcome": "complete",
+    "error": null,
+    "analysis_runs": 1,
+    "provider_calls": 3,
+    "elapsed_ms": 9213,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "scored",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 11,
+        "end": 16
+      },
+      {
+        "id": "F0002",
+        "start": 18,
+        "end": 23
+      }
+    ]
+  },
+  {
+    "id": "N-006",
+    "kind": "full",
+    "outcome": "complete",
+    "error": null,
+    "analysis_runs": 1,
+    "provider_calls": 3,
+    "elapsed_ms": 24389,
+    "false_confirmations": 1,
+    "false_complete_fields": [
+      {
+        "field": "features",
+        "first_observed_divergence": "undetermined",
+        "review_detected": false,
+        "candidate_ids": [
+          "F0001",
+          "F0002"
+        ],
+        "candidate_spans": [
+          {
+            "id": "F0001",
+            "start": 0,
+            "end": 19
+          },
+          {
+            "id": "F0002",
+            "start": 20,
+            "end": 42
+          }
+        ],
+        "gold_spans": [],
+        "evidence_spans": [
+          {
+            "start": 20,
+            "end": 42
+          }
+        ]
+      }
+    ],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "scored",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 0,
+        "end": 19
+      },
+      {
+        "id": "F0002",
+        "start": 20,
+        "end": 42
+      }
+    ]
+  },
+  {
+    "id": "E01",
+    "kind": "focus",
+    "outcome": "needs_confirmation",
+    "error": "SECTION_MERGE",
+    "analysis_runs": 1,
+    "provider_calls": 3,
+    "elapsed_ms": 12528,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "not_applicable",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 5,
+        "end": 22
+      },
+      {
+        "id": "F0002",
+        "start": 24,
+        "end": 43
+      },
+      {
+        "id": "F0003",
+        "start": 61,
+        "end": 72
+      },
+      {
+        "id": "F0004",
+        "start": 74,
+        "end": 79
+      },
+      {
+        "id": "F0005",
+        "start": 87,
+        "end": 99
+      },
+      {
+        "id": "F0006",
+        "start": 102,
+        "end": 129
+      },
+      {
+        "id": "F0007",
+        "start": 131,
+        "end": 151
+      },
+      {
+        "id": "F0008",
+        "start": 154,
+        "end": 173
+      },
+      {
+        "id": "F0009",
+        "start": 174,
+        "end": 194
+      },
+      {
+        "id": "F0010",
+        "start": 196,
+        "end": 222
+      },
+      {
+        "id": "F0011",
+        "start": 223,
+        "end": 248
+      },
+      {
+        "id": "F0012",
+        "start": 250,
+        "end": 272
+      },
+      {
+        "id": "F0013",
+        "start": 273,
+        "end": 299
+      }
+    ]
+  },
+  {
+    "id": "E02",
+    "kind": "focus",
+    "outcome": "needs_confirmation",
+    "error": "SECTION_MERGE",
+    "analysis_runs": 1,
+    "provider_calls": 3,
+    "elapsed_ms": 20119,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "not_applicable",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 7,
+        "end": 31
+      },
+      {
+        "id": "F0002",
+        "start": 33,
+        "end": 46
+      },
+      {
+        "id": "F0003",
+        "start": 49,
+        "end": 71
+      },
+      {
+        "id": "F0004",
+        "start": 73,
+        "end": 88
+      },
+      {
+        "id": "F0005",
+        "start": 124,
+        "end": 155
+      },
+      {
+        "id": "F0006",
+        "start": 129,
+        "end": 138
+      },
+      {
+        "id": "F0007",
+        "start": 139,
+        "end": 155
+      },
+      {
+        "id": "F0008",
+        "start": 158,
+        "end": 176
+      },
+      {
+        "id": "F0009",
+        "start": 177,
+        "end": 195
+      },
+      {
+        "id": "F0010",
+        "start": 197,
+        "end": 224
+      },
+      {
+        "id": "F0011",
+        "start": 225,
+        "end": 243
+      }
+    ]
+  },
+  {
+    "id": "E03",
+    "kind": "focus",
+    "outcome": "needs_confirmation",
+    "error": "SECTION_MERGE",
+    "analysis_runs": 1,
+    "provider_calls": 3,
+    "elapsed_ms": 21866,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "not_applicable",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 9,
+        "end": 31
+      },
+      {
+        "id": "F0002",
+        "start": 42,
+        "end": 56
+      },
+      {
+        "id": "F0003",
+        "start": 58,
+        "end": 75
+      },
+      {
+        "id": "F0004",
+        "start": 78,
+        "end": 107
+      },
+      {
+        "id": "F0005",
+        "start": 109,
+        "end": 122
+      },
+      {
+        "id": "F0006",
+        "start": 125,
+        "end": 143
+      },
+      {
+        "id": "F0007",
+        "start": 144,
+        "end": 170
+      },
+      {
+        "id": "F0008",
+        "start": 172,
+        "end": 185
+      },
+      {
+        "id": "F0009",
+        "start": 186,
+        "end": 203
+      },
+      {
+        "id": "F0010",
+        "start": 205,
+        "end": 248
+      }
+    ]
+  },
+  {
+    "id": "E04",
+    "kind": "focus",
+    "outcome": "complete",
+    "error": null,
+    "analysis_runs": 1,
+    "provider_calls": 4,
+    "elapsed_ms": 52624,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "scored",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 7,
+        "end": 30
+      },
+      {
+        "id": "F0002",
+        "start": 32,
+        "end": 60
+      },
+      {
+        "id": "F0003",
+        "start": 61,
+        "end": 83
+      },
+      {
+        "id": "F0004",
+        "start": 85,
+        "end": 113
+      },
+      {
+        "id": "F0005",
+        "start": 114,
+        "end": 126
+      },
+      {
+        "id": "F0006",
+        "start": 128,
+        "end": 152
+      },
+      {
+        "id": "F0007",
+        "start": 153,
+        "end": 172
+      },
+      {
+        "id": "F0008",
+        "start": 174,
+        "end": 189
+      },
+      {
+        "id": "F0009",
+        "start": 190,
+        "end": 208
+      },
+      {
+        "id": "F0010",
+        "start": 210,
+        "end": 232
+      },
+      {
+        "id": "F0011",
+        "start": 233,
+        "end": 255
+      }
+    ]
+  },
+  {
+    "id": "E05",
+    "kind": "focus",
+    "outcome": "failed",
+    "error": "PROVIDER_TIMEOUT",
+    "analysis_runs": 1,
+    "provider_calls": 1,
+    "elapsed_ms": 40143,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "not_applicable",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": []
+  },
+  {
+    "id": "E06",
+    "kind": "focus",
+    "outcome": "needs_confirmation",
+    "error": "SECTION_MERGE",
+    "analysis_runs": 1,
+    "provider_calls": 3,
+    "elapsed_ms": 27534,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "not_applicable",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 7,
+        "end": 31
+      },
+      {
+        "id": "F0002",
+        "start": 33,
+        "end": 54
+      },
+      {
+        "id": "F0003",
+        "start": 55,
+        "end": 74
+      },
+      {
+        "id": "F0004",
+        "start": 76,
+        "end": 112
+      },
+      {
+        "id": "F0005",
+        "start": 114,
+        "end": 135
+      },
+      {
+        "id": "F0006",
+        "start": 121,
+        "end": 134
+      },
+      {
+        "id": "F0007",
+        "start": 136,
+        "end": 156
+      },
+      {
+        "id": "F0008",
+        "start": 136,
+        "end": 157
+      },
+      {
+        "id": "F0009",
+        "start": 159,
+        "end": 174
+      },
+      {
+        "id": "F0010",
+        "start": 176,
+        "end": 192
+      },
+      {
+        "id": "F0011",
+        "start": 195,
+        "end": 214
+      },
+      {
+        "id": "F0012",
+        "start": 216,
+        "end": 235
+      }
+    ]
+  },
+  {
+    "id": "E07",
+    "kind": "focus",
+    "outcome": "needs_confirmation",
+    "error": "PROVIDER_TIMEOUT",
+    "analysis_runs": 1,
+    "provider_calls": 6,
+    "elapsed_ms": 60074,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "not_applicable",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 10,
+        "end": 17
+      },
+      {
+        "id": "F0002",
+        "start": 19,
+        "end": 33
+      },
+      {
+        "id": "F0003",
+        "start": 48,
+        "end": 50
+      },
+      {
+        "id": "F0004",
+        "start": 54,
+        "end": 68
+      },
+      {
+        "id": "F0005",
+        "start": 83,
+        "end": 86
+      },
+      {
+        "id": "F0006",
+        "start": 88,
+        "end": 95
+      },
+      {
+        "id": "F0007",
+        "start": 102,
+        "end": 121
+      },
+      {
+        "id": "F0008",
+        "start": 124,
+        "end": 137
+      },
+      {
+        "id": "F0009",
+        "start": 139,
+        "end": 144
+      },
+      {
+        "id": "F0010",
+        "start": 159,
+        "end": 184
+      },
+      {
+        "id": "F0011",
+        "start": 185,
+        "end": 204
+      },
+      {
+        "id": "F0012",
+        "start": 206,
+        "end": 227
+      },
+      {
+        "id": "F0013",
+        "start": 228,
+        "end": 251
+      }
+    ]
+  },
+  {
+    "id": "E08",
+    "kind": "focus",
+    "outcome": "failed",
+    "error": "PROVIDER_TIMEOUT",
+    "analysis_runs": 1,
+    "provider_calls": 4,
+    "elapsed_ms": 60058,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "not_applicable",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0,
+    "candidate_spans": [
+      {
+        "id": "F0001",
+        "start": 14,
+        "end": 26
+      },
+      {
+        "id": "F0002",
+        "start": 27,
+        "end": 36
+      },
+      {
+        "id": "F0003",
+        "start": 45,
+        "end": 59
+      },
+      {
+        "id": "F0004",
+        "start": 62,
+        "end": 77
+      },
+      {
+        "id": "F0005",
+        "start": 88,
+        "end": 123
+      },
+      {
+        "id": "F0006",
+        "start": 126,
+        "end": 141
+      },
+      {
+        "id": "F0007",
+        "start": 142,
+        "end": 162
+      },
+      {
+        "id": "F0008",
+        "start": 164,
+        "end": 195
+      },
+      {
+        "id": "F0009",
+        "start": 197,
+        "end": 223
+      },
+      {
+        "id": "F0010",
+        "start": 224,
+        "end": 240
+      }
+    ]
+  }
+]

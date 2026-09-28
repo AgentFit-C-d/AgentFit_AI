@@ -1,0 +1,18 @@
+[
+  {
+    "id": "Q-001",
+    "kind": "full",
+    "outcome": "complete",
+    "error": null,
+    "analysis_runs": 1,
+    "provider_calls": 3,
+    "elapsed_ms": 8595,
+    "false_confirmations": 0,
+    "false_complete_fields": [],
+    "diagnostic_error": null,
+    "structural_evidence_errors": 0,
+    "scoring_status": "scored",
+    "review_issue_gate_applied": false,
+    "gated_potential_false_confirmations": 0
+  }
+]

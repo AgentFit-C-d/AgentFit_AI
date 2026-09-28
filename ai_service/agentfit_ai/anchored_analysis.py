@@ -43,7 +43,7 @@ Do not change quotations or add new candidates. If reviewing issues, reconsider 
 
 class AnchoredAnalyzer(SolarAnalyzer):
     """Experimental path; inherits existing diagnostics retention and deadline wrapper."""
-    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, review_examples=False, review_expression=False, repair_value_boundary=False, repair_state_grounding=False, repair_evidence_units=False, repair_effort="none", repair_occurrence_index=False, candidate_occurrences=False, selected_constraints=False, atomic_verdict=False, keyed_candidates=False, compact_review=False, review_model=None, review_api_key=None, **kwargs):
+    def __init__(self, *args, review_effort="medium", prompt_revision="v1", source_repair=False, repair_examples=False, review_examples=False, review_expression=False, repair_value_boundary=False, repair_state_grounding=False, repair_evidence_units=False, repair_effort="none", repair_occurrence_index=False, candidate_occurrences=False, selected_constraints=False, atomic_verdict=False, keyed_candidates=False, compact_review=False, review_model=None, review_api_key=None, candidate_model=None, candidate_api_key=None, candidate_transport=None, **kwargs):
         if review_effort not in ("medium", "low"):
             raise ValueError("unsupported review effort")
         if prompt_revision not in ("v1", "v2"):
@@ -97,6 +97,22 @@ class AnchoredAnalyzer(SolarAnalyzer):
             self._nvidia_reviewer = None
         self._review_model = review_model
         self._review_api_key = review_api_key
+        if (candidate_model is None) != (candidate_api_key is None):
+            raise ValueError("candidate model and key must be provided together")
+        if candidate_transport is not None and (candidate_model is None or
+                                                not callable(candidate_transport)):
+            raise ValueError("candidate transport requires a model")
+        if candidate_model is not None:
+            from .deepseek_evaluation import NVIDIA_REVIEW_MODELS, NvidiaAnalyzer, post_nvidia
+            if type(candidate_model) is not str or candidate_model not in NVIDIA_REVIEW_MODELS:
+                raise ValueError("unsupported candidate model")
+            self._nvidia_candidate = NvidiaAnalyzer(
+                candidate_api_key, model=candidate_model,
+                transport=post_nvidia if candidate_transport is None else candidate_transport)
+        else:
+            self._nvidia_candidate = None
+        self._candidate_model = candidate_model
+        self._candidate_api_key = candidate_api_key
         super().__init__(*args, **kwargs)
         self._prompt_revision = prompt_revision
         self._review_effort = review_effort
@@ -107,6 +123,11 @@ class AnchoredAnalyzer(SolarAnalyzer):
                 _reject_sensitive(document, self._review_api_key)
             if type(document_id) is str:
                 _reject_sensitive(document_id, self._review_api_key)
+        if self._candidate_api_key is not None:
+            if type(document) is str:
+                _reject_sensitive(document, self._candidate_api_key)
+            if type(document_id) is str:
+                _reject_sensitive(document_id, self._candidate_api_key)
         return super().analyze(document, document_id)
 
     def _request_review(self, document, profile, *, _trace=None, timeout=40):
@@ -162,6 +183,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
             candidate_prompt=KEYED_CANDIDATE_PROMPT
         if self._compact_review:version+="+compact-review-v1"
         if self._review_model:version+="+nvidia-review-v1"
+        if self._candidate_model:version+="+nvidia-candidate-v1"
         if self._atomic_verdict:
             from .atomic_verdict import ATOMIC_PROMPT, atomic_schema, classify_atomic
             judgment_prompt=ATOMIC_PROMPT
@@ -187,7 +209,10 @@ class AnchoredAnalyzer(SolarAnalyzer):
                              {"role":"user","content":json.dumps(content,ensure_ascii=False)}],
                              "response_format":{"type":"json_schema","json_schema":{"name":"agentfit_sections","strict":True,"schema":schema}},
                              "reasoning_effort":self._repair_effort if stage=="source_repair" else "none","frequency_penalty":0,"temperature":0,"max_tokens":4096,"stream":False}
-                    reply=self._send_payload(payload,tuple(schema["properties"]),_trace=trace,timeout=min(40,remaining))
+                    sender = (self._nvidia_candidate._send_payload
+                              if stage == "candidate_generation" and self._nvidia_candidate
+                              else self._send_payload)
+                    reply=sender(payload,tuple(schema["properties"]),_trace=trace,timeout=min(40,remaining))
                 if self._clock()>=deadline:raise AnalysisError("ANALYSIS_DEADLINE")
                 call.update(outcome="response_received",model=reply[1],prompt_tokens=reply[2],completion_tokens=reply[3])
                 replies.append(reply)

@@ -46,6 +46,7 @@ class FalseCompleteEvaluationTests(unittest.TestCase):
         self.assertEqual(row["analysis_runs"], 1)
         self.assertEqual(row["outcome"], "complete")
         self.assertEqual(row["false_confirmations"], 1)
+        self.assertEqual(row["candidate_spans"], [{"id": "F0001", "start": 6, "end": 10}])
         self.assertEqual(row["false_complete_fields"][0]["field"], "project_name")
         self.assertNotIn("Atlas Beta", json.dumps(row))
         self.assertNotIn("Beta", json.dumps(row))

@@ -93,10 +93,10 @@ class NvidiaAnalyzer:
         return reply, self._model, pt, ct
 
 
-def load_key():
-    key = os.environ.get("NVIDIA_API_KEY", "").strip()
+def load_key(env_file=None):
+    key = "" if env_file is not None else os.environ.get("NVIDIA_API_KEY", "").strip()
     if not key:
-        env = Path(__file__).resolve().parents[2] / ".env"
+        env = Path(env_file) if env_file is not None else Path(__file__).resolve().parents[2] / ".env"
         if env.exists():
             for line in env.read_text(encoding="utf-8-sig").splitlines():
                 if line.startswith("NVIDIA_API_KEY="):

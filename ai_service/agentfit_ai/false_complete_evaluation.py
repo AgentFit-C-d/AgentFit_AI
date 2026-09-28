@@ -12,6 +12,7 @@ from pathlib import Path
 from .diagnostics import safe_code
 from .false_complete_observation import ObservedRecoverableAnalyzer
 from .false_complete_scoring import diagnose_case, load_gold_evidence
+from .deepseek_evaluation import NVIDIA_REVIEW_MODELS, load_key as load_nvidia_key, post_nvidia
 from .keyed_profile_evaluation import focus_score, full_score, load_profile_cases
 from .recoverable_draft_evaluation import (
     CountingTransport, FORBIDDEN_ARTIFACT_KEYS, ROOT,
@@ -24,6 +25,7 @@ CODE_PATHS = (
     "ai_service/agentfit_ai/anchored_analysis.py",
     "ai_service/agentfit_ai/recoverable_analysis.py",
     "ai_service/agentfit_ai/diagnostics.py",
+    "ai_service/agentfit_ai/deepseek_evaluation.py",
     "ai_service/agentfit_ai/false_complete_observation.py",
     "ai_service/agentfit_ai/false_complete_scoring.py",
     "ai_service/agentfit_ai/false_complete_evaluation.py",
@@ -55,7 +57,10 @@ def run_case(case: dict, key: str, *, provider=post_solar,
            "false_complete_fields": [], "diagnostic_error": None,
            "structural_evidence_errors": 0, "scoring_status": "not_applicable",
            "review_issue_gate_applied": review_gate,
-           "gated_potential_false_confirmations": 0}
+           "gated_potential_false_confirmations": 0,
+           "candidate_spans": [
+               {"id": item["id"], "start": item["start"], "end": item["end"]}
+               for item in observation["candidates"]]}
     if outcome == "failed":
         return row
     profile = result["profile"]
@@ -157,6 +162,8 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--env-file", type=Path)
     parser.add_argument("--require-issue-free-review", action="store_true")
+    parser.add_argument("--candidate-model", choices=NVIDIA_REVIEW_MODELS)
+    parser.add_argument("--case-id", action="append")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live required")
@@ -164,29 +171,45 @@ def main():
     if len(cases) != 20:
         raise ValueError("expected 20 frozen synthetic cases")
     _canonical_evidence()
+    if args.case_id:
+        selected = set(args.case_id)
+        if len(selected) != len(args.case_id) or not selected <= {case["id"] for case in cases}:
+            raise ValueError("invalid case id selection")
+        cases = [case for case in cases if case["id"] in selected]
     key = load_key(args.env_file)
-    forbidden = [key, *(case["document"] for case in cases)]
+    candidate_key = load_nvidia_key(args.env_file) if args.candidate_model else None
+    forbidden = [key, candidate_key, *(case["document"] for case in cases)]
     args.output.mkdir(parents=True, exist_ok=False)
     plan = {"model": "solar-pro4", "options": options(), "cases": len(cases),
             "require_issue_free_review": args.require_issue_free_review,
+            "candidate_model": args.candidate_model,
+            "selected_case_ids": [case["id"] for case in cases],
             "dataset_sha256": dataset_hashes, "held_out": False,
             "one_analysis_per_case": True,
             "code_sha256": {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
                             for path in CODE_PATHS}}
     write_safe_json(args.output / "plan.json", plan, forbidden_strings=forbidden)
     rows = []
+    def provider(payload, api_key, timeout):
+        if args.candidate_model and payload.get("model") == args.candidate_model:
+            return post_nvidia(payload, api_key, timeout)
+        return post_solar(payload, api_key, timeout)
     def analyzer_factory(key, **kwargs):
+        transport = kwargs["transport"]
         return ObservedRecoverableAnalyzer(
-            key, require_issue_free_review=args.require_issue_free_review, **kwargs)
+            key, require_issue_free_review=args.require_issue_free_review,
+            candidate_model=args.candidate_model, candidate_api_key=candidate_key,
+            candidate_transport=transport if args.candidate_model else None,
+            **kwargs)
     for case in cases:
-        row = run_case(case, key, analyzer_factory=analyzer_factory)
+        row = run_case(case, key, provider=provider, analyzer_factory=analyzer_factory)
         rows.append(row)
         write_safe_json(args.output / "results.json", rows, forbidden_strings=forbidden)
         print(json.dumps({"id": row["id"], "outcome": row["outcome"],
                           "error": row["error"], "elapsed_ms": row["elapsed_ms"],
                           "provider_calls": row["provider_calls"],
                           "false_confirmations": row["false_confirmations"]}), flush=True)
-    summary = aggregate(rows)
+    summary = aggregate(rows, planned=len(cases))
     write_safe_json(args.output / "summary.json", summary, forbidden_strings=forbidden)
     return 0 if summary["passed"] else 1
 

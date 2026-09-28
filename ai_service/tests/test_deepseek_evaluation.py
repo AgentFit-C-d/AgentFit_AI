@@ -1,13 +1,22 @@
 import copy
 import json
+import tempfile
 import unittest
-from unittest.mock import Mock
+from pathlib import Path
+from unittest.mock import Mock, patch
 
-from agentfit_ai.deepseek_evaluation import NvidiaAnalyzer, nvidia_payload
+from agentfit_ai.deepseek_evaluation import NvidiaAnalyzer, load_key, nvidia_payload
 from agentfit_ai.solar import AnalysisError
 
 
 class DeepseekEvaluationTests(unittest.TestCase):
+    def test_explicit_env_file_supplies_nvidia_key_without_logging_it(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / ".env"
+            path.write_text("NVIDIA_API_KEY=fixture-key\n", encoding="utf-8")
+            with patch.dict("os.environ", {"NVIDIA_API_KEY": "different-key"}):
+                self.assertEqual(load_key(path), "fixture-key")
+
     def setUp(self):
         self.source = {
             "model": "solar-pro4", "reasoning_effort": "none",
