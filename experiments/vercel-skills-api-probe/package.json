@@ -1,0 +1,11 @@
+{
+  "name": "agentfit-skills-api-probe",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "@vercel/oidc": "^3.8.7"
+  }
+}
