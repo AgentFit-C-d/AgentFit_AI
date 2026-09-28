@@ -74,6 +74,28 @@ class FalseCompleteEvaluationTests(unittest.TestCase):
         self.assertEqual(row["false_confirmations"], 0)
         self.assertEqual(row["false_complete_fields"], [])
 
+    def test_review_issue_confirmation_counts_prevented_wrong_value(self):
+        case = {"id": "T01", "kind": "full", "document": "Atlas Beta",
+                "gold": {"project_name": "Atlas"}}
+        wrong = named_profile(case["document"], "Beta", 6)
+
+        class FakeAnalyzer:
+            def __init__(self, key, *, transport, **kwargs):
+                pass
+
+            def analyze_observed(self, document, document_id):
+                return ({"outcome": "needs_confirmation", "profile": wrong,
+                         "error": "REVIEW_CONFIRMATION_REQUIRED"},
+                        {"candidates": [], "profiles": [], "reviews": []})
+
+        row = run_case(case, "test-key", analyzer_factory=FakeAnalyzer)
+        self.assertEqual(row["false_confirmations"], 0)
+        self.assertTrue(row["review_issue_gate_applied"])
+        self.assertEqual(row["gated_potential_false_confirmations"], 1)
+        summary = aggregate([row], planned=1)
+        self.assertEqual(summary["review_issue_confirmations"], 1)
+        self.assertEqual(summary["gated_potential_false_confirmations"], 1)
+
     def test_invalid_complete_profile_is_unscored_not_zero_false_confirmations(self):
         case = {"id": "T01", "kind": "full", "document": "Atlas Beta",
                 "gold": {"project_name": "Atlas"}}

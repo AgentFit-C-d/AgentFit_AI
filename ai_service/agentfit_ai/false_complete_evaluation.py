@@ -23,6 +23,7 @@ from .solar import post_solar
 CODE_PATHS = (
     "ai_service/agentfit_ai/anchored_analysis.py",
     "ai_service/agentfit_ai/recoverable_analysis.py",
+    "ai_service/agentfit_ai/diagnostics.py",
     "ai_service/agentfit_ai/false_complete_observation.py",
     "ai_service/agentfit_ai/false_complete_scoring.py",
     "ai_service/agentfit_ai/false_complete_evaluation.py",
@@ -45,12 +46,16 @@ def run_case(case: dict, key: str, *, provider=post_solar,
     result, observation = analyzer.analyze_observed(case["document"], case["id"])
     elapsed_ms = round((clock() - started) * 1000)
     outcome = result["outcome"]
+    review_gate = (outcome == "needs_confirmation" and
+                   result.get("error") == "REVIEW_CONFIRMATION_REQUIRED")
     row = {"id": case["id"], "kind": case["kind"], "outcome": outcome,
            "error": safe_code(result.get("error")) if result.get("error") else None,
            "analysis_runs": 1, "provider_calls": transport.calls,
            "elapsed_ms": elapsed_ms, "false_confirmations": 0,
            "false_complete_fields": [], "diagnostic_error": None,
-           "structural_evidence_errors": 0, "scoring_status": "not_applicable"}
+           "structural_evidence_errors": 0, "scoring_status": "not_applicable",
+           "review_issue_gate_applied": review_gate,
+           "gated_potential_false_confirmations": 0}
     if outcome == "failed":
         return row
     profile = result["profile"]
@@ -60,11 +65,15 @@ def run_case(case: dict, key: str, *, provider=post_solar,
         if outcome == "complete":
             row["false_confirmations"] = None
             row["scoring_status"] = "unscored_invalid_profile"
+        if review_gate:
+            row["gated_potential_false_confirmations"] = None
         return row
     score = (full_score(profile, case["gold"]) if case["kind"] == "full"
              else focus_score(case, profile))
     row["false_confirmations"] = (score["false_confirmations"]
                                   if outcome == "complete" else 0)
+    if review_gate:
+        row["gated_potential_false_confirmations"] = score["false_confirmations"]
     if outcome == "complete":
         row["scoring_status"] = "scored"
     if row["false_confirmations"]:
@@ -108,6 +117,10 @@ def aggregate(rows: list[dict], *, planned: int = 20) -> dict:
             "unscored_complete_cases": sum(
                 row["outcome"] == "complete" and row.get("scoring_status") ==
                 "unscored_invalid_profile" for row in rows),
+            "review_issue_confirmations": sum(
+                row.get("review_issue_gate_applied", False) for row in rows),
+            "gated_potential_false_confirmations": sum(
+                row.get("gated_potential_false_confirmations") or 0 for row in rows),
             "first_observed_divergence": dict(stages),
             "review_detected": dict(reviews),
             "undetermined": stages["undetermined"],
@@ -116,7 +129,7 @@ def aggregate(rows: list[dict], *, planned: int = 20) -> dict:
             "median_elapsed_ms": statistics.median(elapsed) if elapsed else None,
             "p95_elapsed_ms": elapsed[(95 * len(elapsed) + 99) // 100 - 1] if elapsed else None,
             "gate": gate, "passed": bool(rows) and all(gate.values()),
-            "scoring_note": "Wrong auto confirmations count full mismatched fields or focus forbidden-word hits among scored complete cases; stage counts are unique fields and may differ. Unscored complete cases are excluded from the count. Semantic evidence remains unverified. Stage labels are observations, not causes."}
+            "scoring_note": "Wrong auto confirmations count full mismatched fields or focus forbidden-word hits among scored complete cases; stage counts are unique fields and may differ. Gated potential false confirmations are value errors in downgraded profiles, not automatic confirmations. Unscored profiles are excluded. Semantic evidence remains unverified. Stage labels are observations, not causes."}
 
 
 def write_safe_json(path: Path, value, *, forbidden_strings=()):
@@ -143,6 +156,7 @@ def main():
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--env-file", type=Path)
+    parser.add_argument("--require-issue-free-review", action="store_true")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live required")
@@ -154,14 +168,18 @@ def main():
     forbidden = [key, *(case["document"] for case in cases)]
     args.output.mkdir(parents=True, exist_ok=False)
     plan = {"model": "solar-pro4", "options": options(), "cases": len(cases),
+            "require_issue_free_review": args.require_issue_free_review,
             "dataset_sha256": dataset_hashes, "held_out": False,
             "one_analysis_per_case": True,
             "code_sha256": {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
                             for path in CODE_PATHS}}
     write_safe_json(args.output / "plan.json", plan, forbidden_strings=forbidden)
     rows = []
+    def analyzer_factory(key, **kwargs):
+        return ObservedRecoverableAnalyzer(
+            key, require_issue_free_review=args.require_issue_free_review, **kwargs)
     for case in cases:
-        row = run_case(case, key)
+        row = run_case(case, key, analyzer_factory=analyzer_factory)
         rows.append(row)
         write_safe_json(args.output / "results.json", rows, forbidden_strings=forbidden)
         print(json.dumps({"id": row["id"], "outcome": row["outcome"],

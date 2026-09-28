@@ -29,6 +29,56 @@ class RecoverableAnalysisTests(unittest.TestCase):
         self.assertEqual(result["profile"]["data"]["project_name"], "Alpha")
         self.assertEqual(transport.call_count, 3)
 
+    def test_review_issue_success_requires_confirmation_when_opted_in(self):
+        first = {"F0001": chosen("project_name"),
+                 "F0002": chosen("features", "user_action")}
+        repaired = {"F0001": chosen("project_name"),
+                    "F0002": {"decision": "irrelevant"}}
+        replies = [candidates("Alpha", "checkout"), {"decisions": first},
+                   verdict([issue("overbroad")]), {"decisions": repaired},
+                   verdict()]
+        transport = Mock(side_effect=[response(item) for item in replies])
+        analyzer = RecoverableAnchoredAnalyzer(
+            "synthetic-key", transport=transport, require_issue_free_review=True)
+        result = analyzer.analyze_recoverable("Alpha checkout", "doc")
+        self.assertEqual(result["outcome"], "needs_confirmation")
+        self.assertEqual(result["profile"]["data"]["project_name"], "Alpha")
+        self.assertEqual(result["fieldStates"]["project_name"], "suggested")
+        self.assertEqual(result["fieldStates"]["features"], "unknown")
+        self.assertEqual(result["questions"], [])
+        self.assertEqual(result["error"], "REVIEW_CONFIRMATION_REQUIRED")
+        self.assertEqual(transport.call_count, 5)
+
+    def test_default_still_completes_after_resolved_review_issue(self):
+        first = {"F0001": chosen("project_name"),
+                 "F0002": chosen("features", "user_action")}
+        repaired = {"F0001": chosen("project_name"),
+                    "F0002": {"decision": "irrelevant"}}
+        analyzer, _ = self.analyzer([
+            candidates("Alpha", "checkout"), {"decisions": first},
+            verdict([issue("overbroad")]), {"decisions": repaired},
+            verdict()])
+        self.assertEqual(analyzer.analyze_recoverable("Alpha checkout", "doc")["outcome"],
+                         "complete")
+
+    def test_review_issue_gate_state_does_not_leak_to_next_call(self):
+        first = {"F0001": chosen("project_name"),
+                 "F0002": chosen("features", "user_action")}
+        repaired = {"F0001": chosen("project_name"),
+                    "F0002": {"decision": "irrelevant"}}
+        replies = [candidates("Alpha", "checkout"), {"decisions": first},
+                   verdict([issue("overbroad")]), {"decisions": repaired},
+                   verdict(), candidates("Beta"),
+                   {"decisions": {"F0001": chosen("project_name")}}, verdict()]
+        transport = Mock(side_effect=[response(item) for item in replies])
+        analyzer = RecoverableAnchoredAnalyzer(
+            "synthetic-key", transport=transport, require_issue_free_review=True)
+        self.assertEqual(analyzer.analyze_recoverable("Alpha checkout", "first")["outcome"],
+                         "needs_confirmation")
+        self.assertEqual(analyzer.analyze_recoverable("Beta", "second")["outcome"],
+                         "complete")
+        self.assertEqual(transport.call_count, 8)
+
     def test_candidate_failure_has_no_reusable_draft(self):
         analyzer, transport = self.analyzer([candidates("missing")])
         result = analyzer.analyze_recoverable("Alpha", "doc")

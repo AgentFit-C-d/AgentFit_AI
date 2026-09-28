@@ -13,8 +13,11 @@ from .solar import AnalysisError
 class RecoverableAnchoredAnalyzer(AnchoredAnalyzer):
     """Keep only verified snapshots for the duration of one optional call."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, require_issue_free_review: bool = False, **kwargs):
+        if type(require_issue_free_review) is not bool:
+            raise ValueError("require_issue_free_review must be bool")
         super().__init__(*args, **kwargs)
+        self._require_issue_free_review = require_issue_free_review
         self._draft_context = ContextVar("recoverable_anchored_snapshot", default=None)
 
     def _observe_judgment_failure(self, reply, pool, document, document_id, error):
@@ -33,10 +36,11 @@ class RecoverableAnchoredAnalyzer(AnchoredAnalyzer):
         if snapshot is not None:
             snapshot["review_complete"] = True
             snapshot["issues"].update(issue["field"] for issue in issues)
+            snapshot["had_review_issues"] |= bool(issues)
 
     def analyze_recoverable(self, document: str, document_id: str) -> dict:
         snapshot = {"profile": None, "judgment": None, "issues": set(),
-                    "review_complete": False}
+                    "review_complete": False, "had_review_issues": False}
         token = self._draft_context.set(snapshot)
         try:
             try:
@@ -60,6 +64,10 @@ class RecoverableAnchoredAnalyzer(AnchoredAnalyzer):
                 if not any(state == "suggested" for state in draft["fieldStates"].values()):
                     return {"outcome": "failed", "error": safe_code(error.code)}
                 return draft
+            if self._require_issue_free_review and snapshot["had_review_issues"]:
+                return project_draft(document, document_id, result.profile,
+                                     unresolved={}, review_complete=True,
+                                     error_code="REVIEW_CONFIRMATION_REQUIRED")
             return {"outcome": "complete", "profile": result.profile}
         finally:
             self._draft_context.reset(token)
