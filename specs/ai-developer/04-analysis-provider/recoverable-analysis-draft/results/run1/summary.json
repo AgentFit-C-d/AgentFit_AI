@@ -1,0 +1,25 @@
+{
+  "planned_cases": 20,
+  "evaluated_cases": 20,
+  "complete_cases": 5,
+  "needs_confirmation_cases": 13,
+  "failed_cases": 2,
+  "prior_failure_cases": 15,
+  "correct_suggestions_from_prior_failures": 15,
+  "wrong_suggestions_from_prior_failures": 2,
+  "questions": 97,
+  "wrong_auto_confirmations": 1,
+  "max_provider_calls": 6,
+  "median_elapsed_ms": 16234.5,
+  "p95_elapsed_ms": 60047,
+  "gate": {
+    "all_cases_accounted": true,
+    "one_analysis_per_case": true,
+    "six_call_limit": true,
+    "observed_60s_limit": false,
+    "zero_wrong_auto_confirmations": false,
+    "zero_structural_evidence_errors": true
+  },
+  "passed": false,
+  "scoring_note": "Full cases count matched proposed fields; focus cases count matched target items and forbidden confirmations. Other focus fields are not graded."
+}
