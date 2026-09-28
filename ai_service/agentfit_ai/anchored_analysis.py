@@ -126,6 +126,15 @@ class AnchoredAnalyzer(SolarAnalyzer):
                                        prompt=prompt+(REVIEW_EXAMPLES if self._review_examples else ""),
                                        sender=sender)
 
+    def _observe_judgment_failure(self, reply, pool, document, document_id, error):
+        pass
+
+    def _observe_profile(self, stage, profile):
+        pass
+
+    def _observe_review_issues(self, stage, issues):
+        pass
+
     def _analyze(self,document,document_id,diagnostic,raw_responses,deadline):
         started=self._clock()
         version="anchored-"+self._prompt_revision+("+source-repair-v1" if self._source_repair else "")
@@ -224,12 +233,17 @@ class AnchoredAnalyzer(SolarAnalyzer):
         schema=atomic_schema(pool) if self._atomic_verdict else judgment_schema(pool,selected_constraints=self._selected_constraints)
         classify_reply=classify_atomic if self._atomic_verdict else classify
         def merge(value):
-            return value,classify_reply(value,pool,document,document_id)
+            try:profile=classify_reply(value,pool,document,document_id)
+            except AnalysisError as error:
+                self._observe_judgment_failure(value,pool,document,document_id,error)
+                raise
+            return value,profile
         if not pool:
             previous={"decisions":{}}
             profile=classify_reply(previous,pool,document,document_id)
         else:
             previous,profile=request("judgment",judgment_prompt,judgment_content,schema,merge)
+        self._observe_profile("judgment",profile)
         def review(profile,stage):
             def check(value):
                 try:
@@ -240,6 +254,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
                     failure.review_detail={"reason":error.reason}
                     raise failure from None
             issues=request(stage,validator=check,profile=profile)
+            self._observe_review_issues(stage,issues)
             if issues:
                 diagnostic["calls"][-1].update(outcome="semantic_failed",semantic_issues=[{"field":x["field"],"kind":x["kind"]} for x in issues])
                 for call in reversed(diagnostic["calls"][:-1]):
@@ -275,11 +290,13 @@ class AnchoredAnalyzer(SolarAnalyzer):
                 if self._repair_occurrence_index:repair_prompt=occurrence_prompt(repair_prompt)
                 profile=request("source_repair",repair_prompt,content,repair_schema(repaired,repair_sections,occurrence_index=self._repair_occurrence_index),
                     lambda value:apply_repairs(document,document_id,profile,repair_sections,repaired,value,occurrence_index=self._repair_occurrence_index))
+                self._observe_profile("source_repair",profile)
             else:
                 if not pool:raise AnalysisError("SEMANTIC_REJECTED")
                 repaired=tuple(FIELDS)
                 previous,profile=request("semantic_repair",judgment_prompt,
                     {**judgment_content,"previous":previous,"issues":issues},schema,merge)
+                self._observe_profile("semantic_repair",profile)
             if any(fingerprint(field)==value for field,value in before.items()):
                 diagnostic["calls"][-1].update(outcome="semantic_failed",error="ANCHORED_MISSING_CANDIDATE")
                 raise AnalysisError("ANCHORED_MISSING_CANDIDATE")
