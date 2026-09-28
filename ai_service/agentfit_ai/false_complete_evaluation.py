@@ -86,22 +86,17 @@ def run_case(case: dict, key: str, *, provider=post_solar,
     if row["false_confirmations"]:
         if not diagnose_stages:
             row["diagnostic_error"] = "SUBSPAN_STAGE_UNSUPPORTED"
+        try:
+            row["false_complete_fields"] = diagnose_case(
+                case, result, observation, _canonical_evidence(),
+                classify_stages=diagnose_stages)
+        except (KeyError, TypeError, ValueError, IndexError):
+            row["diagnostic_error"] = "DIAGNOSTIC_UNDETERMINED"
             row["false_complete_fields"] = [{
                 "field": None, "first_observed_divergence": "undetermined",
                 "review_detected": None, "candidate_ids": [],
                 "candidate_spans": [], "gold_spans": [], "evidence_spans": [],
             }]
-        else:
-            try:
-                row["false_complete_fields"] = diagnose_case(
-                    case, result, observation, _canonical_evidence())
-            except (KeyError, TypeError, ValueError, IndexError):
-                row["diagnostic_error"] = "DIAGNOSTIC_UNDETERMINED"
-                row["false_complete_fields"] = [{
-                    "field": None, "first_observed_divergence": "undetermined",
-                    "review_detected": None, "candidate_ids": [],
-                    "candidate_spans": [], "gold_spans": [], "evidence_spans": [],
-                }]
     return row
 
 
@@ -117,6 +112,7 @@ def aggregate(rows: list[dict], *, planned: int = 20) -> dict:
         "one_analysis_per_case": all(row["analysis_runs"] == 1 for row in rows),
         "six_call_limit": all(row["provider_calls"] <= 6 for row in rows),
         "observed_60s_limit": all(row["elapsed_ms"] <= 60000 for row in rows),
+        "zero_failed_cases": outcomes["failed"] == 0,
         "zero_wrong_auto_confirmations": all(
             row["outcome"] != "complete" or
             (row.get("scoring_status", "scored") == "scored" and
@@ -144,7 +140,7 @@ def aggregate(rows: list[dict], *, planned: int = 20) -> dict:
             "median_elapsed_ms": statistics.median(elapsed) if elapsed else None,
             "p95_elapsed_ms": elapsed[(95 * len(elapsed) + 99) // 100 - 1] if elapsed else None,
             "gate": gate, "passed": bool(rows) and all(gate.values()),
-            "scoring_note": "Wrong auto confirmations count full mismatched fields or focus forbidden-word hits among scored complete cases; stage counts are unique fields and may differ. Gated potential false confirmations are value errors in downgraded profiles, not automatic confirmations. Unscored profiles are excluded. Semantic evidence remains unverified. Stage labels are observations, not causes."}
+            "scoring_note": "Passed means these synthetic evaluation gates hold, including zero failed analyses; it does not establish production readiness. Wrong auto confirmations count full mismatched fields or focus forbidden-word hits among scored complete cases; stage counts are unique fields and may differ. Gated potential false confirmations are value errors in downgraded profiles, not automatic confirmations. Unscored profiles are excluded. Semantic evidence remains unverified. Stage labels are observations, not causes."}
 
 
 def write_safe_json(path: Path, value, *, forbidden_strings=()):

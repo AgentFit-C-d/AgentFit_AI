@@ -139,6 +139,47 @@ class FalseCompleteEvaluationTests(unittest.TestCase):
         self.assertEqual(row["diagnostic_error"], "SUBSPAN_STAGE_UNSUPPORTED")
         self.assertEqual(row["false_complete_fields"][0]["first_observed_divergence"],
                          "undetermined")
+        self.assertEqual(row["false_complete_fields"][0]["field"], "project_name")
+        self.assertEqual(row["false_complete_fields"][0]["candidate_spans"],
+                         [{"id": "F0001", "start": 0, "end": 10}])
+        self.assertEqual(row["false_complete_fields"][0]["evidence_spans"],
+                         [{"start": 6, "end": 10}])
+
+    def test_failed_case_blocks_pass_even_when_other_limits_hold(self):
+        row = {"outcome": "failed", "analysis_runs": 1, "provider_calls": 1,
+               "elapsed_ms": 100, "false_confirmations": 0,
+               "false_complete_fields": []}
+        summary = aggregate([row], planned=1)
+        self.assertEqual(summary["failed_cases"], 1)
+        self.assertFalse(summary["gate"]["zero_failed_cases"])
+        self.assertFalse(summary["passed"])
+
+    def test_subspan_mode_keeps_each_false_field(self):
+        document = "Atlas Beta Web Mobile"
+        data = dict.fromkeys(FIELDS)
+        data.update(project_name="Beta", project_type="Mobile")
+        evidence = {field: [] for field in FIELDS}
+        evidence["project_name"] = [{"start": 6, "end": 10}]
+        evidence["project_type"] = [{"start": 15, "end": 21}]
+        wrong = validate_profile(document, "T01", {"data": data, "evidence": evidence})
+        case = {"id": "T01", "kind": "full", "document": document,
+                "gold": {"project_name": "Atlas", "project_type": "Web"}}
+
+        class FakeAnalyzer:
+            def __init__(self, key, *, transport, **kwargs):
+                pass
+
+            def analyze_observed(self, document, document_id):
+                return ({"outcome": "complete", "profile": wrong},
+                        {"candidates": [], "profiles": [], "reviews": []})
+
+        row = run_case(case, "test-key", analyzer_factory=FakeAnalyzer,
+                       diagnose_stages=False)
+        self.assertEqual(row["false_confirmations"], 2)
+        self.assertEqual({item["field"] for item in row["false_complete_fields"]},
+                         {"project_name", "project_type"})
+        self.assertEqual({item["first_observed_divergence"]
+                          for item in row["false_complete_fields"]}, {"undetermined"})
 
     def test_fixed_denominator_and_limits(self):
         self.assertIsNotNone(aggregate)

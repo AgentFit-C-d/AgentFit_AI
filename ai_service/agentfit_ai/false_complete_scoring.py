@@ -96,7 +96,7 @@ def _candidate_capacity_covers(spans, candidates):
 
 
 def diagnose_case(case: dict, result: dict, observation: dict,
-                  gold_evidence: dict) -> list[dict]:
+                  gold_evidence: dict, *, classify_stages: bool = True) -> list[dict]:
     if result.get("outcome") != "complete":
         return []
     profile = result["profile"]
@@ -107,7 +107,7 @@ def diagnose_case(case: dict, result: dict, observation: dict,
     for field, forbidden in _false_fields(case, profile):
         category = "undetermined"
         review_stage = None
-        if field is not None and "judgment" in stages:
+        if classify_stages and field is not None and "judgment" in stages:
             initial_correct = _field_correct(case, stages["judgment"], field, forbidden)
             if initial_correct:
                 if any(stage in stages for stage in ("semantic_repair", "source_repair")):
