@@ -1,0 +1,28 @@
+{
+  "model": "solar-pro4",
+  "options": {
+    "model": "solar-pro4",
+    "prompt_revision": "v2",
+    "candidate_occurrences": true,
+    "keyed_candidates": true,
+    "review_effort": "medium",
+    "compact_review": true,
+    "analysis_timeout_seconds": 60
+  },
+  "cases": 20,
+  "dataset_sha256": [
+    "3fc74b4f1773e1fa91b22d5dbb5420774d5c0936f6d42ceb6cd00b030bcb5566",
+    "e98d5b10c92ead4cf6121dd3af991a58a7a75285d9f0f291a4632e0da26bff39",
+    "8ca9114b0bb04f7a8ba2f2cf8ac787e66eb170ec5e82b926c2215bbe8f33842a"
+  ],
+  "held_out": false,
+  "one_analysis_per_case": true,
+  "code_sha256": {
+    "ai_service/agentfit_ai/anchored_analysis.py": "a371b86e189549aa7264ef9eb6dedcf6c6972ee0b6cb1d7a7d91e8961fc835bd",
+    "ai_service/agentfit_ai/recoverable_analysis.py": "3de0ce1055f78e96d28f7c2de19aacdd217f029610e4e25fa67023000fa90e78",
+    "ai_service/agentfit_ai/false_complete_observation.py": "5bdef100767232362eaca7fb18ab31ad17ddcc218c5adbf168613bfd10083155",
+    "ai_service/agentfit_ai/false_complete_scoring.py": "6df3a0911752c5cf419f5624fe684cce0e95a3c72e15e7cd3b464e3ede80979c",
+    "ai_service/agentfit_ai/false_complete_evaluation.py": "e4c96d37a3c94bedfc58ba435a337f3263929d2fe9f7654f42426a389f080060",
+    "specs/ai-developer/04-analysis-provider/false-complete-diagnostics/gold-evidence.json": "4dfbdf0b20d783ba18e56c857e0363acf065a597d6e11bc8973b862d24ea64c7"
+  }
+}
