@@ -68,6 +68,8 @@ def run_case(case, key, *, provider=post_solar,
            "questions": len(result.get("questions", [])),
            "unresolved_fields": sum(state == "unresolved" for state in
                                     result.get("fieldStates", {}).values()),
+           "suggested_fields": 0, "unassessed_suggested_fields": 0,
+           "semantic_evidence_unassessed": 0,
            "correct_suggestions": 0, "wrong_suggestions": 0,
            "false_confirmations": 0, "structural_evidence_errors": 0}
     if outcome == "failed":
@@ -78,12 +80,17 @@ def run_case(case, key, *, provider=post_solar,
     if row["structural_evidence_errors"]:
         return row
     suggested = {field for field in FIELDS if profile["data"][field] is not None}
+    row["suggested_fields"] = len(suggested)
+    # Full references grade all field values, but do not provide independently
+    # adjudicated evidence spans. Focus references only grade listed targets.
+    row["semantic_evidence_unassessed"] = len(suggested)
     if case["kind"] == "full":
         score = full_score(profile, case["gold"])
         wrong = set(score["mismatch_fields"]) & suggested
         row["correct_suggestions"] = len(suggested - wrong)
         row["wrong_suggestions"] = len(wrong)
     else:
+        row["unassessed_suggested_fields"] = len(suggested)
         score = focus_score(case, profile)
         row["correct_suggestions"] = score["matched"]
         row["wrong_suggestions"] = score["false_confirmations"]
@@ -98,6 +105,25 @@ def aggregate(rows, *, planned=20):
     outcomes = Counter(row["outcome"] for row in rows)
     prior_failures = [row for row in rows if row["outcome"] != "complete"]
     elapsed = sorted(row["elapsed_ms"] for row in rows)
+    def total(subset, key):
+        return sum(row[key] for row in subset)
+    def by_kind(subset, kind):
+        return [row for row in subset if row["kind"] == kind]
+    failure_types = {}
+    for code in sorted({row.get("error") or "ANALYSIS_FAILURE" for row in prior_failures}):
+        subset = [row for row in prior_failures if (row.get("error") or "ANALYSIS_FAILURE") == code]
+        failure_types[code] = {
+            "cases": len(subset),
+            "needs_confirmation": sum(row["outcome"] == "needs_confirmation" for row in subset),
+            "failed": sum(row["outcome"] == "failed" for row in subset),
+            "suggested_fields": total(subset, "suggested_fields"),
+            "full_correct_fields": total(by_kind(subset, "full"), "correct_suggestions"),
+            "full_wrong_fields": total(by_kind(subset, "full"), "wrong_suggestions"),
+            "focus_matched_targets": total(by_kind(subset, "focus"), "correct_suggestions"),
+            "focus_forbidden_hits": total(by_kind(subset, "focus"), "wrong_suggestions"),
+            "unassessed_suggested_fields": total(subset, "unassessed_suggested_fields"),
+            "questions": total(subset, "questions"),
+        }
     gate = {
         "all_cases_accounted": len(rows) == planned,
         "one_analysis_per_case": all(row["analysis_runs"] == 1 for row in rows),
@@ -107,6 +133,10 @@ def aggregate(rows, *, planned=20):
             row["false_confirmations"] == 0 for row in rows),
         "zero_structural_evidence_errors": all(
             row["structural_evidence_errors"] == 0 for row in rows),
+        "all_suggestions_semantically_assessed": all(
+            row["unassessed_suggested_fields"] == 0 for row in rows),
+        "semantic_evidence_zero_errors_verified": all(
+            row["semantic_evidence_unassessed"] == 0 for row in rows),
     }
     return {
         "planned_cases": planned, "evaluated_cases": len(rows),
@@ -114,17 +144,25 @@ def aggregate(rows, *, planned=20):
         "needs_confirmation_cases": outcomes["needs_confirmation"],
         "failed_cases": outcomes["failed"],
         "prior_failure_cases": len(prior_failures),
-        "correct_suggestions_from_prior_failures": sum(
-            row["correct_suggestions"] for row in prior_failures),
-        "wrong_suggestions_from_prior_failures": sum(
-            row["wrong_suggestions"] for row in prior_failures),
+        "suggested_fields_from_prior_failures": total(prior_failures, "suggested_fields"),
+        "full_correct_fields_from_prior_failures": total(
+            by_kind(prior_failures, "full"), "correct_suggestions"),
+        "full_wrong_fields_from_prior_failures": total(
+            by_kind(prior_failures, "full"), "wrong_suggestions"),
+        "focus_matched_targets_from_prior_failures": total(
+            by_kind(prior_failures, "focus"), "correct_suggestions"),
+        "focus_forbidden_hits_from_prior_failures": total(
+            by_kind(prior_failures, "focus"), "wrong_suggestions"),
+        "unassessed_suggested_fields": total(rows, "unassessed_suggested_fields"),
+        "semantic_evidence_unassessed": total(rows, "semantic_evidence_unassessed"),
         "questions": sum(row["questions"] for row in rows),
         "wrong_auto_confirmations": sum(row["false_confirmations"] for row in rows),
         "max_provider_calls": max((row["provider_calls"] for row in rows), default=0),
         "median_elapsed_ms": statistics.median(elapsed) if elapsed else None,
         "p95_elapsed_ms": elapsed[(95 * len(elapsed) + 99) // 100 - 1] if elapsed else None,
+        "failure_types": failure_types,
         "gate": gate, "passed": bool(rows) and all(gate.values()),
-        "scoring_note": "Full cases count matched proposed fields; focus cases count matched target items and forbidden confirmations. Other focus fields are not graded.",
+        "scoring_note": "Full cases grade all field values; focus cases grade only listed target spans and forbidden strings. Focus suggestions outside that scope and semantic evidence in all cases remain unverified.",
     }
 
 

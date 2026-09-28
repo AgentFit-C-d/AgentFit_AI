@@ -50,12 +50,16 @@ class RecoverableAnchoredAnalyzer(AnchoredAnalyzer):
                     profile, judgment_issues = salvage_judgment(
                         document, document_id, pool, reply)
                     unresolved.update(judgment_issues)
-                if profile is None:
+                if profile is None or not any(
+                        profile["data"][field] is not None for field in FIELDS):
                     return {"outcome": "failed", "error": safe_code(error.code)}
-                return project_draft(document, document_id, profile,
-                                     unresolved=unresolved,
-                                     review_complete=snapshot["review_complete"],
-                                     error_code=error.code)
+                draft = project_draft(document, document_id, profile,
+                                      unresolved=unresolved,
+                                      review_complete=snapshot["review_complete"],
+                                      error_code=error.code)
+                if not any(state == "suggested" for state in draft["fieldStates"].values()):
+                    return {"outcome": "failed", "error": safe_code(error.code)}
+                return draft
             return {"outcome": "complete", "profile": result.profile}
         finally:
             self._draft_context.reset(token)

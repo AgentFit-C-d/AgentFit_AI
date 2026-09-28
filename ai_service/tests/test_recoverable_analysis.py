@@ -36,6 +36,13 @@ class RecoverableAnalysisTests(unittest.TestCase):
         self.assertNotIn("profile", result)
         self.assertEqual(transport.call_count, 1)
 
+    def test_all_unknown_profile_is_not_a_recoverable_draft(self):
+        analyzer, transport = self.analyzer([candidates(),
+            {"checkedFields": [], "issues": []}])
+        result = analyzer.analyze_recoverable("Alpha", "doc")
+        self.assertEqual(result, {"outcome": "failed", "error": "SEMANTIC_REVIEW_INVALID"})
+        self.assertEqual(transport.call_count, 2)
+
     def test_judgment_failure_keeps_only_valid_independent_field(self):
         judgment = {"decisions": {"F0001": chosen("project_name"),
                                   "F0002": chosen("ai", "operating_model", "tentative")}}
@@ -73,6 +80,16 @@ class RecoverableAnalysisTests(unittest.TestCase):
         self.assertIsNone(result["profile"]["data"]["features"])
         self.assertEqual(result["fieldStates"]["features"], "unresolved")
         self.assertEqual(result["profile"]["data"]["project_name"], "Alpha")
+        self.assertEqual(transport.call_count, 5)
+
+    def test_review_rejection_of_only_suggestion_is_failed(self):
+        selected = {"F0001": chosen("features", "user_action")}
+        analyzer, transport = self.analyzer([
+            candidates("checkout"), {"decisions": selected},
+            verdict([issue("overbroad")]), {"decisions": selected},
+            verdict([issue("overbroad")])])
+        result = analyzer.analyze_recoverable("checkout", "doc")
+        self.assertEqual(result, {"outcome": "failed", "error": "SEMANTIC_REJECTED"})
         self.assertEqual(transport.call_count, 5)
 
     def test_invalid_review_and_timeout_are_unreviewed(self):
