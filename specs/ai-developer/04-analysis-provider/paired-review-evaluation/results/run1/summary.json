@@ -1,0 +1,124 @@
+{
+  "comparable_cases": 16,
+  "shared_failures": {
+    "SECTION_MERGE": 4
+  },
+  "groups": {
+    "full": {
+      "baseline": {
+        "valid": 6,
+        "passed": 6,
+        "matched": 60,
+        "total_valid": 60,
+        "total_planned": 110,
+        "false_confirmations": 0,
+        "errors": {
+          "SEMANTIC_REJECTED": 3,
+          "SEMANTIC_REVIEW_INVALID": 1,
+          "ANCHORED_MISSING_CANDIDATE": 1
+        },
+        "max_calls": 5,
+        "median_ms": 15938,
+        "p95_ms": 40344
+      },
+      "compact": {
+        "valid": 8,
+        "passed": 7,
+        "matched": 79,
+        "total_valid": 80,
+        "total_planned": 110,
+        "false_confirmations": 0,
+        "errors": {
+          "SEMANTIC_REJECTED": 1,
+          "PROVIDER_TIMEOUT": 2
+        },
+        "max_calls": 5,
+        "median_ms": 21984,
+        "p95_ms": 41921
+      }
+    },
+    "focus": {
+      "baseline": {
+        "valid": 1,
+        "passed": 1,
+        "matched": 3,
+        "total_valid": 3,
+        "total_planned": 16,
+        "false_confirmations": 0,
+        "errors": {
+          "SEMANTIC_REJECTED": 1,
+          "PROVIDER_TIMEOUT": 3
+        },
+        "max_calls": 6,
+        "median_ms": 45734,
+        "p95_ms": 60047
+      },
+      "compact": {
+        "valid": 0,
+        "passed": 0,
+        "matched": 0,
+        "total_valid": 0,
+        "total_planned": 16,
+        "false_confirmations": 0,
+        "errors": {
+          "PROVIDER_TIMEOUT": 3,
+          "SEMANTIC_REVIEW_INVALID": 1,
+          "SEMANTIC_REJECTED": 1
+        },
+        "max_calls": 6,
+        "median_ms": 48719,
+        "p95_ms": 60095
+      }
+    }
+  },
+  "review": {
+    "baseline": {
+      "timeouts": {
+        "semantic_review": 2,
+        "semantic_recheck": 1
+      },
+      "invalid_reasons": {
+        "NULL_NON_MISSING": 1
+      },
+      "median_provider_ms": 12094,
+      "median_request_bytes": 5046,
+      "median_completion_tokens": 766.5
+    },
+    "compact": {
+      "timeouts": {
+        "semantic_review": 3,
+        "semantic_recheck": 2
+      },
+      "invalid_reasons": {
+        "COMPACT_MISSING_SOURCE_EMPTY": 1
+      },
+      "median_provider_ms": 21422,
+      "median_request_bytes": 5094,
+      "median_completion_tokens": 17.0
+    }
+  },
+  "gate": {
+    "all_cases_accounted": true,
+    "shared_upstream_replayed": true,
+    "six_call_limit": true,
+    "virtual_60s_limit": false,
+    "full_accuracy_no_regression": true,
+    "focus_accuracy_no_regression": false,
+    "false_confirmations_no_increase": true,
+    "validation_errors_no_increase": true,
+    "successes_increase": false
+  },
+  "passed": false,
+  "total_passed": {
+    "baseline": 7,
+    "compact": 7
+  },
+  "total_validation_errors": {
+    "baseline": 6,
+    "compact": 3
+  },
+  "median_virtual_ms": {
+    "baseline": 20968.5,
+    "compact": 28093.5
+  }
+}

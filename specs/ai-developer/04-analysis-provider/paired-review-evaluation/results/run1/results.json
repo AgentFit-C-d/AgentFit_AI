@@ -1,0 +1,3167 @@
+[
+  {
+    "id": "Q-001",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "baseline",
+      "compact"
+    ],
+    "upstream_ms": 2016,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "ff9c740a83dcf1167796ae0ba7c39ba9cf3dee354e5a2e94a6a8f462bb4fa1e6",
+        "response_hmac": "60d4042bf128b0fc8efdf44d758bc3d351f0dbfb1fc8b570708b9b0221f046aa"
+      },
+      {
+        "request_hmac": "c2515f8551799847260adfd1dca7e10aac2c670e8434658b16546a121f93c6f2",
+        "response_hmac": "32462ed763bb47fb134a1c1cb164004198d07cfa9968d5cd88ee26200a49dd58"
+      }
+    ],
+    "baseline": {
+      "error": "SEMANTIC_REJECTED",
+      "provider_calls": 5,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 4016,
+          "response_bytes": 612,
+          "prompt_tokens": 443,
+          "completion_tokens": 21,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 16519,
+          "response_bytes": 737,
+          "prompt_tokens": 819,
+          "completion_tokens": 58,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 11469,
+          "provider_elapsed_ms": 11469,
+          "request_bytes": 4994,
+          "response_bytes": 3816,
+          "prompt_tokens": 538,
+          "completion_tokens": 642,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 1547,
+          "provider_elapsed_ms": 1547,
+          "request_bytes": 16806,
+          "response_bytes": 679,
+          "prompt_tokens": 897,
+          "completion_tokens": 44,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 25312,
+          "provider_elapsed_ms": 25312,
+          "request_bytes": 4994,
+          "response_bytes": 9113,
+          "prompt_tokens": 538,
+          "completion_tokens": 1792,
+          "max_tokens": 4096,
+          "stage": "semantic_recheck",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 40344,
+      "replayed_calls": 2,
+      "replay_verified": true
+    },
+    "compact": {
+      "error": "SEMANTIC_REJECTED",
+      "provider_calls": 5,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 4016,
+          "response_bytes": 612,
+          "prompt_tokens": 443,
+          "completion_tokens": 21,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 16519,
+          "response_bytes": 737,
+          "prompt_tokens": 819,
+          "completion_tokens": 58,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 7344,
+          "provider_elapsed_ms": 7344,
+          "request_bytes": 5034,
+          "response_bytes": 510,
+          "prompt_tokens": 657,
+          "completion_tokens": 28,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 984,
+          "provider_elapsed_ms": 984,
+          "request_bytes": 16806,
+          "response_bytes": 679,
+          "prompt_tokens": 897,
+          "completion_tokens": 44,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 6922,
+          "provider_elapsed_ms": 6922,
+          "request_bytes": 5034,
+          "response_bytes": 512,
+          "prompt_tokens": 657,
+          "completion_tokens": 28,
+          "max_tokens": 4096,
+          "stage": "semantic_recheck",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        }
+      ],
+      "elapsed_ms": 17266,
+      "replayed_calls": 2,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "Q-002",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "compact",
+      "baseline"
+    ],
+    "upstream_ms": 2453,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "943da16b2a7518a96b919820332ed5735218365fec96899267beebc0bd23e3d6",
+        "response_hmac": "210ffc6487e7cdae6a5b55dd9a35413e6c5542387b654ffda7eded339a95b68a"
+      },
+      {
+        "request_hmac": "3b382b8b5e0287cb5765690b9e646d1f36869d225c6e39ccf94dcc45bdc05278",
+        "response_hmac": "62bad554b50235115590555f3f727b71aa829ff350d8d3dbd34ddfc07b8b9f38"
+      }
+    ],
+    "compact": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 4104,
+          "response_bytes": 639,
+          "prompt_tokens": 449,
+          "completion_tokens": 24,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 25760,
+          "response_bytes": 937,
+          "prompt_tokens": 902,
+          "completion_tokens": 105,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 3313,
+          "provider_elapsed_ms": 3313,
+          "request_bytes": 5147,
+          "response_bytes": 418,
+          "prompt_tokens": 677,
+          "completion_tokens": 6,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        }
+      ],
+      "elapsed_ms": 5766,
+      "replayed_calls": 2,
+      "replay_verified": true
+    },
+    "baseline": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 4104,
+          "response_bytes": 639,
+          "prompt_tokens": 449,
+          "completion_tokens": 24,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 25760,
+          "response_bytes": 937,
+          "prompt_tokens": 902,
+          "completion_tokens": 105,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 16062,
+          "provider_elapsed_ms": 16062,
+          "request_bytes": 5107,
+          "response_bytes": 2932,
+          "prompt_tokens": 551,
+          "completion_tokens": 494,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium",
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 18515,
+      "replayed_calls": 2,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "Q-003",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "baseline",
+      "compact"
+    ],
+    "upstream_ms": 1266,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "d5ef0fd3499ab066b0c19a9e57a772e5538d87c517f1eda4198794ad30670180",
+        "response_hmac": "c245eae56ed3117619ed76204e5cb43bc1dae95e750c6fc0cd3733e6bde58118"
+      },
+      {
+        "request_hmac": "ebffaa7b49b46ee16c53a811ac59505d67cf9643138c0a4bdb05c3ad435cf579",
+        "response_hmac": "4445e2f496a8d937b4a50af87cc912267a65064b2ed0f3e6b878ae241b199538"
+      }
+    ],
+    "baseline": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 4132,
+          "response_bytes": 649,
+          "prompt_tokens": 455,
+          "completion_tokens": 27,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 16693,
+          "response_bytes": 578,
+          "prompt_tokens": 837,
+          "completion_tokens": 20,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 11984,
+          "provider_elapsed_ms": 11984,
+          "request_bytes": 4835,
+          "response_bytes": 3116,
+          "prompt_tokens": 520,
+          "completion_tokens": 539,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium",
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 13250,
+      "replayed_calls": 2,
+      "replay_verified": true
+    },
+    "compact": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 4132,
+          "response_bytes": 649,
+          "prompt_tokens": 455,
+          "completion_tokens": 27,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 16,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 16693,
+          "response_bytes": 578,
+          "prompt_tokens": 837,
+          "completion_tokens": 20,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 5984,
+          "provider_elapsed_ms": 5984,
+          "request_bytes": 4875,
+          "response_bytes": 418,
+          "prompt_tokens": 637,
+          "completion_tokens": 6,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        }
+      ],
+      "elapsed_ms": 7266,
+      "replayed_calls": 2,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "Q-004",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "compact",
+      "baseline"
+    ],
+    "upstream_ms": 4328,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "60c60be8e4b14c13ec54a0cfb332de7d4864fb70d04e0cd67e33b640953f2390",
+        "response_hmac": "d71ab6ab32bd96fd898af715c0f7a67ee63fa5e55d396dc61f558fa5762e7b3b"
+      },
+      {
+        "request_hmac": "e3d50b35646bd336aae5b87772879b6ab3d174ee76d9c855b8466b4247e01e6e",
+        "response_hmac": "a86ee98b4d992b57a061bb0ebec3017b9452d7712a379b028a621588b26651ee"
+      }
+    ],
+    "compact": {
+      "passed": false,
+      "matched": 9,
+      "total": 10,
+      "mismatch_fields": [
+        "external_integrations"
+      ],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 3964,
+          "response_bytes": 598,
+          "prompt_tokens": 435,
+          "completion_tokens": 17,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 16441,
+          "response_bytes": 697,
+          "prompt_tokens": 807,
+          "completion_tokens": 49,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 21422,
+          "provider_elapsed_ms": 21422,
+          "request_bytes": 4791,
+          "response_bytes": 418,
+          "prompt_tokens": 626,
+          "completion_tokens": 6,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        }
+      ],
+      "elapsed_ms": 25750,
+      "replayed_calls": 2,
+      "replay_verified": true
+    },
+    "baseline": {
+      "error": "SEMANTIC_REVIEW_INVALID",
+      "provider_calls": 3,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 3964,
+          "response_bytes": 598,
+          "prompt_tokens": 435,
+          "completion_tokens": 17,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 16441,
+          "response_bytes": 697,
+          "prompt_tokens": 807,
+          "completion_tokens": 49,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 6719,
+          "provider_elapsed_ms": 6719,
+          "request_bytes": 4751,
+          "response_bytes": 4109,
+          "prompt_tokens": 510,
+          "completion_tokens": 742,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validation_failed",
+          "reasoning_effort": "medium",
+          "error": "SEMANTIC_REVIEW_INVALID",
+          "review_error": {
+            "reason": "NULL_NON_MISSING"
+          },
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 11047,
+      "replayed_calls": 2,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "Q-005",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "baseline",
+      "compact"
+    ],
+    "upstream_ms": 484,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "f10bc660d2776a7701158c23ab3fb0c421959a5cb1e97378d69862ca67da75f8",
+        "response_hmac": "cc36cd7bad578c8a84f3323d4aed1cc95f294dc7d481d42188ee7b82d8cd144b"
+      }
+    ],
+    "baseline": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 2,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 3904,
+          "response_bytes": 544,
+          "prompt_tokens": 437,
+          "completion_tokens": 12,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1766,
+          "provider_elapsed_ms": 1766,
+          "request_bytes": 4721,
+          "response_bytes": 1444,
+          "prompt_tokens": 511,
+          "completion_tokens": 194,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium",
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 2250,
+      "replayed_calls": 1,
+      "replay_verified": true
+    },
+    "compact": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 2,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 3904,
+          "response_bytes": 544,
+          "prompt_tokens": 437,
+          "completion_tokens": 12,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 21500,
+          "provider_elapsed_ms": 21500,
+          "request_bytes": 4761,
+          "response_bytes": 418,
+          "prompt_tokens": 625,
+          "completion_tokens": 6,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        }
+      ],
+      "elapsed_ms": 21984,
+      "replayed_calls": 1,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "Q-006",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "compact",
+      "baseline"
+    ],
+    "upstream_ms": 1937,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "641bb72083b325893e9920d2e5f0cae5caf5cb0e59a7323eb4ea1c57773c3605",
+        "response_hmac": "9c18ab6bdf79932b90b5b85da2267daea0c86735c3458e5daf04715b20b0025d"
+      },
+      {
+        "request_hmac": "71dff9adfef8f6c1a5a3322de9ded5fa49377ca1d3a79dceacc94b60a230318e",
+        "response_hmac": "1fc07e5f940e2adc02b60627fdeb6f6964f37510b9e2383023dde2f023848cc3"
+      },
+      {
+        "request_hmac": "a1c106277267a38391e408587a748a805d2a3812b3916165597605b2c1371e39",
+        "response_hmac": "ffab3c2f536d4fedf4d65ed8a17a921c0f4677bcd259d42ca12b002a29f5d7be"
+      }
+    ],
+    "compact": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 4,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 3943,
+          "response_bytes": 544,
+          "prompt_tokens": 446,
+          "completion_tokens": 12,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 3943,
+          "response_bytes": 561,
+          "prompt_tokens": 445,
+          "completion_tokens": 14,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 16371,
+          "response_bytes": 679,
+          "prompt_tokens": 816,
+          "completion_tokens": 44,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 25172,
+          "provider_elapsed_ms": 25172,
+          "request_bytes": 4909,
+          "response_bytes": 418,
+          "prompt_tokens": 649,
+          "completion_tokens": 6,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        }
+      ],
+      "elapsed_ms": 27109,
+      "replayed_calls": 3,
+      "replay_verified": true
+    },
+    "baseline": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 4,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 3943,
+          "response_bytes": 544,
+          "prompt_tokens": 446,
+          "completion_tokens": 12,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 3943,
+          "response_bytes": 561,
+          "prompt_tokens": 445,
+          "completion_tokens": 14,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 16371,
+          "response_bytes": 679,
+          "prompt_tokens": 816,
+          "completion_tokens": 44,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 4188,
+          "provider_elapsed_ms": 4188,
+          "request_bytes": 4869,
+          "response_bytes": 2821,
+          "prompt_tokens": 533,
+          "completion_tokens": 486,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium",
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 6125,
+      "replayed_calls": 3,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "N-001",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "baseline",
+      "compact"
+    ],
+    "upstream_ms": 4187,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "7b3fb7c5e5eeeacfb532c2eea952189aeafffc3c5d52b33928ec3c2841ae325b",
+        "response_hmac": "0641237fff898a8eedc19e0f5d8ecb14ebb5eaab9153cf382f271286ef655515"
+      },
+      {
+        "request_hmac": "16de0bb8c96e59a422e75475820e6891d25c5bc75f5175eb3ab80a26ec87e8c4",
+        "response_hmac": "ba5e1c3a74d905887dd13ab537ea9b38df953f3e238d910e8feffef133b06f78"
+      }
+    ],
+    "baseline": {
+      "error": "ANCHORED_MISSING_CANDIDATE",
+      "provider_calls": 4,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 4198,
+          "response_bytes": 664,
+          "prompt_tokens": 459,
+          "completion_tokens": 29,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 16792,
+          "response_bytes": 608,
+          "prompt_tokens": 843,
+          "completion_tokens": 30,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 24500,
+          "provider_elapsed_ms": 24500,
+          "request_bytes": 4868,
+          "response_bytes": 6586,
+          "prompt_tokens": 522,
+          "completion_tokens": 1352,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "project_name",
+              "kind": "missing"
+            },
+            {
+              "field": "project_type",
+              "kind": "missing"
+            },
+            {
+              "field": "domain",
+              "kind": "missing"
+            },
+            {
+              "field": "features",
+              "kind": "missing"
+            }
+          ],
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 828,
+          "provider_elapsed_ms": 828,
+          "request_bytes": 17276,
+          "response_bytes": 578,
+          "prompt_tokens": 975,
+          "completion_tokens": 20,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "error": "ANCHORED_MISSING_CANDIDATE",
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 29515,
+      "replayed_calls": 2,
+      "replay_verified": true
+    },
+    "compact": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 4198,
+          "response_bytes": 664,
+          "prompt_tokens": 459,
+          "completion_tokens": 29,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 16792,
+          "response_bytes": 608,
+          "prompt_tokens": 843,
+          "completion_tokens": 30,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 17313,
+          "provider_elapsed_ms": 17313,
+          "request_bytes": 4908,
+          "response_bytes": 420,
+          "prompt_tokens": 647,
+          "completion_tokens": 6,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        }
+      ],
+      "elapsed_ms": 21500,
+      "replayed_calls": 2,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "N-002",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "compact",
+      "baseline"
+    ],
+    "upstream_ms": 2515,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "1541dbfe0135d50c59bfdbfa8ea1b49aa898539d04e7fc990ff4f053954728bb",
+        "response_hmac": "c480a7f046d3806cb607424ca5408c7ef3bb2dd6e140a9bef79436d3d85f974b"
+      },
+      {
+        "request_hmac": "1654b67315e4d3cf20ffc78858c646f55e7147abb4d2d503cec9862a3630e412",
+        "response_hmac": "b3433f5b7d1d85286d709b76c1688fca0beb5a760d7a72eedf657365d2c74ede"
+      }
+    ],
+    "common_error": "SECTION_MERGE",
+    "compact": {
+      "error": "SECTION_MERGE",
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 562,
+          "provider_elapsed_ms": 562,
+          "request_bytes": 4052,
+          "response_bytes": 621,
+          "prompt_tokens": 441,
+          "completion_tokens": 20,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1953,
+          "provider_elapsed_ms": 1938,
+          "request_bytes": 16573,
+          "response_bytes": 692,
+          "prompt_tokens": 816,
+          "completion_tokens": 47,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "external_integrations"
+          },
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 2515,
+      "provider_calls": 2
+    },
+    "baseline": {
+      "error": "SECTION_MERGE",
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 562,
+          "provider_elapsed_ms": 562,
+          "request_bytes": 4052,
+          "response_bytes": 621,
+          "prompt_tokens": 441,
+          "completion_tokens": 20,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1953,
+          "provider_elapsed_ms": 1938,
+          "request_bytes": 16573,
+          "response_bytes": 692,
+          "prompt_tokens": 816,
+          "completion_tokens": 47,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "external_integrations"
+          },
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 2515,
+      "provider_calls": 2
+    }
+  },
+  {
+    "id": "N-003",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "baseline",
+      "compact"
+    ],
+    "upstream_ms": 3781,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "ec759842507bd16733f3070cac04959037f5d717251cf089f99697a1dcefef51",
+        "response_hmac": "2c4d879f72e3d186f4cd59e4e843835a4e94e5c6dde6c94b08a2c8628abb3041"
+      },
+      {
+        "request_hmac": "9d3842a0654861fbeb1801ca40ee0179fb502b0f04d9e0f297f703e9a6652219",
+        "response_hmac": "e867e3763604bc2cbbe4f695b6e61a29d1cba6b3d6befe470edeed3caa23cf28"
+      }
+    ],
+    "baseline": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 4090,
+          "response_bytes": 631,
+          "prompt_tokens": 443,
+          "completion_tokens": 21,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 16630,
+          "response_bytes": 578,
+          "prompt_tokens": 819,
+          "completion_tokens": 20,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 14032,
+          "provider_elapsed_ms": 14032,
+          "request_bytes": 4814,
+          "response_bytes": 6842,
+          "prompt_tokens": 514,
+          "completion_tokens": 1229,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium",
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 17813,
+      "replayed_calls": 2,
+      "replay_verified": true
+    },
+    "compact": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 4090,
+          "response_bytes": 631,
+          "prompt_tokens": 443,
+          "completion_tokens": 21,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 16630,
+          "response_bytes": 578,
+          "prompt_tokens": 819,
+          "completion_tokens": 20,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 14187,
+          "provider_elapsed_ms": 14187,
+          "request_bytes": 4854,
+          "response_bytes": 418,
+          "prompt_tokens": 633,
+          "completion_tokens": 6,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        }
+      ],
+      "elapsed_ms": 17968,
+      "replayed_calls": 2,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "N-004",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "compact",
+      "baseline"
+    ],
+    "upstream_ms": 1438,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "d04a285fc388f5fe6a6557b9d8cb0dee9fcfa6e5043b73edb1f85b4d9dab06ed",
+        "response_hmac": "cb8a5722f58a2fdd5ceecd3adffb8acc5f1db8d675dee02b0ca741e426e43f06"
+      },
+      {
+        "request_hmac": "695cb5d59b5f8d8b6a94a4f512175a83a280ad77670739cb8279470b95e04958",
+        "response_hmac": "b32a2e2e43ff9c56fc436e3a7e69b2f1fc5082283866ef852c696260759ac2bd"
+      }
+    ],
+    "compact": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 3,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 4088,
+          "response_bytes": 636,
+          "prompt_tokens": 451,
+          "completion_tokens": 25,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 16627,
+          "response_bytes": 677,
+          "prompt_tokens": 831,
+          "completion_tokens": 44,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 40125,
+          "provider_elapsed_ms": 40125,
+          "request_bytes": 5094,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "failed",
+          "reasoning_effort": "none",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ],
+      "elapsed_ms": 41563,
+      "replayed_calls": 2,
+      "replay_verified": true
+    },
+    "baseline": {
+      "error": "SEMANTIC_REJECTED",
+      "provider_calls": 5,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 4088,
+          "response_bytes": 636,
+          "prompt_tokens": 451,
+          "completion_tokens": 25,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 16627,
+          "response_bytes": 677,
+          "prompt_tokens": 831,
+          "completion_tokens": 44,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 8343,
+          "provider_elapsed_ms": 8343,
+          "request_bytes": 5054,
+          "response_bytes": 2749,
+          "prompt_tokens": 546,
+          "completion_tokens": 493,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "ai",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 969,
+          "provider_elapsed_ms": 969,
+          "request_bytes": 16906,
+          "response_bytes": 677,
+          "prompt_tokens": 909,
+          "completion_tokens": 44,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 5188,
+          "provider_elapsed_ms": 5188,
+          "request_bytes": 5054,
+          "response_bytes": 3467,
+          "prompt_tokens": 546,
+          "completion_tokens": 621,
+          "max_tokens": 4096,
+          "stage": "semantic_recheck",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "ai",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 15938,
+      "replayed_calls": 2,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "N-005",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "baseline",
+      "compact"
+    ],
+    "upstream_ms": 6218,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "315fa7bd49fbd1a368a123947146c18e71620de309c155bd0fd637fead1cfaff",
+        "response_hmac": "d2aa35746f7930da06741d26310ff75de7709b09cb6d9192f013a9e39ad1933b"
+      },
+      {
+        "request_hmac": "2064bc99cf77da42d187bc50a8aca2d2661561c6ce2f971efb78078b87c5c97c",
+        "response_hmac": "7c65db84ef121af6cb4fa2377861cd1bf0800a819a4c712abe448552b7732ac4"
+      }
+    ],
+    "baseline": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 3970,
+          "response_bytes": 579,
+          "prompt_tokens": 442,
+          "completion_tokens": 17,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 25445,
+          "response_bytes": 929,
+          "prompt_tokens": 886,
+          "completion_tokens": 105,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 6469,
+          "provider_elapsed_ms": 6469,
+          "request_bytes": 4926,
+          "response_bytes": 2408,
+          "prompt_tokens": 541,
+          "completion_tokens": 417,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium",
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 12687,
+      "replayed_calls": 2,
+      "replay_verified": true
+    },
+    "compact": {
+      "passed": true,
+      "matched": 10,
+      "total": 10,
+      "mismatch_fields": [],
+      "false_confirmations": 0,
+      "provider_calls": 3,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 3970,
+          "response_bytes": 579,
+          "prompt_tokens": 442,
+          "completion_tokens": 17,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 25445,
+          "response_bytes": 929,
+          "prompt_tokens": 886,
+          "completion_tokens": 105,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 22860,
+          "provider_elapsed_ms": 22860,
+          "request_bytes": 4966,
+          "response_bytes": 418,
+          "prompt_tokens": 658,
+          "completion_tokens": 6,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        }
+      ],
+      "elapsed_ms": 29078,
+      "replayed_calls": 2,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "N-006",
+    "kind": "full",
+    "gold_total": 10,
+    "order": [
+      "compact",
+      "baseline"
+    ],
+    "upstream_ms": 1812,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "5c7dff0503e3692b5adfc1c63c96d3fefef5ecbe6f32e00b6139b0fe74535354",
+        "response_hmac": "b3d74aadfd1592a955d7ed599a75e93a4432b1808c90693f1fd9a8077a64f744"
+      },
+      {
+        "request_hmac": "0a46c62ab1eb6036dd8695826054ef9e582e42773157a240d3f8472c23af470e",
+        "response_hmac": "5cc680b8673aa43acc101229cc8acbaa2e615ea8b7efae3202ec16a3fd13140f"
+      }
+    ],
+    "compact": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 3,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 4158,
+          "response_bytes": 654,
+          "prompt_tokens": 453,
+          "completion_tokens": 26,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 25868,
+          "response_bytes": 799,
+          "prompt_tokens": 910,
+          "completion_tokens": 77,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 40109,
+          "provider_elapsed_ms": 40109,
+          "request_bytes": 5086,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "failed",
+          "reasoning_effort": "none",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ],
+      "elapsed_ms": 41921,
+      "replayed_calls": 2,
+      "replay_verified": true
+    },
+    "baseline": {
+      "error": "SEMANTIC_REJECTED",
+      "provider_calls": 5,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 4158,
+          "response_bytes": 654,
+          "prompt_tokens": 453,
+          "completion_tokens": 26,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 25868,
+          "response_bytes": 799,
+          "prompt_tokens": 910,
+          "completion_tokens": 77,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 14750,
+          "provider_elapsed_ms": 14734,
+          "request_bytes": 5046,
+          "response_bytes": 6280,
+          "prompt_tokens": 541,
+          "completion_tokens": 1180,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 1438,
+          "provider_elapsed_ms": 1438,
+          "request_bytes": 26198,
+          "response_bytes": 724,
+          "prompt_tokens": 1002,
+          "completion_tokens": 58,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 5406,
+          "provider_elapsed_ms": 5406,
+          "request_bytes": 5046,
+          "response_bytes": 4250,
+          "prompt_tokens": 541,
+          "completion_tokens": 791,
+          "max_tokens": 4096,
+          "stage": "semantic_recheck",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "features",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 23422,
+      "replayed_calls": 2,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "E01",
+    "kind": "focus",
+    "gold_total": 4,
+    "order": [
+      "baseline",
+      "compact"
+    ],
+    "upstream_ms": 5250,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "17ef336b188337e7ebd8cce84438141985998992b920514adc22161462d51921",
+        "response_hmac": "daa2efe463cc36cb46a6313cebf35da97038f5fbc4c04432170b48bb8b8775b3"
+      },
+      {
+        "request_hmac": "c7114d738db1045e16b55ad42e1d13b0fd352848d4e859e3b43e9b288972a8c1",
+        "response_hmac": "ef3d0974a24ca0198672be407a7d6fa9e55437e19ab74a1148883f5fd5cc7da4"
+      },
+      {
+        "request_hmac": "9ca52b8b680b97cf066ad4d73aeb55eac049545cd3769a17cadb442cc8a24c30",
+        "response_hmac": "3fef2c99e615ca55f797028efbd73c18d87d146b177defd5f183b7d80e86a065"
+      }
+    ],
+    "common_error": "SECTION_MERGE",
+    "baseline": {
+      "error": "SECTION_MERGE",
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 859,
+          "provider_elapsed_ms": 859,
+          "request_bytes": 6012,
+          "response_bytes": 899,
+          "prompt_tokens": 704,
+          "completion_tokens": 75,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 906,
+          "provider_elapsed_ms": 906,
+          "request_bytes": 6119,
+          "response_bytes": 927,
+          "prompt_tokens": 723,
+          "completion_tokens": 87,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 3485,
+          "provider_elapsed_ms": 3485,
+          "request_bytes": 119425,
+          "response_bytes": 1955,
+          "prompt_tokens": 1946,
+          "completion_tokens": 383,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "ai"
+          },
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 5250,
+      "provider_calls": 3
+    },
+    "compact": {
+      "error": "SECTION_MERGE",
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 859,
+          "provider_elapsed_ms": 859,
+          "request_bytes": 6012,
+          "response_bytes": 899,
+          "prompt_tokens": 704,
+          "completion_tokens": 75,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 906,
+          "provider_elapsed_ms": 906,
+          "request_bytes": 6119,
+          "response_bytes": 927,
+          "prompt_tokens": 723,
+          "completion_tokens": 87,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 3485,
+          "provider_elapsed_ms": 3485,
+          "request_bytes": 119425,
+          "response_bytes": 1955,
+          "prompt_tokens": 1946,
+          "completion_tokens": 383,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "ai"
+          },
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 5250,
+      "provider_calls": 3
+    }
+  },
+  {
+    "id": "E02",
+    "kind": "focus",
+    "gold_total": 3,
+    "order": [
+      "compact",
+      "baseline"
+    ],
+    "upstream_ms": 5922,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "12167b648554b253f7be1400582be4de2764dbecbd4c5373c6977bdff0999208",
+        "response_hmac": "aec79aed0ad2e735f8d653ffc6f6c6e3e091fc2941df361d14255755bcab0175"
+      },
+      {
+        "request_hmac": "62d65cb65426176c662f9e9ad4d92479da616549c58acb987955fd1791694a0f",
+        "response_hmac": "4a8ae2e18eb3c824551d000ceaa83eb915dd0e6afbad1775750f8eba5be3ccc3"
+      },
+      {
+        "request_hmac": "e5bad9f08a111899c989288eaf98e78d02a4793025f4a550cac9cb26616a3158",
+        "response_hmac": "74ec1a9cd759dd46ee9b0e745e8c36ec4295fedb53824f83e84c179d49e48231"
+      }
+    ],
+    "compact": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 4,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5723,
+          "response_bytes": 844,
+          "prompt_tokens": 684,
+          "completion_tokens": 72,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5711,
+          "response_bytes": 847,
+          "prompt_tokens": 667,
+          "completion_tokens": 66,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 63845,
+          "response_bytes": 1452,
+          "prompt_tokens": 1373,
+          "completion_tokens": 242,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 40094,
+          "provider_elapsed_ms": 40094,
+          "request_bytes": 6379,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "failed",
+          "reasoning_effort": "none",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ],
+      "elapsed_ms": 46016,
+      "replayed_calls": 3,
+      "replay_verified": true
+    },
+    "baseline": {
+      "error": "SEMANTIC_REJECTED",
+      "provider_calls": 6,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5723,
+          "response_bytes": 844,
+          "prompt_tokens": 684,
+          "completion_tokens": 72,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5711,
+          "response_bytes": 847,
+          "prompt_tokens": 667,
+          "completion_tokens": 66,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 63845,
+          "response_bytes": 1452,
+          "prompt_tokens": 1373,
+          "completion_tokens": 242,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 9266,
+          "provider_elapsed_ms": 9266,
+          "request_bytes": 6339,
+          "response_bytes": 7136,
+          "prompt_tokens": 696,
+          "completion_tokens": 1398,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "project_type",
+              "kind": "overbroad"
+            },
+            {
+              "field": "database",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 2343,
+          "provider_elapsed_ms": 2343,
+          "request_bytes": 64769,
+          "response_bytes": 1449,
+          "prompt_tokens": 1626,
+          "completion_tokens": 242,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 6,
+          "elapsed_ms": 12094,
+          "provider_elapsed_ms": 12094,
+          "request_bytes": 6339,
+          "response_bytes": 9785,
+          "prompt_tokens": 696,
+          "completion_tokens": 1997,
+          "max_tokens": 4096,
+          "stage": "semantic_recheck",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "project_type",
+              "kind": "overbroad"
+            },
+            {
+              "field": "database",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 29625,
+      "replayed_calls": 3,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "E03",
+    "kind": "focus",
+    "gold_total": 3,
+    "order": [
+      "baseline",
+      "compact"
+    ],
+    "upstream_ms": 11922,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "515eec3e7abea769e7f61ec2dd54168fc77759894c42453e1ed8e53e31822860",
+        "response_hmac": "55434992365f51bcad325b029137e20f8d789f2f641549c2000986b788b7f95f"
+      },
+      {
+        "request_hmac": "9b76fde61adbb8334802a51e8b3836311445c8b496b3370100ed17358a1c684c",
+        "response_hmac": "4279a5c77f02bdf30369d11c66d4bcd8044619b9f826f4f2287a5be4edfce65c"
+      },
+      {
+        "request_hmac": "c920918f15fa36f107915cd8a4f2932d2f0d2bc65673eef1ff8d419392171d10",
+        "response_hmac": "42081f1b0173c4e3636046c845d4054a16ddddd5219a7ce7f32bd34b18f9a3aa"
+      }
+    ],
+    "common_error": "SECTION_MERGE",
+    "baseline": {
+      "error": "SECTION_MERGE",
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 938,
+          "provider_elapsed_ms": 938,
+          "request_bytes": 5930,
+          "response_bytes": 877,
+          "prompt_tokens": 672,
+          "completion_tokens": 67,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 6015,
+          "provider_elapsed_ms": 6015,
+          "request_bytes": 5787,
+          "response_bytes": 855,
+          "prompt_tokens": 658,
+          "completion_tokens": 65,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 4969,
+          "provider_elapsed_ms": 4969,
+          "request_bytes": 64130,
+          "response_bytes": 1441,
+          "prompt_tokens": 1355,
+          "completion_tokens": 239,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "ai"
+          },
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 11922,
+      "provider_calls": 3
+    },
+    "compact": {
+      "error": "SECTION_MERGE",
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 938,
+          "provider_elapsed_ms": 938,
+          "request_bytes": 5930,
+          "response_bytes": 877,
+          "prompt_tokens": 672,
+          "completion_tokens": 67,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 6015,
+          "provider_elapsed_ms": 6015,
+          "request_bytes": 5787,
+          "response_bytes": 855,
+          "prompt_tokens": 658,
+          "completion_tokens": 65,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 4969,
+          "provider_elapsed_ms": 4969,
+          "request_bytes": 64130,
+          "response_bytes": 1441,
+          "prompt_tokens": 1355,
+          "completion_tokens": 239,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "ai"
+          },
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 11922,
+      "provider_calls": 3
+    }
+  },
+  {
+    "id": "E04",
+    "kind": "focus",
+    "gold_total": 3,
+    "order": [
+      "compact",
+      "baseline"
+    ],
+    "upstream_ms": 4843,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "ea08aec5970e5ed0725b7eb240b58902080ceed1f1a1880379cde7dfd1827a46",
+        "response_hmac": "1cfb4f5d9ab22a8f6a471519b4906dde7c00dfe201f439ba1c01e2b92b1dba9c"
+      },
+      {
+        "request_hmac": "304113fffc593ac491787707036be74c69814d7d68198e7b5e637fefdfe3617a",
+        "response_hmac": "a95d93fad712acf1bc423ad1fb76afbad09980cdeab17a236227d4f6609f4fc8"
+      },
+      {
+        "request_hmac": "b9b4196cd3e751f88fa28ab8d637c77ea7c48e7acbf5d74e22c4b387e491c278",
+        "response_hmac": "f8e14824e77876b0a8372cbfe97b19ed037fde2560f44ce8aa059682c7a8919b"
+      }
+    ],
+    "compact": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 6,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5767,
+          "response_bytes": 856,
+          "prompt_tokens": 686,
+          "completion_tokens": 71,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5867,
+          "response_bytes": 895,
+          "prompt_tokens": 667,
+          "completion_tokens": 70,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 91314,
+          "response_bytes": 1517,
+          "prompt_tokens": 1608,
+          "completion_tokens": 269,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 27454,
+          "provider_elapsed_ms": 27454,
+          "request_bytes": 6380,
+          "response_bytes": 617,
+          "prompt_tokens": 910,
+          "completion_tokens": 54,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "semantic_issues": [
+            {
+              "field": "frontend",
+              "kind": "overbroad"
+            },
+            {
+              "field": "external_integrations",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 5062,
+          "provider_elapsed_ms": 5062,
+          "request_bytes": 92280,
+          "response_bytes": 1517,
+          "prompt_tokens": 1881,
+          "completion_tokens": 269,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 6,
+          "elapsed_ms": 22734,
+          "provider_elapsed_ms": 22734,
+          "request_bytes": 6380,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 4096,
+          "stage": "semantic_recheck",
+          "outcome": "failed",
+          "reasoning_effort": "none",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ],
+      "elapsed_ms": 60093,
+      "replayed_calls": 3,
+      "replay_verified": true
+    },
+    "baseline": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 4,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5767,
+          "response_bytes": 856,
+          "prompt_tokens": 686,
+          "completion_tokens": 71,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5867,
+          "response_bytes": 895,
+          "prompt_tokens": 667,
+          "completion_tokens": 70,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 91314,
+          "response_bytes": 1517,
+          "prompt_tokens": 1608,
+          "completion_tokens": 269,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 40266,
+          "provider_elapsed_ms": 40266,
+          "request_bytes": 6340,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "failed",
+          "reasoning_effort": "medium",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ],
+      "elapsed_ms": 45109,
+      "replayed_calls": 3,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "E05",
+    "kind": "focus",
+    "gold_total": 3,
+    "order": [
+      "baseline",
+      "compact"
+    ],
+    "upstream_ms": 7344,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "9586ced6830d012fdce7b2bea07e981d27bec27e0100d8a26d9042e75515b512",
+        "response_hmac": "c0f2aa3e6cb53cc2546331ff9d51e98ec12ad9f0c11c41045c30c2548aecebbd"
+      },
+      {
+        "request_hmac": "6f2c4e523ff4a67de1b4a504676e31698d5385284a6695d042f306dcb358b73b",
+        "response_hmac": "12d597f18980c27f1b1685cc21a97378285d1a744340c17bdf998ea1f9c0da5d"
+      },
+      {
+        "request_hmac": "307c578ee7467186f592fe84e372ce53b39394fd5761f30602ea815f3eba081b",
+        "response_hmac": "a2349fc4ca28a84f9885c0d4b785373a864ff195889b993027387dfc8736967f"
+      }
+    ],
+    "baseline": {
+      "matched": 3,
+      "total": 3,
+      "false_confirmations": 0,
+      "passed": true,
+      "provider_calls": 4,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5930,
+          "response_bytes": 967,
+          "prompt_tokens": 683,
+          "completion_tokens": 85,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5675,
+          "response_bytes": 823,
+          "prompt_tokens": 671,
+          "completion_tokens": 67,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 64013,
+          "response_bytes": 1194,
+          "prompt_tokens": 1379,
+          "completion_tokens": 187,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 38390,
+          "provider_elapsed_ms": 38375,
+          "request_bytes": 6388,
+          "response_bytes": 10332,
+          "prompt_tokens": 713,
+          "completion_tokens": 2076,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium",
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 45734,
+      "replayed_calls": 3,
+      "replay_verified": true
+    },
+    "compact": {
+      "error": "SEMANTIC_REVIEW_INVALID",
+      "provider_calls": 6,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5930,
+          "response_bytes": 967,
+          "prompt_tokens": 683,
+          "completion_tokens": 85,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5675,
+          "response_bytes": 823,
+          "prompt_tokens": 671,
+          "completion_tokens": 67,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 64013,
+          "response_bytes": 1194,
+          "prompt_tokens": 1379,
+          "completion_tokens": 187,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 33594,
+          "provider_elapsed_ms": 33594,
+          "request_bytes": 6428,
+          "response_bytes": 686,
+          "prompt_tokens": 913,
+          "completion_tokens": 70,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "semantic_issues": [
+            {
+              "field": "domain",
+              "kind": "overbroad"
+            },
+            {
+              "field": "backend",
+              "kind": "overbroad"
+            },
+            {
+              "field": "features",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 2156,
+          "provider_elapsed_ms": 2156,
+          "request_bytes": 65004,
+          "response_bytes": 795,
+          "prompt_tokens": 1655,
+          "completion_tokens": 90,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 6,
+          "elapsed_ms": 5625,
+          "provider_elapsed_ms": 5625,
+          "request_bytes": 5793,
+          "response_bytes": 672,
+          "prompt_tokens": 809,
+          "completion_tokens": 63,
+          "max_tokens": 4096,
+          "stage": "semantic_recheck",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SEMANTIC_REVIEW_INVALID",
+          "review_error": {
+            "reason": "COMPACT_MISSING_SOURCE_EMPTY"
+          },
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        }
+      ],
+      "elapsed_ms": 48719,
+      "replayed_calls": 3,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "E06",
+    "kind": "focus",
+    "gold_total": 3,
+    "order": [
+      "compact",
+      "baseline"
+    ],
+    "upstream_ms": 10579,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "4fb294f9c19abac846ca839f5afd84335aafdaf3fde71270937faa1d1fc6f295",
+        "response_hmac": "52d00e42aa8dcff53812aac57e31b1937af149b695c3df77967ebf8c61003b36"
+      },
+      {
+        "request_hmac": "05c397f2efec4baa18d73bdb28d64b52dca24ffed8e3f13c08d8a548810de01a",
+        "response_hmac": "f1e1dd5764d5a1273d1cbec8fff156afd5d3694c7669229049f8526089fb55ce"
+      },
+      {
+        "request_hmac": "4cc00b4f1f6a85680ff78e32ab6c7186b183d440e6c9df9d355f6831705ca763",
+        "response_hmac": "38c19d117dc182cb9f8c0e9ab1a27ee3e8adb559132859dff270d0a5b9b24aa9"
+      }
+    ],
+    "compact": {
+      "error": "SEMANTIC_REJECTED",
+      "provider_calls": 6,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5739,
+          "response_bytes": 846,
+          "prompt_tokens": 661,
+          "completion_tokens": 62,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5748,
+          "response_bytes": 856,
+          "prompt_tokens": 674,
+          "completion_tokens": 73,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 73055,
+          "response_bytes": 1522,
+          "prompt_tokens": 1440,
+          "completion_tokens": 262,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 12735,
+          "provider_elapsed_ms": 12735,
+          "request_bytes": 6406,
+          "response_bytes": 705,
+          "prompt_tokens": 916,
+          "completion_tokens": 74,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "semantic_issues": [
+            {
+              "field": "project_type",
+              "kind": "overbroad"
+            },
+            {
+              "field": "backend",
+              "kind": "overbroad"
+            },
+            {
+              "field": "external_integrations",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 8843,
+          "provider_elapsed_ms": 8843,
+          "request_bytes": 74138,
+          "response_bytes": 1522,
+          "prompt_tokens": 1739,
+          "completion_tokens": 262,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 6,
+          "elapsed_ms": 14266,
+          "provider_elapsed_ms": 14266,
+          "request_bytes": 6406,
+          "response_bytes": 705,
+          "prompt_tokens": 916,
+          "completion_tokens": 74,
+          "max_tokens": 4096,
+          "stage": "semantic_recheck",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "semantic_issues": [
+            {
+              "field": "project_type",
+              "kind": "overbroad"
+            },
+            {
+              "field": "backend",
+              "kind": "overbroad"
+            },
+            {
+              "field": "external_integrations",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        }
+      ],
+      "elapsed_ms": 46438,
+      "replayed_calls": 3,
+      "replay_verified": true
+    },
+    "baseline": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 4,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5739,
+          "response_bytes": 846,
+          "prompt_tokens": 661,
+          "completion_tokens": 62,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5748,
+          "response_bytes": 856,
+          "prompt_tokens": 674,
+          "completion_tokens": 73,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 73055,
+          "response_bytes": 1522,
+          "prompt_tokens": 1440,
+          "completion_tokens": 262,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 40062,
+          "provider_elapsed_ms": 40062,
+          "request_bytes": 6366,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "failed",
+          "reasoning_effort": "medium",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ],
+      "elapsed_ms": 50641,
+      "replayed_calls": 3,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "E07",
+    "kind": "focus",
+    "gold_total": 4,
+    "order": [
+      "baseline",
+      "compact"
+    ],
+    "upstream_ms": 9235,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "6ffbebcd945bb98462a8fd85ec9543c47e005df3db7dd710bb8a80bc40c2e2ca",
+        "response_hmac": "bf284ad7949302cd1e0976d499d62a59cd8c750bd4396fc24ec0410dd76dc526"
+      },
+      {
+        "request_hmac": "0e1ddaadaceff66cc2f36990d2fd63319d27668cab162facb2e7fceb9b70b7bd",
+        "response_hmac": "e7e01f07a16824c89fdad6eba0b71d163c8e622aec91c4e19e1759580f7c6fe3"
+      },
+      {
+        "request_hmac": "c4a910a742835afb895fffe9fc4cc6878c3dc94ff6dc3896be7c2c2ed93e757b",
+        "response_hmac": "0cbf96ffe17ca068854d6a37ae92122e149c38f7f2bfa11008ac23fc88c51daf"
+      }
+    ],
+    "baseline": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 6,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5654,
+          "response_bytes": 850,
+          "prompt_tokens": 665,
+          "completion_tokens": 67,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5747,
+          "response_bytes": 853,
+          "prompt_tokens": 666,
+          "completion_tokens": 66,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 82078,
+          "response_bytes": 1570,
+          "prompt_tokens": 1513,
+          "completion_tokens": 276,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 29562,
+          "provider_elapsed_ms": 29562,
+          "request_bytes": 6430,
+          "response_bytes": 7199,
+          "prompt_tokens": 703,
+          "completion_tokens": 1446,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "medium",
+          "semantic_issues": [
+            {
+              "field": "project_name",
+              "kind": "overbroad"
+            },
+            {
+              "field": "database",
+              "kind": "overbroad"
+            },
+            {
+              "field": "deployment",
+              "kind": "overbroad"
+            },
+            {
+              "field": "features",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 6391,
+          "provider_elapsed_ms": 6391,
+          "request_bytes": 83282,
+          "response_bytes": 1570,
+          "prompt_tokens": 1845,
+          "completion_tokens": 276,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 6,
+          "elapsed_ms": 14843,
+          "provider_elapsed_ms": 14843,
+          "request_bytes": 6430,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 4096,
+          "stage": "semantic_recheck",
+          "outcome": "failed",
+          "reasoning_effort": "medium",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ],
+      "elapsed_ms": 60047,
+      "replayed_calls": 3,
+      "replay_verified": true
+    },
+    "compact": {
+      "error": "PROVIDER_TIMEOUT",
+      "provider_calls": 6,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5654,
+          "response_bytes": 850,
+          "prompt_tokens": 665,
+          "completion_tokens": 67,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 5747,
+          "response_bytes": 853,
+          "prompt_tokens": 666,
+          "completion_tokens": 66,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 0,
+          "provider_elapsed_ms": 0,
+          "request_bytes": 82078,
+          "response_bytes": 1570,
+          "prompt_tokens": 1513,
+          "completion_tokens": 276,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 37969,
+          "provider_elapsed_ms": 37969,
+          "request_bytes": 6470,
+          "response_bytes": 778,
+          "prompt_tokens": 914,
+          "completion_tokens": 90,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "semantic_failed",
+          "reasoning_effort": "none",
+          "semantic_issues": [
+            {
+              "field": "project_name",
+              "kind": "overbroad"
+            },
+            {
+              "field": "database",
+              "kind": "overbroad"
+            },
+            {
+              "field": "deployment",
+              "kind": "overbroad"
+            },
+            {
+              "field": "features",
+              "kind": "overbroad"
+            }
+          ],
+          "model": "deepseek-ai/deepseek-v4.1-flash"
+        },
+        {
+          "call": 5,
+          "elapsed_ms": 9844,
+          "provider_elapsed_ms": 9844,
+          "request_bytes": 83282,
+          "response_bytes": 1570,
+          "prompt_tokens": 1845,
+          "completion_tokens": 276,
+          "max_tokens": 4096,
+          "stage": "semantic_repair",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 6,
+          "elapsed_ms": 3047,
+          "provider_elapsed_ms": 3047,
+          "request_bytes": 6470,
+          "response_bytes": null,
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "max_tokens": 4096,
+          "stage": "semantic_recheck",
+          "outcome": "failed",
+          "reasoning_effort": "none",
+          "error": "PROVIDER_TIMEOUT"
+        }
+      ],
+      "elapsed_ms": 60095,
+      "replayed_calls": 3,
+      "replay_verified": true
+    }
+  },
+  {
+    "id": "E08",
+    "kind": "focus",
+    "gold_total": 4,
+    "order": [
+      "compact",
+      "baseline"
+    ],
+    "upstream_ms": 9828,
+    "upstream_fingerprints": [
+      {
+        "request_hmac": "4b6226762576958eed1896ba9eda3bc168488282cd2343276a1c56d3c51bfcd2",
+        "response_hmac": "3d62cd357e7a6d93678aed0201e6d02fb116ff66eef8b749e3fcf16c18c31c9c"
+      },
+      {
+        "request_hmac": "dd442db43dc633564b531ad4ab5c22c2ee5decce93f407b5acd63a094884a7af",
+        "response_hmac": "724542e3a009f700456b952084136bb9d3afb8e8286375287a92dad1d76e938e"
+      },
+      {
+        "request_hmac": "fd7bc7b54b73c5efbb69bd097cf838d117af3ae6f1986680f0496570d0c66977",
+        "response_hmac": "35e8940e119719b88a575c69985a134aab58523db7c508edb8b90a910900f81a"
+      }
+    ],
+    "common_error": "SECTION_MERGE",
+    "compact": {
+      "error": "SECTION_MERGE",
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 5453,
+          "provider_elapsed_ms": 5453,
+          "request_bytes": 5830,
+          "response_bytes": 872,
+          "prompt_tokens": 666,
+          "completion_tokens": 65,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 907,
+          "provider_elapsed_ms": 907,
+          "request_bytes": 5768,
+          "response_bytes": 846,
+          "prompt_tokens": 656,
+          "completion_tokens": 66,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 3453,
+          "provider_elapsed_ms": 3453,
+          "request_bytes": 73155,
+          "response_bytes": 1631,
+          "prompt_tokens": 1428,
+          "completion_tokens": 287,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "ai"
+          },
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 9828,
+      "provider_calls": 3
+    },
+    "baseline": {
+      "error": "SECTION_MERGE",
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 5453,
+          "provider_elapsed_ms": 5453,
+          "request_bytes": 5830,
+          "response_bytes": 872,
+          "prompt_tokens": 666,
+          "completion_tokens": 65,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 907,
+          "provider_elapsed_ms": 907,
+          "request_bytes": 5768,
+          "response_bytes": 846,
+          "prompt_tokens": 656,
+          "completion_tokens": 66,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none",
+          "model": "solar-pro4-260806"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 3453,
+          "provider_elapsed_ms": 3453,
+          "request_bytes": 73155,
+          "response_bytes": 1631,
+          "prompt_tokens": 1428,
+          "completion_tokens": 287,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "ai"
+          },
+          "model": "solar-pro4-260806"
+        }
+      ],
+      "elapsed_ms": 9828,
+      "provider_calls": 3
+    }
+  }
+]
