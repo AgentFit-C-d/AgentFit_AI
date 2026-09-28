@@ -2,9 +2,10 @@
 
 ## 실행 범위
 
-- Python 3.12 격리 환경에 `pypdf==6.19.0` 설치 후 실제 PDF 객체를 만든 결정적 테스트를 실행했다. 텍스트·Markdown·PDF 10건과 기존 AI 테스트를 포함해 전체 **451건 통과**했다.
+- Python 3.12 격리 환경에 `pypdf==6.19.0` 설치 후 실제 PDF 객체를 만든 결정적 테스트를 실행했다. 텍스트·Markdown·PDF 14건과 기존 AI 테스트를 포함해 전체 **455건 통과**했다.
 - 정상 2쪽 PDF의 페이지 범위, 암호 PDF, 시그니처·구조 손상, 전체 빈 내용, 텍스트/빈 페이지 혼합, 101쪽, 100,000자 초과를 각각 확인했다. TEXT의 Unicode code point 포함 경계와 Markdown UTF-8 strict decode·파일 크기 거부도 확인했다.
 - 실제 자식 프로세스를 0.001초 기한으로 실행한 결과 `PDF_TIMEOUT`을 반환했다. `subprocess.run`의 timeout 정리를 사용한다. Worker에 전달하는 환경 키 집합에는 `UPSTAGE_API_KEY`, `NVIDIA_API_KEY`, `OPENAI_API_KEY`가 없음을 확인했다.
+- 독립 리뷰에서 정상 100,000개 보조평면 문자의 JSON 출력이 기존 1 MB 상한을 넘는 점과 TEXT 길이를 인코딩 뒤에 검사한 점을 발견했다. Worker 출력 상한을 1.5 MB로 조정하고 길이 검사를 앞당겼다. 잘못된 Worker 오류 형식·잘못된 Unicode 추출 결과도 안전 코드로 거부한다.
 - `git diff --check` 통과. 합성 PDF·테스트 결과에서 원문을 파일로 기록하지 않는다.
 
 ## 판정과 한계

@@ -1,8 +1,10 @@
 """Input boundary tests for document extraction before any provider call."""
 
 from io import BytesIO
+import json
 import unittest
 from unittest.mock import patch
+from subprocess import CompletedProcess
 
 from pypdf import PdfReader, PdfWriter
 
@@ -59,6 +61,11 @@ class DocumentExtractionTests(unittest.TestCase):
         self.assertEqual(extract_document("TEXT", "😀" * 100000).character_count, 100000)
         with self.assertRaises(DocumentExtractionError) as caught:
             extract_document("TEXT", "😀" * 100001)
+        self.assertEqual(caught.exception.code, "DOCUMENT_TEXT_TOO_LONG")
+
+    def test_direct_text_rejects_excess_length_before_utf8_encoding(self):
+        with self.assertRaises(DocumentExtractionError) as caught:
+            extract_document("TEXT", "x" * 100001 + "\ud800")
         self.assertEqual(caught.exception.code, "DOCUMENT_TEXT_TOO_LONG")
 
     def test_markdown_strict_utf8_and_leading_bom(self):
@@ -146,6 +153,37 @@ class DocumentExtractionTests(unittest.TestCase):
             with self.assertRaises(DocumentExtractionError) as caught:
                 extract_document("PDF", sample_pdf(["Alpha"]))
         self.assertEqual(caught.exception.code, "PDF_TIMEOUT")
+
+    def test_pdf_rejects_malformed_worker_error_instead_of_raising_type_error(self):
+        completed = CompletedProcess([], 0, stdout=b'{"error": []}')
+        with patch("agentfit_ai.document_extraction.subprocess.run",
+                   return_value=completed):
+            with self.assertRaises(DocumentExtractionError) as caught:
+                extract_document("PDF", sample_pdf(["Alpha"]))
+        self.assertEqual(caught.exception.code, "PDF_WORKER_FAILED")
+
+    def test_pdf_rejects_non_utf8_worker_text(self):
+        completed = CompletedProcess(
+            [], 0,
+            stdout=(b'{"text": "\\ud800", "page_count": 1, '
+                    b'"page_spans": [{"page": 1, "start": 0, "end": 1}]}'))
+        with patch("agentfit_ai.document_extraction.subprocess.run",
+                   return_value=completed):
+            with self.assertRaises(DocumentExtractionError) as caught:
+                extract_document("PDF", sample_pdf(["Alpha"]))
+        self.assertEqual(caught.exception.code, "PDF_WORKER_FAILED")
+
+    def test_pdf_accepts_maximum_supplementary_unicode_worker_output(self):
+        text = "😀" * 100000
+        output = json.dumps({"text": text, "page_count": 1,
+                             "page_spans": [{"page": 1, "start": 0,
+                                             "end": 100000}]}).encode("ascii")
+        self.assertGreater(len(output), 1000000)
+        completed = CompletedProcess([], 0, stdout=output)
+        with patch("agentfit_ai.document_extraction.subprocess.run",
+                   return_value=completed):
+            result = extract_document("PDF", sample_pdf(["Alpha"]))
+        self.assertEqual(result.character_count, 100000)
 
 
 if __name__ == "__main__":

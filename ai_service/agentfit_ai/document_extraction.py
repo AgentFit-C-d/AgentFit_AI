@@ -10,7 +10,7 @@ from pathlib import Path
 
 MAX_FILE_BYTES = 10_485_760
 MAX_TEXT_POINTS = 100_000
-MAX_WORKER_OUTPUT_BYTES = 1_000_000
+MAX_WORKER_OUTPUT_BYTES = 1_500_000
 PDF_TIMEOUT_SECONDS = 15
 PDF_WORKER_ERRORS = frozenset((
     "DOCUMENT_TOO_LARGE", "DOCUMENT_TEXT_TOO_LONG", "DOCUMENT_EMPTY",
@@ -62,11 +62,12 @@ def _extract_pdf(content: bytes, byte_size: int) -> ExtractedDocument:
         raise DocumentExtractionError("PDF_WORKER_FAILED")
     try:
         result = json.loads(completed.stdout)
-    except (ValueError, UnicodeError):
+    except (ValueError, UnicodeError, RecursionError):
         raise DocumentExtractionError("PDF_WORKER_FAILED") from None
     if type(result) is not dict:
         raise DocumentExtractionError("PDF_WORKER_FAILED")
-    if set(result) == {"error"} and result["error"] in PDF_WORKER_ERRORS:
+    if (set(result) == {"error"} and type(result["error"]) is str and
+            result["error"] in PDF_WORKER_ERRORS):
         raise DocumentExtractionError(result["error"])
     if set(result) != {"text", "page_count", "page_spans"}:
         raise DocumentExtractionError("PDF_WORKER_FAILED")
@@ -78,6 +79,10 @@ def _extract_pdf(content: bytes, byte_size: int) -> ExtractedDocument:
             len(spans) != page_count or len(text) > MAX_TEXT_POINTS or
             not text.strip()):
         raise DocumentExtractionError("PDF_WORKER_FAILED")
+    try:
+        text.encode("utf-8")
+    except UnicodeEncodeError:
+        raise DocumentExtractionError("PDF_WORKER_FAILED") from None
     end = 0
     for index, span in enumerate(spans, start=1):
         if (type(span) is not dict or set(span) != {"page", "start", "end"} or
@@ -99,6 +104,8 @@ def extract_document(kind: str, content: bytes | str) -> ExtractedDocument:
     if kind == "TEXT":
         if type(content) is not str:
             raise DocumentExtractionError("INVALID_DOCUMENT_CONTENT")
+        if len(content) > MAX_TEXT_POINTS:
+            raise DocumentExtractionError("DOCUMENT_TEXT_TOO_LONG")
         try:
             byte_size = len(content.encode("utf-8"))
         except UnicodeEncodeError:
