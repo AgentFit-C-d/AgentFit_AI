@@ -35,9 +35,11 @@ class ReviewDiagnosticTests(unittest.TestCase):
     def test_only_known_review_reason_is_exported(self):
         result=safe_diagnostics({"calls":[
             {"review_error":{"reason":"ARRAY_INDEX","raw":"private"}},
+            {"review_error":{"reason":"COMPACT_MISSING_SOURCE_EMPTY","raw":"private"}},
             {"review_error":{"reason":"private"}},
         ]})
-        self.assertEqual(result["calls"],[{"review_error":{"reason":"ARRAY_INDEX"}},{}])
+        self.assertEqual(result["calls"],[{"review_error":{"reason":"ARRAY_INDEX"}},
+                                          {"review_error":{"reason":"COMPACT_MISSING_SOURCE_EMPTY"}},{}])
 
     def test_anchored_error_reaches_safe_diagnostics(self):
         from unittest.mock import Mock

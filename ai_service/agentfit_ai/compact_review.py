@@ -77,7 +77,7 @@ def _evidence_lines(document, profile, field, value):
         if anchor is not None:
             found.add(anchor)
     if not found:
-        raise ReviewValidationError("EVIDENCE_LINES")
+        raise ReviewValidationError("COMPACT_EVIDENCE_UNRESOLVED")
     return sorted(found)[:30]
 
 
@@ -118,14 +118,13 @@ def normalize_compact_review(reply, profile, document):
             invalid("ISSUE_ENUM")
         if type(refs) is not list or len(refs) > 30 or any(
                 type(ref) is not int or not 1 <= ref <= count for ref in refs):
-            invalid("EVIDENCE_LINES")
+            invalid("COMPACT_SOURCE_LINE_INVALID")
         value = profile["data"][field]
         if kind == "missing":
             if target is not None: invalid("MISSING_INDEX")
-            if not refs: invalid("EVIDENCE_LINES")
+            if not refs: invalid("COMPACT_MISSING_SOURCE_EMPTY")
             index = None
         else:
-            if refs: invalid("EVIDENCE_LINES")
             if type(value) is list and value:
                 if type(target) is not str or target not in ids or ids[target][0] != field:
                     invalid("ARRAY_INDEX")

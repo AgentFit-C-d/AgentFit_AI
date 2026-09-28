@@ -1,0 +1,23 @@
+{
+  "cases": 20,
+  "dataset_sha256": [
+    "3fc74b4f1773e1fa91b22d5dbb5420774d5c0936f6d42ceb6cd00b030bcb5566",
+    "e98d5b10c92ead4cf6121dd3af991a58a7a75285d9f0f291a4632e0da26bff39",
+    "3683257124db4d4ee9f2cc403dd411f62a27c32f1ea710850abc239d91bd9e2c"
+  ],
+  "model": "solar-pro4",
+  "candidate_contract": "keyed-v1",
+  "prompt_revision": "v2",
+  "review_effort": "medium",
+  "overall_timeout_seconds": 60,
+  "per_call_cap_seconds": 40,
+  "order": "even=baseline,compact; odd=compact,baseline",
+  "held_out": false,
+  "evaluator_sha256": "6570ea736e49d7b7f3477fcbf97aab3f497ccce4b1dd1e846a40cf526a0ed94f",
+  "code_sha256": {
+    "ai_service/agentfit_ai/anchored_analysis.py": "e8eef585d983481d002949f1b081be96895159d85d758e5c522813397265688f",
+    "ai_service/agentfit_ai/compact_review.py": "c78e27b1095e6727a0595607270f646040d3c67e1b0fec12f2653b4e235b8e40",
+    "ai_service/agentfit_ai/semantic_review.py": "b0013790ea9bd181e7eb3a2ff0657a82023fa8f39407e126f93b096149ff5d4a"
+  },
+  "gate": "no full/focus accuracy, false-confirmation or validation regression; fewer review timeouts and invalid replies; more final successes; <=6 calls and observed <=60s"
+}

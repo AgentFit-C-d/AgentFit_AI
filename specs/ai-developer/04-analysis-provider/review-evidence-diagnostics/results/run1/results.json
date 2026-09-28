@@ -1,0 +1,187 @@
+[
+  {
+    "id": "N-004",
+    "compact": {
+      "passed": false,
+      "matched": 9,
+      "total": 10,
+      "mismatch_fields": [
+        "ai"
+      ],
+      "false_confirmations": 1,
+      "provider_calls": 3,
+      "elapsed_ms": 25359,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 2922,
+          "provider_elapsed_ms": 2922,
+          "request_bytes": 4088,
+          "response_bytes": 640,
+          "prompt_tokens": 451,
+          "completion_tokens": 25,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 5891,
+          "provider_elapsed_ms": 5875,
+          "request_bytes": 25728,
+          "response_bytes": 797,
+          "prompt_tokens": 906,
+          "completion_tokens": 77,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 16546,
+          "provider_elapsed_ms": 16546,
+          "request_bytes": 4984,
+          "response_bytes": 7010,
+          "prompt_tokens": 540,
+          "completion_tokens": 1328,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    }
+  },
+  {
+    "id": "E06",
+    "compact": {
+      "matched": 3,
+      "total": 3,
+      "false_confirmations": 0,
+      "passed": true,
+      "provider_calls": 4,
+      "elapsed_ms": 34813,
+      "first_pass": true,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 750,
+          "provider_elapsed_ms": 750,
+          "request_bytes": 5739,
+          "response_bytes": 846,
+          "prompt_tokens": 661,
+          "completion_tokens": 62,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 829,
+          "provider_elapsed_ms": 829,
+          "request_bytes": 5748,
+          "response_bytes": 868,
+          "prompt_tokens": 674,
+          "completion_tokens": 73,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 5234,
+          "provider_elapsed_ms": 5234,
+          "request_bytes": 100407,
+          "response_bytes": 1708,
+          "prompt_tokens": 1675,
+          "completion_tokens": 319,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 28000,
+          "provider_elapsed_ms": 28000,
+          "request_bytes": 6193,
+          "response_bytes": 5119,
+          "prompt_tokens": 692,
+          "completion_tokens": 963,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validated",
+          "reasoning_effort": "medium"
+        }
+      ]
+    }
+  },
+  {
+    "id": "E07",
+    "compact": {
+      "error": "INCOMPLETE_RESPONSE",
+      "provider_calls": 4,
+      "elapsed_ms": 38531,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 844,
+          "provider_elapsed_ms": 844,
+          "request_bytes": 5654,
+          "response_bytes": 850,
+          "prompt_tokens": 665,
+          "completion_tokens": 67,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 812,
+          "provider_elapsed_ms": 812,
+          "request_bytes": 5747,
+          "response_bytes": 861,
+          "prompt_tokens": 666,
+          "completion_tokens": 66,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 2844,
+          "provider_elapsed_ms": 2828,
+          "request_bytes": 100312,
+          "response_bytes": 1694,
+          "prompt_tokens": 1668,
+          "completion_tokens": 314,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 34031,
+          "provider_elapsed_ms": 34031,
+          "request_bytes": 6231,
+          "response_bytes": 20382,
+          "prompt_tokens": 688,
+          "completion_tokens": 4096,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "failed",
+          "reasoning_effort": "medium",
+          "error": "INCOMPLETE_RESPONSE"
+        }
+      ]
+    }
+  }
+]

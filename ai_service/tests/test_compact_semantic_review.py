@@ -43,17 +43,24 @@ class CompactReviewTests(unittest.TestCase):
             with self.subTest(refs=refs), self.assertRaises(ReviewValidationError):
                 normalize_compact_review(response, self.profile, self.document)
 
-    def test_reject_wrong_field_target_and_model_supplied_existing_lines(self):
+    def test_reject_wrong_field_target(self):
         ids = item_ids(self.profile)
         invalid = [
             {"field": "external_integrations", "kind": "wrong_role", "targetId": ids["features"][0], "sourceLineIds": []},
             {"field": "features", "kind": "wrong_role", "targetId": "I9999", "sourceLineIds": []},
-            {"field": "features", "kind": "wrong_role", "targetId": ids["features"][0], "sourceLineIds": [1]},
             {"field": "features", "kind": "missing", "targetId": ids["features"][0], "sourceLineIds": [1]},
         ]
         for issue in invalid:
             with self.subTest(issue=issue), self.assertRaises(ReviewValidationError):
                 normalize_compact_review({"issues": [issue]}, self.profile, self.document)
+
+    def test_existing_issue_ignores_extra_valid_model_line_and_uses_server_line(self):
+        target = item_ids(self.profile)["features"][0]
+        issue = {"field": "features", "kind": "wrong_role", "targetId": target,
+                 "sourceLineIds": [3]}
+        result = normalize_compact_review({"issues": [issue]}, self.profile, self.document)
+        self.assertEqual(result[0]["evidenceLineIds"], [1])
+        self.assertEqual(result[0]["itemIndex"], 0)
 
     def test_duplicate_target_is_rejected(self):
         target = item_ids(self.profile)["features"][0]
@@ -82,6 +89,18 @@ class CompactReviewTests(unittest.TestCase):
         issue = normalize_compact_review(response, self.profile, self.document)[0]
         self.assertEqual(issue["itemIndex"], None)
         self.assertEqual(issue["evidenceLineIds"], [3])
+
+    def test_evidence_failures_have_distinct_safe_reasons(self):
+        cases = [
+            ({"field": "ai", "kind": "missing", "targetId": None,
+              "sourceLineIds": []}, "COMPACT_MISSING_SOURCE_EMPTY"),
+            ({"field": "ai", "kind": "missing", "targetId": None,
+              "sourceLineIds": [4]}, "COMPACT_SOURCE_LINE_INVALID"),
+        ]
+        for issue, reason in cases:
+            with self.subTest(reason=reason), self.assertRaises(ReviewValidationError) as caught:
+                normalize_compact_review({"issues": [issue]}, self.profile, self.document)
+            self.assertEqual(caught.exception.reason, reason)
 
     def test_schema_and_payload_are_compact_and_source_is_not_mutated(self):
         schema = compact_review_schema(self.profile, len(self.document.splitlines()))

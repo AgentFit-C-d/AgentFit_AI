@@ -1,0 +1,122 @@
+[
+  {
+    "id": "E07",
+    "compact": {
+      "error": "SEMANTIC_REVIEW_INVALID",
+      "provider_calls": 4,
+      "elapsed_ms": 35469,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 1062,
+          "provider_elapsed_ms": 1062,
+          "request_bytes": 5654,
+          "response_bytes": 850,
+          "prompt_tokens": 665,
+          "completion_tokens": 67,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 938,
+          "provider_elapsed_ms": 938,
+          "request_bytes": 5747,
+          "response_bytes": 861,
+          "prompt_tokens": 666,
+          "completion_tokens": 66,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 21281,
+          "provider_elapsed_ms": 21281,
+          "request_bytes": 100312,
+          "response_bytes": 2495,
+          "prompt_tokens": 1668,
+          "completion_tokens": 498,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 4,
+          "elapsed_ms": 12172,
+          "provider_elapsed_ms": 12172,
+          "request_bytes": 6231,
+          "response_bytes": 8109,
+          "prompt_tokens": 688,
+          "completion_tokens": 1683,
+          "max_tokens": 4096,
+          "stage": "semantic_review",
+          "outcome": "validation_failed",
+          "reasoning_effort": "medium",
+          "error": "SEMANTIC_REVIEW_INVALID",
+          "review_error": {
+            "reason": "COMPACT_EXISTING_SOURCE_UNEXPECTED"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "E08",
+    "compact": {
+      "error": "SECTION_MERGE",
+      "provider_calls": 3,
+      "elapsed_ms": 7828,
+      "calls": [
+        {
+          "call": 1,
+          "elapsed_ms": 750,
+          "provider_elapsed_ms": 750,
+          "request_bytes": 5830,
+          "response_bytes": 853,
+          "prompt_tokens": 666,
+          "completion_tokens": 61,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 2,
+          "elapsed_ms": 1265,
+          "provider_elapsed_ms": 1265,
+          "request_bytes": 5768,
+          "response_bytes": 854,
+          "prompt_tokens": 656,
+          "completion_tokens": 66,
+          "max_tokens": 4096,
+          "stage": "candidate_generation",
+          "outcome": "validated",
+          "reasoning_effort": "none"
+        },
+        {
+          "call": 3,
+          "elapsed_ms": 5813,
+          "provider_elapsed_ms": 5813,
+          "request_bytes": 91359,
+          "response_bytes": 1755,
+          "prompt_tokens": 1582,
+          "completion_tokens": 325,
+          "max_tokens": 4096,
+          "stage": "judgment",
+          "outcome": "validation_failed",
+          "reasoning_effort": "none",
+          "error": "SECTION_MERGE",
+          "merge_error": {
+            "reason": "SELECTED_STATUS",
+            "field": "ai"
+          }
+        }
+      ]
+    }
+  }
+]
