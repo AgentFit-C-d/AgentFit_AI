@@ -129,6 +129,9 @@ class AnchoredAnalyzer(SolarAnalyzer):
     def _observe_judgment_failure(self, reply, pool, document, document_id, error):
         pass
 
+    def _observe_candidate_pool(self, pool):
+        pass
+
     def _observe_profile(self, stage, profile):
         pass
 
@@ -228,6 +231,7 @@ class AnchoredAnalyzer(SolarAnalyzer):
             diagnostic.update(sections_covered=len(sections),candidate_remapped=metrics["remapped"],
                               candidate_deduplicated=metrics["deduplicated"])
         diagnostic["candidate_count"]=len(pool)
+        self._observe_candidate_pool(pool)
         candidates=candidate_views(pool,sections,focus=self._candidate_occurrences)
         judgment_content={"document":document,"candidates":candidates}
         schema=atomic_schema(pool) if self._atomic_verdict else judgment_schema(pool,selected_constraints=self._selected_constraints)
