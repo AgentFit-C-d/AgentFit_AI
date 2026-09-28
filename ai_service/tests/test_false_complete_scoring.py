@@ -46,6 +46,9 @@ class FalseCompleteScoringTests(unittest.TestCase):
         self.assertEqual(rows[0]["first_observed_divergence"], "candidate_gap")
         self.assertEqual(rows[0]["review_detected"], False)
         self.assertEqual(rows[0]["candidate_ids"], ["F0001"])
+        self.assertEqual(rows[0]["candidate_spans"], self.both[:1])
+        self.assertEqual(rows[0]["gold_spans"], [{"start": 0, "end": 5},
+                                                  {"start": 6, "end": 11}])
         self.assertNotIn("장소 확인", str(rows))
 
     def test_wrong_first_judgment_and_empty_review(self):
@@ -108,7 +111,8 @@ class FalseCompleteScoringTests(unittest.TestCase):
         self.assertEqual(rows, [{"field": None,
                                  "first_observed_divergence": "undetermined",
                                  "review_detected": None,
-                                 "candidate_ids": [], "evidence_spans": []}])
+                                 "candidate_ids": [], "candidate_spans": [],
+                                 "gold_spans": [], "evidence_spans": []}])
 
 
 if __name__ == "__main__":

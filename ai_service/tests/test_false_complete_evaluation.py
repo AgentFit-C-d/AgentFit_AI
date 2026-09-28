@@ -74,6 +74,28 @@ class FalseCompleteEvaluationTests(unittest.TestCase):
         self.assertEqual(row["false_confirmations"], 0)
         self.assertEqual(row["false_complete_fields"], [])
 
+    def test_invalid_complete_profile_is_unscored_not_zero_false_confirmations(self):
+        case = {"id": "T01", "kind": "full", "document": "Atlas Beta",
+                "gold": {"project_name": "Atlas"}}
+        invalid = named_profile(case["document"], "Beta", 6)
+        invalid["evidence"]["project_name"] = [{"start": 0, "end": 4}]
+
+        class FakeAnalyzer:
+            def __init__(self, key, *, transport, **kwargs):
+                pass
+
+            def analyze_observed(self, document, document_id):
+                return ({"outcome": "complete", "profile": invalid},
+                        {"candidates": [], "profiles": [], "reviews": []})
+
+        row = run_case(case, "test-key", analyzer_factory=FakeAnalyzer)
+        self.assertEqual(row["structural_evidence_errors"], 1)
+        self.assertIsNone(row["false_confirmations"])
+        self.assertEqual(row["scoring_status"], "unscored_invalid_profile")
+        summary = aggregate([row], planned=1)
+        self.assertEqual(summary["unscored_complete_cases"], 1)
+        self.assertFalse(summary["gate"]["zero_wrong_auto_confirmations"])
+
     def test_fixed_denominator_and_limits(self):
         self.assertIsNotNone(aggregate)
         rows = [

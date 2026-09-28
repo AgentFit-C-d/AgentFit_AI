@@ -127,6 +127,11 @@ def diagnose_case(case: dict, result: dict, observation: dict,
             "review_detected": _review_detected(observation, review_stage, field)
                                if review_stage else None,
             "candidate_ids": [item["id"] for item in candidates] if field else [],
+            "candidate_spans": [
+                {"id": item["id"], "start": item["start"], "end": item["end"]}
+                for item in candidates] if field else [],
+            "gold_spans": [{"start": start, "end": end}
+                           for start, end in annotations.get(field, [])] if field else [],
             "evidence_spans": [{"start": span["start"], "end": span["end"]}
                                for span in evidence],
         })

@@ -50,18 +50,23 @@ def run_case(case: dict, key: str, *, provider=post_solar,
            "analysis_runs": 1, "provider_calls": transport.calls,
            "elapsed_ms": elapsed_ms, "false_confirmations": 0,
            "false_complete_fields": [], "diagnostic_error": None,
-           "structural_evidence_errors": 0}
+           "structural_evidence_errors": 0, "scoring_status": "not_applicable"}
     if outcome == "failed":
         return row
     profile = result["profile"]
     row["structural_evidence_errors"] = _structural_evidence_errors(
         case["document"], case["id"], profile)
     if row["structural_evidence_errors"]:
+        if outcome == "complete":
+            row["false_confirmations"] = None
+            row["scoring_status"] = "unscored_invalid_profile"
         return row
     score = (full_score(profile, case["gold"]) if case["kind"] == "full"
              else focus_score(case, profile))
     row["false_confirmations"] = (score["false_confirmations"]
                                   if outcome == "complete" else 0)
+    if outcome == "complete":
+        row["scoring_status"] = "scored"
     if row["false_confirmations"]:
         try:
             row["false_complete_fields"] = diagnose_case(
@@ -70,7 +75,8 @@ def run_case(case: dict, key: str, *, provider=post_solar,
             row["diagnostic_error"] = "DIAGNOSTIC_UNDETERMINED"
             row["false_complete_fields"] = [{
                 "field": None, "first_observed_divergence": "undetermined",
-                "review_detected": None, "candidate_ids": [], "evidence_spans": [],
+                "review_detected": None, "candidate_ids": [],
+                "candidate_spans": [], "gold_spans": [], "evidence_spans": [],
             }]
     return row
 
@@ -88,7 +94,9 @@ def aggregate(rows: list[dict], *, planned: int = 20) -> dict:
         "six_call_limit": all(row["provider_calls"] <= 6 for row in rows),
         "observed_60s_limit": all(row["elapsed_ms"] <= 60000 for row in rows),
         "zero_wrong_auto_confirmations": all(
-            row["false_confirmations"] == 0 for row in rows),
+            row["outcome"] != "complete" or
+            (row.get("scoring_status", "scored") == "scored" and
+             row["false_confirmations"] == 0) for row in rows),
         "zero_structural_evidence_errors": all(
             row.get("structural_evidence_errors", 0) == 0 for row in rows),
     }
@@ -96,7 +104,10 @@ def aggregate(rows: list[dict], *, planned: int = 20) -> dict:
             "complete_cases": outcomes["complete"],
             "needs_confirmation_cases": outcomes["needs_confirmation"],
             "failed_cases": outcomes["failed"],
-            "wrong_auto_confirmations": sum(row["false_confirmations"] for row in rows),
+            "wrong_auto_confirmations": sum(row["false_confirmations"] or 0 for row in rows),
+            "unscored_complete_cases": sum(
+                row["outcome"] == "complete" and row.get("scoring_status") ==
+                "unscored_invalid_profile" for row in rows),
             "first_observed_divergence": dict(stages),
             "review_detected": dict(reviews),
             "undetermined": stages["undetermined"],
@@ -105,7 +116,7 @@ def aggregate(rows: list[dict], *, planned: int = 20) -> dict:
             "median_elapsed_ms": statistics.median(elapsed) if elapsed else None,
             "p95_elapsed_ms": elapsed[(95 * len(elapsed) + 99) // 100 - 1] if elapsed else None,
             "gate": gate, "passed": bool(rows) and all(gate.values()),
-            "scoring_note": "Existing full/focus value scoring; semantic evidence remains unverified. Stage labels are observations, not causes."}
+            "scoring_note": "Wrong auto confirmations count full mismatched fields or focus forbidden-word hits among scored complete cases; stage counts are unique fields and may differ. Unscored complete cases are excluded from the count. Semantic evidence remains unverified. Stage labels are observations, not causes."}
 
 
 def write_safe_json(path: Path, value, *, forbidden_strings=()):
