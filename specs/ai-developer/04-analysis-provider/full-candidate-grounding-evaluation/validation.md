@@ -24,3 +24,5 @@
 ## 실서비스 판정
 
 아직 승격하지 않는다. 네 합성 문서의 두 필드만 다뤘고 새 실제 문서 골드, 전체 Profile 필드, 추가 후보의 값 정규화·중복 합치기, Spring 연동, 장문·스캔 PDF 및 Docling worker 한도는 검증되지 않았다. 표준 Docling cold 실행은 이전 측정에서 약 19.6초·RSS 약 1,018MiB로 현재 PDF worker 15초·512MiB를 초과했다.
+
+로컬 서비스 전체 테스트와 실험 venv의 실제 Docling 포함 30건이 통과했다. 커밋 `1244f46`의 [Linux CI](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36592426230)도 통과했다. CI는 기본 서비스 의존성만 설치하므로 실제 Docling 변환 테스트는 로컬 실험 환경 결과다.

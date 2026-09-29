@@ -23,5 +23,5 @@
 ## 3. 실제 평가와 검증
 
 - [x] 고정 합성 문서에 표준 Docling 경로를 반복 실행하고 native/pypdf와 비교했다. 기존 분류 지시문의 불안정성을 확인해 필드 정의를 추가했다.
-- [ ] 서비스 전체 테스트, 실험 venv의 실제 Docling 테스트, Linux CI와 diff 검사를 실행한다.
-- [ ] 결과·남은 관문을 `validation.md`에 기록하고 `feature/full-candidate-grounding-evaluation`을 push한다.
+- [x] 서비스 전체 테스트, 실험 venv의 실제 Docling 테스트, Linux CI와 diff 검사를 실행했다.
+- [x] 결과·남은 관문을 `validation.md`에 기록하고 `feature/full-candidate-grounding-evaluation`을 push했다.
