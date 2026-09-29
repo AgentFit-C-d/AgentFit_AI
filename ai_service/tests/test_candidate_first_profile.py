@@ -21,6 +21,46 @@ def extraction(quote, anchor=None):
 
 
 class CandidateFirstProfileTests(unittest.TestCase):
+    def test_label_and_review_requests_identify_each_repeated_occurrence(self):
+        document = "이전 제품은 Go를 쓴다.\r\n🚀 현재 제품은 Go를 검토 중이다."
+        first = document.index("Go")
+        second = document.rindex("Go")
+        # IDs and order deliberately do not encode source order.
+        frozen = {"candidates": [
+            {"id": "C000", "start": second, "end": second + 2},
+            {"id": "C001", "start": first, "end": first + 2}], "rejected": []}
+        labels = [{"id": item["id"], "field": "backend", "status": "tentative"}
+                  for item in frozen["candidates"]]
+        label_request = json.loads(candidate_label_payload(
+            document, frozen["candidates"])["messages"][1]["content"])
+        review_request = json.loads(coverage_review_payload(
+            document, frozen, labels)["messages"][1]["content"])
+        for rows in (label_request["candidates"], review_request["selections"]):
+            for row, source in zip(rows, frozen["candidates"]):
+                self.assertEqual(row.get("start"), source["start"])
+                self.assertEqual(row.get("end"), source["end"])
+                self.assertEqual(row["value"], "Go")
+                self.assertEqual(row.get("before"), document[:source["start"]])
+                self.assertEqual(row.get("after"), document[source["end"]:])
+
+    def test_mention_context_is_bounded_exact_source_without_normalization(self):
+        document = "가" * 300 + "🚀\r\nGo\r\n" + "나" * 300
+        start = document.index("Go")
+        request = json.loads(candidate_label_payload(document, [
+            {"id": "C000", "start": start, "end": start + 2}])[
+                "messages"][1]["content"])
+        item = request["candidates"][0]
+        self.assertEqual(item.get("before"), document[start - 240:start])
+        self.assertEqual(item.get("after"), document[start + 2:start + 242])
+
+    def test_coverage_request_rejects_invalid_candidate_positions(self):
+        labels = [{"id": "C000", "field": "backend", "status": "confirmed"}]
+        for start, end in ((-1, 1), (0, 9), (2, 1), (True, 2)):
+            frozen = {"candidates": [{"id": "C000", "start": start,
+                                      "end": end}], "rejected": []}
+            with self.subTest(start=start, end=end), self.assertRaises(ValueError):
+                coverage_review_payload("Go", frozen, labels)
+
     def test_repeated_mentions_get_stable_ids_and_exact_positions(self):
         document = "Go는 검토 중이다. Go를 서버로 확정했다."
         frozen = freeze_candidates(document, [
@@ -102,6 +142,7 @@ class CandidateFirstProfileTests(unittest.TestCase):
         frozen = freeze_candidates(document, [extraction("Alpha"),
                                               extraction("검색")])
         payload = candidate_label_payload(document, frozen["candidates"])
+        self.assertEqual(payload["reasoning_effort"], "medium")
         item_schema = payload["response_format"]["json_schema"]["schema"][
             "properties"]["labels"]["items"]
         self.assertEqual(set(item_schema["properties"]), {"id", "field", "status"})
@@ -113,6 +154,7 @@ class CandidateFirstProfileTests(unittest.TestCase):
                   {"id": "C001", "field": "features", "status": "confirmed"}]
         def transport(request, key, timeout):
             self.assertEqual(key, "synthetic-key")
+            self.assertEqual(timeout, 600)
             return json.dumps({"model": "solar-pro4-260806", "choices": [{
                 "finish_reason": "stop", "message": {"content": json.dumps({
                     "labels": labels})}}], "usage": {}}).encode()

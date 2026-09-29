@@ -88,6 +88,28 @@ def validate_candidate_labels(frozen: dict, labels: list[dict]) -> list[dict]:
     return labels
 
 
+def _source_mention(document: str, item: dict) -> dict:
+    """Preserve occurrence identity at both semantic model boundaries."""
+    if (type(item) is not dict or set(item) != {"id", "start", "end"} or
+            type(item["id"]) is not str or
+            type(item["start"]) is not int or type(item["end"]) is not int or
+            not 0 <= item["start"] < item["end"] <= len(document)):
+        raise ValueError("invalid candidate range")
+    start, end = item["start"], item["end"]
+    return {**item, "value": document[start:end],
+            "before": document[max(0, start - 240):start],
+            "after": document[end:end + 240]}
+
+
+_MENTION_INSTRUCTION = (
+    "Each candidate identifies one specific source occurrence. start/end are "
+    "zero-based Unicode code-point offsets with end excluded. before and after "
+    "are exact adjacent source context around value at that occurrence. Judge "
+    "that occurrence in its product and time context; do not copy certainty "
+    "from another occurrence of the same value. Candidate order is not source "
+    "order. Use the whole document for explicit decisions and relationships. ")
+
+
 def candidate_label_payload(document: str, candidates: list[dict]) -> dict:
     """Ask for semantics by ID without allowing model-written values or quotes."""
     if (type(document) is not str or not document.strip() or
@@ -96,14 +118,9 @@ def candidate_label_payload(document: str, candidates: list[dict]) -> dict:
     ids = []
     mentions = []
     for item in candidates:
-        if (type(item) is not dict or set(item) != {"id", "start", "end"} or
-                type(item["id"]) is not str or
-                type(item["start"]) is not int or type(item["end"]) is not int or
-                not 0 <= item["start"] < item["end"] <= len(document)):
-            raise ValueError("invalid candidate range")
+        mention = _source_mention(document, item)
         ids.append(item["id"])
-        mentions.append({"id": item["id"],
-                         "value": document[item["start"]:item["end"]]})
+        mentions.append(mention)
     if len(set(ids)) != len(ids):
         raise ValueError("duplicate candidate ID")
     label = {"type": "object", "properties": {
@@ -127,14 +144,14 @@ def candidate_label_payload(document: str, candidates: list[dict]) -> dict:
         "storage engine; deployment is an adopted hosting or container environment; "
         "features are user or product operations, not team tasks; "
         "external_integrations are named outside providers, including backup storage. "
-        "Use other for anything outside these fields.")
+        "Use other for anything outside these fields. " + _MENTION_INSTRUCTION)
     return {"model": "solar-pro4", "messages": [
         {"role": "system", "content": system},
         {"role": "user", "content": json.dumps({
             "document": document, "candidates": mentions}, ensure_ascii=False)}],
         "response_format": {"type": "json_schema", "json_schema": {
             "name": "agentfit_candidate_labels", "strict": True, "schema": schema}},
-        "reasoning_effort": "none", "frequency_penalty": 0,
+        "reasoning_effort": "medium", "frequency_penalty": 0,
         "temperature": 0, "max_tokens": 8192, "stream": False}
 
 
@@ -153,7 +170,7 @@ def classify_profile_candidates(document: str, frozen: dict, key: str,
         batch = candidates[offset:offset + 30]
         payload = candidate_label_payload(document, batch)
         reply, model, _, _ = sender._send_payload(payload, ("labels",),
-                                                   timeout=120)
+                                                   timeout=600)
         if not model.startswith("solar-pro4"):
             raise AnalysisError("PROVIDER_MODEL")
         normalized = [{**label, "status": "irrelevant"}
@@ -173,9 +190,7 @@ def coverage_review_payload(document: str, frozen: dict,
     if type(document) is not str or not document.strip():
         raise ValueError("invalid review document")
     spans = {item["id"]: item for item in frozen["candidates"]}
-    selections = [{**label,
-                   "value": document[spans[label["id"]]["start"]:
-                                     spans[label["id"]]["end"]]}
+    selections = [{**_source_mention(document, spans[label["id"]]), **label}
                   for label in labels]
     field_array = {"type": "array", "maxItems": len(FIELDS),
                    "items": {"type": "string", "enum": list(FIELDS)}}
@@ -195,7 +210,8 @@ def coverage_review_payload(document: str, frozen: dict,
         "Report candidate IDs with wrong field or certainty status. Tentative, "
         "negative, example, historical, and other-product claims are not confirmed. "
         "Return all checkedFields in the supplied order, and only existing field "
-        "names and candidate IDs. Never write a new quote or value.")
+        "names and candidate IDs. Never write a new quote or value. " +
+        _MENTION_INSTRUCTION)
     return {"model": "solar-pro4", "messages": [
         {"role": "system", "content": system},
         {"role": "user", "content": json.dumps({
