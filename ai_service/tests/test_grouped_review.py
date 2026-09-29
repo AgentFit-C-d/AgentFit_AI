@@ -1,0 +1,77 @@
+import unittest
+
+from agentfit_ai.grouped_review import GROUPS, group_review_payload, normalize_group_review
+from agentfit_ai.profile import FIELDS, validate_profile
+from agentfit_ai.semantic_review import ReviewValidationError
+
+
+DOCUMENT = "# Alpha\n- registration"
+
+
+def profile():
+    data = dict.fromkeys(FIELDS)
+    data["project_name"] = "Alpha"
+    data["features"] = ["registration"]
+    evidence = {field: [] for field in FIELDS}
+    evidence["project_name"] = [{"start": 2, "end": 7}]
+    evidence["features"] = [{"start": 10, "end": 22}]
+    return validate_profile(DOCUMENT, "doc", {"data": data, "evidence": evidence})
+
+
+class GroupedReviewTests(unittest.TestCase):
+    def test_groups_cover_each_public_field_once(self):
+        self.assertEqual(len(GROUPS), 3)
+        self.assertEqual([len(group) for group in GROUPS], [5, 4, 1])
+        self.assertEqual(sorted(field for group in GROUPS for field in group),
+                         sorted(FIELDS))
+
+    def test_payload_restricts_checked_and_issue_fields(self):
+        payload = group_review_payload(DOCUMENT, profile(), GROUPS[2],
+                                       model="solar-pro4", effort="medium")
+        schema = payload["response_format"]["json_schema"]["schema"]
+        self.assertEqual(set(schema["properties"]), {"checkedFields", "issues"})
+        self.assertEqual(schema["properties"]["checkedFields"]["items"]["enum"],
+                         ["features"])
+        self.assertEqual(schema["properties"]["issues"]["items"]["properties"]
+                         ["field"]["enum"], ["features"])
+        self.assertEqual(payload["max_tokens"], 4096)
+        prompt = payload["messages"][0]["content"]
+        self.assertIn('"checkedFields"', prompt)
+        self.assertNotIn('출력은 {"issues"', prompt)
+        self.assertNotIn("10개 필드를 모두 검토", prompt)
+
+    def test_existing_and_missing_issues_are_server_normalized(self):
+        reply = {"checkedFields": ["features"], "issues": [
+            {"field": "features", "kind": "overbroad", "targetId": "I0001",
+             "sourceLineIds": []},
+            {"field": "features", "kind": "missing", "targetId": None,
+             "sourceLineIds": [2]},
+        ]}
+        normalized = normalize_group_review(reply, profile(), DOCUMENT, GROUPS[2])
+        self.assertEqual(normalized["checkedFields"], ["features"])
+        self.assertEqual(normalized["issues"][0]["itemIndex"], 0)
+        self.assertEqual(normalized["issues"][0]["evidenceLineIds"], [2])
+        self.assertEqual(normalized["issues"][1]["itemIndex"], None)
+
+    def test_invalid_checked_fields_and_out_of_group_issue_fail(self):
+        for checked in ([], ["features", "features"], ["project_name"]):
+            with self.subTest(checked=checked), self.assertRaises(ReviewValidationError):
+                normalize_group_review({"checkedFields": checked, "issues": []},
+                                       profile(), DOCUMENT, GROUPS[2])
+        with self.assertRaises(ReviewValidationError):
+            normalize_group_review({"checkedFields": ["features"], "issues": [
+                {"field": "project_name", "kind": "unsupported", "targetId": None,
+                 "sourceLineIds": []}]}, profile(), DOCUMENT, GROUPS[2])
+
+    def test_invalid_target_duplicate_and_missing_without_line_fail(self):
+        for issues in (
+            [{"field": "features", "kind": "overbroad", "targetId": "I9999",
+              "sourceLineIds": []}],
+            [{"field": "features", "kind": "overbroad", "targetId": "I0001",
+              "sourceLineIds": []}] * 2,
+            [{"field": "features", "kind": "missing", "targetId": None,
+              "sourceLineIds": []}],
+        ):
+            with self.subTest(issues=issues), self.assertRaises(ReviewValidationError):
+                normalize_group_review({"checkedFields": ["features"], "issues": issues},
+                                       profile(), DOCUMENT, GROUPS[2])

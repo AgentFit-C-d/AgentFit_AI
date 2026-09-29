@@ -1,0 +1,60 @@
+"""Strict field-scoped semantic review for opt-in source selector analysis."""
+
+from .compact_review import normalize_compact_review, review_payload
+from .profile import FIELDS
+from .semantic_review import ReviewValidationError
+
+
+GROUPS = (
+    ("project_name", "project_type", "domain", "frontend", "backend"),
+    ("ai", "database", "deployment", "external_integrations"),
+    ("features",),
+)
+
+
+def _valid_fields(fields):
+    return (type(fields) is tuple and fields in GROUPS and
+            len(fields) == len(set(fields)) and set(fields) <= set(FIELDS))
+
+
+def group_review_payload(document, profile, fields, *, model, effort):
+    if not _valid_fields(fields):
+        raise ValueError("unsupported review group")
+    payload = review_payload(document, profile, model=model, effort=effort)
+    prompt = payload["messages"][0]["content"]
+    prompt = prompt.replace("10개 필드를 모두 검토한다", "지정된 필드만 검토한다")
+    prompt = "\n".join(
+        line for line in prompt.splitlines() if not line.startswith("출력은 "))
+    payload["messages"][0]["content"] = prompt + (
+        "\n이번 호출에서는 다음 필드만 독립적으로 검토한다: " + ", ".join(fields) +
+        '. 다른 필드의 이슈는 반환하지 않는다. 출력은 {"checkedFields":[지정 필드 전체],'
+        '"issues":[오류 항목]} 형식이다. checkedFields에 지정 필드를 각각 한 번 적는다.'
+    )
+    schema = payload["response_format"]["json_schema"]
+    schema["name"] = "agentfit_grouped_review"
+    props = schema["schema"]["properties"]
+    props["issues"]["items"]["properties"]["field"]["enum"] = list(fields)
+    props["checkedFields"] = {
+        "type": "array", "minItems": len(fields), "maxItems": len(fields),
+        "items": {"type": "string", "enum": list(fields)},
+    }
+    schema["schema"]["required"] = ["checkedFields", "issues"]
+    return payload
+
+
+def normalize_group_review(reply, profile, document, fields):
+    if not _valid_fields(fields):
+        raise ReviewValidationError("CHECKED_FIELDS")
+    if type(reply) is not dict or set(reply) != {"checkedFields", "issues"}:
+        raise ReviewValidationError("ROOT_SHAPE")
+    checked = reply["checkedFields"]
+    if (type(checked) is not list or len(checked) != len(fields) or
+            any(type(item) is not str for item in checked) or
+            set(checked) != set(fields)):
+        raise ReviewValidationError("CHECKED_FIELDS")
+    issues = reply["issues"]
+    if type(issues) is not list or any(type(issue) is not dict or
+                                       issue.get("field") not in fields for issue in issues):
+        raise ReviewValidationError("ISSUE_ENUM")
+    normalized = normalize_compact_review({"issues": issues}, profile, document)
+    return {"checkedFields": list(fields), "issues": normalized}
