@@ -45,6 +45,26 @@ class RecoverableDraftTests(unittest.TestCase):
         self.assertNotIn("PRIVATE_SOURCE_MARKER", json.dumps(result))
         self.assertEqual(result["error"], "PROVIDER_TIMEOUT")
 
+    def test_unreviewed_suggestions_can_require_explicit_confirmation(self):
+        result = project_draft(DOCUMENT, "doc", profile(), unresolved={},
+                               review_complete=False, error_code="PROVIDER_TIMEOUT",
+                               ask_suggested_when_unreviewed=True)
+        self.assertEqual(result["fieldStates"]["project_name"], "suggested")
+        self.assertEqual(result["profile"]["data"]["project_name"], "Raven")
+        self.assertEqual(len(result["questions"]), len(FIELDS))
+        self.assertIn({"field": "project_name", "reason": "REVIEW_UNAVAILABLE",
+                       "questionId": "confirm_project_name"}, result["questions"])
+        self.assertNotIn("PRIVATE_SOURCE_MARKER", json.dumps(result))
+
+    def test_unreviewed_unknowns_can_remain_editable_without_blanket_questions(self):
+        result = project_draft(DOCUMENT, "doc", profile(), unresolved={},
+                               review_complete=False, error_code="PROVIDER_TIMEOUT",
+                               ask_suggested_when_unreviewed=True,
+                               ask_unknown_when_unreviewed=False)
+        self.assertEqual(result["fieldStates"]["database"], "unknown")
+        self.assertEqual([question["field"] for question in result["questions"]],
+                         ["project_name", "external_integrations"])
+
     def test_provider_text_is_not_returned_as_reason_or_error(self):
         result = project_draft(DOCUMENT, "doc", profile(),
                                unresolved={"ai": "PRIVATE_PROVIDER_TEXT"},

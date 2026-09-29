@@ -573,6 +573,12 @@ class SolarAnalyzer:
         self._transport = transport
         self._diagnostics_store = diagnostics_store
 
+    def _observe_profile(self, stage, profile):
+        pass
+
+    def _observe_review_issues(self, stage, issues):
+        pass
+
     def analyze(self, document: str, document_id: str) -> AnalysisResult:
         if type(document) is not str or not document.strip() or len(document) > 100_000:
             raise AnalysisError("INVALID_INPUT")
@@ -730,6 +736,7 @@ class SolarAnalyzer:
             raise
         if repaired:
             diagnostic["calls"][-1]["outcome"] = "validated"
+        self._observe_profile("pre_review", profile)
         semantic_repaired = ()
         if self._semantic_review:
             def review_draft(current, stage):
@@ -742,6 +749,7 @@ class SolarAnalyzer:
                     if error.reason in REVIEW_INVALID_REASONS:
                         call["review_error"] = {"reason": error.reason}
                     raise AnalysisError("SEMANTIC_REVIEW_INVALID") from None
+                self._observe_review_issues(stage, issues)
                 call["outcome"] = "semantic_failed" if issues else "validated"
                 if issues:
                     # Diagnostics contain classifications, never source quotes or original values.
@@ -765,6 +773,7 @@ class SolarAnalyzer:
                     diagnostic["calls"][-1].update(outcome="validation_failed", error=safe_code(error.code))
                     raise
                 diagnostic["calls"][-1]["outcome"] = "validated"
+                self._observe_profile("post_repair", profile)
                 if review_draft(profile, "semantic_recheck"):
                     raise AnalysisError("SEMANTIC_REJECTED")
         def total(index):
