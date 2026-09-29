@@ -12,7 +12,7 @@
 
 - [x] 1. 실패 응답의 stage/batch/finish_reason/tokens와 민감 데이터 미포함, 수집 전후 요청 동일성 테스트 RED. CLI 실패 행 보존·조합 검증 RED.
 - [x] 2. solar._send_payload trace에 안전 finish_reason 추가. 분리 검토에 선택형 review_calls 수집기 추가. 분석기/평가 CLI를 연결하고 관련 테스트 GREEN.
-- [ ] 3. 전체 테스트와 diff 검사·독립 리뷰·commit/push·CI. H02 진단 평가 한 번 실행 후 실패 위치와 다음 결정을 validation.md에 기록한다.
+- [x] 3. 전체 테스트와 diff 검사·독립 리뷰·commit/push·CI. H02 진단 평가 한 번 실행 후 실패 위치와 다음 결정을 validation.md에 기록한다. 묶음 2의 length/8192 종료를 확인했다.
 
 ## 상태
 
