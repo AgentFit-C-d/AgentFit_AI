@@ -59,6 +59,11 @@ class SafeTraceSolarAnalyzer(RecoverableSolarAnalyzer):
                                else "unknown"),
                    "error": safe_code(call["error"]) if call.get("error") else None,
                    "validation": [item for item in validations if item is not None]}
+            timing = {name: call[name]
+                      for name in ("request_bytes", "provider_elapsed_ms", "elapsed_ms")
+                      if type(call.get(name)) is int and 0 <= call[name] <= 1_000_000_000}
+            if timing:
+                row["timing"] = timing
             self.safe_calls.append(row)
 
 
@@ -133,6 +138,7 @@ def main():
     parser.add_argument("--partition", choices=("tuning", "heldout"), default="tuning")
     parser.add_argument("--case-id", action="append")
     parser.add_argument("--repair-context-options", action="store_true")
+    parser.add_argument("--parallel-first-pass", action="store_true")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live required")
@@ -156,6 +162,7 @@ def main():
                          "sha256": case["sha256"]} for case, _ in documents],
             "one_analysis_per_case": True,
             "repair_context_options": args.repair_context_options,
+            "parallel_first_pass": args.parallel_first_pass,
             "release_gate_passed": False}
     write_safe_json(args.output / "plan.json", plan, forbidden_strings=forbidden)
     rows = []
@@ -164,7 +171,8 @@ def main():
         analyzer = SafeTraceSolarAnalyzer(
             key, transport=transport, model="solar-pro4", evidence_contract=True,
             semantic_review=True, analysis_timeout_seconds=40,
-            repair_context_options=args.repair_context_options)
+            repair_context_options=args.repair_context_options,
+            parallel_first_pass=args.parallel_first_pass)
         row = evaluate_case(case, document, analyzer,
                             provider_calls=lambda: transport.calls)
         rows.append(row)

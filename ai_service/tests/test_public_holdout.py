@@ -22,6 +22,16 @@ class PublicHoldoutTests(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, "parsed"):
                     main()
 
+    def test_evaluation_accepts_parallel_first_pass_flag(self):
+        with tempfile.TemporaryDirectory() as temp:
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                            str(Path(temp) / "run"),
+                                            "--parallel-first-pass"]), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_manifest",
+                       side_effect=RuntimeError("parsed")):
+                with self.assertRaisesRegex(RuntimeError, "parsed"):
+                    main()
+
     def test_frozen_manifest_has_three_distinct_sources(self):
         cases = load_manifest()
         self.assertEqual([case["id"] for case in cases],
@@ -220,6 +230,17 @@ class PublicHoldoutTests(unittest.TestCase):
                            "error": "INVALID_EVIDENCE",
                            "validation": [{"field": "features", "reason": "QUOTE_NOT_FOUND",
                                            "itemIndex": 0, "matchCount": 0}]}])
+
+    def test_safe_trace_retains_only_numeric_stage_timing(self):
+        analyzer = SafeTraceSolarAnalyzer("synthetic-key", evidence_contract=True)
+        analyzer._save_diagnostic({"calls": [{
+            "call": 1, "stage": "core", "outcome": "validated",
+            "request_bytes": 1234, "provider_elapsed_ms": 56,
+            "elapsed_ms": 57, "private": "secret source"}]}, {})
+        self.assertEqual(analyzer.safe_calls[0]["timing"],
+                         {"request_bytes": 1234, "provider_elapsed_ms": 56,
+                          "elapsed_ms": 57})
+        self.assertNotIn("secret source", json.dumps(analyzer.safe_calls))
 
     def test_safe_trace_counts_offered_options_without_retaining_source(self):
         analyzer = SafeTraceSolarAnalyzer("synthetic-key", evidence_contract=True,

@@ -688,18 +688,27 @@ class SolarAnalyzer:
     def _analyze(self, document, document_id, diagnostic, raw_responses, deadline):
         started = self._clock()
         replies = []
-        def request(names, purpose, correction=None, *, stage=None, review_profile=None):
-            remaining = deadline - self._clock()
-            if remaining <= 0:
+        def reserve_call(names, correction=None, stage=None):
+            if deadline - self._clock() <= 0:
                 raise AnalysisError("ANALYSIS_DEADLINE")
             if len(diagnostic["calls"]) >= 6:
                 raise AnalysisError("CALL_LIMIT")
-
             call = {"call": len(diagnostic["calls"]) + 1,
                     "stage": stage or ("repair" if correction is not None else "features" if names == ("features",) else "core"),
                     "fields": list(names), "outcome": "started", "response_bytes": None,
                     "prompt_tokens": None, "completion_tokens": None, "model": None}
             diagnostic["calls"].append(call)
+            return call
+
+        def request(names, purpose, correction=None, *, stage=None, review_profile=None,
+                    _reserved_call=None):
+            remaining = deadline - self._clock()
+            if remaining <= 0:
+                if _reserved_call is not None:
+                    _reserved_call.update(outcome="failed", error="ANALYSIS_DEADLINE")
+                raise AnalysisError("ANALYSIS_DEADLINE")
+            call = (_reserved_call if _reserved_call is not None else
+                    reserve_call(names, correction, stage))
             trace = {}
             call_started = self._clock()
             try:
@@ -725,9 +734,7 @@ class SolarAnalyzer:
                         prompt_tokens=reply[2], completion_tokens=reply[3])
             replies.append(reply)
             return reply[0]
-        core = tuple(field for field in FIELDS if field != "features")
-        candidate = request(core, "Extract confirmed technology and integrations, including external backup storage. Exclude evaluation candidates and examples.")
-        candidate.update(request(("features",), "Extract only confirmed product and operational features as exact source spans."))
+        candidate = self._first_pass(request, reserve_call)
         errors = []
         for field in FIELDS:
             isolated = dict.fromkeys(FIELDS)
@@ -836,6 +843,12 @@ class SolarAnalyzer:
 
     def _repair_correction(self, document, errors, previous):
         return {"errors": errors, "previous": previous}
+
+    def _first_pass(self, request, reserve_call):
+        core = tuple(field for field in FIELDS if field != "features")
+        candidate = request(core, "Extract confirmed technology and integrations, including external backup storage. Exclude evaluation candidates and examples.")
+        candidate.update(request(("features",), "Extract only confirmed product and operational features as exact source spans."))
+        return candidate
 
     def _request_fields(self, document, names, purpose, correction=None, *, _trace=None, timeout=40):
         if self._evidence_contract:

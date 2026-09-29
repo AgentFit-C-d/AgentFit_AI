@@ -1,6 +1,7 @@
 """Opt-in recoverable draft from the existing Solar analysis pipeline."""
 
 from contextvars import ContextVar
+from concurrent.futures import ThreadPoolExecutor
 
 from .diagnostics import safe_code
 from .profile import FIELDS, validate_profile
@@ -12,13 +13,37 @@ from .solar import AnalysisError, SolarAnalyzer
 class RecoverableSolarAnalyzer(SolarAnalyzer):
     def __init__(self, *args, **kwargs):
         repair_context_options = kwargs.pop("repair_context_options", False)
+        parallel_first_pass = kwargs.pop("parallel_first_pass", False)
         if type(repair_context_options) is not bool:
             raise ValueError("repair_context_options must be boolean")
+        if type(parallel_first_pass) is not bool:
+            raise ValueError("parallel_first_pass must be boolean")
         if kwargs.get("semantic_review") is False:
             raise ValueError("recoverable Solar analysis requires semantic review")
         super().__init__(*args, **kwargs)
         self._repair_context_options = repair_context_options
+        self._parallel_first_pass = parallel_first_pass
         self._draft_context = ContextVar("recoverable_solar_snapshot", default=None)
+
+    def _first_pass(self, request, reserve_call):
+        if not self._parallel_first_pass:
+            return super()._first_pass(request, reserve_call)
+        core = tuple(field for field in FIELDS if field != "features")
+        features = ("features",)
+        core_call = reserve_call(core, stage="core")
+        features_call = reserve_call(features, stage="features")
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            core_result = pool.submit(
+                request, core,
+                "Extract confirmed technology and integrations, including external backup storage. Exclude evaluation candidates and examples.",
+                _reserved_call=core_call)
+            features_result = pool.submit(
+                request, features,
+                "Extract only confirmed product and operational features as exact source spans.",
+                _reserved_call=features_call)
+            candidate = core_result.result()
+            candidate.update(features_result.result())
+        return candidate
 
     def _repair_correction(self, document, errors, previous):
         correction = super()._repair_correction(document, errors, previous)
