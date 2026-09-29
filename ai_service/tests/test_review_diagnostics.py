@@ -43,7 +43,8 @@ class ReviewDiagnosticTests(unittest.TestCase):
 
     def test_section_review_reasons_are_exported_without_raw_values(self):
         for reason in ("CHECKED_RANGE", "SECTION_SOURCE_LINE_INVALID",
-                       "SECTION_TARGET_INVALID", "SECTION_ISSUE_CONFLICT"):
+                       "SECTION_TARGET_INVALID", "SECTION_ISSUE_CONFLICT",
+                       "SECTION_EVIDENCE_ALIGNMENT"):
             with self.subTest(reason=reason):
                 result = safe_diagnostics({"calls": [
                     {"review_error": {"reason": reason, "raw": "private"}}]})

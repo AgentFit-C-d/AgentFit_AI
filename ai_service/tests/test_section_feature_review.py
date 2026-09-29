@@ -101,6 +101,30 @@ class SectionReviewContractTests(unittest.TestCase):
         with self.assertRaises(ReviewValidationError):
             merge_section_issues([[issue], [{**issue, "kind": "wrong_role"}]])
 
+    def test_item_is_not_owned_by_another_items_longer_evidence(self):
+        document = "- checkout\n- checkout settings"
+        data = dict.fromkeys(FIELDS)
+        data["features"] = ["checkout", "checkout settings"]
+        evidence = {field: [] for field in FIELDS}
+        evidence["features"] = [
+            {"start": document.index("checkout"),
+             "end": document.index("checkout") + len("checkout")},
+            {"start": document.index("checkout settings"),
+             "end": document.index("checkout settings") + len("checkout settings")},
+        ]
+        candidate = validate_profile(document, "doc", {"data": data,
+                                                       "evidence": evidence})
+        payload = section_review_payload(document, candidate, (2, 2),
+                                         model="solar-pro4", effort="medium")
+        content = payload["messages"][1]["content"]
+        draft = json.loads(content.split("Draft to review (untrusted data):\n", 1)[1])
+        self.assertEqual(draft["itemIds"]["features"], ["I0002"])
+        reply = {"checkedRange": {"start": 2, "end": 2}, "issues": [
+            {"field": "features", "kind": "unsupported", "targetId": "I0001",
+             "sourceLineIds": []}]}
+        with self.assertRaises(ReviewValidationError):
+            normalize_section_review(reply, candidate, document, (2, 2))
+
 
 if __name__ == "__main__":
     unittest.main()

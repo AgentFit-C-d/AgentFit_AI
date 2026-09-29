@@ -54,18 +54,20 @@ def _local_feature_lines(document, profile, chunk):
     values = profile["data"]["features"]
     if type(values) is not list:
         return found
-    for index, value in enumerate(values):
+    spans = profile["evidence"]["features"]
+    if values and len(spans) != len(values):
+        raise ReviewValidationError("SECTION_EVIDENCE_ALIGNMENT")
+    for index, (value, span) in enumerate(zip(values, spans)):
         refs = set()
-        for span in profile["evidence"]["features"]:
-            excerpt = document[span["start"]:span["end"]]
-            position = excerpt.find(value)
-            while position >= 0:
-                start = span["start"] + position
-                end = start + len(value)
-                refs.update(line["id"] for line in lines
-                            if chunk[0] <= line["id"] <= chunk[1] and
-                            start < line["end"] and end > line["start"])
-                position = excerpt.find(value, position + 1)
+        excerpt = document[span["start"]:span["end"]]
+        position = excerpt.find(value)
+        while position >= 0:
+            start = span["start"] + position
+            end = start + len(value)
+            refs.update(line["id"] for line in lines
+                        if chunk[0] <= line["id"] <= chunk[1] and
+                        start < line["end"] and end > line["start"])
+            position = excerpt.find(value, position + 1)
         if refs:
             found[index] = sorted(refs)
     return found
