@@ -4,6 +4,7 @@ from unittest.mock import Mock
 
 from agentfit_ai.profile import FIELDS
 from agentfit_ai.grouped_review import GROUPS
+from agentfit_ai import grouped_review
 from agentfit_ai.source_selector_analysis import SourceSelectorSolarAnalyzer
 from test_semantic_review import verdict
 from test_staged_analysis import response
@@ -25,6 +26,102 @@ def features():
 
 
 class SourceSelectorAnalysisTests(unittest.TestCase):
+    def test_fieldwise_review_requires_curation_and_reserves_twenty_two_calls(self):
+        with self.assertRaises(ValueError):
+            SourceSelectorSolarAnalyzer("synthetic-key", fieldwise_review=True)
+        analyzer = SourceSelectorSolarAnalyzer(
+            "synthetic-key", grouped_review=True, group_review_max_tokens=8192,
+            section_feature_review=True, section_feature_extraction=True,
+            section_feature_curation=True, fieldwise_review=True)
+        self.assertEqual(analyzer._max_provider_calls(), 22)
+
+    def test_fieldwise_review_completes_after_each_core_field_and_feature_section(self):
+        document = "# Alpha\n- registration"
+        self.assertTrue(hasattr(grouped_review, "FIELDWISE_GROUPS"))
+        groups = grouped_review.FIELDWISE_GROUPS[:-1]
+        replies = [{"checkedFields": list(group), "issues": []} for group in groups]
+        section = {"checkedRange": {"start": 1, "end": 2}, "issues": []}
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      *(response(item) for item in replies + [section])])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192, section_feature_review=True,
+            section_feature_extraction=True, section_feature_curation=True,
+            fieldwise_review=True).analyze_recoverable(document, "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual(transport.call_count, 8)
+        for group, call in zip(groups, transport.call_args_list[2:7]):
+            schema = call.args[0]["response_format"]["json_schema"]["schema"]
+            self.assertEqual(schema["properties"]["checkedFields"]["items"]["enum"],
+                             list(group))
+
+    def test_fieldwise_review_holds_on_last_core_field_or_feature_section(self):
+        document = "# Alpha\n- registration"
+        self.assertTrue(hasattr(grouped_review, "FIELDWISE_GROUPS"))
+        groups = grouped_review.FIELDWISE_GROUPS[:-1]
+        valid = [{"checkedFields": list(group), "issues": []} for group in groups]
+        section = {"checkedRange": {"start": 1, "end": 2}, "issues": []}
+        for replies in (valid[:-1] + [{"checkedFields": [], "issues": []}],
+                        valid + [{"checkedRange": {"start": 1, "end": 1},
+                                  "issues": []}]):
+            with self.subTest(replies=replies):
+                transport = Mock(side_effect=[response(core()), response(features()),
+                                              *(response(item) for item in replies),
+                                              response(section)])
+                result = SourceSelectorSolarAnalyzer(
+                    "synthetic-key", transport=transport, grouped_review=True,
+                    group_review_max_tokens=8192, section_feature_review=True,
+                    section_feature_extraction=True, section_feature_curation=True,
+                    fieldwise_review=True).analyze_recoverable(document, "doc")
+                self.assertEqual(result["outcome"], "needs_confirmation")
+
+    def test_fieldwise_review_collects_early_issue_before_final_hold(self):
+        document = "# Alpha\n- registration"
+        groups = grouped_review.FIELDWISE_GROUPS[:-1]
+        replies = [{"checkedFields": list(group), "issues": []} for group in groups]
+        replies[0]["issues"] = [{"field": "project_name", "kind": "unsupported",
+                                  "targetId": None, "sourceLineIds": []}]
+        section = {"checkedRange": {"start": 1, "end": 2}, "issues": []}
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      *(response(item) for item in replies + [section])])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192, section_feature_review=True,
+            section_feature_extraction=True, section_feature_curation=True,
+            fieldwise_review=True).analyze_recoverable(document, "doc")
+        self.assertEqual(result["outcome"], "needs_confirmation")
+        self.assertEqual(result["error"], "SEMANTIC_REJECTED")
+        self.assertEqual(transport.call_count, 8)
+
+    def test_fieldwise_review_can_use_last_reserved_call_for_seventh_section(self):
+        document = ("# Alpha\n" +
+                    "".join(f"- feature {number}\n" for number in range(1, 31)) +
+                    "context\n" * 89 + "# Next\n- feature 31\n" +
+                    "context\n" * 718)
+        first = {"features": {"state": "confirmed", "items": [
+            {"lineId": line, "selector": "BODY", "role": "user_action"}
+            for line in range(2, 32)]}}
+        feature_chunks = [first,
+                          {"features": confirmed(122, role="user_action")},
+                          *({"features": None} for _ in range(5))]
+        groups = [{"checkedFields": list(group), "issues": []}
+                  for group in grouped_review.FIELDWISE_GROUPS[:-1]]
+        sections = [{"checkedRange": {"start": start, "end": start + 119},
+                     "issues": []} for start in range(1, 841, 120)]
+        transport = Mock(side_effect=[
+            response(core("BOLD_1")),
+            *(response(item) for item in feature_chunks),
+            response({"selectedIds": ["F0001", "F0031"]}),
+            response({"project_name": confirmed(1)}),
+            *(response(item) for item in groups + sections)])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192, section_feature_review=True,
+            section_feature_extraction=True, section_feature_curation=True,
+            fieldwise_review=True).analyze_recoverable(document, "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual(transport.call_count, 22)
+
     def test_section_curation_requires_extraction_and_has_nineteen_call_cap(self):
         with self.assertRaises(ValueError):
             SourceSelectorSolarAnalyzer("synthetic-key", grouped_review=True,

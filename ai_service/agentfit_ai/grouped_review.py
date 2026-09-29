@@ -13,9 +13,12 @@ GROUPS = (
     ("features",),
 )
 
+FIELDWISE_GROUPS = (GROUPS[0], ("ai",), ("database",),
+                    ("deployment",), ("external_integrations",), GROUPS[2])
+
 
 def _valid_fields(fields):
-    return (type(fields) is tuple and fields in GROUPS and
+    return (type(fields) is tuple and fields in (*GROUPS, *FIELDWISE_GROUPS) and
             len(fields) == len(set(fields)) and set(fields) <= set(FIELDS))
 
 

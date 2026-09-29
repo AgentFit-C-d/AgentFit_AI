@@ -853,13 +853,14 @@ class SolarAnalyzer:
         if self._semantic_review:
             groups = self._semantic_review_groups()
             if groups != (FIELDS,):
-                if (type(groups) is not tuple or len(groups) != 3 or
+                if (type(groups) is not tuple or len(groups) < 2 or
                         any(type(group) is not tuple for group in groups) or
+                        section_chunks is not None and groups[-1] != ("features",) or
                         sorted(field for group in groups for field in group) != sorted(FIELDS)):
                     raise AnalysisError("SEMANTIC_REVIEW_INVALID")
                 all_issues = []
                 checked = []
-                for group in (groups[:2] if section_chunks is not None else groups):
+                for group in (groups[:-1] if section_chunks is not None else groups):
                     value = request(group, "", stage="semantic_review", review_profile=profile)
                     call = diagnostic["calls"][-1]
                     if (type(value) is not dict or set(value) != {"checkedFields", "issues"} or

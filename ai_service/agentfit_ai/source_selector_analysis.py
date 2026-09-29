@@ -4,7 +4,8 @@ import json
 
 from .evidence import EvidenceError
 from .compact_review import normalize_compact_review, review_payload
-from .grouped_review import GROUPS, group_review_payload, normalize_group_review
+from .grouped_review import (GROUPS, FIELDWISE_GROUPS, group_review_payload,
+                             normalize_group_review)
 from .line_evidence_analysis import LineEvidenceSolarAnalyzer
 from .profile import FIELDS
 from .semantic_review import REVIEW_REASONING_EFFORT, ReviewValidationError
@@ -54,6 +55,7 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
                  grouped_review=False, group_review_max_tokens=4096,
                  section_feature_review=False, section_feature_extraction=False,
                  section_feature_curation=False,
+                 fieldwise_review=False,
                  **kwargs):
         if type(compact_review) is not bool:
             raise ValueError("compact_review must be boolean")
@@ -72,6 +74,8 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
         if (type(section_feature_curation) is not bool or
                 section_feature_curation and not section_feature_extraction):
             raise ValueError("section feature curation requires section extraction")
+        if type(fieldwise_review) is not bool or fieldwise_review and not section_feature_curation:
+            raise ValueError("fieldwise review requires section feature curation")
         if compact_review_effort not in ("medium", "low") or (
                 not compact_review and compact_review_effort != "medium"):
             raise ValueError("compact_review_effort requires compact review")
@@ -86,9 +90,11 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
         self._section_feature_review = section_feature_review
         self._section_feature_extraction = section_feature_extraction
         self._section_feature_curation = section_feature_curation
+        self._fieldwise_review = fieldwise_review
 
     def _semantic_review_groups(self):
-        return GROUPS if self._grouped_review else super()._semantic_review_groups()
+        return (FIELDWISE_GROUPS if self._fieldwise_review else GROUPS
+                if self._grouped_review else super()._semantic_review_groups())
 
     def _section_feature_chunks(self, document):
         if not self._section_feature_review:
@@ -104,7 +110,7 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
 
     def _max_provider_calls(self):
         if self._section_feature_curation:
-            return 19
+            return 22 if self._fieldwise_review else 19
         if self._section_feature_extraction:
             return 18
         return 12 if self._section_feature_review else super()._max_provider_calls()

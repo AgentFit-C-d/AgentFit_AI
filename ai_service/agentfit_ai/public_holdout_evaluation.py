@@ -244,6 +244,7 @@ def main():
     parser.add_argument("--section-feature-review", action="store_true")
     parser.add_argument("--section-feature-extraction", action="store_true")
     parser.add_argument("--section-feature-curation", action="store_true")
+    parser.add_argument("--fieldwise-semantic-review", action="store_true")
     parser.add_argument("--compact-review-effort", choices=("medium", "low"),
                         default="medium")
     args = parser.parse_args()
@@ -272,6 +273,8 @@ def main():
         parser.error("section feature extraction requires section feature review")
     if args.section_feature_curation and not args.section_feature_extraction:
         parser.error("section feature curation requires section feature extraction")
+    if args.fieldwise_semantic_review and not args.section_feature_curation:
+        parser.error("fieldwise semantic review requires section feature curation")
     if args.compact_review_effort != "medium" and not args.compact_review:
         parser.error("compact review effort requires compact review mode")
     if args.extended_review_window and (not args.source_selector or
@@ -307,7 +310,9 @@ def main():
             "section_feature_review": args.section_feature_review,
             "section_feature_extraction": args.section_feature_extraction,
             "section_feature_curation": args.section_feature_curation,
-            "max_provider_calls": (19 if args.section_feature_curation else
+            "fieldwise_semantic_review": args.fieldwise_semantic_review,
+            "max_provider_calls": (22 if args.fieldwise_semantic_review else
+                                   19 if args.section_feature_curation else
                                    18 if args.section_feature_extraction else
                                    12 if args.section_feature_review else 6),
             "feature_section_max_tokens": 8192 if args.section_feature_review else None,
@@ -352,6 +357,7 @@ def main():
                 "section_feature_review": args.section_feature_review,
                 "section_feature_extraction": args.section_feature_extraction,
                 "section_feature_curation": args.section_feature_curation,
+                "fieldwise_review": args.fieldwise_semantic_review,
                 "group_review_max_tokens": 8192 if args.group_review_8k else 4096}
                if args.source_selector else {}))
         row = evaluate_case(case, document, analyzer,

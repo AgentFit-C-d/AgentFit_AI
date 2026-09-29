@@ -1,6 +1,7 @@
 import json
 import unittest
 
+from agentfit_ai import grouped_review
 from agentfit_ai.grouped_review import GROUPS, group_review_payload, normalize_group_review
 from agentfit_ai.profile import FIELDS, validate_profile
 from agentfit_ai.semantic_review import ReviewValidationError
@@ -20,6 +21,25 @@ def profile():
 
 
 class GroupedReviewTests(unittest.TestCase):
+    def test_fieldwise_groups_cover_public_fields_once_and_support_single_field_review(self):
+        self.assertTrue(hasattr(grouped_review, "FIELDWISE_GROUPS"))
+        groups = grouped_review.FIELDWISE_GROUPS
+        self.assertEqual(groups[:1], GROUPS[:1])
+        self.assertEqual(groups[1:-1], (("ai",), ("database",),
+                                        ("deployment",), ("external_integrations",)))
+        self.assertEqual(groups[-1], ("features",))
+        self.assertEqual(sorted(field for group in groups for field in group),
+                         sorted(FIELDS))
+        payload = group_review_payload(DOCUMENT, profile(), ("ai",),
+                                       model="solar-pro4", effort="medium",
+                                       max_tokens=8192)
+        schema = payload["response_format"]["json_schema"]["schema"]
+        self.assertEqual(schema["properties"]["checkedFields"]["items"]["enum"],
+                         ["ai"])
+        self.assertEqual(normalize_group_review(
+            {"checkedFields": ["ai"], "issues": []}, profile(), DOCUMENT,
+            ("ai",))["checkedFields"], ["ai"])
+
     def test_groups_cover_each_public_field_once(self):
         self.assertEqual(len(GROUPS), 3)
         self.assertEqual([len(group) for group in GROUPS], [5, 4, 1])
