@@ -32,5 +32,5 @@
 
 ## 배포 전 확인
 
-- 코드 push 및 Linux CI: 진행 예정.
+- 코드2620207 및 비교 결과 문서c338659를 `feature/source-name-expressions`에 push했다. [c338659의 Linux CI36630464051](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36630464051) success를 확인했다.
 - 실사용 목표: active. 이 기능 완료와 전체 목표 완료를 구분한다.

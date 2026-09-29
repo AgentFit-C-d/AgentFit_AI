@@ -19,7 +19,7 @@
 
 - [x] 1. `tests/test_source_name_expressions.py`에 원문 괄호 표현이 null로 사라지는 회귀를 먼저 RED로 확인한다. 위 경계 사례와 자동 완료 부재를 함께 검증한다. `source_name_expressions.py`에 `source_name_expression(document, entries)`를 구현하고 `candidate_first_profile.project_candidate_profile`에 연결한다. entries는 이미 확정된 (원문값, start/end) 목록이다. 반환은 (전체 원문값, start/end) 또는 None이다.
 - [x] 2. `candidate_paired_review._field_summaries`의 이름 표현 진단을 RED→GREEN으로 맞춘다. 관련·전체 테스트 및 고정 H02 후보의 로컬 재투영을 확인한다.
-- [ ] 3. 독립 리뷰, diff 검사, commit/push·Linux CI와 검증 기록을 완료한다. 실행 중인 paired 비교는 원래 코드에서 끝까지 추적한다.
+- [x] 3. 독립 리뷰, diff 검사, commit/push·Linux CI와 검증 기록을 완료한다. 실행 중인 paired 비교는 원래 코드에서 끝까지 추적한다.
 
 ## 상태
 
@@ -31,4 +31,5 @@
 - 작업1: 최초 8개 검사에서 구현 부재의 RED를 확인한 뒤 GREEN. 작업2: 비교 진단의 RED 1개를 추가해 새9건·관련24건 GREEN. 이번 재개에서는 아래 기존 테스트2건을 포함해35건 GREEN을 확인했다.
 - 고정 H02의 원본·추출 해시와 승인 manifest 해시를 검증하고 같은 reviewed_refs를 이전/수정 코드에서 로컬 재투영했다. Solar 4/6→5/6, DeepSeek 5/6→6/6. 두 결과 모두 이름의 전체 인용 위치가 정확하고 needs_confirmation이며 다른9필드의 값·근거 digest는 전후 동일하다. 추가 API 호출은 없다. 전체 모델 품질 또는 독립 검증 결과로 일반화하지 않는다.
 - Ruling: 전체857건 검사에서 기존 줄바꿈 테스트2건이 Windows checkout의 CRLF를 중복 변환하거나 LF 전용 파일을 가정해 실패했다. 실제 로더는 이미 LF 정규화를 한다. 두 테스트의 입력을 LF로 정규화한 뒤 CRLF를 생성하도록 수정했다. 평가 내용·해시·실제 로더는 바꾸지 않으며, 잘못 판단했을 경우 checkout 호환성을 검증하지 못할 수 있어 기존 두 테스트를 재실행해 GREEN을 확인했다.
-- 전체 재검증857건(6건 건너뜀) 통과. 독립 리뷰의 수정 권고는 없었다. 리뷰가 보류한 의미적 동등성은 확인 필요로 남기고, H02 재생은 메인에서 직접 검증했다. 전체 품질은 미완료다. 코드 push·Linux CI를 남겨 두었다.
+- 전체 재검증857건(6건 건너뜀) 통과. 독립 리뷰의 수정 권고는 없었다. 리뷰가 보류한 의미적 동등성은 확인 필요로 남기고, H02 재생은 메인에서 직접 검증했다. 전체 품질은 미완료다.
+- 코드2620207 및 비교 결과 문서c338659를 feature/source-name-expressions에 push했다. c338659의 Linux CI36630464051이 success임을 직접 조회했다. 비교 전용 브랜치에도 결과 문서d81dc53을 push했다. 기능 브랜치는 후속 품질 검증을 위해 보존하며 기본 서비스에 승격하지 않는다.
