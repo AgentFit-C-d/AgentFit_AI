@@ -5,6 +5,7 @@
 - 공개 PRD 평가 전용 `--source-selector --accuracy-first --extended-review-window`는 전체 600초, 필드 120초, 의미 검토 16,384 출력 토큰을 허용한다. 기본 분석기 60초·평가의 기존 300초 설정은 유지된다.
 - 의미 검토 응답의 형식 검증 실패 사유는 허용된 고정 코드일 때만 안전한 평가 진단에 남긴다. 원문·원본 응답·키·Profile을 기록하지 않는다.
 - 전체 `python -m unittest discover -s tests -q`: 625건 통과.
+- 구현 커밋 `74577f9`을 `feature/extended-review-window`에 push했고 Linux CI `36540615116`가 성공했다. CI 통과는 분석 품질 합격을 뜻하지 않는다.
 
 ## 이미 튜닝한 Campfire PRD 실험
 
