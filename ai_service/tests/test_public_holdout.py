@@ -1,8 +1,12 @@
 import hashlib
+import json
+import tempfile
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
-from agentfit_ai.public_holdout import load_manifest, score_profile, verify_document
-from agentfit_ai.public_holdout_evaluation import SafeTraceSolarAnalyzer, evaluate_case, summarize
+from agentfit_ai.public_holdout import MANIFEST, load_manifest, score_profile, verify_document
+from agentfit_ai.public_holdout_evaluation import SafeTraceSolarAnalyzer, evaluate_case, main, summarize
 
 
 class PublicHoldoutTests(unittest.TestCase):
@@ -10,6 +14,31 @@ class PublicHoldoutTests(unittest.TestCase):
         cases = load_manifest()
         self.assertEqual([case["id"] for case in cases],
                          ["actual-product", "mealie-readme", "immich-readme"])
+
+    def test_manifest_partition_must_match_explicit_evaluation_purpose(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "manifest.json"
+            source = json.loads(MANIFEST.read_text(encoding="utf-8"))
+            source["partition"] = "heldout"
+            path.write_text(json.dumps(source), encoding="utf-8")
+            self.assertEqual(len(load_manifest(path, expected_partition="heldout")), 3)
+            with self.assertRaises(ValueError):
+                load_manifest(path)
+            with self.assertRaises(ValueError):
+                load_manifest(path, expected_partition="unknown")
+
+    def test_cli_rejects_wrong_partition_before_creating_output(self):
+        with tempfile.TemporaryDirectory() as temp:
+            manifest = Path(temp) / "manifest.json"
+            output = Path(temp) / "result"
+            source = json.loads(MANIFEST.read_text(encoding="utf-8"))
+            source["partition"] = "heldout"
+            manifest.write_text(json.dumps(source), encoding="utf-8")
+            with patch("sys.argv", ["eval", "--live", "--output", str(output),
+                                    "--manifest", str(manifest), "--partition", "tuning"]):
+                with self.assertRaisesRegex(ValueError, "invalid public manifest"):
+                    main()
+            self.assertFalse(output.exists())
 
     def setUp(self):
         self.document = "# Acme\nVue powers the frontend.\nUsers can import recipes.\n"

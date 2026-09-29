@@ -1,0 +1,88 @@
+{
+  "version": "public-holdout-v1",
+  "partition": "heldout",
+  "cases": [
+    {
+      "id": "todaywhere-readme",
+      "repo": "kookmin-sw/2026-capstone-53",
+      "commit": "c341a8fe6dc57926f93902bc19bbe8a3f0c33c47",
+      "path": "README.md",
+      "sha256": "1f3e72fc8b29fbdf2b40750c20bfac51ffebeb63a2dd25650eb0756a896a03f2",
+      "checks": {
+        "project_name": [{"aliases": ["오늘어디"], "quote": "오늘어디는 사용자의 반복 일정과 목적지를 기반으로 권장 출발 시각을 계산하고"}],
+        "domain": [{"aliases": ["경로 알림", "이동 알림"], "quote": "필요한 시점에 알림을 제공하는 경로 알림 서비스입니다"}],
+        "features": [
+          {"aliases": ["일정 기반 목적지 관리", "목적지 관리"], "quote": "- 일정 기반 목적지 관리"},
+          {"aliases": ["권장 출발 시각 계산", "출발 시각 계산"], "quote": "- 권장 출발 시각 계산"},
+          {"aliases": ["웹 푸시 알림", "푸시 알림"], "quote": "- 웹 푸시 알림"}
+        ]
+      }
+    },
+    {
+      "id": "devconnect-readme",
+      "repo": "PHM-dung2/springproject_devconnect_app",
+      "commit": "e7d45cd9c885343e190ae8dbc03d985be6b56341",
+      "path": "README.md",
+      "sha256": "a0d65bc2ad5985aee052f8287d41f7c2eb703397060bcd6d3419ad80ea921b85",
+      "checks": {
+        "domain": [{"aliases": ["프리랜서", "개발자 중개"], "quote": "프리랜서 개발자와 기업의 프로젝트를 중개하는 중개플랫폼입니다"}],
+        "backend": [{"aliases": ["Spring Boot"], "quote": "백엔드(Spring Boot 기반 API 서버)"}],
+        "frontend": [{"aliases": ["Flutter"], "quote": "프론트엔드(Flutter 기반 모바일 앱)"}],
+        "features": [
+          {"aliases": ["프로젝트 검색", "프로젝트 탐색"], "quote": "프로젝트 검색, 탐색, 매칭 추천"},
+          {"aliases": ["자동 매칭", "매칭 추천", "프로젝트 추천"], "quote": "기업 평가와 기술스택 적합도에 따라 프로젝트 자동 매칭"}
+        ]
+      }
+    },
+    {
+      "id": "gitfarm-readme",
+      "repo": "soo054141/GitFarm",
+      "commit": "53f0f705fbddc104b14d6b0f6faf8679e8aa091a",
+      "path": "README.md",
+      "sha256": "7a6bca4b9754fff7336db016fa0fd26fb1463606778c5369df27a711c2b58414",
+      "checks": {
+        "project_name": [{"aliases": ["GitFarm"], "quote": "GitFarm 은 Git + Farm의 합성어로 농장을 컨셉으로 하여 Git 잔디 관리를 즐겁게 할 수 있도록 도와주는 서비스입니다"}],
+        "domain": [{"aliases": ["GitHub", "Git 잔디", "커밋"], "quote": "Git 잔디 관리를 즐겁게 할 수 있도록 도와주는 서비스입니다"}],
+        "features": [
+          {"aliases": ["농장꾸미기", "농장 꾸미기", "농장이 점차 채워"], "quote": "유저가 목표로 한 일일 커밋양에 비례하여 농장이 점차 채워집니다"},
+          {"aliases": ["월간 그래프", "커밋 통계"], "quote": "월간 그래프를 통해 나의 커밋 통계를 확인합니다"},
+          {"aliases": ["Github OAuth", "GitHub OAuth", "Github 로그인"], "quote": "Github OAuth로 로그인합니다"}
+        ]
+      }
+    },
+    {
+      "id": "festmoment-readme",
+      "repo": "ericyum/FestMoment",
+      "commit": "e62802d0803e29e7daabf3585b0410e18e9f3624",
+      "path": "README.md",
+      "sha256": "3632ca3fe0703cd9ddd10407da66ba954d290fcdf3f6d233bc8c65f973bdae70",
+      "checks": {
+        "project_name": [{"aliases": ["FestMoment"], "quote": "**FestMoment**는 전국의 축제 데이터를 기반으로"}],
+        "domain": [{"aliases": ["축제", "AI 축제 가이드"], "quote": "'AI 축제 가이드'를 생성하는 올인원(All-in-One) 서비스입니다"}],
+        "backend": [{"aliases": ["FastAPI"], "quote": "FastAPI | 0.115.0 | REST API 서버"}],
+        "frontend": [{"aliases": ["React"], "quote": "React | 18.3.1 | UI 라이브러리"}],
+        "features": [
+          {"aliases": ["계층적 카테고리 검색", "카테고리 검색"], "quote": "계층적 카테고리 검색"},
+          {"aliases": ["블로그 리뷰 AI 분석", "블로그 리뷰 분석", "감성 분석"], "quote": "블로그 리뷰 AI 분석"},
+          {"aliases": ["AI 이미지 생성", "이미지 생성", "영화 포스터"], "quote": "Vision 모델이 축제를 영화 포스터처럼 재창조하고, 계절/시간대별 이미지 생성"}
+        ]
+      }
+    },
+    {
+      "id": "order101-readme",
+      "repo": "beyond-sw-camp/be18-fin-SYNERGY-ORDER101",
+      "commit": "25299cc8364ca864f75624f93d3559e2bdef46d1",
+      "path": "README.md",
+      "sha256": "8c7cfb4ac30e58177f6e78eb67922a258c55164f8bfdcd1d59a58a1afb1ab0c4",
+      "checks": {
+        "project_name": [{"aliases": ["ORDER101"], "quote": "**ORDER101**은 AI 기반 의사결정 자동화로 공급사–본사–점포의 발주·재고·주문·물류(SCM)를 지능화하여"}],
+        "domain": [{"aliases": ["주문 관리", "발주", "재고", "SCM"], "quote": "재고 손실 최소화와 운영 효율 극대화하는 주문 관리 시스템입니다"}],
+        "features": [
+          {"aliases": ["주문 생성", "주문 승인"], "quote": "주문 생성 / 승인 / 내역 조회"},
+          {"aliases": ["창고 재고", "재고 관리"], "quote": "본사/가맹점 창고 재고"},
+          {"aliases": ["정산 리포트", "정산 보고서"], "quote": "정산 리포트"}
+        ]
+      }
+    }
+  ]
+}

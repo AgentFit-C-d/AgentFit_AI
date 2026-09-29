@@ -100,7 +100,7 @@ def summarize(rows, *, planned):
         "max_provider_calls": max((row["provider_calls"] for row in rows), default=0),
         "max_elapsed_ms": max((row["elapsed_ms"] for row in rows), default=0),
         "release_gate_passed": False,
-        "release_gate_note": "Three English public product documents and partial labels do not prove service readiness",
+        "release_gate_note": "Public project documents and partial labels do not prove service readiness",
     }
 
 
@@ -109,13 +109,15 @@ def main():
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--env-file", type=Path)
+    parser.add_argument("--manifest", type=Path, default=MANIFEST)
+    parser.add_argument("--partition", choices=("tuning", "heldout"), default="tuning")
     parser.add_argument("--case-id", action="append")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live required")
     if args.output.exists():
         parser.error("output already exists")
-    cases = load_manifest()
+    cases = load_manifest(args.manifest, expected_partition=args.partition)
     if args.case_id:
         selected = set(args.case_id)
         if len(selected) != len(args.case_id) or not selected <= {case["id"] for case in cases}:
@@ -125,8 +127,8 @@ def main():
     key = load_key(args.env_file)
     forbidden = (key, *(document for _, document in documents))
     args.output.mkdir(parents=True, exist_ok=False)
-    plan = {"model": "solar-pro4", "partition": "tuning-after-initial-holdout",
-            "manifest_sha256": hashlib.sha256(MANIFEST.read_bytes()).hexdigest(),
+    plan = {"model": "solar-pro4", "partition": args.partition,
+            "manifest_sha256": hashlib.sha256(args.manifest.read_bytes()).hexdigest(),
             "sources": [{"id": case["id"], "repo": case["repo"],
                          "commit": case["commit"], "path": case["path"],
                          "sha256": case["sha256"]} for case, _ in documents],

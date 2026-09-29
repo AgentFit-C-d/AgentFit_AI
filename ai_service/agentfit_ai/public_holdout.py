@@ -45,11 +45,14 @@ def _check_case(case):
                 raise ValueError("invalid public check")
 
 
-def load_manifest(path=MANIFEST):
+def load_manifest(path=MANIFEST, *, expected_partition="tuning"):
+    if expected_partition not in ("tuning", "heldout"):
+        raise ValueError("invalid expected partition")
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     if type(data) is not dict or set(data) != {"version", "partition", "cases"}:
         raise ValueError("invalid public manifest")
-    if data["version"] != "public-holdout-v1" or data["partition"] != "tuning":
+    if (data["version"] != "public-holdout-v1"
+            or data["partition"] != expected_partition):
         raise ValueError("invalid public manifest")
     cases = data["cases"]
     if type(cases) is not list or not cases or any(type(case) is not dict
