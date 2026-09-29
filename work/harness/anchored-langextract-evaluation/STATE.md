@@ -8,3 +8,5 @@
 - Ruling: `sdd-workspace` Bash 스크립트는 이 Windows 환경에서 `/bin/bash` 부재로 실행되지 않았다. 프로젝트 `work/harness/anchored-langextract-evaluation/STATE.md`를 실행 원장으로 쓴다. 비용: 스킬 전용 임시 산출물 자동 정리는 사용하지 못한다.
 - Task 1: 합성 고정 모델로 LangExtract 1.7.0의 anchor 속성 파싱을 확인했다. 문맥 정확·고유성 및 중복 최종 위치 검증 테스트가 구현 전 실패, 구현 후 10/10 통과했다. 전체 서비스 테스트 739/739 통과.
 - 다음 행동: Task 2의 Solar 스키마·LangExtract 속성 연결을 테스트 우선으로 구현한다.
+- Task 2: 필수 `candidate_attributes.anchor` 응답 스키마와 한국어 반복 예시를 연결했다. 이전 테스트 더블은 빈 위치를 `SimpleNamespace(None,None)`로 만들어 실제 LangExtract의 `char_interval=None`과 달랐으므로 실측 형식에 맞춰 고쳤다. 새 계약 테스트는 기대한 실패 후 통과했고 전체 741/741 통과.
+- 다음 행동: Task 3에서 같은 원문의 짝 사례를 한 번만 추출하도록 바꾸고 합성 18건을 실측한다.

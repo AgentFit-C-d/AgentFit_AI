@@ -10,9 +10,12 @@ from unittest.mock import patch
 from agentfit_ai.langextract_solar_trial import candidate_payload, score_case, main, run_case
 
 
-def extraction(text, start, end):
+def extraction(text, start, end, anchor=None):
     return SimpleNamespace(extraction_class="candidate", extraction_text=text,
-                           char_interval=SimpleNamespace(start_pos=start, end_pos=end))
+                           char_interval=(SimpleNamespace(start_pos=start, end_pos=end)
+                                          if start is not None and end is not None
+                                          else None),
+                           attributes={"anchor": anchor} if anchor is not None else None)
 
 
 class LangExtractSolarTrialTests(unittest.TestCase):
@@ -21,10 +24,16 @@ class LangExtractSolarTrialTests(unittest.TestCase):
         self.assertEqual(payload["model"], "solar-pro4")
         self.assertEqual(payload["messages"][1]["content"], "example prompt")
         self.assertEqual(payload["response_format"]["json_schema"]["schema"]
-                         ["properties"]["extractions"]["items"]["properties"],
-                         {"candidate": {"type": "string"}})
+                         ["properties"]["extractions"]["items"]["properties"]
+                         ["candidate"], {"type": "string"})
         self.assertEqual(payload["max_tokens"], 4096)
         self.assertEqual(payload["reasoning_effort"], "none")
+        item = payload["response_format"]["json_schema"]["schema"]\
+            ["properties"]["extractions"]["items"]
+        self.assertEqual(set(item["required"]),
+                         {"candidate", "candidate_attributes"})
+        self.assertEqual(item["properties"]["candidate_attributes"]
+                         ["properties"]["anchor"], {"type": "string"})
 
     def test_score_requires_exact_gold_span_and_candidate_local_rule(self):
         document = "팀 채팅은 검토안이다. 팀 채팅을 출시 기능으로 확정했다."
@@ -34,8 +43,10 @@ class LangExtractSolarTrialTests(unittest.TestCase):
                 "candidate": {"field": "features", "state": "present",
                               "start": first, "end": first + len(quote)},
                 "expected_decision": "review"}
-        row = score_case(case, [extraction(quote, first, first + len(quote)),
-                                extraction(quote, second, second + len(quote))])
+        row = score_case(case, [
+            extraction(quote, first, first + len(quote), "팀 채팅은 검토안이다."),
+            extraction(quote, second, second + len(quote),
+                       "팀 채팅을 출시 기능으로 확정했다.")])
         self.assertEqual(row["decision"], "review")
         self.assertTrue(row["evidence_exact"])
         self.assertEqual(row["false_auto_confirmation"], 0)
@@ -52,8 +63,34 @@ class LangExtractSolarTrialTests(unittest.TestCase):
                 "expected_decision": "allow"}
         first = document.index(quote)
         row = score_case(case, [extraction(quote, first, first + len(quote))])
-        self.assertEqual(row["decision"], "missing")
+        self.assertEqual(row["decision"], "review")
         self.assertEqual(row["missed_allow"], 1)
+
+    def test_distinct_anchor_scores_confirmed_repeat_without_confirming_proposal(self):
+        document = "후보 DB는 PinoDB다. 운영 DB는 PinoDB로 확정했다."
+        items = [extraction("PinoDB", None, None, "후보 DB는 PinoDB다."),
+                 extraction("PinoDB", None, None,
+                            "운영 DB는 PinoDB로 확정했다.")]
+        first = {"id": "A01", "document": document, "candidate": {
+            "field": "database", "state": "present", "start": 7, "end": 13},
+            "expected_decision": "review"}
+        second = {"id": "A02", "document": document, "candidate": {
+            "field": "database", "state": "present", "start": 23, "end": 29},
+            "expected_decision": "allow"}
+        self.assertEqual(score_case(first, items)["decision"], "review")
+        self.assertEqual(score_case(second, items)["decision"], "allow")
+        self.assertEqual(score_case(second, items)["evidence_exact"], True)
+
+    def test_repeated_same_anchor_cannot_score_confirmed_repeat(self):
+        document = "후보 DB는 PinoDB다. 운영 DB는 PinoDB로 확정했다."
+        case = {"id": "A03", "document": document, "candidate": {
+            "field": "database", "state": "present", "start": 23, "end": 29},
+            "expected_decision": "allow"}
+        items = [extraction("PinoDB", None, None, "후보 DB는 PinoDB다."),
+                 extraction("PinoDB", None, None, "후보 DB는 PinoDB다.")]
+        row = score_case(case, items)
+        self.assertNotEqual(row["decision"], "allow")
+        self.assertFalse(row["evidence_exact"])
 
     def test_duplicate_span_is_reported_separately_from_missing_candidate(self):
         document = "Alpha를 사용한다."
