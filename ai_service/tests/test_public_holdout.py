@@ -12,6 +12,46 @@ from agentfit_ai.profile import FIELDS
 
 
 class PublicHoldoutTests(unittest.TestCase):
+    def test_section_review_cli_requires_long_eight_k_grouped_mode(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "sections"
+
+            class FakeSelectorAnalyzer:
+                def __init__(self, *args, **kwargs):
+                    self.safe_calls = []
+                    assert kwargs["section_feature_review"] is True
+                    assert kwargs["group_review_max_tokens"] == 8192
+                    assert kwargs["analysis_timeout_seconds"] == 600
+
+                def analyze_recoverable(self, document, document_id):
+                    return {"outcome": "failed", "error": "SEMANTIC_REVIEW_INVALID"}
+
+            flags = ["--source-selector", "--grouped-review", "--group-review-8k",
+                     "--accuracy-first", "--extended-review-window",
+                     "--section-feature-review"]
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(output), *flags]), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_manifest",
+                       return_value=[self.case]), \
+                 patch("agentfit_ai.public_holdout_evaluation.fetch_document",
+                       return_value=self.document), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_key",
+                       return_value="synthetic-key"), \
+                 patch("agentfit_ai.public_holdout_evaluation.SafeTraceSourceSelectorAnalyzer",
+                       FakeSelectorAnalyzer):
+                self.assertEqual(main(), 0)
+            plan = json.loads((output / "plan.json").read_text(encoding="utf-8"))
+            self.assertTrue(plan["section_feature_review"])
+            self.assertEqual(plan["max_provider_calls"], 12)
+            self.assertEqual(plan["analysis_timeout_seconds"], 600)
+            self.assertEqual(plan["review_max_tokens"], 8192)
+            self.assertNotIn("synthetic-key", json.dumps(plan))
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(Path(temp) / "invalid"),
+                                                "--section-feature-review"]):
+                with self.assertRaises(SystemExit):
+                    main()
+
     def test_group_review_eight_k_requires_long_grouped_evaluation(self):
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / "group8k"

@@ -185,6 +185,7 @@ def main():
     parser.add_argument("--compact-review", action="store_true")
     parser.add_argument("--grouped-review", action="store_true")
     parser.add_argument("--group-review-8k", action="store_true")
+    parser.add_argument("--section-feature-review", action="store_true")
     parser.add_argument("--compact-review-effort", choices=("medium", "low"),
                         default="medium")
     args = parser.parse_args()
@@ -205,6 +206,10 @@ def main():
     if args.group_review_8k and not (args.source_selector and args.grouped_review and
                                       args.accuracy_first and args.extended_review_window):
         parser.error("8k grouped review requires long accuracy-first source selector")
+    if args.section_feature_review and not (
+            args.source_selector and args.grouped_review and args.group_review_8k and
+            args.accuracy_first and args.extended_review_window):
+        parser.error("section feature review requires long 8k grouped source selector")
     if args.compact_review_effort != "medium" and not args.compact_review:
         parser.error("compact review effort requires compact review mode")
     if args.extended_review_window and (not args.source_selector or
@@ -237,6 +242,9 @@ def main():
             "compact_review": args.compact_review,
             "grouped_review": args.grouped_review,
             "group_review_8k": args.group_review_8k,
+            "section_feature_review": args.section_feature_review,
+            "max_provider_calls": 12 if args.section_feature_review else 6,
+            "feature_section_max_tokens": 8192 if args.section_feature_review else None,
             "compact_review_effort": args.compact_review_effort,
             "accuracy_first": args.accuracy_first,
             "extended_review_window": args.extended_review_window,
@@ -270,6 +278,7 @@ def main():
             **({"compact_review": args.compact_review,
                 "compact_review_effort": args.compact_review_effort,
                 "grouped_review": args.grouped_review,
+                "section_feature_review": args.section_feature_review,
                 "group_review_max_tokens": 8192 if args.group_review_8k else 4096}
                if args.source_selector else {}))
         row = evaluate_case(case, document, analyzer,
