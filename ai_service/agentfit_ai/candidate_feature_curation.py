@@ -27,7 +27,7 @@ def _feature_candidates(document, frozen, labels):
     return candidates
 
 
-def _validate_partition(candidates, partition):
+def _validate_partition(candidates, partition, *, allow_duplicate_values=False):
     if type(partition) is not dict or set(partition) != {'groups', 'unrepresentedIds'}:
         raise ValueError('invalid feature partition')
     groups, unrepresented = partition['groups'], partition['unrepresentedIds']
@@ -45,7 +45,8 @@ def _validate_partition(candidates, partition):
                 not members or representative not in members or assigned.intersection(members)):
             raise ValueError('invalid feature group')
         value = by_id[representative]['value']
-        if not value.strip() or len(value) > MAX_TEXT_CODE_POINTS or value in values:
+        if (not value.strip() or len(value) > MAX_TEXT_CODE_POINTS or
+                (value in values and not allow_duplicate_values)):
             raise ValueError('invalid feature representative')
         assigned.update(members)
         representatives.add(representative)
@@ -53,6 +54,25 @@ def _validate_partition(candidates, partition):
     if assigned != set(by_id):
         raise ValueError('incomplete feature partition')
     return [item['id'] for item in candidates if item['id'] in representatives]
+
+
+def _coalesce_representatives(candidates, partition):
+    """Combine only identical source values after validating all assignments."""
+    order = {item['id']: index for index, item in enumerate(candidates)}
+    by_id = {item['id']: item for item in candidates}
+    by_value = {}
+    for group in sorted(partition['groups'], key=lambda row: order[row['representativeId']]):
+        representative = group['representativeId']
+        value = by_id[representative]['value']
+        combined = by_value.setdefault(value, {
+            'representativeId': representative, 'memberIds': []})
+        combined['memberIds'].extend(group['memberIds'])
+    normalized = {'groups': list(by_value.values()),
+                  'unrepresentedIds': list(partition['unrepresentedIds'])}
+    for group in normalized['groups']:
+        group['memberIds'].sort(key=order.__getitem__)
+    _validate_partition(candidates, normalized)
+    return normalized
 
 
 def validate_feature_curation(document, frozen, reviewed_labels, curation):
@@ -135,7 +155,8 @@ def curate_reviewed_features(document, frozen, reviewed_labels, key, *,
             'required': ['representativeId', 'memberIds'], 'additionalProperties': False}},
          'unrepresentedIds': id_array})
     partition = request(grouping, 'feature_grouping',
-                        lambda reply: _validate_partition(candidates, reply))
+        lambda reply: _validate_partition(candidates, reply, allow_duplicate_values=True))
+    partition = _coalesce_representatives(candidates, partition)
     checking = _payload('agentfit_feature_coverage',
         'Independently verify the proposed feature groups against the document. '
         'Each candidate denotes a specific source occurrence; inspect its adjacent context '

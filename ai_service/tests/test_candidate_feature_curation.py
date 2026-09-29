@@ -200,17 +200,61 @@ class CandidateFeatureCurationTests(unittest.TestCase):
             self.assertEqual(len(requests), 1)
             self.assertFalse(traces[0]['validated'])
 
-    def test_duplicate_or_oversized_representative_values_fail(self):
+    def test_duplicate_final_or_oversized_proposed_values_fail(self):
         duplicated = fixture(extras=(('기록 검색', 'features', 'confirmed'),))
         duplicate_groups = {'groups': [partition()['groups'][0],
                                       {'representativeId': 'C031', 'memberIds': ['C031']}],
                             'unrepresentedIds': []}
-        for data, selected in ((duplicated, duplicate_groups),
-                                (fixture(first='가' * 201), partition())):
+        with self.assertRaises(ValueError):
+            validate_feature_curation(*duplicated, {**duplicate_groups, **coverage(32)})
+        requests = []
+        with self.assertRaises(ValueError):
+            curate_reviewed_features(*fixture(first='가' * 201), 'fake',
+                transport=sender([response(partition())], requests))
+        self.assertEqual(len(requests), 1)
+
+    def test_repeated_representatives_keep_every_occurrence_for_coverage(self):
+        data = fixture(extras=(('기록 검색', 'features', 'confirmed'),))
+        groups = [partition()['groups'][0],
+                  {'representativeId': 'C031', 'memberIds': ['C031']}]
+        for proposed_groups in (groups, list(reversed(groups))):
+            proposed = {'groups': proposed_groups, 'unrepresentedIds': []}
+            original = copy.deepcopy((data, proposed))
             requests = []
-            with self.subTest(), self.assertRaises(ValueError):
+            # The second occurrence has a different context; the independent
+            # reviewer says the chosen occurrence cannot represent it.
+            result = curate_reviewed_features(*data, 'fake', transport=sender([
+                response(proposed), response(coverage(32, uncovered=['C031']))], requests))
+            self.assertEqual(len(requests), 2)
+            reviewed_partition = json.loads(requests[1]['messages'][1]['content'])
+            self.assertEqual(reviewed_partition['groups'], partition(32)['groups'])
+            self.assertEqual(reviewed_partition['unrepresentedIds'], [])
+            self.assertEqual(result, {**partition(32), **coverage(32, uncovered=['C031'])})
+            final = finalize_candidate_analysis(data[0], 'case', data[1], data[2],
+                self.verdict(), feature_curation=result)
+            self.assertEqual(final['profile']['data']['features'], ['기록 검색'])
+            self.assertEqual(final['featureCuration'], {
+                'candidateCount': 32, 'selectedCount': 1, 'uncoveredCount': 1})
+            self.assertEqual(final['outcome'], 'needs_confirmation')
+            self.assertIn('features', final['unresolvedFields'])
+            self.assertEqual((data, proposed), original)
+
+    def test_repeated_representatives_still_require_valid_partition_and_review(self):
+        data = fixture(extras=(('기록 검색', 'features', 'confirmed'),))
+        proposed = {'groups': [partition()['groups'][0],
+            {'representativeId': 'C031', 'memberIds': ['C031']}], 'unrepresentedIds': []}
+        requests = []
+        with self.assertRaises(AnalysisError):
+            curate_reviewed_features(*data, 'fake', transport=sender([
+                response(proposed), AnalysisError('PROVIDER_UNAVAILABLE')], requests))
+        self.assertEqual(len(requests), 2)
+        for wrong_member in ('C000', 'UNKNOWN'):
+            bad = copy.deepcopy(proposed)
+            bad['groups'][1]['memberIds'].append(wrong_member)
+            requests = []
+            with self.subTest(wrong_member=wrong_member), self.assertRaises(ValueError):
                 curate_reviewed_features(*data, 'fake',
-                    transport=sender([response(selected)], requests))
+                    transport=sender([response(bad)], requests))
             self.assertEqual(len(requests), 1)
 
     def test_invalid_review_and_provider_fail_closed(self):
