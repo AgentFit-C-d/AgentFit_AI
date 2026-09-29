@@ -12,6 +12,33 @@ from agentfit_ai.real_document_holdout import PreparedCase
 
 
 class CandidateFirstRealEvaluationTests(unittest.TestCase):
+    def test_cli_selects_split_review_and_records_mode(self):
+        from agentfit_ai import candidate_first_real_evaluation as trial
+
+        case = PreparedCase('H02', 'private-source-fragment', [
+            {'id': 'C01', 'field': 'project_name', 'contains_any': ['Alpha']}],
+            'a', 'b', None, 0, 0)
+        def runner(text, document_id, key, *, split_review):
+            self.assertTrue(split_review)
+            return {'outcome': 'needs_confirmation', 'profile': {'data': {'project_name': 'Alpha'}},
+                    'candidateCount': 1, 'rejectedCandidateCount': 0,
+                    'reviewIssueCount': 1, 'unresolvedFields': ['features']}
+        with tempfile.TemporaryDirectory() as temp:
+            manifest = Path(temp) / 'manifest.json'
+            raw = b'{"cases": []}'
+            manifest.write_bytes(raw)
+            output = Path(temp) / 'result.json'
+            with (patch.object(sys, 'argv', ['trial', '--live', '--manifest', str(manifest),
+                    '--manifest-sha256', hashlib.sha256(raw).hexdigest(),
+                    '--output', str(output), '--split-review']),
+                  patch.object(trial, 'prepare_cases', return_value=[case]),
+                  patch.object(trial, 'load_key', return_value='fake-key'),
+                  patch.object(trial, 'analyze_candidate_first', side_effect=runner)):
+                self.assertEqual(trial.main(), 0)
+            result = json.loads(output.read_text(encoding='utf-8'))
+            self.assertEqual(result['review_mode'], 'split')
+            self.assertEqual(result['complete'], 0)
+
     def test_stage_diagnostics_survive_a_later_provider_failure(self):
         from agentfit_ai.candidate_first_real_evaluation import evaluate_cases
         from agentfit_ai.candidate_first_profile import CandidatePipelineError

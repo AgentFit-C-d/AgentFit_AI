@@ -107,6 +107,7 @@ def main() -> int:
     parser.add_argument("--case-id", choices=("H01", "H02", "H03"))
     parser.add_argument("--source-occurrences", action="store_true")
     parser.add_argument("--stage-diagnostics", action="store_true")
+    parser.add_argument("--split-review", action="store_true")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live required")
@@ -126,10 +127,13 @@ def main() -> int:
     key = load_key(args.env_file)
     runner = (partial(analyze_candidate_first, source_occurrences=True)
               if args.source_occurrences else analyze_candidate_first)
+    if args.split_review:
+        runner = partial(runner, split_review=True)
     result = evaluate_cases(select_cases(prepared, args.case_id), key, runner=runner,
                             stage_diagnostics=args.stage_diagnostics)
     result["grounding_mode"] = ("source-occurrences" if args.source_occurrences
                                 else "model-anchor")
+    result["review_mode"] = "split" if args.split_review else "combined"
     forbidden = (key, *(case.text for case in prepared),
                  *(str(case.get("path", "")) for case in payload["cases"]))
     args.output.parent.mkdir(parents=True, exist_ok=True)
