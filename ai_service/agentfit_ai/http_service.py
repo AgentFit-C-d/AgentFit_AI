@@ -139,12 +139,17 @@ def _checked_confirmation(outcome: dict, profile: dict) -> tuple[dict, list]:
         if type(question) is not dict or set(question) != {"field", "reason", "questionId"}:
             raise ValueError("invalid confirmation question")
         field = question["field"]
-        if (field not in FIELDS or field in fields or states[field] != "unresolved" or
-                question["reason"] not in SAFE_REASONS | {"ANALYSIS_UNRESOLVED"} or
-                question["questionId"] != "confirm_" + field):
+        if field not in FIELDS or field in fields:
+            raise ValueError("invalid confirmation question")
+        valid_reason = (
+            (states[field] == "unresolved" and
+             question["reason"] in SAFE_REASONS | {"ANALYSIS_UNRESOLVED"}) or
+            (states[field] == "suggested" and
+             question["reason"] == "REVIEW_UNAVAILABLE"))
+        if not valid_reason or question["questionId"] != "confirm_" + field:
             raise ValueError("invalid confirmation question")
         fields.add(field)
-    if fields != {field for field in FIELDS if states[field] == "unresolved"}:
+    if not {field for field in FIELDS if states[field] == "unresolved"} <= fields:
         raise ValueError("missing confirmation question")
     return states, questions
 

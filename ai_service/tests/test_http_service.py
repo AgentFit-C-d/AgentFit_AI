@@ -185,6 +185,42 @@ class InternalAnalysisHttpTests(unittest.TestCase):
                          [{"field": "domain", "reason": "ANALYSIS_UNRESOLVED",
                            "questionId": "confirm_domain"}])
 
+    def test_confirmation_accepts_review_unavailable_question_for_suggested_value(self):
+        data = {field: None for field in FIELDS}
+        evidence = {field: [] for field in FIELDS}
+        data["project_name"] = "AgentFit"
+        evidence["project_name"] = [{"start": 0, "end": 8}]
+        profile = validate_profile("AgentFit", "doc_1",
+                                   {"data": data, "evidence": evidence})
+        states = {field: "unknown" for field in FIELDS}
+        states["project_name"] = "suggested"
+        question = {"field": "project_name", "reason": "REVIEW_UNAVAILABLE",
+                    "questionId": "confirm_project_name"}
+
+        def send_question(item):
+            service = TestClient(create_app(internal_token="local-secret",
+                analyze=lambda *_: {"outcome": "needs_confirmation", "profile": profile,
+                                   "fieldStates": states, "questions": [item],
+                                   "error": "PROVIDER_TIMEOUT"}))
+            return service.post("/internal/v1/analyze", content=b"AgentFit",
+                                headers={"Authorization": "Bearer local-secret",
+                                         "X-Document-Id": "doc_1", "X-Request-Id": "req_1",
+                                         "X-Document-Kind": "TEXT",
+                                         "Content-Type": "text/plain"})
+
+        response = send_question(question)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["questions"], [question])
+        self.assertEqual(response.json()["outcome"], "needs_confirmation")
+
+        for invalid in (dict(question, reason="REVIEW_ISSUE"),
+                        {"field": "database", "reason": "REVIEW_UNAVAILABLE",
+                         "questionId": "confirm_database"}):
+            with self.subTest(invalid=invalid):
+                response = send_question(invalid)
+                self.assertEqual(response.status_code, 502)
+                self.assertEqual(response.json(), {"error": "INVALID_ANALYSIS_RESULT"})
+
     def test_invalid_document_id_is_rejected_before_analysis(self):
         response = self.send(headers={"X-Document-Id": "../../other"})
         self.assertEqual(response.status_code, 400)
