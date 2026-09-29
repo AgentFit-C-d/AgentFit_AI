@@ -7,8 +7,13 @@
 - 통합 테스트의 backend 기대값을 기존 공개 계약인 배열로 수정했다. 서비스/Profile 형식은 변경하지 않았다.
 - 관련19개, 전체836개 실행(6개 건너뜀, 나머지 통과). diff 공백 검사 통과. 실제 CLI에서 split-review 없는 adaptive-review는 호출 전에 거부됨을 확인했다.
 - 독립 리뷰에서 수정이 필요한 P0–P2 결함 없음. 리뷰어의 합성7건(하위 ID 누락·중복, 오류 ID 범위·중복, timeout, 다른 모델, 진단 없는 복구·부모 부분 응답 폐기)도 통과했다. 해당 경계를 전부 영구 회귀 테스트로 추가하지는 않았다.
-- 실제 H02 평가 대기. 모델 정확도·완주 개선 및 실사용 가능 여부는 아직 미입증이다. 초기 누락·의미적 오판·원문 누락 호출 자체의 길이 제한은 이번 복구 범위 밖이다.
+- 코드 커밋46c9b4d를 feature/candidate-adaptive-review에 push했고 Linux CI36622279410 성공을 확인했다. 실제 H02 평가 실행 중이다. 모델 정확도·완주 개선 및 실사용 가능 여부는 아직 미입증이다. 초기 누락·의미적 오판·원문 누락 호출 자체의 길이 제한은 이번 복구 범위 밖이다.
 
 ## 다음 행동
 
-리뷰·push·CI 이후 기존 승인된 H02를 source-occurrences/stage-diagnostics/split-review/review-diagnostics/adaptive-review로 실행한다. 아직 이 새 평가를 시작하지 않았다. 이전 진단 평가 PID30404와 셸34082는 종료됐다.
+기존 승인된 H02를 source-occurrences/stage-diagnostics/split-review/review-diagnostics/adaptive-review로 실행했다. PID26276, 시작 UTC2026-09-29T19:52:18.2253049Z, 시작 셸 세션51531. PID와 시작 시간을 함께 확인해야 한다. 이전 진단 평가 PID30404와 셸34082는 종료됐다.
+
+- 결과: E:/AgentFit/tmp/candidate-adaptive-review-h02-20260930-v1.json
+- 프로세스 기록: E:/AgentFit/tmp/candidate-adaptive-review-h02-20260930-v1-process.json
+- 실행 로그: 같은 이름의 .stdout.log/.stderr.log. Git에 추가하지 않는다.
+- 실제 프로세스/결과를 재확인하고 종료 전에는 중복 실행하지 않는다. 완료되면 review_calls의 실패 부모·recovered·하위 검증과 source_coverage 도달 여부, 최종 6항목 및 단계별 정답 도달을 확인한다.
