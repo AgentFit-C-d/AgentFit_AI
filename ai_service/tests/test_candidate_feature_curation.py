@@ -5,6 +5,8 @@ import unittest
 
 from agentfit_ai.candidate_feature_curation import (
     curate_reviewed_features, validate_feature_curation)
+from agentfit_ai.candidate_first_profile import finalize_candidate_analysis
+from agentfit_ai.profile import FIELDS
 from agentfit_ai.solar import AnalysisError
 
 
@@ -90,6 +92,81 @@ class CandidateFeatureCurationTests(unittest.TestCase):
                                               transport=sender([], requests))
             self.assertIsNone(result)
             self.assertEqual(requests, [])
+
+
+    def verdict(self, *, wrong=(), missing=()):
+        return {'checkedFields': list(FIELDS), 'missingFields': list(missing),
+                'wrongCandidateIds': list(wrong)}
+
+    def test_projection_keeps_representatives_and_nine_fields(self):
+        data = fixture(extras=(('TestApp', 'project_name', 'confirmed'),
+            ('web app', 'project_type', 'confirmed'), ('records', 'domain', 'confirmed'),
+            ('React', 'frontend', 'confirmed'), ('Go', 'backend', 'confirmed'),
+            ('ModelX', 'ai', 'confirmed'), ('SQLite', 'database', 'confirmed'),
+            ('CloudZ', 'deployment', 'confirmed'), ('MailSvc', 'external_integrations', 'confirmed')))
+        document, frozen, labels = data
+        baseline = finalize_candidate_analysis(document, 'case', frozen, labels, self.verdict())
+        self.assertIsNone(baseline['profile']['data']['features'])
+        curated = finalize_candidate_analysis(document, 'case', frozen, labels, self.verdict(),
+                                              feature_curation={**partition(), **coverage()})
+        self.assertEqual(curated['profile']['data']['features'], ['기록 검색'])
+        self.assertEqual(curated['profile']['evidence']['features'], [
+            {'documentId': 'case', 'start': 0, 'end': 5}])
+        self.assertEqual(curated['featureCuration'], {
+            'candidateCount': 31, 'selectedCount': 1, 'uncoveredCount': 0})
+        self.assertEqual(curated['outcome'], 'candidate_profile')
+        self.assertEqual(curated['unresolvedFields'], [])
+        for field in FIELDS:
+            if field != 'features':
+                self.assertEqual(curated['profile']['data'][field], baseline['profile']['data'][field])
+                self.assertEqual(curated['profile']['evidence'][field], baseline['profile']['evidence'][field])
+
+    def test_projection_keeps_unresolved_and_reviewed_labels(self):
+        document, frozen, labels = fixture(extras=(('Go', 'backend', 'confirmed'),))
+        frozen['rejected'] = [{'index': 40, 'reason': 'ambiguous_anchor'}]
+        verdict = self.verdict(wrong=['C031'], missing=['domain'])
+        groups = partition(30)
+        groups['unrepresentedIds'] = ['C030']
+        curation = {**groups, **coverage(uncovered=['C030', 'C020'])}
+        original = copy.deepcopy((frozen, labels, verdict, curation))
+        observed = {}
+        def observer(stage, value):
+            if stage == 'reviewed':
+                observed.update(value)
+        result = finalize_candidate_analysis(document, 'case', frozen, labels, verdict,
+            observer=observer, feature_curation=curation)
+        self.assertEqual(result['profile']['data']['features'], ['기록 검색'])
+        self.assertEqual(result['outcome'], 'needs_confirmation')
+        self.assertEqual(result['unresolvedFields'], ['domain', 'backend', 'features'])
+        self.assertEqual(result['reviewIssueCount'], 4)
+        self.assertEqual(result['featureCuration']['uncoveredCount'], 2)
+        self.assertEqual(observed['labels'][1]['status'], 'confirmed')
+        self.assertEqual(observed['labels'][-1]['status'], 'irrelevant')
+        self.assertEqual((frozen, labels, verdict, curation), original)
+
+    def test_projection_rejects_stale_or_foreign_curation(self):
+        document, frozen, labels = fixture(extras=(
+            ('기록 검색', 'features', 'negated'), ('Go', 'backend', 'confirmed')))
+        complete = {**partition(), **coverage()}
+        invalids = [(self.verdict(wrong=['C000']), complete)]
+        for wrong_id in ('C031', 'C032', 'UNKNOWN'):
+            bad = copy.deepcopy(complete)
+            bad['groups'][0]['memberIds'][-1] = wrong_id
+            invalids.append((self.verdict(), bad))
+        for verdict, curation in invalids:
+            with self.subTest(verdict=verdict), self.assertRaises(ValueError):
+                finalize_candidate_analysis(document, 'case', frozen, labels, verdict,
+                                             feature_curation=curation)
+
+    def test_default_projection_retains_existing_overflow_behavior(self):
+        document, frozen, labels = fixture()
+        before = finalize_candidate_analysis(document, 'case', frozen, labels, self.verdict())
+        explicit = finalize_candidate_analysis(document, 'case', frozen, labels, self.verdict(),
+                                                feature_curation=None)
+        self.assertEqual(before, explicit)
+        self.assertIsNone(explicit['profile']['data']['features'])
+        self.assertEqual(explicit['unresolvedFields'], ['features'])
+        self.assertEqual(explicit['outcome'], 'needs_confirmation')
 
     def test_invalid_partitions_fail_before_review(self):
         document, frozen, labels = fixture(extras=(

@@ -393,7 +393,8 @@ def analyze_candidate_first(document: str, document_id: str, key: str,
 
 
 def finalize_candidate_analysis(document: str, document_id: str, frozen: dict,
-                                labels: list[dict], review: dict, *, observer=None) -> dict:
+                                labels: list[dict], review: dict, *, observer=None,
+                                feature_curation=None) -> dict:
     """Share the same validated projection across single and paired reviews."""
     validate_candidate_labels(frozen, labels)
     if observer is not None and not callable(observer):
@@ -428,14 +429,28 @@ def finalize_candidate_analysis(document: str, document_id: str, frozen: dict,
     safe_labels = [{**label, "status": "irrelevant"}
                    if label["id"] in wrong else label for label in labels]
     observe("reviewed", {"frozen": frozen, "labels": safe_labels})
+    curation = None
+    projection_labels = safe_labels
+    if feature_curation is not None:
+        from .candidate_feature_curation import validate_feature_curation
+        curation = validate_feature_curation(document, frozen, safe_labels, feature_curation)
+        selected = set(curation['selectedIds'])
+        # Representative selection changes projection, not the factual review record.
+        projection_labels = [{**label, 'status': 'irrelevant'}
+                             if (label['field'] == 'features' and label['status'] == 'confirmed'
+                                 and label['id'] not in selected) else label
+                             for label in safe_labels]
+    uncovered_count = len(curation['uncoveredIds']) if curation is not None else 0
     complete = (bool(frozen["candidates"]) and not frozen["rejected"] and
-                not review["missingFields"] and not wrong)
+                not review["missingFields"] and not wrong and not uncovered_count)
     projected = run("PROJECTION_FAILED", lambda: project_candidate_profile(
-        document, document_id, frozen, safe_labels,
+        document, document_id, frozen, projection_labels,
         coverage_verified=complete))
     unresolved = set(projected["unresolvedFields"])
     unresolved.update(review["missingFields"])
     unresolved.update(wrong_fields)
+    if uncovered_count:
+        unresolved.add('features')
     projected["unresolvedFields"] = [field for field in FIELDS
                                      if field in unresolved]
     if unresolved or not complete:
@@ -444,6 +459,10 @@ def finalize_candidate_analysis(document: str, document_id: str, frozen: dict,
     projected["rejectedReasons"] = dict(Counter(
         item["reason"] for item in frozen["rejected"]))
     projected["reviewIssueCount"] = (len(review["missingFields"]) +
-                                     len(wrong))
+                                     len(wrong) + uncovered_count)
+    if curation is not None:
+        projected['featureCuration'] = {'candidateCount': curation['candidateCount'],
+                                       'selectedCount': len(curation['selectedIds']),
+                                       'uncoveredCount': uncovered_count}
     observe("projected", projected["profile"])
     return projected
