@@ -9,6 +9,6 @@
 
 `ai_service/requirements.txt`의 `pypdf==6.19.0`을 설치한 뒤 `agentfit_ai.document_extraction.extract_document(kind, content)`를 호출한다. `TEXT`는 Python 문자열, `MARKDOWN`·`PDF`는 파일 bytes를 받는다. 반환값은 검증된 텍스트와 문자·바이트 수, PDF 페이지별 근거 위치다. 오류는 원문 없는 `DocumentExtractionError.code`로 구분한다.
 
-PDF는 별도 프로세스에서 처리하며 15초를 넘기면 종료한다. 원문·추출문을 파일에 쓰지 않고 Worker 환경에 Provider 키를 전달하지 않는다. 이 모듈은 아직 FastAPI HTTP 엔드포인트에 연결되지 않았다. 서버 요청 취소와 body 스트리밍·OS 메모리 한계는 연동 작업에서 보완해야 한다.
+PDF는 별도 프로세스에서 처리하며 15초를 넘기면 종료한다. 원문·추출문을 파일에 쓰지 않고 Worker 환경에 Provider 키를 전달하지 않는다. 현재 FastAPI 내부 HTTP 엔드포인트에 연결되어 있으며 요청 수용·취소는 [서비스 명세](../13-analysis-request-lifecycle/spec.md), PDF Worker의 메모리 한계는 [메모리 제한 명세](../14-pdf-worker-memory-limit/spec.md)를 따른다.
 
 [명세](spec.md) · [계획](plan.md) · [검증](validation.md)

@@ -4,7 +4,7 @@ import json
 import sys
 from io import BytesIO
 
-from pypdf import PdfReader
+from .worker_memory import apply_pdf_memory_limit
 
 
 MAX_FILE_BYTES = 10_485_760
@@ -18,6 +18,8 @@ def extract_pdf_bytes(raw: bytes) -> dict:
     if not raw.startswith(b"%PDF-"):
         return {"error": "PDF_INVALID"}
     try:
+        from pypdf import PdfReader
+
         reader = PdfReader(BytesIO(raw), strict=False)
         if reader.is_encrypted:
             return {"error": "PDF_LOCKED"}
@@ -47,11 +49,18 @@ def extract_pdf_bytes(raw: bytes) -> dict:
             return {"error": "PDF_PARTIAL_TEXT"}
         return {"text": "\n".join(texts), "page_count": page_count,
                 "page_spans": spans}
+    except MemoryError:
+        return {"error": "PDF_WORKER_FAILED"}
     except Exception:
         return {"error": "PDF_INVALID"}
 
 
 def main() -> int:
+    try:
+        apply_pdf_memory_limit()
+    except Exception:
+        sys.stdout.buffer.write(b'{"error": "PDF_WORKER_FAILED"}')
+        return 0
     raw = sys.stdin.buffer.read(MAX_FILE_BYTES + 1)
     result = extract_pdf_bytes(raw)
     sys.stdout.buffer.write(json.dumps(result, ensure_ascii=True).encode("ascii"))
