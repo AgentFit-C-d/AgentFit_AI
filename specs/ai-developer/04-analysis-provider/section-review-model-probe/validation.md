@@ -2,7 +2,8 @@
 
 ## 검증
 
-- 2026-09-29, `python -m unittest discover -s tests -q`: 700건 통과.
+- 2026-09-29, 독립 원격 diff 리뷰에서 고정 문서/구역 우회와 Solar 응답 실제 모델 미검증 P2 두 건을 발견했다. CLI 대상 변경 옵션 제거, 원문 SHA 고정, Solar Pro 4 응답 모델 확인을 추가하고 재현 테스트를 작성했다.
+- 수정 후 `python -m unittest discover -s tests -q`: 702건 통과.
 - `git diff --check`: 통과.
 - 고정 공개 튜닝 문서 `campfire-prd`의 12번째 50줄 구역(417–466줄)을 동일한 서버 검증 초안(대표 기능 30개)으로 각 설정 1회 검토했다. 결과 원본은 로컬 임시 파일 `E:/AgentFit/tmp/section-review-model-probe-campfire-20260929-1.json`에 안전 메타데이터만 저장했다.
 

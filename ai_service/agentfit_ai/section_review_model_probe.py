@@ -5,6 +5,7 @@ from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
+import re
 import time
 
 from .deepseek_evaluation import (NVIDIA_REVIEW_MODELS, NvidiaAnalyzer,
@@ -23,6 +24,8 @@ from .source_selector_analysis import SourceSelectorSolarAnalyzer
 TUNING_MANIFEST = (Path(__file__).resolve().parents[2] /
                    "specs/ai-developer/04-analysis-provider/public-prd-holdout/manifest.json")
 CASE_ID = "campfire-prd"
+PINNED_SHA256 = "60ca7a99360ca70aeab4bf72a6ac672e2cb69f8a504bf26dccd5062ebc60d3f1"
+SECTION_INDEX = 12
 
 class _DraftCaptured(Exception):
     pass
@@ -64,8 +67,11 @@ def evaluate_section(document, profile, chunk, sender, payload, *, model, effort
            "error": None, "prompt_tokens": None, "completion_tokens": None,
            "elapsed_ms": None, "issue_count": None}
     try:
-        reply, _, prompt_tokens, completion_tokens = sender._send_payload(
+        reply, reported_model, prompt_tokens, completion_tokens = sender._send_payload(
             payload, ("checkedRange", "issues"), _trace=trace, timeout=600)
+        if (model == "solar-pro4" and
+                re.fullmatch(r"solar-pro4(?:-[0-9]+)?", reported_model or "") is None):
+            raise AnalysisError("PROVIDER_MODEL")
         normalized = normalize_section_review(reply, profile, document, chunk)
     except AnalysisError as error:
         row["error"] = safe_code(error.code)
@@ -104,28 +110,29 @@ def main():
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--env-file", type=Path)
-    parser.add_argument("--manifest", type=Path, default=TUNING_MANIFEST)
-    parser.add_argument("--section-index", type=int, default=12)
     args = parser.parse_args()
     if not args.live:
         parser.error("--live required")
     if args.output.exists():
         parser.error("output already exists")
-    cases = load_manifest(args.manifest, expected_partition="tuning")
+    cases = load_manifest(TUNING_MANIFEST, expected_partition="tuning")
     case = next((case for case in cases if case["id"] == CASE_ID), None)
     if case is None:
         parser.error("pinned case missing")
     document = fetch_document(case)
+    document_hash = hashlib.sha256(document.encode("utf-8")).hexdigest()
+    if document_hash != PINNED_SHA256:
+        parser.error("pinned source hash mismatch")
     chunks = split_feature_sections(document, max_lines=50)
-    if not 1 <= args.section_index <= len(chunks):
-        parser.error("invalid section index")
-    chunk = chunks[args.section_index - 1]
+    if len(chunks) < SECTION_INDEX:
+        parser.error("pinned section missing")
+    chunk = chunks[SECTION_INDEX - 1]
     solar_key = load_key(args.env_file)
     nvidia_key = nvidia_load_key(args.env_file)
     forbidden = (document, solar_key, nvidia_key)
     result = {"case_id": CASE_ID,
-              "source_sha256": hashlib.sha256(document.encode("utf-8")).hexdigest(),
-              "section_index": args.section_index,
+              "source_sha256": document_hash,
+              "section_index": SECTION_INDEX,
               "section_start": chunk[0], "section_end": chunk[1],
               "total_sections": len(chunks), "arms": [], "outcome": "failed"}
     try:

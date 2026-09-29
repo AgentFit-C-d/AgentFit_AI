@@ -68,6 +68,33 @@ class SectionReviewModelProbeTests(unittest.TestCase):
                     probe.main()
             self.assertEqual(output.read_text(encoding="utf-8"), "existing")
 
+    def test_cli_does_not_allow_replacing_pinned_document_or_section(self):
+        probe = import_module("agentfit_ai.section_review_model_probe")
+        with tempfile.TemporaryDirectory() as temp:
+            output = str(Path(temp) / "probe.json")
+            for extra in (("--manifest", "other.json"),
+                          ("--section-index", "1")):
+                with self.subTest(extra=extra):
+                    with patch.object(sys, "argv", ["probe", "--live", "--output",
+                                                    output, *extra]):
+                        with self.assertRaises(SystemExit):
+                            probe.main()
+
+    def test_solar_reply_must_identify_pro4(self):
+        probe = import_module("agentfit_ai.section_review_model_probe")
+        transport = Mock(side_effect=[response(core()), response(features())])
+        profile = probe.capture_draft(DOCUMENT, "doc", "synthetic-key", transport)
+        payload = section_review_payload(DOCUMENT, profile, (1, 2),
+                                         model="solar-pro4", effort="medium")
+        sender = Mock()
+        sender._send_payload.return_value = (
+            {"checkedRange": {"start": 1, "end": 2}, "issues": []},
+            "solar-mini4", 12, 34)
+        row = probe.evaluate_section(DOCUMENT, profile, (1, 2), sender, payload,
+                                     model="solar-pro4", effort="medium")
+        self.assertEqual(row["outcome"], "failed")
+        self.assertEqual(row["error"], "PROVIDER_MODEL")
+
     def test_capture_draft_stops_before_any_semantic_review(self):
         self.assertIsNotNone(find_spec("agentfit_ai.section_review_model_probe"))
         capture_draft = import_module("agentfit_ai.section_review_model_probe").capture_draft
