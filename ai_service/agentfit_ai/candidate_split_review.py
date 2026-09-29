@@ -10,6 +10,33 @@ from .solar import AnalysisError, SolarAnalyzer, post_solar
 from .candidate_field_semantics import field_semantics_instructions
 
 
+_REJECTION_REASONS = ('wrong_field', 'not_current', 'not_product_fact',
+                      'insufficient_evidence')
+_REJECTION_INSTRUCTION = (
+    ' For every wrongCandidateId return one rejectionReasons row with the same ID '
+    'and the single primary reason code: wrong_field means this fact belongs in a '
+    'different Profile field; not_current means negated, tentative, historical, '
+    'example or other-product scope; not_product_fact means it describes a benefit, '
+    'aspiration or team task without a concrete product operation; insufficient_evidence '
+    'means the source does not support the asserted fact. Return no explanation, quote '
+    'or new value. Do not list supported candidates in rejectionReasons.')
+
+
+def _valid_rejection_reasons(result):
+    if set(result) != {'checkedCandidateIds', 'wrongCandidateIds', 'rejectionReasons'}:
+        return False
+    rows = result['rejectionReasons']
+    wrong = result['wrongCandidateIds']
+    if type(rows) is not list or len(rows) != len(wrong):
+        return False
+    if any(type(row) is not dict or set(row) != {'id', 'reason'} or
+           type(row['id']) is not str or row['id'] not in wrong or
+           type(row['reason']) is not str or row['reason'] not in _REJECTION_REASONS
+           for row in rows):
+        return False
+    return len({row['id'] for row in rows}) == len(wrong)
+
+
 class _TokenLimitedReview(AnalysisError):
     """A trusted Solar length response; never a generic retry signal."""
 
@@ -36,7 +63,8 @@ def review_candidates_separately(document: str, frozen: dict,
                                 labels: list[dict], key: str,
                                 *, transport=None, review_calls=None,
                                 adaptive_review=False, review_model="solar-pro4",
-                                field_semantics='legacy') -> dict:
+                                field_semantics='legacy', reasoned_review=False,
+                                review_reasons=None) -> dict:
     """Review all confirmed IDs before checking omissions in the full source."""
     semantics = field_semantics_instructions(field_semantics)
     if type(document) is not str or not document.strip():
@@ -45,6 +73,10 @@ def review_candidates_separately(document: str, frozen: dict,
         raise ValueError("invalid review diagnostic collector")
     if type(adaptive_review) is not bool:
         raise ValueError("invalid adaptive review mode")
+    if type(reasoned_review) is not bool:
+        raise ValueError('invalid reasoned review mode')
+    if review_reasons is not None and type(review_reasons) is not list:
+        raise ValueError('invalid rejection reason collector')
     if review_model not in ("solar-pro4", *NVIDIA_REVIEW_MODELS):
         raise ValueError("unsupported review model")
     validate_candidate_labels(frozen, labels)
@@ -103,10 +135,26 @@ def review_candidates_separately(document: str, frozen: dict,
             ('\n' + semantics if semantics else ''),
             {"document": document, "selections": batch},
             {"checkedCandidateIds": {**array, "minItems": len(ids)}, "wrongCandidateIds": array})
-        return send(payload, "candidate_batch", lambda result: (
+        if reasoned_review:
+            payload['messages'][0]['content'] += _REJECTION_INSTRUCTION
+            schema = payload['response_format']['json_schema']['schema']
+            schema['properties']['rejectionReasons'] = {
+                'type': 'array', 'maxItems': len(ids), 'items': {
+                    'type': 'object', 'properties': {
+                        'id': {'type': 'string', 'enum': ids},
+                        'reason': {'type': 'string', 'enum': list(_REJECTION_REASONS)}},
+                    'required': ['id', 'reason'], 'additionalProperties': False}}
+            schema['required'].append('rejectionReasons')
+        reply = send(payload, "candidate_batch", lambda result: (
             result["checkedCandidateIds"] == ids and
-            _unique_subset(result["wrongCandidateIds"], ids)),
+            _unique_subset(result["wrongCandidateIds"], ids) and
+            (not reasoned_review or _valid_rejection_reasons(result))),
             batch_index=batch_index, candidate_count=len(batch), sub_batch_index=sub_batch_index)
+        if reasoned_review and review_reasons is not None:
+            review_reasons.extend({'batch_index': batch_index,
+                                   'sub_batch_index': sub_batch_index, **row}
+                                  for row in reply['rejectionReasons'])
+        return reply
 
     wrong = []
     for offset in range(0, len(confirmed), 20):
