@@ -1,0 +1,72 @@
+{
+  "version": "synthetic-evidence-v1",
+  "partition": "tuning",
+  "held_out": false,
+  "cases": {
+    "Q-001": {"evidence": {"features": ["장소 확인", "후보 선택"]}},
+    "Q-002": {"evidence": {"features": ["회원 승인을 요청", "회원 승인을 처리"]}},
+    "Q-003": {"evidence": {}},
+    "Q-004": {"evidence": {"external_integrations": ["외부 연동 서비스는 사용하지 않는다"]}},
+    "Q-005": {"evidence": {}},
+    "Q-006": {"evidence": {"features": ["일정 추천"]}},
+    "N-001": {"evidence": {}},
+    "N-002": {"evidence": {"external_integrations": ["외부 서비스와 연동하지 않기로 확정했다"]}},
+    "N-003": {"evidence": {}},
+    "N-004": {"evidence": {"ai": ["Lyra를 확정했다"]}},
+    "N-005": {"evidence": {"features": ["도서 검색", "대출 연장"]}},
+    "N-006": {"evidence": {"features": ["좌석 예약"]}},
+    "E01": {"fields": {
+      "project_name": [{"aliases": ["물결 노트"], "quote": "물결 노트"}],
+      "backend": [{"aliases": ["Ktor"], "quote": "Ktor"}],
+      "ai": [{"aliases": ["달빛 2"], "quote": "달빛 2"}],
+      "external_integrations": [{"aliases": ["파도ID"], "quote": "파도ID"}]
+    }},
+    "E02": {"fields": {
+      "project_type": [{"aliases": ["CLI", "사진 정리 CLI"], "quote": "사진 정리 CLI"}],
+      "features": [{"aliases": ["중복 사진을 찾고", "중복 사진 찾기"], "quote": "중복 사진을 찾고"}, {"aliases": ["앨범을 내보낼", "앨범 내보내기"], "quote": "앨범을 내보낼"}],
+      "database": [{"aliases": ["SQLite"], "quote": "SQLite"}],
+      "frontend": null
+    }},
+    "E03": {"fields": {
+      "project_type": [{"aliases": ["도서 예약 서비스"], "quote": "도서 예약 서비스"}],
+      "deployment": [{"aliases": ["Fly.io"], "quote": "Fly.io"}],
+      "features": [{"aliases": ["좌석을 예약하고", "좌석 예약"], "quote": "좌석을 예약하고"}, {"aliases": ["예약을 취소", "예약 취소"], "quote": "예약을 취소"}],
+      "external_integrations": null,
+      "ai": null
+    }},
+    "E04": {"fields": {
+      "frontend": [{"aliases": ["SvelteKit"], "quote": "SvelteKit"}],
+      "features": [{"aliases": ["데이터 복구 시험", "데이터 복구 시험을 실행"], "quote": "데이터 복구 시험"}],
+      "external_integrations": [{"aliases": ["구름문자"], "quote": "구름문자"}],
+      "project_name": null
+    }},
+    "E05": {"fields": {
+      "domain": [{"aliases": ["산업 안전 교육"], "quote": "산업 안전 교육"}],
+      "backend": [{"aliases": ["Phoenix"], "quote": "Phoenix"}],
+      "features": [{"aliases": ["퀴즈를 출제하고", "퀴즈 출제"], "quote": "퀴즈를 출제하고"}, {"aliases": ["정답 해설을 볼", "정답 해설 보기"], "quote": "정답 해설을 볼"}],
+      "frontend": null,
+      "database": null,
+      "ai": null
+    }},
+    "E06": {"fields": {
+      "project_type": [{"aliases": ["API 서비스"], "quote": "API 서비스"}],
+      "backend": [{"aliases": ["Bun"], "quote": "Bun"}],
+      "external_integrations": [{"aliases": ["두리버킷"], "quote": "두리버킷"}],
+      "ai": null
+    }},
+    "E07": {"fields": {
+      "project_name": [{"aliases": ["숲길"], "quote": "숲길"}],
+      "features": [{"aliases": ["산책 경로 기록"], "quote": "산책 경로 기록"}, {"aliases": ["친구 공유"], "quote": "친구 공유"}],
+      "database": [{"aliases": ["CockroachDB"], "quote": "CockroachDB"}],
+      "deployment": [{"aliases": ["Cloud Run"], "quote": "Cloud Run"}]
+    }},
+    "E08": {"fields": {
+      "project_type": [{"aliases": ["웹 서비스", "음식 재고 관리 웹 서비스"], "quote": "음식 재고 관리 웹 서비스"}],
+      "frontend": [{"aliases": ["Nuxt"], "quote": "Nuxt"}],
+      "features": [{"aliases": ["재고를 등록하고", "재고 등록"], "quote": "재고를 등록하고"}, {"aliases": ["유통기한 알림을 확인", "유통기한 알림 확인"], "quote": "유통기한 알림을 확인"}],
+      "database": [{"aliases": ["돌담DB"], "quote": "돌담DB"}],
+      "external_integrations": [{"aliases": ["돌담DB"], "quote": "돌담DB"}],
+      "ai": {"absent": "사용하지 않기로 확정했다"}
+    }}
+  }
+}

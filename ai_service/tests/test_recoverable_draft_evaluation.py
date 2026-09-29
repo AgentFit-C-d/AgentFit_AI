@@ -77,6 +77,27 @@ class RecoverableEvaluationTests(unittest.TestCase):
         self.assertFalse(summary["gate"]["observed_60s_limit"])
         self.assertFalse(summary["gate"]["zero_wrong_auto_confirmations"])
 
+    def test_synthetic_oracle_metrics_cannot_pass_independent_document_gate(self):
+        case = {"id": "T01", "kind": "full", "document": "Atlas",
+                "gold": {"project_name": "Atlas"}}
+        class FakeAnalyzer:
+            def __init__(self, key, *, transport, **kwargs):
+                pass
+            def analyze_recoverable(self, document, document_id):
+                return {"outcome": "complete", "profile": profile(document)}
+
+        score = {"assessed_suggested_fields": 1, "unassessed_suggested_fields": 0,
+                 "wrong_value_fields": 0, "wrong_evidence_fields": 0,
+                 "missing_expected_fields": 0}
+        row = run_case(case, "test-key", analyzer_factory=FakeAnalyzer,
+                       oracle_assessor=lambda *_: score)
+        self.assertEqual(row["synthetic_oracle"], score)
+        self.assertEqual(row["semantic_evidence_unassessed"], 0)
+        summary = aggregate([row], planned=1, synthetic_oracle=True)
+        self.assertEqual(summary["synthetic_oracle"]["profile_cases_scored"], 1)
+        self.assertFalse(summary["gate"]["held_out_independent_documents"])
+        self.assertFalse(summary["passed"])
+
     def test_focus_targets_do_not_certify_other_suggestions(self):
         document = "Atlas Solar"
         data = dict.fromkeys(FIELDS)

@@ -10,12 +10,15 @@ from .keyed_profile_evaluation import load_profile_cases
 from .recoverable_draft_evaluation import ROOT, aggregate, load_key, run_case
 from .recoverable_solar_analysis import RecoverableSolarAnalyzer
 from .solar import post_solar_inline
+from .synthetic_evidence_oracle import assess_profile, load_oracle, ORACLE_PATH
 
 
 CODE_PATHS = (
     "ai_service/agentfit_ai/solar.py",
     "ai_service/agentfit_ai/recoverable_draft.py",
     "ai_service/agentfit_ai/recoverable_solar_analysis.py",
+    "ai_service/agentfit_ai/recoverable_draft_evaluation.py",
+    "ai_service/agentfit_ai/synthetic_evidence_oracle.py",
     "ai_service/agentfit_ai/recoverable_solar_evaluation.py",
 )
 
@@ -38,6 +41,7 @@ def main():
     cases, hashes = load_profile_cases()
     if len(cases) != 20:
         raise ValueError("expected 20 frozen cases")
+    oracle = load_oracle(cases)
     if args.case_id:
         selected = set(args.case_id)
         if len(selected) != len(args.case_id) or not selected <= {case["id"] for case in cases}:
@@ -52,6 +56,7 @@ def main():
             "semantic_review": True, "evidence_contract": True,
             "selected_case_ids": [case["id"] for case in cases],
             "held_out": False, "dataset_sha256": hashes,
+            "synthetic_oracle_sha256": hashlib.sha256(ORACLE_PATH.read_bytes()).hexdigest(),
             "code_sha256": {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
                             for path in CODE_PATHS}}
     write_safe_json(args.output / "plan.json", plan, forbidden_strings=forbidden)
@@ -59,17 +64,19 @@ def main():
     write_safe_json(args.output / "results.json", rows, forbidden_strings=forbidden)
     for case in cases:
         row = run_case(case, key, provider=post_solar_inline,
-                       analyzer_factory=solar_factory)
+                       analyzer_factory=solar_factory,
+                       oracle_assessor=lambda item, profile: assess_profile(item, profile, oracle))
         rows.append(row)
         write_safe_json(args.output / "results.json", rows, forbidden_strings=forbidden)
-        write_safe_json(args.output / "summary.json", aggregate(rows, planned=len(cases)),
+        write_safe_json(args.output / "summary.json",
+                        aggregate(rows, planned=len(cases), synthetic_oracle=True),
                         forbidden_strings=forbidden)
         print(json.dumps({"id": row["id"], "outcome": row["outcome"],
                           "error": row["error"], "suggested_fields": row["suggested_fields"],
                           "questions": row["questions"],
                           "false_confirmations": row["false_confirmations"],
                           "elapsed_ms": row["elapsed_ms"]}), flush=True)
-    return 0 if aggregate(rows, planned=len(cases))["passed"] else 1
+    return 0 if aggregate(rows, planned=len(cases), synthetic_oracle=True)["passed"] else 1
 
 
 if __name__ == "__main__":

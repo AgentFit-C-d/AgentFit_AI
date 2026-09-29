@@ -55,7 +55,8 @@ def _structural_evidence_errors(document, case_id, profile):
 
 
 def run_case(case, key, *, provider=post_solar,
-             analyzer_factory=RecoverableAnchoredAnalyzer, clock=time.monotonic):
+             analyzer_factory=RecoverableAnchoredAnalyzer, clock=time.monotonic,
+             oracle_assessor=None):
     transport = CountingTransport(provider)
     analyzer = analyzer_factory(key, transport=transport, **options())
     started = clock()
@@ -79,18 +80,24 @@ def run_case(case, key, *, provider=post_solar,
         case["document"], case["id"], profile)
     if row["structural_evidence_errors"]:
         return row
+    if oracle_assessor is not None:
+        row["synthetic_oracle"] = oracle_assessor(case, profile)
+        row["unassessed_suggested_fields"] = row["synthetic_oracle"]["unassessed_suggested_fields"]
+        row["semantic_evidence_unassessed"] = row["synthetic_oracle"]["unassessed_suggested_fields"]
     suggested = {field for field in FIELDS if profile["data"][field] is not None}
     row["suggested_fields"] = len(suggested)
     # Full references grade all field values, but do not provide independently
     # adjudicated evidence spans. Focus references only grade listed targets.
-    row["semantic_evidence_unassessed"] = len(suggested)
+    if oracle_assessor is None:
+        row["semantic_evidence_unassessed"] = len(suggested)
     if case["kind"] == "full":
         score = full_score(profile, case["gold"])
         wrong = set(score["mismatch_fields"]) & suggested
         row["correct_suggestions"] = len(suggested - wrong)
         row["wrong_suggestions"] = len(wrong)
     else:
-        row["unassessed_suggested_fields"] = len(suggested)
+        if oracle_assessor is None:
+            row["unassessed_suggested_fields"] = len(suggested)
         score = focus_score(case, profile)
         row["correct_suggestions"] = score["matched"]
         row["wrong_suggestions"] = score["false_confirmations"]
@@ -101,7 +108,7 @@ def run_case(case, key, *, provider=post_solar,
     return row
 
 
-def aggregate(rows, *, planned=20):
+def aggregate(rows, *, planned=20, synthetic_oracle=False):
     outcomes = Counter(row["outcome"] for row in rows)
     prior_failures = [row for row in rows if row["outcome"] != "complete"]
     elapsed = sorted(row["elapsed_ms"] for row in rows)
@@ -138,7 +145,20 @@ def aggregate(rows, *, planned=20):
         "semantic_evidence_zero_errors_verified": all(
             row["semantic_evidence_unassessed"] == 0 for row in rows),
     }
-    return {
+    oracle_summary = None
+    if synthetic_oracle:
+        assessed = [row["synthetic_oracle"] for row in rows if "synthetic_oracle" in row]
+        keys = ("assessed_suggested_fields", "unassessed_suggested_fields",
+                "wrong_value_fields", "wrong_evidence_fields", "missing_expected_fields")
+        oracle_summary = {key: sum(score[key] for score in assessed) for key in keys}
+        oracle_summary["profile_cases_scored"] = len(assessed)
+        profiles_to_score = sum(row["outcome"] != "failed" and
+                                row["structural_evidence_errors"] == 0 for row in rows)
+        gate.update(zero_wrong_oracle_values=oracle_summary["wrong_value_fields"] == 0,
+                    zero_wrong_oracle_evidence=oracle_summary["wrong_evidence_fields"] == 0,
+                    oracle_scored_every_profile=len(assessed) == profiles_to_score,
+                    held_out_independent_documents=False)
+    summary = {
         "planned_cases": planned, "evaluated_cases": len(rows),
         "complete_cases": outcomes["complete"],
         "needs_confirmation_cases": outcomes["needs_confirmation"],
@@ -164,6 +184,12 @@ def aggregate(rows, *, planned=20):
         "gate": gate, "passed": bool(rows) and all(gate.values()),
         "scoring_note": "Full cases grade all field values; focus cases grade only listed target spans and forbidden strings. Focus suggestions outside that scope and semantic evidence in all cases remain unverified.",
     }
+    if synthetic_oracle:
+        summary["synthetic_oracle"] = oracle_summary
+        summary["scoring_note"] = ("Frozen tuning-only synthetic oracle grades annotated field values and "
+                                   "source spans. Unannotated focus fields remain unassessed; this is not "
+                                   "independent real-document verification.")
+    return summary
 
 
 def write_json(path, value):
