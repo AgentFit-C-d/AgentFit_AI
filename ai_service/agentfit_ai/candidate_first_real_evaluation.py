@@ -25,12 +25,18 @@ _SAFE_REJECTION_REASONS = frozenset((
 
 
 def evaluate_cases(cases, key: str, *, runner=analyze_candidate_first,
-                   stage_diagnostics=False) -> dict:
-    if type(stage_diagnostics) is not bool:
+                   stage_diagnostics=False, review_diagnostics=False) -> dict:
+    if type(stage_diagnostics) is not bool or type(review_diagnostics) is not bool:
         raise ValueError("invalid diagnostic mode")
     rows = []
     for case in cases:
         diagnostic = CandidateStageDiagnostics(case.text, case.checks) if stage_diagnostics else None
+        review_calls = []
+        options = {}
+        if diagnostic:
+            options["observer"] = diagnostic.observe
+        if review_diagnostics:
+            options["review_calls"] = review_calls
         started = time.monotonic()
         row = {"case_id": case.id, "source_sha256": case.source_sha256,
                "redacted_sha256": case.redacted_sha256,
@@ -38,8 +44,7 @@ def evaluate_cases(cases, key: str, *, runner=analyze_candidate_first,
                "heading_count": case.heading_count,
                "table_count": case.table_count}
         try:
-            result = (runner(case.text, case.id, key, observer=diagnostic.observe)
-                      if diagnostic else runner(case.text, case.id, key))
+            result = runner(case.text, case.id, key, **options)
             if (type(result) is not dict or
                     result.get("outcome") not in ("candidate_profile",
                                                   "needs_confirmation") or
@@ -80,6 +85,8 @@ def evaluate_cases(cases, key: str, *, runner=analyze_candidate_first,
             row.update(outcome="failed", error="TRIAL_FAILURE")
         if diagnostic:
             row["stage_checks"] = diagnostic.summary()
+        if review_diagnostics:
+            row["review_calls"] = review_calls
         row["elapsed_ms"] = round((time.monotonic() - started) * 1000)
         rows.append(row)
     completed = [row for row in rows if row["outcome"] == "candidate_profile"]
@@ -108,7 +115,10 @@ def main() -> int:
     parser.add_argument("--source-occurrences", action="store_true")
     parser.add_argument("--stage-diagnostics", action="store_true")
     parser.add_argument("--split-review", action="store_true")
+    parser.add_argument("--review-diagnostics", action="store_true")
     args = parser.parse_args()
+    if args.review_diagnostics and not args.split_review:
+        parser.error("--review-diagnostics requires --split-review")
     if not args.live:
         parser.error("--live required")
     if args.output.exists():
@@ -130,7 +140,8 @@ def main() -> int:
     if args.split_review:
         runner = partial(runner, split_review=True)
     result = evaluate_cases(select_cases(prepared, args.case_id), key, runner=runner,
-                            stage_diagnostics=args.stage_diagnostics)
+                            stage_diagnostics=args.stage_diagnostics,
+                            review_diagnostics=args.review_diagnostics)
     result["grounding_mode"] = ("source-occurrences" if args.source_occurrences
                                 else "model-anchor")
     result["review_mode"] = "split" if args.split_review else "combined"

@@ -25,6 +25,47 @@ def fixture(count=21):
 
 
 class CandidateSplitReviewTests(unittest.TestCase):
+    def test_review_diagnostics_preserve_failed_call_without_response_content(self):
+        from agentfit_ai.candidate_split_review import review_candidates_separately
+        from agentfit_ai.solar import AnalysisError
+        document, frozen, labels = fixture(1)
+        calls = []
+        def transport(payload, key, timeout):
+            if "selections" in json.loads(payload["messages"][1]["content"]):
+                return response({"checkedCandidateIds": ["C000"], "wrongCandidateIds": []})
+            return json.dumps({"model": "solar-pro4-260806", "choices": [{
+                "finish_reason": "length", "message": {"content": "PRIVATE RESPONSE"}}],
+                "usage": {"prompt_tokens": 321, "completion_tokens": 8192}}).encode()
+        with self.assertRaises(AnalysisError):
+            review_candidates_separately(document, frozen, labels, "fake", transport=transport,
+                                         review_calls=calls)
+        self.assertEqual([row["stage"] for row in calls], ["candidate_batch", "source_coverage"])
+        self.assertEqual(calls[0]["batch_index"], 1)
+        self.assertEqual(calls[0]["candidate_count"], 1)
+        self.assertTrue(calls[0]["validated"])
+        self.assertFalse(calls[1]["validated"])
+        self.assertEqual(calls[1]["finish_reason"], "length")
+        self.assertEqual(calls[1]["completion_tokens"], 8192)
+        self.assertEqual(calls[1]["error"], "INCOMPLETE_RESPONSE")
+        self.assertNotIn("PRIVATE RESPONSE", json.dumps(calls))
+        self.assertNotIn(document, json.dumps(calls))
+
+    def test_review_diagnostics_do_not_change_requests_and_filter_unknown_finish(self):
+        from agentfit_ai.candidate_split_review import review_candidates_separately
+        document, frozen, labels = fixture(1)
+        requests = []
+        def transport(payload, key, timeout):
+            requests.append(payload)
+            return response({}, finish="PRIVATE REASON")
+        for collector in (None, []):
+            with self.assertRaises(Exception):
+                review_candidates_separately(document, frozen, labels, "fake", transport=transport,
+                                             review_calls=collector)
+            if collector is not None:
+                self.assertEqual(collector[0]["finish_reason"], "unknown")
+                self.assertNotIn("PRIVATE REASON", json.dumps(collector))
+        self.assertEqual(requests[0], requests[1])
+
     def test_all_batches_keep_occurrences_then_coverage_deduplicates_safe_values(self):
         from agentfit_ai.candidate_split_review import review_candidates_separately
         document, frozen, labels = fixture()

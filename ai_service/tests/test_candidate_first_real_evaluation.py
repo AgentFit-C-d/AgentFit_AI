@@ -12,14 +12,27 @@ from agentfit_ai.real_document_holdout import PreparedCase
 
 
 class CandidateFirstRealEvaluationTests(unittest.TestCase):
+    def test_review_diagnostics_survive_provider_failure(self):
+        from agentfit_ai.candidate_first_real_evaluation import evaluate_cases
+        from agentfit_ai.candidate_first_profile import CandidatePipelineError
+        case = PreparedCase('H02', 'private-source', [
+            {'id': 'C01', 'field': 'project_name', 'contains_any': ['Alpha']}], 'a', 'b', None, 0, 0)
+        def runner(text, document_id, key, *, review_calls):
+            review_calls.append({'stage': 'candidate_batch', 'batch_index': 1, 'validated': False})
+            raise CandidatePipelineError('COVERAGE_REVIEW_FAILED', 'INCOMPLETE_RESPONSE')
+        result = evaluate_cases([case], 'fake', runner=runner, review_diagnostics=True)
+        self.assertEqual(result['rows'][0]['review_calls'][0]['stage'], 'candidate_batch')
+        self.assertEqual(result['rows'][0]['outcome'], 'failed')
+
     def test_cli_selects_split_review_and_records_mode(self):
         from agentfit_ai import candidate_first_real_evaluation as trial
 
         case = PreparedCase('H02', 'private-source-fragment', [
             {'id': 'C01', 'field': 'project_name', 'contains_any': ['Alpha']}],
             'a', 'b', None, 0, 0)
-        def runner(text, document_id, key, *, split_review):
+        def runner(text, document_id, key, *, split_review, review_calls):
             self.assertTrue(split_review)
+            review_calls.append({'stage': 'source_coverage', 'validated': True})
             return {'outcome': 'needs_confirmation', 'profile': {'data': {'project_name': 'Alpha'}},
                     'candidateCount': 1, 'rejectedCandidateCount': 0,
                     'reviewIssueCount': 1, 'unresolvedFields': ['features']}
@@ -30,7 +43,7 @@ class CandidateFirstRealEvaluationTests(unittest.TestCase):
             output = Path(temp) / 'result.json'
             with (patch.object(sys, 'argv', ['trial', '--live', '--manifest', str(manifest),
                     '--manifest-sha256', hashlib.sha256(raw).hexdigest(),
-                    '--output', str(output), '--split-review']),
+                    '--output', str(output), '--split-review', '--review-diagnostics']),
                   patch.object(trial, 'prepare_cases', return_value=[case]),
                   patch.object(trial, 'load_key', return_value='fake-key'),
                   patch.object(trial, 'analyze_candidate_first', side_effect=runner)):
@@ -38,6 +51,7 @@ class CandidateFirstRealEvaluationTests(unittest.TestCase):
             result = json.loads(output.read_text(encoding='utf-8'))
             self.assertEqual(result['review_mode'], 'split')
             self.assertEqual(result['complete'], 0)
+            self.assertEqual(result['rows'][0]['review_calls'][0]['stage'], 'source_coverage')
 
     def test_stage_diagnostics_survive_a_later_provider_failure(self):
         from agentfit_ai.candidate_first_real_evaluation import evaluate_cases

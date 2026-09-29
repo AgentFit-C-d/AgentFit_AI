@@ -3,6 +3,7 @@
 import json
 
 from .candidate_first_profile import _MENTION_INSTRUCTION, _source_mention, validate_candidate_labels
+from .diagnostics import safe_code
 from .profile import FIELDS
 from .solar import AnalysisError, SolarAnalyzer, post_solar
 
@@ -27,22 +28,43 @@ def _unique_subset(value, allowed) -> bool:
 
 def review_candidates_separately(document: str, frozen: dict,
                                 labels: list[dict], key: str,
-                                *, transport=post_solar) -> dict:
+                                *, transport=post_solar, review_calls=None) -> dict:
     """Review all confirmed IDs before checking omissions in the full source."""
     if type(document) is not str or not document.strip():
         raise ValueError("invalid review document")
+    if review_calls is not None and type(review_calls) is not list:
+        raise ValueError("invalid review diagnostic collector")
     validate_candidate_labels(frozen, labels)
     spans = {item["id"]: _source_mention(document, item) for item in frozen["candidates"]}
     confirmed = [{**spans[label["id"]], **label} for label in labels
                  if label["status"] == "confirmed"]
     sender = SolarAnalyzer(key, transport=transport)
 
-    def send(payload):
+    def send(payload, stage, validate, *, batch_index=None, candidate_count=None):
         required = tuple(payload["response_format"]["json_schema"]["schema"]["required"])
-        reply, model, _, _ = sender._send_payload(payload, required, timeout=600)
-        if not model.startswith("solar-pro4"):
-            raise AnalysisError("PROVIDER_MODEL")
-        return reply
+        trace = {}
+        row = {"stage": stage, "batch_index": batch_index,
+               "candidate_count": candidate_count, "validated": False}
+        try:
+            reply, model, _, _ = sender._send_payload(payload, required, timeout=600, _trace=trace)
+            if not model.startswith("solar-pro4"):
+                raise AnalysisError("PROVIDER_MODEL")
+            if not validate(reply):
+                raise ValueError("invalid split review contract")
+            row["validated"] = True
+            return reply
+        except AnalysisError as error:
+            row["error"] = safe_code(error.code)
+            raise
+        except ValueError:
+            row["error"] = "INVALID_REVIEW_CONTRACT"
+            raise
+        finally:
+            if review_calls is not None:
+                for name in ("model", "finish_reason", "prompt_tokens", "completion_tokens",
+                             "provider_elapsed_ms", "request_bytes", "response_bytes"):
+                    row[name] = trace.get(name)
+                review_calls.append(row)
 
     wrong = []
     for offset in range(0, len(confirmed), 20):
@@ -61,10 +83,10 @@ def review_candidates_separately(document: str, frozen: dict,
             "from this batch. Never generate quotes, values or corrections. " + _MENTION_INSTRUCTION,
             {"document": document, "selections": batch},
             {"checkedCandidateIds": {**array, "minItems": len(ids)}, "wrongCandidateIds": array})
-        reply = send(payload)
-        if (reply["checkedCandidateIds"] != ids or
-                not _unique_subset(reply["wrongCandidateIds"], ids)):
-            raise ValueError("invalid candidate batch review")
+        reply = send(payload, "candidate_batch", lambda result: (
+            result["checkedCandidateIds"] == ids and
+            _unique_subset(result["wrongCandidateIds"], ids)),
+            batch_index=offset // 20 + 1, candidate_count=len(batch))
         wrong.extend(reply["wrongCandidateIds"])
 
     rejected_ids = set(wrong)
@@ -85,7 +107,6 @@ def review_candidates_separately(document: str, frozen: dict,
         "Do not emit values, quotes or candidate IDs.",
         {"document": document, "confirmedValues": values, "fields": list(FIELDS)},
         {"checkedFields": {**fields, "minItems": len(FIELDS)}, "missingFields": fields})
-    reply = send(payload)
-    if reply["checkedFields"] != list(FIELDS) or not _unique_subset(reply["missingFields"], FIELDS):
-        raise ValueError("invalid source coverage review")
+    reply = send(payload, "source_coverage", lambda result: (
+        result["checkedFields"] == list(FIELDS) and _unique_subset(result["missingFields"], FIELDS)))
     return {**reply, "wrongCandidateIds": wrong}

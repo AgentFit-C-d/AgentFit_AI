@@ -326,12 +326,15 @@ def project_candidate_profile(document: str, document_id: str,
 
 def analyze_candidate_first(document: str, document_id: str, key: str,
                             *, extractor=None, transport=post_solar,
-                            source_occurrences=False, observer=None, split_review=False) -> dict:
+                            source_occurrences=False, observer=None, split_review=False,
+                            review_calls=None) -> dict:
     """Run the optional candidate-first path; never silently complete gaps."""
     if type(source_occurrences) is not bool:
         raise ValueError("invalid grounding mode")
     if type(split_review) is not bool:
         raise ValueError("invalid review mode")
+    if review_calls is not None and (not split_review or type(review_calls) is not list):
+        raise ValueError("review diagnostics require split review")
     if observer is not None and not callable(observer):
         raise ValueError("invalid candidate observer")
     def run(stage, operation):
@@ -356,11 +359,13 @@ def analyze_candidate_first(document: str, document_id: str, key: str,
         document, frozen, key, transport=transport))
     observe("classified", {"frozen": frozen, "labels": labels})
     reviewer = review_candidate_coverage
+    review_options = {}
     if split_review:
         from .candidate_split_review import review_candidates_separately
         reviewer = review_candidates_separately
+        review_options["review_calls"] = review_calls
     review = run("COVERAGE_REVIEW_FAILED", lambda: reviewer(
-        document, frozen, labels, key, transport=transport))
+        document, frozen, labels, key, transport=transport, **review_options))
     wrong = set(review["wrongCandidateIds"])
     wrong_fields = {label["field"] for label in labels
                     if label["id"] in wrong and label["field"] in _FIELDS}

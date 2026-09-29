@@ -1102,6 +1102,9 @@ class SolarAnalyzer:
         if type(choices) is not list or len(choices) != 1 or type(choices[0]) is not dict:
             raise AnalysisError("INVALID_RESPONSE")
         choice = choices[0]
+        finish = choice.get("finish_reason")
+        trace["finish_reason"] = (finish if type(finish) is str and finish in (
+            "stop", "length", "content_filter", "tool_calls", "function_call") else "unknown")
         message = choice.get("message")
         if type(message) is not dict:
             raise AnalysisError("INVALID_RESPONSE")
