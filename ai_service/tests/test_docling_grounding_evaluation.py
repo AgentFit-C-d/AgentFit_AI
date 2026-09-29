@@ -63,6 +63,25 @@ class DoclingGroundingEvaluationTests(unittest.TestCase):
                 {"field": "database", "status": "tentative"},
                 {"field": "database", "status": "confirmed"}])
 
+    def test_classifier_defines_database_and_feature_independently(self):
+        from agentfit_ai.docling_grounding_evaluation import classify_candidate_mentions
+
+        def transport(payload, key, timeout):
+            instruction = payload["messages"][0]["content"].lower()
+            self.assertIn("storage engine", instruction)
+            self.assertIn("product capabilities", instruction)
+            self.assertIn("independently", instruction)
+            response = {"model": "solar-pro4", "choices": [{
+                "finish_reason": "stop", "message": {"content": json.dumps({
+                    "labels": [{"index": 0, "field": "features",
+                                "status": "confirmed"}]})}}]}
+            return json.dumps(response).encode()
+
+        result = classify_candidate_mentions(
+            "검색을 제공한다.", [candidate("검색", "검색을 제공한다.")],
+            "synthetic-key", transport=transport)
+        self.assertEqual(result, [{"field": "features", "status": "confirmed"}])
+
     def test_structured_fixture_is_a_real_heading_and_table(self):
         import importlib.util
         if not (importlib.util.find_spec("docling") and

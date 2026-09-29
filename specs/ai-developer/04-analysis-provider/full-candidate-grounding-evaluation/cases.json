@@ -1,0 +1,28 @@
+{
+  "version": "full-candidate-grounding-v1",
+  "documents": [
+    {
+      "id": "D01", "category": "repeat", "layout": "plain",
+      "lines": ["검토 DB는 CedarDB다.", "운영 DB는 CedarDB로 확정했다."],
+      "expected": [{"anchor": "운영 DB는 CedarDB로 확정했다.", "quote": "CedarDB", "field": "database"}]
+    },
+    {
+      "id": "D02", "category": "negation", "layout": "plain",
+      "lines": ["AlphaDB는 사용하지 않고 BetaDB는 사용한다."],
+      "expected": [{"anchor": "AlphaDB는 사용하지 않고 BetaDB는 사용한다.", "quote": "BetaDB", "field": "database"}]
+    },
+    {
+      "id": "D03", "category": "proposal", "layout": "plain",
+      "lines": ["채팅 알림은 초안에서 제안했다.", "요금 계산 자동화를 제공한다."],
+      "expected": [{"anchor": "요금 계산 자동화를 제공한다.", "quote": "요금 계산 자동화", "field": "features"}]
+    },
+    {
+      "id": "D04", "category": "structured", "layout": "structured",
+      "lines": ["기능 결정", "기능|상태", "실시간 검색|제공한다", "채팅 알림|검토한다", "문서 내보내기|제공하지 않는다", "요금 계산|확정했다"],
+      "expected": [
+        {"anchor": "실시간 검색", "quote": "실시간 검색", "field": "features"},
+        {"anchor": "요금 계산", "quote": "요금 계산", "field": "features"}
+      ]
+    }
+  ]
+}
