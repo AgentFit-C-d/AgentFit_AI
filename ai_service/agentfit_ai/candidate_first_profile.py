@@ -2,6 +2,7 @@
 
 import json
 from collections import Counter
+from copy import deepcopy
 
 from .anchored_grounding import ground_anchored_extractions
 from .diagnostics import safe_code
@@ -325,10 +326,12 @@ def project_candidate_profile(document: str, document_id: str,
 
 def analyze_candidate_first(document: str, document_id: str, key: str,
                             *, extractor=None, transport=post_solar,
-                            source_occurrences=False) -> dict:
+                            source_occurrences=False, observer=None) -> dict:
     """Run the optional candidate-first path; never silently complete gaps."""
     if type(source_occurrences) is not bool:
         raise ValueError("invalid grounding mode")
+    if observer is not None and not callable(observer):
+        raise ValueError("invalid candidate observer")
     def run(stage, operation):
         try:
             return operation()
@@ -337,13 +340,19 @@ def analyze_candidate_first(document: str, document_id: str, key: str,
             detail = error.code if isinstance(error, CandidateContractError) else None
             raise CandidatePipelineError(stage, code, detail) from None
 
+    def observe(stage, state):
+        if observer is not None:
+            run("DIAGNOSTIC_FAILED", lambda: observer(stage, deepcopy(state)))
+
     extractions = run("EXTRACTION_FAILED", lambda: extract_profile_candidates(
         document, key, extractor=extractor))
     ground = freeze_candidate_occurrences if source_occurrences else freeze_candidates
     frozen = run("GROUNDING_FAILED", lambda: ground(
         document, extractions))
+    observe("grounded", frozen)
     labels = run("CLASSIFICATION_FAILED", lambda: classify_profile_candidates(
         document, frozen, key, transport=transport))
+    observe("classified", {"frozen": frozen, "labels": labels})
     review = run("COVERAGE_REVIEW_FAILED", lambda: review_candidate_coverage(
         document, frozen, labels, key, transport=transport))
     wrong = set(review["wrongCandidateIds"])
@@ -351,6 +360,7 @@ def analyze_candidate_first(document: str, document_id: str, key: str,
                     if label["id"] in wrong and label["field"] in _FIELDS}
     safe_labels = [{**label, "status": "irrelevant"}
                    if label["id"] in wrong else label for label in labels]
+    observe("reviewed", {"frozen": frozen, "labels": safe_labels})
     complete = (bool(frozen["candidates"]) and not frozen["rejected"] and
                 not review["missingFields"] and not wrong)
     projected = run("PROJECTION_FAILED", lambda: project_candidate_profile(
@@ -368,4 +378,5 @@ def analyze_candidate_first(document: str, document_id: str, key: str,
         item["reason"] for item in frozen["rejected"]))
     projected["reviewIssueCount"] = (len(review["missingFields"]) +
                                      len(wrong))
+    observe("projected", projected["profile"])
     return projected

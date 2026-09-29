@@ -12,6 +12,24 @@ from agentfit_ai.real_document_holdout import PreparedCase
 
 
 class CandidateFirstRealEvaluationTests(unittest.TestCase):
+    def test_stage_diagnostics_survive_a_later_provider_failure(self):
+        from agentfit_ai.candidate_first_real_evaluation import evaluate_cases
+        from agentfit_ai.candidate_first_profile import CandidatePipelineError
+
+        case = PreparedCase('H02', 'Alpha', [
+            {'id': 'C01', 'field': 'project_name', 'contains_any': ['Alpha']}],
+            'a', 'b', None, 0, 0)
+        def runner(text, document_id, key, *, observer):
+            observer('grounded', {'candidates': [{'id': 'C000', 'start': 0, 'end': 5}], 'rejected': []})
+            raise CandidatePipelineError('CLASSIFICATION_FAILED')
+        result = evaluate_cases([case], 'fake-key', runner=runner, stage_diagnostics=True)
+        row = result['rows'][0]
+        self.assertEqual(row['outcome'], 'failed')
+        self.assertTrue(row['stage_checks'][0]['grounded'])
+        self.assertIsNone(row['stage_checks'][0]['classified'])
+        self.assertEqual(row['stage_checks'][0]['first_unmatched_stage'], 'unobserved')
+        self.assertNotIn('Alpha', json.dumps(result))
+
     def test_cli_selects_source_occurrences_and_preserves_safe_rejection_reason(self):
         from agentfit_ai import candidate_first_real_evaluation as trial
 
@@ -81,6 +99,7 @@ class CandidateFirstRealEvaluationTests(unittest.TestCase):
         self.assertEqual(result["matched"], 0)
         self.assertEqual(result["suggestion_matched"], 1)
         self.assertEqual(result["suggestion_checked"], 1)
+        self.assertEqual(result["rows"][0]["suggestion_failed_check_ids"], [])
         self.assertEqual(result["rows"][0]["outcome"], "needs_confirmation")
 
     def test_manifest_failure_never_loads_key(self):

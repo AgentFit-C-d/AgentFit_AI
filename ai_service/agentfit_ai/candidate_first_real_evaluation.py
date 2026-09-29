@@ -10,6 +10,7 @@ import time
 
 from .candidate_first_profile import (CandidatePipelineError,
                                       analyze_candidate_first)
+from .candidate_stage_diagnostics import CandidateStageDiagnostics
 from .diagnostics import safe_code
 from .false_complete_evaluation import write_safe_json
 from .langextract_solar_trial import load_key
@@ -23,9 +24,13 @@ _SAFE_REJECTION_REASONS = frozenset((
     "ambiguous_source", "alignment_conflict", "duplicate_span", "source_quote_absent"))
 
 
-def evaluate_cases(cases, key: str, *, runner=analyze_candidate_first) -> dict:
+def evaluate_cases(cases, key: str, *, runner=analyze_candidate_first,
+                   stage_diagnostics=False) -> dict:
+    if type(stage_diagnostics) is not bool:
+        raise ValueError("invalid diagnostic mode")
     rows = []
     for case in cases:
+        diagnostic = CandidateStageDiagnostics(case.text, case.checks) if stage_diagnostics else None
         started = time.monotonic()
         row = {"case_id": case.id, "source_sha256": case.source_sha256,
                "redacted_sha256": case.redacted_sha256,
@@ -33,7 +38,8 @@ def evaluate_cases(cases, key: str, *, runner=analyze_candidate_first) -> dict:
                "heading_count": case.heading_count,
                "table_count": case.table_count}
         try:
-            result = runner(case.text, case.id, key)
+            result = (runner(case.text, case.id, key, observer=diagnostic.observe)
+                      if diagnostic else runner(case.text, case.id, key))
             if (type(result) is not dict or
                     result.get("outcome") not in ("candidate_profile",
                                                   "needs_confirmation") or
@@ -60,7 +66,8 @@ def evaluate_cases(cases, key: str, *, runner=analyze_candidate_first) -> dict:
             else:
                 suggestion = score_profile(result["profile"], case.checks)
                 row.update(suggestion_matched=suggestion["matched"],
-                           suggestion_checked=suggestion["total"])
+                           suggestion_checked=suggestion["total"],
+                           suggestion_failed_check_ids=suggestion["failed_check_ids"])
         except CandidatePipelineError as error:
             row.update(outcome="failed", error=error.stage)
             if error.provider_code is not None:
@@ -71,6 +78,8 @@ def evaluate_cases(cases, key: str, *, runner=analyze_candidate_first) -> dict:
             row.update(outcome="failed", error=safe_code(error.code))
         except Exception:
             row.update(outcome="failed", error="TRIAL_FAILURE")
+        if diagnostic:
+            row["stage_checks"] = diagnostic.summary()
         row["elapsed_ms"] = round((time.monotonic() - started) * 1000)
         rows.append(row)
     completed = [row for row in rows if row["outcome"] == "candidate_profile"]
@@ -97,6 +106,7 @@ def main() -> int:
     parser.add_argument("--env-file", type=Path)
     parser.add_argument("--case-id", choices=("H01", "H02", "H03"))
     parser.add_argument("--source-occurrences", action="store_true")
+    parser.add_argument("--stage-diagnostics", action="store_true")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live required")
@@ -116,7 +126,8 @@ def main() -> int:
     key = load_key(args.env_file)
     runner = (partial(analyze_candidate_first, source_occurrences=True)
               if args.source_occurrences else analyze_candidate_first)
-    result = evaluate_cases(select_cases(prepared, args.case_id), key, runner=runner)
+    result = evaluate_cases(select_cases(prepared, args.case_id), key, runner=runner,
+                            stage_diagnostics=args.stage_diagnostics)
     result["grounding_mode"] = ("source-occurrences" if args.source_occurrences
                                 else "model-anchor")
     forbidden = (key, *(case.text for case in prepared),
