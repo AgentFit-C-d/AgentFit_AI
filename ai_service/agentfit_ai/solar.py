@@ -600,6 +600,9 @@ class SolarAnalyzer:
     def _observe_profile(self, stage, profile):
         pass
 
+    def _observe_partial_candidate(self, document, document_id, candidate):
+        pass
+
     def _observe_review_issues(self, stage, issues):
         pass
 
@@ -747,6 +750,7 @@ class SolarAnalyzer:
                 call["validation_errors"] = invalid
         repaired = tuple(error["field"] for error in errors)
         if errors:
+            self._observe_partial_candidate(document, document_id, candidate)
             candidate.update(request(repaired, "Correct only the requested invalid fields using exact source lines. Do not discard confirmed facts merely to pass validation.", {
                 "errors": errors, "previous": {field: candidate[field] for field in repaired},
             }))
@@ -757,6 +761,7 @@ class SolarAnalyzer:
             failure = safe_evidence_failure(error)
             if failure is not None:
                 diagnostic["calls"][-1]["validation_error"] = failure
+            self._observe_partial_candidate(document, document_id, candidate)
             error.provider_calls = len(replies)
             error.first_pass_validated = False
             error.repaired_fields = repaired

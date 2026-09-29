@@ -3,7 +3,7 @@
 from contextvars import ContextVar
 
 from .diagnostics import safe_code
-from .profile import FIELDS
+from .profile import FIELDS, validate_profile
 from .recoverable_draft import project_draft
 from .solar import AnalysisError, SolarAnalyzer
 
@@ -19,7 +19,31 @@ class RecoverableSolarAnalyzer(SolarAnalyzer):
         snapshot = self._draft_context.get()
         if snapshot is not None:
             snapshot["profile"] = profile
+            snapshot["invalid_fields"] = set()
             snapshot["review_complete"] = False
+
+    def _observe_partial_candidate(self, document, document_id, candidate):
+        snapshot = self._draft_context.get()
+        if snapshot is None:
+            return
+        data, evidence, invalid = {}, {}, set()
+        for field in FIELDS:
+            isolated = dict.fromkeys(FIELDS)
+            isolated[field] = candidate[field]
+            try:
+                checked = self._project(document, document_id, isolated)
+            except AnalysisError:
+                data[field], evidence[field] = None, []
+                invalid.add(field)
+            else:
+                data[field] = checked["data"][field]
+                evidence[field] = [{"start": span["start"], "end": span["end"]}
+                                   for span in checked["evidence"][field]]
+        profile = validate_profile(document, document_id,
+                                   {"data": data, "evidence": evidence})
+        snapshot["profile"] = profile
+        snapshot["invalid_fields"] = invalid
+        snapshot["review_complete"] = False
 
     def _observe_review_issues(self, stage, issues):
         snapshot = self._draft_context.get()
@@ -28,7 +52,8 @@ class RecoverableSolarAnalyzer(SolarAnalyzer):
             snapshot["issues"].update(issue["field"] for issue in issues)
 
     def analyze_recoverable(self, document: str, document_id: str) -> dict:
-        snapshot = {"profile": None, "issues": set(), "review_complete": False}
+        snapshot = {"profile": None, "issues": set(), "invalid_fields": set(),
+                    "review_complete": False}
         token = self._draft_context.set(snapshot)
         try:
             try:
@@ -38,7 +63,9 @@ class RecoverableSolarAnalyzer(SolarAnalyzer):
                 if profile is None or not any(profile["data"][field] is not None
                                               for field in FIELDS):
                     return {"outcome": "failed", "error": safe_code(error.code)}
-                unresolved = {field: "REVIEW_ISSUE" for field in snapshot["issues"]}
+                unresolved = {field: "ANALYSIS_UNRESOLVED"
+                              for field in snapshot["invalid_fields"]}
+                unresolved.update({field: "REVIEW_ISSUE" for field in snapshot["issues"]})
                 draft = project_draft(
                     document, document_id, profile, unresolved=unresolved,
                     review_complete=snapshot["review_complete"],
