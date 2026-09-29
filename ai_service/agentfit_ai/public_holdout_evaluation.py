@@ -8,8 +8,11 @@ from collections import Counter
 from pathlib import Path
 
 from .diagnostics import safe_code
+from .deepseek_evaluation import (NVIDIA_REVIEW_MODELS, load_key as nvidia_load_key,
+                                  post_nvidia)
 from .false_complete_evaluation import write_safe_json
 from .line_evidence_analysis import LineEvidenceSolarAnalyzer
+from .nvidia_source_selector import NvidiaSourceSelectorAnalyzer
 from .source_selector_analysis import SourceSelectorSolarAnalyzer
 from .public_holdout import MANIFEST, SCORE_VERSION, fetch_document, load_manifest, score_profile
 from .recoverable_draft_evaluation import (CountingTransport,
@@ -66,6 +69,12 @@ class _SafeTraceMixin:
                       if type(call.get(name)) is int and 0 <= call[name] <= 1_000_000_000}
             if timing:
                 row["timing"] = timing
+            token_usage = {label: call[name] for label, name in (
+                ("limit", "max_tokens"), ("prompt", "prompt_tokens"),
+                ("completion", "completion_tokens"))
+                if type(call.get(name)) is int and 0 <= call[name] <= 1_000_000_000}
+            if token_usage:
+                row["tokens"] = token_usage
             self.safe_calls.append(row)
 
 
@@ -78,6 +87,10 @@ class SafeTraceLineEvidenceAnalyzer(_SafeTraceMixin, LineEvidenceSolarAnalyzer):
 
 
 class SafeTraceSourceSelectorAnalyzer(_SafeTraceMixin, SourceSelectorSolarAnalyzer):
+    pass
+
+
+class SafeTraceNvidiaSourceSelectorAnalyzer(_SafeTraceMixin, NvidiaSourceSelectorAnalyzer):
     pass
 
 
@@ -160,6 +173,9 @@ def main():
     parser.add_argument("--parallel-first-pass", action="store_true")
     parser.add_argument("--line-evidence", action="store_true")
     parser.add_argument("--source-selector", action="store_true")
+    parser.add_argument("--source-selector-model", choices=("solar-pro4", *NVIDIA_REVIEW_MODELS),
+                        default="solar-pro4")
+    parser.add_argument("--accuracy-first", action="store_true")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live required")
@@ -169,6 +185,11 @@ def main():
         parser.error("line evidence does not use quote context options")
     if args.source_selector and (args.line_evidence or args.repair_context_options):
         parser.error("source selector is exclusive with other evidence modes")
+    if (args.source_selector_model != "solar-pro4" or args.accuracy_first) and not args.source_selector:
+        parser.error("model comparison requires source selector mode")
+    nvidia_mode = args.source_selector_model != "solar-pro4"
+    if nvidia_mode and args.parallel_first_pass:
+        parser.error("NVIDIA source selector requires sequential calls")
     cases = load_manifest(args.manifest, expected_partition=args.partition)
     if args.case_id:
         selected = set(args.case_id)
@@ -176,10 +197,10 @@ def main():
             parser.error("invalid case selection")
         cases = [case for case in cases if case["id"] in selected]
     documents = [(case, fetch_document(case)) for case in cases]
-    key = load_key(args.env_file)
+    key = nvidia_load_key(args.env_file) if nvidia_mode else load_key(args.env_file)
     forbidden = (key, *(document for _, document in documents))
     args.output.mkdir(parents=True, exist_ok=False)
-    plan = {"model": "solar-pro4", "score_version": SCORE_VERSION,
+    plan = {"model": args.source_selector_model, "score_version": SCORE_VERSION,
             "partition": args.partition,
             "manifest_sha256": hashlib.sha256(args.manifest.read_bytes()).hexdigest(),
             "sources": [{"id": case["id"], "repo": case["repo"],
@@ -190,17 +211,25 @@ def main():
             "parallel_first_pass": args.parallel_first_pass,
             "line_evidence": args.line_evidence,
             "source_selector": args.source_selector,
+            "accuracy_first": args.accuracy_first,
+            "analysis_timeout_seconds": 300 if args.accuracy_first else 40,
+            "field_call_timeout_seconds": 120 if args.accuracy_first else 40,
+            "review_max_tokens": 16384 if args.accuracy_first else 8192,
             "release_gate_passed": False}
     write_safe_json(args.output / "plan.json", plan, forbidden_strings=forbidden)
     rows = []
     for case, document in documents:
-        transport = CountingTransport(post_solar_inline)
-        analyzer_type = (SafeTraceSourceSelectorAnalyzer if args.source_selector else
+        transport = CountingTransport(post_nvidia if nvidia_mode else post_solar_inline)
+        analyzer_type = (SafeTraceNvidiaSourceSelectorAnalyzer if nvidia_mode else
+                         SafeTraceSourceSelectorAnalyzer if args.source_selector else
                          SafeTraceLineEvidenceAnalyzer if args.line_evidence else
                          SafeTraceSolarAnalyzer)
         analyzer = analyzer_type(
-            key, transport=transport, model="solar-pro4", evidence_contract=True,
-            semantic_review=True, analysis_timeout_seconds=40,
+            key, transport=transport, model=args.source_selector_model, evidence_contract=True,
+            semantic_review=True, analysis_timeout_seconds=300 if args.accuracy_first else 40,
+            field_call_timeout_seconds=120 if args.accuracy_first else 40,
+            review_max_tokens=16384 if args.accuracy_first else 8192,
+            experimental_long_timeout=args.accuracy_first,
             repair_context_options=args.repair_context_options,
             parallel_first_pass=args.parallel_first_pass)
         row = evaluate_case(case, document, analyzer,

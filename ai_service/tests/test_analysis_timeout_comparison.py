@@ -6,6 +6,37 @@ from agentfit_ai.analysis_timeout_evaluation import ReviewCappedAnchoredAnalyzer
 
 
 class TimeoutOptionTests(unittest.TestCase):
+    def test_experimental_deadline_does_not_change_default_limits(self):
+        baseline = SolarAnalyzer("synthetic-key")
+        self.assertEqual((baseline._analysis_timeout_seconds,
+                          baseline._field_call_timeout_seconds), (60, 40))
+        with self.assertRaises(ValueError):
+            SolarAnalyzer("synthetic-key", analysis_timeout_seconds=300)
+        with self.assertRaises(ValueError):
+            SolarAnalyzer("synthetic-key", field_call_timeout_seconds=120)
+        trial = SolarAnalyzer("synthetic-key", analysis_timeout_seconds=300,
+                              field_call_timeout_seconds=120,
+                              experimental_long_timeout=True)
+        self.assertEqual((trial._analysis_timeout_seconds,
+                          trial._field_call_timeout_seconds), (300, 120))
+
+    def test_experimental_review_token_limit_is_explicit(self):
+        baseline = SolarAnalyzer("synthetic-key")
+        self.assertEqual(baseline._review_max_tokens, 8192)
+        with self.assertRaises(ValueError):
+            SolarAnalyzer("synthetic-key", review_max_tokens=16384)
+        analyzer = SolarAnalyzer("synthetic-key", experimental_long_timeout=True,
+                                 review_max_tokens=16384)
+        analyzer._send_payload = Mock(return_value=({}, "solar-pro4", 0, 0))
+        profile = {"data": {field: None for field in (
+            "project_name", "project_type", "domain", "frontend", "backend", "ai",
+            "database", "deployment", "features", "external_integrations")},
+                   "evidence": {field: [] for field in (
+            "project_name", "project_type", "domain", "frontend", "backend", "ai",
+            "database", "deployment", "features", "external_integrations")}}
+        analyzer._request_review("document", profile)
+        self.assertEqual(analyzer._send_payload.call_args.args[0]["max_tokens"], 16384)
+
     def test_default_and_opt_in_deadlines(self):
         for seconds in (60, 120):
             with self.subTest(seconds=seconds):

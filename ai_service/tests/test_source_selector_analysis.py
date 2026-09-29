@@ -53,3 +53,15 @@ class SourceSelectorAnalysisTests(unittest.TestCase):
                          ["project_name"])
         self.assertIn("INVALID_SELECTOR", payload["messages"][1]["content"])
         self.assertEqual(analyzer._contract_version(), "source-selector-v1")
+
+    def test_experimental_field_timeout_reaches_provider_call(self):
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      response(verdict())])
+        analyzer = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, analysis_timeout_seconds=300,
+            field_call_timeout_seconds=120, experimental_long_timeout=True)
+        original = analyzer._request_fields
+        analyzer._request_fields = Mock(wraps=original)
+        result = analyzer.analyze_recoverable("# Alpha\n- registration", "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual(analyzer._request_fields.call_args_list[0].kwargs["timeout"], 120)

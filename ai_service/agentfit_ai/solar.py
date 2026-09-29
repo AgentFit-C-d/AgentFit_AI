@@ -578,7 +578,7 @@ class AnalysisResult:
 
 
 class SolarAnalyzer:
-    def __init__(self, api_key: str, *, transport: Callable = post_solar, diagnostics_store=None, semantic_review=True, clock=None, evidence_contract=True, model="solar-pro4", analysis_timeout_seconds=60):
+    def __init__(self, api_key: str, *, transport: Callable = post_solar, diagnostics_store=None, semantic_review=True, clock=None, evidence_contract=True, model="solar-pro4", analysis_timeout_seconds=60, field_call_timeout_seconds=40, review_max_tokens=REVIEW_MAX_TOKENS, experimental_long_timeout=False):
         if type(api_key) is not str or not api_key.strip() or not api_key.isascii() or any(c.isspace() for c in api_key):
             raise AnalysisError("MISSING_OR_INVALID_KEY")
         if type(semantic_review) is not bool:
@@ -587,10 +587,21 @@ class SolarAnalyzer:
             raise ValueError("evidence_contract must be boolean")
         if type(model) is not str or model not in ("solar-pro4","solar-pro4-260806","solar-mini4","solar-mini4-260922"):
             raise ValueError("unsupported Solar model")
-        if type(analysis_timeout_seconds) is not int or not 1 <= analysis_timeout_seconds <= 120:
-            raise ValueError("analysis_timeout_seconds must be an integer from 1 to 120")
+        if type(experimental_long_timeout) is not bool:
+            raise ValueError("experimental_long_timeout must be boolean")
+        maximum = 300 if experimental_long_timeout else 120
+        if type(analysis_timeout_seconds) is not int or not 1 <= analysis_timeout_seconds <= maximum:
+            raise ValueError("invalid analysis_timeout_seconds")
+        if (type(field_call_timeout_seconds) is not int or
+                not 1 <= field_call_timeout_seconds <= (120 if experimental_long_timeout else 40)):
+            raise ValueError("invalid field_call_timeout_seconds")
+        if (type(review_max_tokens) is not int or
+                not 1 <= review_max_tokens <= (32768 if experimental_long_timeout else REVIEW_MAX_TOKENS)):
+            raise ValueError("invalid review_max_tokens")
         self._model = model
         self._analysis_timeout_seconds = analysis_timeout_seconds
+        self._field_call_timeout_seconds = field_call_timeout_seconds
+        self._review_max_tokens = review_max_tokens
         self._evidence_contract = evidence_contract
         self._semantic_review = semantic_review
         self._clock = clock or time.monotonic
@@ -719,7 +730,8 @@ class SolarAnalyzer:
                 if review_profile is not None:
                     reply = self._request_review(document, review_profile, _trace=trace, timeout=remaining)
                 else:
-                    reply = self._request_fields(document, names, purpose, correction, _trace=trace, timeout=min(40, remaining))
+                    reply = self._request_fields(document, names, purpose, correction, _trace=trace,
+                                                 timeout=min(self._field_call_timeout_seconds, remaining))
                 if self._clock() >= deadline:
                     raise AnalysisError("ANALYSIS_DEADLINE")
             except AnalysisError as error:
@@ -916,7 +928,7 @@ class SolarAnalyzer:
             "response_format": {"type": "json_schema", "json_schema": {
                 "name": "agentfit_semantic_review", "strict": True, "schema": review_schema(len(lines))}},
             "reasoning_effort": reasoning_effort, "frequency_penalty": FREQUENCY_PENALTY,
-            "temperature": 0, "max_tokens": REVIEW_MAX_TOKENS, "stream": False,
+            "temperature": 0, "max_tokens": self._review_max_tokens, "stream": False,
         }
         return (sender or self._send_payload)(payload, ("checkedFields", "issues"), _trace=_trace, timeout=timeout)
 

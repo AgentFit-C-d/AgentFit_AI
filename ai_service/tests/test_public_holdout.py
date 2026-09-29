@@ -12,6 +12,53 @@ from agentfit_ai.profile import FIELDS
 
 
 class PublicHoldoutTests(unittest.TestCase):
+    def test_nvidia_selector_uses_nvidia_key_and_accuracy_first_plan(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "result"
+
+            class FakeNvidiaAnalyzer:
+                def __init__(self, *args, **kwargs):
+                    self.safe_calls = []
+                    self._model = kwargs["model"]
+                    self._timeout = kwargs["analysis_timeout_seconds"]
+                    self._field_timeout = kwargs["field_call_timeout_seconds"]
+                    self._key = args[0]
+
+                def analyze_recoverable(self, document, document_id):
+                    assert (self._model, self._timeout, self._field_timeout, self._key) == (
+                        "deepseek-ai/deepseek-v4.1-flash", 300, 120, "nvidia-test-key")
+                    return {"outcome": "failed", "error": "INVALID_EVIDENCE"}
+
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output", str(output),
+                                                "--source-selector", "--accuracy-first",
+                                                "--source-selector-model",
+                                                "deepseek-ai/deepseek-v4.1-flash"]), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_manifest",
+                       return_value=[self.case]), \
+                 patch("agentfit_ai.public_holdout_evaluation.fetch_document",
+                       return_value=self.document), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_key",
+                       side_effect=AssertionError("Solar key requested")), \
+                 patch("agentfit_ai.public_holdout_evaluation.nvidia_load_key",
+                       return_value="nvidia-test-key"), \
+                 patch("agentfit_ai.public_holdout_evaluation.SafeTraceNvidiaSourceSelectorAnalyzer",
+                       FakeNvidiaAnalyzer):
+                self.assertEqual(main(), 0)
+            plan = json.loads((output / "plan.json").read_text(encoding="utf-8"))
+            self.assertEqual(plan["model"], "deepseek-ai/deepseek-v4.1-flash")
+            self.assertTrue(plan["accuracy_first"])
+            self.assertEqual(plan["review_max_tokens"], 16384)
+            self.assertNotIn("nvidia-test-key", (output / "plan.json").read_text())
+
+    def test_nvidia_model_requires_source_selector_mode(self):
+        with tempfile.TemporaryDirectory() as temp:
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(Path(temp) / "run"),
+                                                "--source-selector-model",
+                                                "deepseek-ai/deepseek-v4.1-flash"]):
+                with self.assertRaises(SystemExit):
+                    main()
+
     def test_source_selector_flag_selects_opt_in_analyzer_and_records_plan(self):
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / "result"
@@ -341,6 +388,17 @@ class PublicHoldoutTests(unittest.TestCase):
                            "error": "INVALID_EVIDENCE",
                            "validation": [{"field": "features", "reason": "QUOTE_NOT_FOUND",
                                            "itemIndex": 0, "matchCount": 0}]}])
+
+    def test_safe_trace_records_numeric_token_limit_for_incomplete_review(self):
+        analyzer = SafeTraceSolarAnalyzer("synthetic-key")
+        analyzer._save_diagnostic({"calls": [{
+            "call": 3, "stage": "semantic_review", "outcome": "failed",
+            "error": "INCOMPLETE_RESPONSE", "max_tokens": 8192,
+            "prompt_tokens": 123, "completion_tokens": 8192,
+            "raw": "private model reply"}]}, {3: b"private model reply"})
+        self.assertEqual(analyzer.safe_calls[0]["tokens"],
+                         {"limit": 8192, "prompt": 123, "completion": 8192})
+        self.assertNotIn("private", json.dumps(analyzer.safe_calls))
 
     def test_safe_trace_retains_only_numeric_stage_timing(self):
         analyzer = SafeTraceSolarAnalyzer("synthetic-key", evidence_contract=True)
