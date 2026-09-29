@@ -1,0 +1,10 @@
+{
+  "status": "candidate-sources-only; no model calls or gold labels yet",
+  "sources": [
+    {"id": "dereel-prd", "repo": "veryfaraway/DeReel", "commit": "c9ef28c92c832008247a43bec1729943c43aa6cc", "path": "docs/PRD.md", "bytes": 8850, "sha256": "17e0a88d2b10e9e1d73323980fc0332e0df25f3a58d80d5dd4109030c6dacbd4"},
+    {"id": "truetwo-prd", "repo": "raehy19/TrueTwo", "commit": "0312c763416a5cd60be03cad2cbea4c80ab300fa", "path": "docs/project/PRD.md", "bytes": 22483, "sha256": "12296dd41ea3423b26689cfdb7245709e403906983ff45aef93b7836617cf896"},
+    {"id": "campfire-prd", "repo": "wlsdks/campfire", "commit": "51cb404cebc546d1a1f3615c519f0b0b0efb719d", "path": "PRD.md", "bytes": 32985, "sha256": "60ca7a99360ca70aeab4bf72a6ac672e2cb69f8a504bf26dccd5062ebc60d3f1"},
+    {"id": "gongsi-mcp-prd", "repo": "dolseom/gongsi-mcp", "commit": "18d4511426c5498b801091f9a4b4942f09dbf235", "path": "PRD.md", "bytes": 96718, "sha256": "34a08c488d0eea3b2baacf46288f139edd43174f03acc4dc64cb023a3ee93301"},
+    {"id": "price-kr-prd", "repo": "price-kr/price.kr", "commit": "d22fe6cda773ec90c0591bbc1d64bdda608eba77", "path": "docs/PRD.md", "bytes": 23970, "sha256": "566a2892276ab29fab5d08a9721777ed947308f7704a616448f2da21d6d4a9bc"}
+  ]
+}
