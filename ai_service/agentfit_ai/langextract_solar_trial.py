@@ -1,6 +1,8 @@
 """Synthetic-only LangExtract extraction trial using the existing Solar transport."""
 
 import argparse
+from collections import Counter
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -12,11 +14,13 @@ from .document_grounding_rules import guard_candidate
 from .false_complete_evaluation import write_safe_json
 from .langextract_grounding import validate_alignment
 from .recoverable_draft_evaluation import load_key
-from .solar import AnalysisError, SolarAnalyzer, post_solar_inline
+from .solar import AnalysisError, SolarAnalyzer, post_solar
 
 
 CASES_PATH = (Path(__file__).resolve().parents[2] /
               "specs/ai-developer/04-analysis-provider/document-grounding-evaluation/adversarial-cases.json")
+CASES_SHA256 = "3bf5b44622074f51f76a7288e772993518324257399c28d26e8257efd45277d6"
+CALL_TIMEOUT_SECONDS = 600
 
 
 def candidate_payload(prompt: str) -> dict:
@@ -55,20 +59,35 @@ def score_case(case: dict, extractions) -> dict:
                                 char_interval=item.char_interval)
                 for index, (quote, item) in enumerate(zip(quotes, items))]
     aligned = validate_alignment(document, quotes, numbered)
+    located = []
+    for quote, item in zip(quotes, items):
+        interval = item.char_interval
+        start = getattr(interval, "start_pos", None)
+        end = getattr(interval, "end_pos", None)
+        if (type(start) is int and type(end) is int and
+                0 <= start < end <= len(document) and
+                document[start:end] == quote):
+            located.append((start, end))
+    span_counts = Counter(located)
+    duplicate_span_count = sum(count - 1 for count in span_counts.values()
+                               if count > 1)
+    duplicated_gold = span_counts[(gold["start"], gold["end"])] > 1
     exact = [row for row in aligned if row["status"] == "exact"]
     matches = [row for row in exact if (row["start"], row["end"]) ==
                (gold["start"], gold["end"])]
-    decision = (guard_candidate(document, **gold) if len(matches) == 1
+    decision = ("review" if duplicated_gold else
+                guard_candidate(document, **gold) if len(matches) == 1
                 else "missing" if not matches else "review")
     return {"case_id": case["id"], "candidate_count": len(items),
             "exact_count": len(exact), "evidence_exact": len(matches) == 1,
             "decision": decision,
             "false_auto_confirmation": int(decision == "allow" and expected == "review"),
             "missed_allow": int(decision != "allow" and expected == "allow"),
-            "missing_candidate": int(not matches)}
+            "missing_candidate": int(not matches and not duplicated_gold),
+            "duplicate_span_count": duplicate_span_count}
 
 
-def run_case(case: dict, api_key: str, *, transport=post_solar_inline,
+def run_case(case: dict, api_key: str, *, transport=post_solar,
              telemetry=None) -> dict:
     import langextract as lx
     from langextract.core.base_model import BaseLanguageModel
@@ -82,7 +101,7 @@ def run_case(case: dict, api_key: str, *, transport=post_solar_inline,
                 try:
                     reply, model, _, _ = sender._send_payload(
                         candidate_payload(prompt), ("extractions",),
-                        _trace=trace, timeout=120)
+                        _trace=trace, timeout=CALL_TIMEOUT_SECONDS)
                 finally:
                     if telemetry is not None:
                         for name in ("prompt_tokens", "completion_tokens"):
@@ -142,7 +161,10 @@ def main() -> int:
         parser.error("--live required")
     if args.output.exists():
         parser.error("output already exists")
-    data = json.loads(CASES_PATH.read_text(encoding="utf-8"))
+    fixture_bytes = CASES_PATH.read_bytes()
+    if hashlib.sha256(fixture_bytes).hexdigest() != CASES_SHA256:
+        parser.error("pinned cases hash mismatch")
+    data = json.loads(fixture_bytes.decode("utf-8"))
     if data.get("version") != "document-grounding-adversarial-v1":
         parser.error("pinned cases missing")
     cases = data["cases"]
@@ -171,6 +193,8 @@ def main() -> int:
                                       for row in result["rows"])
         result["missing_candidates"] = sum(row.get("missing_candidate", 0)
                                             for row in result["rows"])
+        result["duplicate_spans"] = sum(row.get("duplicate_span_count", 0)
+                                        for row in result["rows"])
         result["outcome"] = "completed" if result["failed"] == 0 else "partial"
         write_safe_json(args.output, result, forbidden_strings=forbidden)
         return 0 if result["failed"] == 0 else 1
