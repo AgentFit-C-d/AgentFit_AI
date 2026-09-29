@@ -18,11 +18,30 @@
 
 기존 NVIDIA adapter를 재사용한다. 공식 모델 페이지에서 모델 ID와 endpoint 예시를 확인했다: [DeepSeek V4.1 Flash](https://build.nvidia.com/deepseek-ai/deepseek-v4.1-flash), [GLM5.3](https://build.nvidia.com/z-ai/glm-5-3), [Kimi K3](https://build.nvidia.com/moonshotai/kimi-k3). JSON 계약의 실제 호환성은 코드 테스트와 별도의 실호출 결과로 판정한다. Solar medium과 DeepSeek thinking=false 등 설정 차이는 결과의 review_settings에 기록한다.
 
-## 실제 H02 실행 — 진행 중
+## 실제 H02 실행 — 종료 확인
 
 - 실행 코드5c82f5c. 기존 승인 manifest의 LF 정규화 SHA256은 a69837761609613a5252e6014f85d996681ef54c2c0938a68fdb9208deb0db95.
 - PID5468, 시작 UTC2026-09-29T20:25:05.3135979Z, 시작 셸 세션60976. 중복 실행 전에 PID/시작 시간과 결과의 state를 함께 확인한다.
 - 결과: E:/AgentFit/tmp/candidate-paired-review-h02-20260930-v1.json
 - 프로세스 기록: 같은 basename의 -process.json. stdout/stderr는 .stdout.log/.stderr.log. 원문·키·원본 응답은 저장하지 않는다. 모두 Git 제외 로컬 파일이다.
 - 공통 추출·분류가 끝나면 state=running 중간 집계가 생성되고, 각 모델 종료 후 갱신된다. **파일 존재만으로 실행 종료를 판단하지 않는다.** state=finished와 실제 프로세스/셸 종료를 확인한다.
-- Solar와 DeepSeek가 동일 후보를 받는 실제 비교는 아직 끝나지 않았다. 기존4/6 H02는 별도 실행이므로 이번 두 모델의 공통 기준으로 사용하지 않는다.
+- 최종 JSON은 state=finished, failed=0이며 두 모델 결과가 있다. 원래 셸 세션60976은 종료했고 PID5468/24708이 더는 존재하지 않음을 재확인했다. 이전 별도4/6 실행과 이번 입력은 서로 다르므로 섞지 않는다.
+
+### 같은 후보로 비교한 결과
+
+공통 추출·분류539,571ms, 후보125개·반려4개. 두 검토 모두20/20/20/5개 후보 묶음과 원문 커버리지 검토까지 총5호출을 완주했다. 모든 finish_reason은 stop이며 Solar의 재분할은 발동하지 않았다.
+
+| 항목 | Solar Pro4 | DeepSeek V4.1 Flash |
+|---|---:|---:|
+| 지정6개 검사 만족 | 4/6 | 5/6 |
+| 불일치 검사 | C01, C03 | C01 |
+| 검토 시간 | 367,218ms | 22,668ms |
+| 검토 지적 수 | 8 | 35 |
+| 최종 상태 | needs_confirmation | needs_confirmation |
+| 기능 후보 유지/입력 | 14/15 | 5/15 |
+| 외부 연동 후보 유지/입력 | 9/13 | 4/13 |
+
+- 두 모델 모두 프로젝트명17개/고유2개를 유지했으나 변환 단계의 scalar 충돌로 이름이 null이 됐다. 같은 위치 후보만으로 이전 변환을 재현했다. 모델 변경과 독립된 원문 표현 보존 수정의 근거다.
+- backend C03의 null 정답은 원문의 도입 모듈과 앱 언어·프레임워크를 구분하는 범위 문제가 있다. Solar가 남긴4개는 도입/검증 모듈 구간이며, DeepSeek는 모두 제외했다. 점수를 올리기 위해 정답을 바꾸지 않는다. 필드 역할과 검증 기준을 재검토해야 한다.
+- DeepSeek는 project_type도 모두 제외하고 기능·연동을 더 많이 지웠다. 희소한6개 검사 중5개 통과는 전체 정확도나 재현율 우위를 입증하지 않는다. 원문 대조와 기능 누락 검사가 필요하다.
+- 이번 문서는 이미 튜닝에 사용됐다(held_out=false). 반복 안정성·다른 문서·실서비스 연동은 검증하지 않았다. 모델/기본 서비스 승격 근거가 아니다.
