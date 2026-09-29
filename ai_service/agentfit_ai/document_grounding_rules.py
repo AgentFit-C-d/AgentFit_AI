@@ -9,14 +9,26 @@ _NEGATIVE = re.compile(r"않|없|미사용|제외|중단|금지|불가|비활성
 _POSITIVE = re.compile(r"확정|채택|도입|제공한다|사용한다|포함하기로|출시")
 _ABSENT = re.compile(r"사용하지\s*않|제공하지\s*않|없다|미사용|제외하기로|도입하지\s*않")
 _BOUNDARIES = ".!?。\n"
+_CLAUSE_BOUNDARY = re.compile(r"[,;:，；]|(?:않|없)고\s+|하지만|그러나|반면")
 
 
-def _sentence(document: str, start: int, end: int) -> str:
+def _clause_and_tail(document: str, start: int, end: int) -> tuple[str, str]:
     left = max((document.rfind(mark, 0, start) for mark in _BOUNDARIES), default=-1)
     rights = [position for mark in _BOUNDARIES
               if (position := document.find(mark, end)) >= 0]
     right = min(rights) + 1 if rights else len(document)
-    return document[left + 1:right].strip()
+    sentence = document[left + 1:right]
+    relative_start, relative_end = start - left - 1, end - left - 1
+    clause_start, clause_end = 0, len(sentence)
+    for boundary in _CLAUSE_BOUNDARY.finditer(sentence):
+        if boundary.end() <= relative_start:
+            clause_start = boundary.end()
+        elif boundary.start() >= relative_end:
+            clause_end = boundary.start()
+            break
+        else:
+            return "", ""
+    return sentence[clause_start:clause_end].strip(), sentence[relative_end:clause_end]
 
 
 def _conflicting_mentions(document: str, quote: str) -> bool:
@@ -38,14 +50,14 @@ def guard_candidate(document: str, *, field: str, state: str,
             type(start) is not int or type(end) is not int or
             not 0 <= start < end <= len(document)):
         raise ValueError("invalid candidate")
-    sentence = _sentence(document, start, end)
-    if _UNCERTAIN.search(sentence) or _OTHER_CONTEXT.search(sentence):
+    clause, tail = _clause_and_tail(document, start, end)
+    if not clause or _UNCERTAIN.search(clause) or _OTHER_CONTEXT.search(clause):
         return "review"
     if _conflicting_mentions(document, document[start:end]):
         return "review"
     if state == "present":
-        return "review" if _NEGATIVE.search(sentence) or not _POSITIVE.search(sentence) else "allow"
-    return "allow" if _ABSENT.search(sentence) else "review"
+        return "review" if _NEGATIVE.search(clause) or not _POSITIVE.search(tail) else "allow"
+    return "allow" if _ABSENT.search(tail) else "review"
 
 
 def evaluate_cases(cases: list[dict], decisions: dict[str, str]) -> dict:

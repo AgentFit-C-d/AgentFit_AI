@@ -51,6 +51,18 @@ class DocumentGroundingRulesTests(unittest.TestCase):
                                          start=first, end=first + len("WillowAI")),
                          "review")
 
+    def test_absence_of_another_subject_does_not_confirm_candidate_absence(self):
+        document = "A는 사용하지 않고 B는 제공한다."
+        start = document.index("B")
+        self.assertEqual(guard_candidate(document, field="features", state="absent",
+                                         start=start, end=start + 1), "review")
+
+    def test_confirmation_of_another_subject_does_not_confirm_candidate(self):
+        document = "운영 DB는 Azure를 사용한다, AWS는 비교 대상이다."
+        start = document.index("AWS")
+        self.assertEqual(guard_candidate(document, field="database", state="present",
+                                         start=start, end=start + 3), "review")
+
     def test_evaluation_counts_false_confirmations_and_omissions_without_sources(self):
         baseline = evaluate_cases(self.cases, {case["id"]: "allow"
                                                for case in self.cases})

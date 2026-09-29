@@ -32,6 +32,9 @@ def convert_docling_pdf_bytes(raw: bytes, *, converter=None) -> ExtractedDocumen
     document = getattr(result, "document", None)
     pages = getattr(document, "pages", None)
     texts = getattr(document, "texts", None)
+    tables = getattr(document, "tables", None)
+    if tables:
+        raise DocumentExtractionError("PDF_PARTIAL_TEXT")
     if (type(pages) is not dict or not 1 <= len(pages) <= 100 or
             set(pages) != set(range(1, len(pages) + 1)) or
             type(texts) is not list):
