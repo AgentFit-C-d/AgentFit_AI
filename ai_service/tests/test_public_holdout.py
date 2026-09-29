@@ -13,6 +13,49 @@ from agentfit_ai.profile import FIELDS
 
 
 class PublicHoldoutTests(unittest.TestCase):
+    def test_fine_review_cli_requires_fieldwise_and_records_separate_review_size(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "fine"
+
+            class FakeSelectorAnalyzer:
+                safe_calls = []
+
+                def __init__(self, *args, **kwargs):
+                    assert kwargs["fine_feature_review"] is True
+                    assert kwargs["fieldwise_review"] is True
+                    assert kwargs["analysis_timeout_seconds"] == 2400
+
+                def analyze_recoverable(self, _document, _id):
+                    return {"outcome": "failed", "error": "INVALID_EVIDENCE"}
+
+            flags = ["--source-selector", "--grouped-review", "--group-review-8k",
+                     "--accuracy-first", "--extended-review-window",
+                     "--section-feature-review", "--section-feature-extraction",
+                     "--section-feature-curation", "--fieldwise-semantic-review",
+                     "--fine-feature-review"]
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(output), *flags]), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_manifest",
+                       return_value=[self.case]), \
+                 patch("agentfit_ai.public_holdout_evaluation.fetch_document",
+                       return_value=self.document), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_key",
+                       return_value="synthetic-key"), \
+                 patch("agentfit_ai.public_holdout_evaluation.SafeTraceSourceSelectorAnalyzer",
+                       FakeSelectorAnalyzer):
+                self.assertEqual(main(), 0)
+            plan = json.loads((output / "plan.json").read_text(encoding="utf-8"))
+            self.assertTrue(plan["fine_feature_review"])
+            self.assertEqual(plan["feature_extraction_max_lines"], 120)
+            self.assertEqual(plan["feature_review_max_lines"], 50)
+            self.assertEqual(plan["max_provider_calls"], 36)
+            self.assertEqual(plan["analysis_timeout_seconds"], 2400)
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(Path(temp) / "invalid"),
+                                                *flags[:-2], "--fine-feature-review"]):
+                with self.assertRaises(SystemExit):
+                    main()
+
     def test_fieldwise_cli_requires_curation_and_records_twenty_two_calls(self):
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / "fieldwise"

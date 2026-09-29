@@ -245,6 +245,7 @@ def main():
     parser.add_argument("--section-feature-extraction", action="store_true")
     parser.add_argument("--section-feature-curation", action="store_true")
     parser.add_argument("--fieldwise-semantic-review", action="store_true")
+    parser.add_argument("--fine-feature-review", action="store_true")
     parser.add_argument("--compact-review-effort", choices=("medium", "low"),
                         default="medium")
     args = parser.parse_args()
@@ -275,6 +276,8 @@ def main():
         parser.error("section feature curation requires section feature extraction")
     if args.fieldwise_semantic_review and not args.section_feature_curation:
         parser.error("fieldwise semantic review requires section feature curation")
+    if args.fine_feature_review and not args.fieldwise_semantic_review:
+        parser.error("fine feature review requires fieldwise semantic review")
     if args.compact_review_effort != "medium" and not args.compact_review:
         parser.error("compact review effort requires compact review mode")
     if args.extended_review_window and (not args.source_selector or
@@ -311,18 +314,24 @@ def main():
             "section_feature_extraction": args.section_feature_extraction,
             "section_feature_curation": args.section_feature_curation,
             "fieldwise_semantic_review": args.fieldwise_semantic_review,
-            "max_provider_calls": (22 if args.fieldwise_semantic_review else
+            "fine_feature_review": args.fine_feature_review,
+            "max_provider_calls": (36 if args.fine_feature_review else
+                                   22 if args.fieldwise_semantic_review else
                                    19 if args.section_feature_curation else
                                    18 if args.section_feature_extraction else
                                    12 if args.section_feature_review else 6),
             "feature_section_max_tokens": 8192 if args.section_feature_review else None,
+            "feature_extraction_max_lines": 120 if args.section_feature_extraction else None,
+            "feature_review_max_lines": (50 if args.fine_feature_review else
+                                         120 if args.section_feature_review else None),
             "feature_section_extraction_max_tokens": (
                 4096 if args.section_feature_extraction else None),
             "feature_curation_max_tokens": 4096 if args.section_feature_curation else None,
             "compact_review_effort": args.compact_review_effort,
             "accuracy_first": args.accuracy_first,
             "extended_review_window": args.extended_review_window,
-            "analysis_timeout_seconds": (1200 if args.section_feature_extraction else
+            "analysis_timeout_seconds": (2400 if args.fine_feature_review else
+                                         1200 if args.section_feature_extraction else
                                          600 if args.extended_review_window else
                                          300 if args.accuracy_first else 40),
             "field_call_timeout_seconds": 120 if args.accuracy_first else 40,
@@ -341,7 +350,8 @@ def main():
         analyzer = analyzer_type(
             key, transport=transport, model=args.source_selector_model, evidence_contract=True,
             semantic_review=True,
-            analysis_timeout_seconds=(1200 if args.section_feature_extraction else
+            analysis_timeout_seconds=(2400 if args.fine_feature_review else
+                                      1200 if args.section_feature_extraction else
                                       600 if args.extended_review_window else
                                       300 if args.accuracy_first else 40),
             field_call_timeout_seconds=120 if args.accuracy_first else 40,
@@ -358,6 +368,7 @@ def main():
                 "section_feature_extraction": args.section_feature_extraction,
                 "section_feature_curation": args.section_feature_curation,
                 "fieldwise_review": args.fieldwise_semantic_review,
+                "fine_feature_review": args.fine_feature_review,
                 "group_review_max_tokens": 8192 if args.group_review_8k else 4096}
                if args.source_selector else {}))
         row = evaluate_case(case, document, analyzer,

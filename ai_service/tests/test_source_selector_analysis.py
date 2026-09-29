@@ -1,5 +1,6 @@
 import json
 import unittest
+from inspect import signature
 from unittest.mock import Mock
 
 from agentfit_ai.profile import FIELDS
@@ -26,6 +27,87 @@ def features():
 
 
 class SourceSelectorAnalysisTests(unittest.TestCase):
+    def test_fine_review_uses_smaller_review_ranges_without_changing_extraction(self):
+        self.assertIn("fine_feature_review", signature(SourceSelectorSolarAnalyzer).parameters)
+        document = "# Alpha\n- registration\n" + "context\n" * 118
+        groups = [{"checkedFields": list(group), "issues": []}
+                  for group in grouped_review.FIELDWISE_GROUPS[:-1]]
+        ranges = ((1, 50), (51, 100), (101, 120))
+        sections = [{"checkedRange": {"start": start, "end": end}, "issues": []}
+                    for start, end in ranges]
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      *(response(item) for item in groups + sections)])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192, section_feature_review=True,
+            section_feature_extraction=True, section_feature_curation=True,
+            fieldwise_review=True, fine_feature_review=True).analyze_recoverable(
+                document, "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual(transport.call_count, 10)
+        extraction = transport.call_args_list[1].args[0]
+        line_rule = extraction["response_format"]["json_schema"]["schema"]
+        line_rule = line_rule["properties"]["features"]["anyOf"][1]
+        line_rule = line_rule["properties"]["items"]["items"]["properties"]["lineId"]
+        self.assertEqual((line_rule["minimum"], line_rule["maximum"]), (1, 120))
+        for (start, end), call in zip(ranges, transport.call_args_list[7:]):
+            schema = call.args[0]["response_format"]["json_schema"]["schema"]
+            checked = schema["properties"]["checkedRange"]["properties"]
+            self.assertEqual(checked["start"]["enum"], [start])
+            self.assertEqual(checked["end"]["enum"], [end])
+
+    def test_fine_review_rejects_twenty_two_ranges_before_provider_calls(self):
+        self.assertIn("fine_feature_review", signature(SourceSelectorSolarAnalyzer).parameters)
+        document = "".join(f"# Section {number}\n" + "context\n" * 29
+                           for number in range(22))
+        transport = Mock()
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192, section_feature_review=True,
+            section_feature_extraction=True, section_feature_curation=True,
+            fieldwise_review=True, fine_feature_review=True).analyze_recoverable(
+                document, "doc")
+        self.assertEqual(result["outcome"], "failed")
+        self.assertEqual(result["error"], "CALL_LIMIT")
+        transport.assert_not_called()
+
+    def test_fine_review_allows_only_explicit_twenty_four_hundred_second_window(self):
+        self.assertIn("fine_feature_review", signature(SourceSelectorSolarAnalyzer).parameters)
+        options = {"grouped_review": True, "group_review_max_tokens": 8192,
+                   "section_feature_review": True, "section_feature_extraction": True,
+                   "section_feature_curation": True, "fieldwise_review": True,
+                   "fine_feature_review": True, "experimental_long_timeout": True}
+        analyzer = SourceSelectorSolarAnalyzer(
+            "synthetic-key", analysis_timeout_seconds=2400, **options)
+        self.assertEqual(analyzer._analysis_timeout_seconds, 2400)
+        self.assertEqual(analyzer._max_provider_calls(), 36)
+        with self.assertRaises(ValueError):
+            SourceSelectorSolarAnalyzer(
+                "synthetic-key", analysis_timeout_seconds=2401, **options)
+        options["fine_feature_review"] = False
+        with self.assertRaises(ValueError):
+            SourceSelectorSolarAnalyzer(
+                "synthetic-key", analysis_timeout_seconds=2400, **options)
+
+    def test_fine_review_last_range_failure_cannot_complete(self):
+        self.assertIn("fine_feature_review", signature(SourceSelectorSolarAnalyzer).parameters)
+        document = "# Alpha\n- registration\n" + "context\n" * 118
+        groups = [{"checkedFields": list(group), "issues": []}
+                  for group in grouped_review.FIELDWISE_GROUPS[:-1]]
+        sections = [{"checkedRange": {"start": start, "end": end}, "issues": []}
+                    for start, end in ((1, 50), (51, 100))]
+        sections.append({"checkedRange": {"start": 101, "end": 119}, "issues": []})
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      *(response(item) for item in groups + sections)])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192, section_feature_review=True,
+            section_feature_extraction=True, section_feature_curation=True,
+            fieldwise_review=True, fine_feature_review=True).analyze_recoverable(
+                document, "doc")
+        self.assertEqual(result["outcome"], "needs_confirmation")
+        self.assertEqual(result["error"], "SEMANTIC_REVIEW_INVALID")
+
     def test_fieldwise_review_requires_curation_and_reserves_twenty_two_calls(self):
         with self.assertRaises(ValueError):
             SourceSelectorSolarAnalyzer("synthetic-key", fieldwise_review=True)

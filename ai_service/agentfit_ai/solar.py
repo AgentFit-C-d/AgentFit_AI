@@ -581,7 +581,7 @@ class AnalysisResult:
 
 
 class SolarAnalyzer:
-    def __init__(self, api_key: str, *, transport: Callable = post_solar, diagnostics_store=None, semantic_review=True, clock=None, evidence_contract=True, model="solar-pro4", analysis_timeout_seconds=60, field_call_timeout_seconds=40, review_max_tokens=REVIEW_MAX_TOKENS, experimental_long_timeout=False, experimental_section_extraction_timeout=False):
+    def __init__(self, api_key: str, *, transport: Callable = post_solar, diagnostics_store=None, semantic_review=True, clock=None, evidence_contract=True, model="solar-pro4", analysis_timeout_seconds=60, field_call_timeout_seconds=40, review_max_tokens=REVIEW_MAX_TOKENS, experimental_long_timeout=False, experimental_section_extraction_timeout=False, experimental_fine_feature_review_timeout=False):
         if type(api_key) is not str or not api_key.strip() or not api_key.isascii() or any(c.isspace() for c in api_key):
             raise AnalysisError("MISSING_OR_INVALID_KEY")
         if type(semantic_review) is not bool:
@@ -594,7 +594,11 @@ class SolarAnalyzer:
             raise ValueError("experimental_long_timeout must be boolean")
         if type(experimental_section_extraction_timeout) is not bool:
             raise ValueError("section extraction timeout must be boolean")
-        maximum = (1200 if experimental_section_extraction_timeout else
+        if (type(experimental_fine_feature_review_timeout) is not bool or
+                experimental_fine_feature_review_timeout and not experimental_section_extraction_timeout):
+            raise ValueError("fine feature review timeout requires section extraction")
+        maximum = (2400 if experimental_fine_feature_review_timeout else
+                   1200 if experimental_section_extraction_timeout else
                    600 if experimental_long_timeout else 120)
         if type(analysis_timeout_seconds) is not int or not 1 <= analysis_timeout_seconds <= maximum:
             raise ValueError("invalid analysis_timeout_seconds")
@@ -629,6 +633,9 @@ class SolarAnalyzer:
 
     def _section_feature_chunks(self, document):
         return None
+
+    def _feature_review_chunks(self, document, extraction_chunks):
+        return extraction_chunks
 
     def _max_provider_calls(self):
         return 6
@@ -735,6 +742,7 @@ class SolarAnalyzer:
         started = self._clock()
         replies = []
         section_chunks = self._section_feature_chunks(document)
+        review_chunks = self._feature_review_chunks(document, section_chunks)
         def reserve_call(names, correction=None, stage=None):
             if deadline - self._clock() <= 0:
                 raise AnalysisError("ANALYSIS_DEADLINE")
@@ -886,7 +894,7 @@ class SolarAnalyzer:
                 if section_chunks is not None:
                     from .section_feature_review import merge_section_issues
                     section_issues = []
-                    for chunk in section_chunks:
+                    for chunk in review_chunks:
                         value = request(("features",), "", stage="semantic_review",
                                         review_profile=profile, review_section=chunk)
                         call = diagnostic["calls"][-1]
