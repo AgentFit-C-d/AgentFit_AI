@@ -4,4 +4,4 @@
 - [x] P02 최초 추출 opt-in 병렬 구현
 - [x] P03 평가 옵션과 안전한 단계 지연 기록
 - [x] P04 공개 튜닝 관찰과 결정
-- [ ] P05 전체 검증·feature 브랜치 push·CI
+- [x] P05 전체 검증·feature 브랜치 push·CI

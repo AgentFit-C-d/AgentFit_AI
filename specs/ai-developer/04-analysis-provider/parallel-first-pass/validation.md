@@ -19,3 +19,5 @@
 ## 결정
 
 병렬 첫 호출은 전체 기한의 여유를 늘릴 수 있지만, 5건에서 완전 통과가 없고 근거 오류 판정도 남았다. 서비스 기본값을 켜지 않는다. 실제 서비스 준비에는 근거의 의미 판단, 수정 실패 후 부분 확인 흐름, 독립 문서 검증과 Spring 확인 후 저장 연동이 더 필요하다. `release_gate_passed=false`를 유지한다.
+
+프로젝트 가상환경에서 전체 580개 테스트와 staged diff check가 통과했다. `feature/parallel-first-pass`의 코드 커밋 `29aeaa2`를 push했고 [AI service Linux checks](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36523787863)가 성공했다.
