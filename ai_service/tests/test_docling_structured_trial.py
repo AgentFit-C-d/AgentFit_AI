@@ -17,12 +17,13 @@ def text_item(text, page, label="paragraph"):
                            label=SimpleNamespace(value=label))
 
 
-def table_item(cells, page):
+def table_item(cells, page, markdown=None):
     return SimpleNamespace(
         data=SimpleNamespace(table_cells=[SimpleNamespace(text=value)
                                                for value in cells]),
         prov=[SimpleNamespace(page_no=page)],
-        label=SimpleNamespace(value="table"))
+        label=SimpleNamespace(value="table"),
+        export_to_markdown=lambda *, doc: markdown or " ".join(cells))
 
 
 class FakeDocument:
@@ -70,6 +71,16 @@ class DoclingStructuredTrialTests(unittest.TestCase):
 
     def test_missing_table_cell_fails_whole_document(self):
         document = FakeDocument({1: "항목"}, [table_item(["항목", "빠진값"], 1)])
+        with self.assertRaises(DocumentExtractionError) as caught:
+            convert_structured_pdf_bytes(
+                b"%PDF-synthetic", converter=FakeConverter(document))
+        self.assertEqual(caught.exception.code, "PDF_PARTIAL_TEXT")
+
+    def test_table_cells_without_row_column_relationship_fail(self):
+        table = table_item(["Feature", "Status", "Search", "Confirmed"], 1,
+                           "| Feature | Status |\n| Search | Confirmed |")
+        document = FakeDocument(
+            {1: "Feature Status Search Confirmed"}, [table])
         with self.assertRaises(DocumentExtractionError) as caught:
             convert_structured_pdf_bytes(
                 b"%PDF-synthetic", converter=FakeConverter(document))
@@ -152,6 +163,8 @@ class DoclingStructuredTrialTests(unittest.TestCase):
         self.assertEqual(result.table_count, 1)
         self.assertTrue(all(value in result.extracted.text
                             for value in ("Search", "Confirmed", "Export", "Proposed")))
+        self.assertIn("| Search", result.extracted.text)
+        self.assertIn("| Export", result.extracted.text)
 
 
 if __name__ == "__main__":

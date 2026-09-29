@@ -95,6 +95,14 @@ def convert_structured_pdf_bytes(raw: bytes, *, converter=None) -> StructuredDoc
             if type(table_cells) is not list:
                 raise DocumentExtractionError("PDF_PARTIAL_TEXT")
             body_tables += 1
+            try:
+                table_markdown = item.export_to_markdown(doc=document)
+            except Exception:
+                raise DocumentExtractionError("PDF_PARTIAL_TEXT") from None
+            if (type(table_markdown) is not str or
+                    not _normal(table_markdown) or
+                    _normal(table_markdown) not in normal_pages[page_index]):
+                raise DocumentExtractionError("PDF_PARTIAL_TEXT")
             for cell in table_cells:
                 value = getattr(cell, "text", None)
                 if (type(value) is not str or

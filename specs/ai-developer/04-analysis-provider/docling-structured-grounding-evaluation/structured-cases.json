@@ -1,0 +1,9 @@
+{
+  "version": "docling-grounding-structured-v1",
+  "cases": [
+    {"id":"S01","category":"structured","lines":["기능 결정","기능|상태","실시간 검색|제공한다","채팅 알림|검토한다","문서 내보내기|제공하지 않는다","요금 계산|확정했다"],"anchor":"실시간 검색","quote":"실시간 검색","field":"features","state":"present","expected_decision":"allow"},
+    {"id":"S02","category":"structured","lines":["기능 결정","기능|상태","실시간 검색|제공한다","채팅 알림|검토한다","문서 내보내기|제공하지 않는다","요금 계산|확정했다"],"anchor":"채팅 알림","quote":"채팅 알림","field":"features","state":"present","expected_decision":"review"},
+    {"id":"S03","category":"structured","lines":["기능 결정","기능|상태","실시간 검색|제공한다","채팅 알림|검토한다","문서 내보내기|제공하지 않는다","요금 계산|확정했다"],"anchor":"문서 내보내기","quote":"문서 내보내기","field":"features","state":"present","expected_decision":"review"},
+    {"id":"S04","category":"structured","lines":["기능 결정","기능|상태","실시간 검색|제공한다","채팅 알림|검토한다","문서 내보내기|제공하지 않는다","요금 계산|확정했다"],"anchor":"요금 계산","quote":"요금 계산","field":"features","state":"present","expected_decision":"allow"}
+  ]
+}
