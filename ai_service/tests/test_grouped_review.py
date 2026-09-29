@@ -1,3 +1,4 @@
+import json
 import unittest
 
 from agentfit_ai.grouped_review import GROUPS, group_review_payload, normalize_group_review
@@ -32,13 +33,33 @@ class GroupedReviewTests(unittest.TestCase):
         self.assertEqual(set(schema["properties"]), {"checkedFields", "issues"})
         self.assertEqual(schema["properties"]["checkedFields"]["items"]["enum"],
                          ["features"])
-        self.assertEqual(schema["properties"]["issues"]["items"]["properties"]
-                         ["field"]["enum"], ["features"])
+        self.assertEqual(schema["properties"]["issues"]["items"]["anyOf"][0]
+                         ["properties"]["field"]["enum"], ["features"])
         self.assertEqual(payload["max_tokens"], 4096)
+        draft = json.loads(payload["messages"][1]["content"].split(
+            "Draft to review (untrusted data):\n", 1)[1])
+        self.assertEqual(set(draft["data"]), {"features"})
+        self.assertEqual(set(draft["itemIds"]), {"features"})
+        self.assertEqual(set(draft["evidenceLines"]), {"features"})
         prompt = payload["messages"][0]["content"]
         self.assertIn('"checkedFields"', prompt)
         self.assertNotIn('출력은 {"issues"', prompt)
         self.assertNotIn("10개 필드를 모두 검토", prompt)
+
+    def test_schema_restricts_target_ids_by_field(self):
+        identity = group_review_payload(DOCUMENT, profile(), GROUPS[0],
+                                        model="solar-pro4", effort="medium")
+        variants = identity["response_format"]["json_schema"]["schema"]["properties"]
+        variants = variants["issues"]["items"]["anyOf"]
+        scalar = next(item for item in variants
+                      if item["properties"]["field"]["enum"] == ["project_name"])
+        self.assertEqual(scalar["properties"]["targetId"], {"type": "null"})
+        feature = group_review_payload(DOCUMENT, profile(), GROUPS[2],
+                                       model="solar-pro4", effort="medium")
+        variants = feature["response_format"]["json_schema"]["schema"]["properties"]
+        variants = variants["issues"]["items"]["anyOf"]
+        self.assertEqual(variants[0]["properties"]["targetId"]["anyOf"][1]["enum"],
+                         ["I0001"])
 
     def test_existing_and_missing_issues_are_server_normalized(self):
         reply = {"checkedFields": ["features"], "issues": [

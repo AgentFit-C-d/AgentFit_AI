@@ -1,6 +1,8 @@
 """Strict field-scoped semantic review for opt-in source selector analysis."""
 
-from .compact_review import normalize_compact_review, review_payload
+from copy import deepcopy
+
+from .compact_review import item_ids, normalize_compact_review, review_payload
 from .profile import FIELDS
 from .semantic_review import ReviewValidationError
 
@@ -20,7 +22,8 @@ def _valid_fields(fields):
 def group_review_payload(document, profile, fields, *, model, effort):
     if not _valid_fields(fields):
         raise ValueError("unsupported review group")
-    payload = review_payload(document, profile, model=model, effort=effort)
+    payload = review_payload(document, profile, model=model, effort=effort,
+                             fields=fields)
     prompt = payload["messages"][0]["content"]
     prompt = prompt.replace("10개 필드를 모두 검토한다", "지정된 필드만 검토한다")
     prompt = "\n".join(
@@ -33,7 +36,19 @@ def group_review_payload(document, profile, fields, *, model, effort):
     schema = payload["response_format"]["json_schema"]
     schema["name"] = "agentfit_grouped_review"
     props = schema["schema"]["properties"]
-    props["issues"]["items"]["properties"]["field"]["enum"] = list(fields)
+    issue_props = props["issues"]["items"]["properties"]
+    ids_by_field = item_ids(profile)
+    variants = []
+    for field in fields:
+        variant_props = deepcopy(issue_props)
+        variant_props["field"] = {"type": "string", "enum": [field]}
+        ids = ids_by_field.get(field, [])
+        variant_props["targetId"] = ({"anyOf": [
+            {"type": "null"}, {"type": "string", "enum": ids}]}
+            if ids else {"type": "null"})
+        variants.append({"type": "object", "properties": variant_props,
+                         "required": list(variant_props), "additionalProperties": False})
+    props["issues"]["items"] = {"anyOf": variants}
     props["checkedFields"] = {
         "type": "array", "minItems": len(fields), "maxItems": len(fields),
         "items": {"type": "string", "enum": list(fields)},

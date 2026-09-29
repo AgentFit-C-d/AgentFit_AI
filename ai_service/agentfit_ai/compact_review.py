@@ -81,11 +81,16 @@ def _evidence_lines(document, profile, field, value):
     return sorted(found)[:30]
 
 
-def review_payload(document, profile, *, model, effort):
+def review_payload(document, profile, *, model, effort, fields=None):
     lines = source_lines(document)
-    draft = {"data": profile["data"], "itemIds": item_ids(profile),
+    reviewed_fields = FIELDS if fields is None else fields
+    all_ids = item_ids(profile)
+    draft = {"data": {field: profile["data"][field] for field in reviewed_fields},
+             "itemIds": {field: all_ids[field] for field in reviewed_fields
+                         if field in all_ids},
              "evidenceLines": {field: _evidence_lines(document, profile, field, None)
-                               for field in FIELDS if profile["data"][field] is not None}}
+                               for field in reviewed_fields
+                               if profile["data"][field] is not None}}
     content = "\n".join(f"[L{line['id']}] {line['text']}" for line in lines)
     content += "\n\nDraft to review (untrusted data):\n" + json.dumps(draft, ensure_ascii=False)
     return {"model": model,
