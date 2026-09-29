@@ -221,6 +221,36 @@ class InternalAnalysisHttpTests(unittest.TestCase):
                 self.assertEqual(response.status_code, 502)
                 self.assertEqual(response.json(), {"error": "INVALID_ANALYSIS_RESULT"})
 
+    def test_recoverable_mode_requires_question_for_every_suggested_value(self):
+        data = {field: None for field in FIELDS}
+        evidence = {field: [] for field in FIELDS}
+        data["project_name"] = "AgentFit"
+        evidence["project_name"] = [{"start": 0, "end": 8}]
+        profile = validate_profile("AgentFit", "doc_1",
+                                   {"data": data, "evidence": evidence})
+        states = {field: "unknown" for field in FIELDS}
+        states["project_name"] = "suggested"
+
+        def send(questions):
+            service = TestClient(create_app(
+                internal_token="local-secret", analysis_mode="recoverable-solar",
+                analyze=lambda *_: {"outcome": "needs_confirmation",
+                                   "profile": profile, "fieldStates": states,
+                                   "questions": questions,
+                                   "error": "SEMANTIC_REJECTED"}))
+            return service.post("/internal/v1/analyze", content=b"AgentFit",
+                                headers={"Authorization": "Bearer local-secret",
+                                         "X-Document-Id": "doc_1", "X-Request-Id": "req_1",
+                                         "X-Document-Kind": "TEXT",
+                                         "X-AgentFit-Analysis-Contract": "confirmation-v1",
+                                         "Content-Type": "text/plain"})
+
+        self.assertEqual(send([]).status_code, 502)
+        question = {"field": "project_name", "reason": "CONFIRM_SUGGESTION",
+                    "questionId": "confirm_project_name"}
+        self.assertEqual(send([question]).status_code, 200)
+        self.assertEqual(send([dict(question, reason="REVIEW_ISSUE")]).status_code, 502)
+
     def test_invalid_document_id_is_rejected_before_analysis(self):
         response = self.send(headers={"X-Document-Id": "../../other"})
         self.assertEqual(response.status_code, 400)

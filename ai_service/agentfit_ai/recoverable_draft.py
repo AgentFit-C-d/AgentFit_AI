@@ -4,14 +4,17 @@ from .diagnostics import safe_code
 from .profile import FIELDS, validate_profile
 
 
-SAFE_REASONS = frozenset({"REVIEW_ISSUE", "JUDGMENT_INVALID",
-                          "CANDIDATE_MISSING", "REVIEW_UNAVAILABLE"})
+UNRESOLVED_REASONS = frozenset({"REVIEW_ISSUE", "JUDGMENT_INVALID",
+                                "CANDIDATE_MISSING", "REVIEW_UNAVAILABLE"})
+SUGGESTED_REASONS = frozenset({"REVIEW_UNAVAILABLE", "CONFIRM_SUGGESTION"})
+SAFE_REASONS = UNRESOLVED_REASONS | SUGGESTED_REASONS
 
 
 def project_draft(document: str, document_id: str, profile: dict, *,
                   unresolved: dict[str, str], review_complete: bool,
                   error_code: str, ask_suggested_when_unreviewed: bool = False,
-                  ask_unknown_when_unreviewed: bool = True) -> dict:
+                  ask_unknown_when_unreviewed: bool = True,
+                  ask_suggested_when_reviewed: bool = False) -> dict:
     if type(unresolved) is not dict or not set(unresolved) <= set(FIELDS):
         raise ValueError("invalid unresolved fields")
     data = {field: profile["data"][field] for field in FIELDS}
@@ -35,6 +38,10 @@ def project_draft(document: str, document_id: str, profile: dict, *,
         for field in FIELDS:
             if states[field] == "suggested":
                 question_reasons[field] = "REVIEW_UNAVAILABLE"
+    if ask_suggested_when_reviewed and review_complete:
+        for field in FIELDS:
+            if states[field] == "suggested":
+                question_reasons[field] = "CONFIRM_SUGGESTION"
     questions = [{"field": field,
                   "reason": (question_reasons[field] if question_reasons[field] in SAFE_REASONS
                              else "ANALYSIS_UNRESOLVED"),

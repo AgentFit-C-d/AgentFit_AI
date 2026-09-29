@@ -8,6 +8,7 @@
 - 복구 모드를 호출하는 Spring은 기존 Bearer 토큰과 함께 `X-AgentFit-Analysis-Contract: confirmation-v1`을 정확히 한 번 보낸다. 누락·중복·다른 값은 body 읽기 전에 `428 CONFIRMATION_CONTRACT_REQUIRED`다. 이 헤더는 Spring 구현 검증을 대체하지 않는다.
 - `POST /internal/v1/analyze`의 `outcome`은 `complete`, `needs_confirmation`, `failed`다. `needs_confirmation`에는 재검증 가능한 `profile`, 10개 필드의 `fieldStates`, 안전한 `questions`, 안전 오류 코드가 포함된다.
 - `suggested`는 근거 구조가 검증된 값이지만 사용자 확인 전 확정이 아니다. `unknown`은 null이며 편집 가능하다. `unresolved`는 null이며 해당 질문이 하나 있어야 한다. `suggested`의 `REVIEW_UNAVAILABLE` 질문은 제안값의 명시적 확인을 요구한다.
+- 복구 모드의 `needs_confirmation`은 **모든 `suggested`와 `unresolved` 필드에 `confirm_<field>` 질문을 정확히 하나씩** 포함한다. `unknown`에는 질문이 없다. 의미 검토를 마친 제안에는 `CONFIRM_SUGGESTION`, 검토가 완료되지 않은 제안에는 `REVIEW_UNAVAILABLE` 사유를 쓴다. Spring은 질문이 빠진 응답을 저장 가능한 초안으로 취급하지 않아야 한다. FastAPI는 누락·중복·상태에 맞지 않는 사유를 502로 거절한다.
 - `failed`에는 저장할 새 Profile이 없다. `complete`도 FastAPI가 DB 저장을 완료했다는 뜻이 아니다.
 
 ## Spring 공개 결과 매핑 제안

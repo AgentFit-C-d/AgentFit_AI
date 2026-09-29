@@ -116,7 +116,8 @@ class RecoverableSolarAnalyzer(SolarAnalyzer):
                     document, document_id, profile, unresolved=unresolved,
                     review_complete=snapshot["review_complete"],
                     error_code=error.code, ask_suggested_when_unreviewed=True,
-                    ask_unknown_when_unreviewed=False)
+                    ask_unknown_when_unreviewed=False,
+                    ask_suggested_when_reviewed=True)
                 if not any(state == "suggested" for state in draft["fieldStates"].values()):
                     return {"outcome": "failed", "error": safe_code(error.code)}
                 return draft

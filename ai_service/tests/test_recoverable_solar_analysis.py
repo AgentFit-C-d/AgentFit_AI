@@ -99,6 +99,8 @@ class RecoverableSolarAnalysisTests(unittest.TestCase):
         self.assertIn({"field": "features", "reason": "REVIEW_ISSUE",
                        "questionId": "confirm_features"}, result["questions"])
         self.assertEqual(result["fieldStates"]["project_name"], "suggested")
+        self.assertIn({"field": "project_name", "reason": "CONFIRM_SUGGESTION",
+                       "questionId": "confirm_project_name"}, result["questions"])
 
     def test_failure_before_verified_profile_stays_failed(self):
         analyzer, _ = self.analyzer([TimeoutError("private failure")])

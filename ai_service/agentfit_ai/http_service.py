@@ -17,7 +17,7 @@ from .document_extraction import (MAX_FILE_BYTES, PDF_TIMEOUT_SECONDS,
                                   DocumentExtractionError,
                                   extract_document)
 from .profile import FIELDS, ProfileValidationError, validate_profile
-from .recoverable_draft import SAFE_REASONS
+from .recoverable_draft import SUGGESTED_REASONS, UNRESOLVED_REASONS
 from .solar import AnalysisError
 
 
@@ -127,7 +127,8 @@ def _checked_profile(document: str, document_id: str, profile: dict) -> dict:
     return checked
 
 
-def _checked_confirmation(outcome: dict, profile: dict) -> tuple[dict, list]:
+def _checked_confirmation(outcome: dict, profile: dict, *,
+                          require_suggested_questions: bool = False) -> tuple[dict, list]:
     states = outcome.get("fieldStates")
     questions = outcome.get("questions")
     if (type(states) is not dict or set(states) != set(FIELDS) or
@@ -147,14 +148,17 @@ def _checked_confirmation(outcome: dict, profile: dict) -> tuple[dict, list]:
             raise ValueError("invalid confirmation question")
         valid_reason = (
             (states[field] == "unresolved" and
-             question["reason"] in SAFE_REASONS | {"ANALYSIS_UNRESOLVED"}) or
+             question["reason"] in UNRESOLVED_REASONS | {"ANALYSIS_UNRESOLVED"}) or
             (states[field] == "suggested" and
-             question["reason"] == "REVIEW_UNAVAILABLE"))
+             question["reason"] in SUGGESTED_REASONS))
         if not valid_reason or question["questionId"] != "confirm_" + field:
             raise ValueError("invalid confirmation question")
         fields.add(field)
     if not {field for field in FIELDS if states[field] == "unresolved"} <= fields:
         raise ValueError("missing confirmation question")
+    if (require_suggested_questions and
+            not {field for field in FIELDS if states[field] == "suggested"} <= fields):
+        raise ValueError("missing suggested confirmation question")
     return states, questions
 
 
@@ -308,7 +312,9 @@ def create_app(*, internal_token: str | None = None,
                 return finish(200, {"requestId": request_id, "outcome": "complete",
                                     "profile": profile})
             try:
-                states, questions = _checked_confirmation(outcome, profile)
+                states, questions = _checked_confirmation(
+                    outcome, profile,
+                    require_suggested_questions=(mode == "recoverable-solar"))
             except (TypeError, ValueError):
                 return fail(502, "INVALID_ANALYSIS_RESULT")
             return finish(200, {"requestId": request_id, "outcome": "needs_confirmation",

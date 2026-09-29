@@ -56,6 +56,20 @@ class RecoverableDraftTests(unittest.TestCase):
                        "questionId": "confirm_project_name"}, result["questions"])
         self.assertNotIn("PRIVATE_SOURCE_MARKER", json.dumps(result))
 
+    def test_reviewed_suggestions_can_require_explicit_confirmation(self):
+        result = project_draft(
+            DOCUMENT, "doc", profile(),
+            unresolved={"project_name": "REVIEW_ISSUE"},
+            review_complete=True, error_code="SEMANTIC_REJECTED",
+            ask_suggested_when_reviewed=True)
+        self.assertEqual(result["fieldStates"]["external_integrations"], "suggested")
+        self.assertIn({"field": "external_integrations",
+                       "reason": "CONFIRM_SUGGESTION",
+                       "questionId": "confirm_external_integrations"},
+                      result["questions"])
+        self.assertIn({"field": "project_name", "reason": "REVIEW_ISSUE",
+                       "questionId": "confirm_project_name"}, result["questions"])
+
     def test_unreviewed_unknowns_can_remain_editable_without_blanket_questions(self):
         result = project_draft(DOCUMENT, "doc", profile(), unresolved={},
                                review_complete=False, error_code="PROVIDER_TIMEOUT",
