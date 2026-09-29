@@ -23,8 +23,8 @@ CASES_SHA256 = "3bf5b44622074f51f76a7288e772993518324257399c28d26e8257efd45277d6
 CALL_TIMEOUT_SECONDS = 600
 
 
-def candidate_payload(prompt: str) -> dict:
-    if type(prompt) is not str or not prompt:
+def candidate_payload(prompt: str, *, max_tokens=4096) -> dict:
+    if type(prompt) is not str or not prompt or max_tokens not in (4096, 8192):
         raise ValueError("invalid prompt")
     attributes = {"type": "object", "properties": {"anchor": {"type": "string"}},
                   "required": ["anchor"], "additionalProperties": False}
@@ -48,7 +48,7 @@ def candidate_payload(prompt: str) -> dict:
         "response_format": {"type": "json_schema", "json_schema": {
             "name": "agentfit_langextract_candidates", "strict": True, "schema": schema}},
         "reasoning_effort": "none", "frequency_penalty": 0,
-        "temperature": 0, "max_tokens": 4096, "stream": False}
+        "temperature": 0, "max_tokens": max_tokens, "stream": False}
 
 
 def score_case(case: dict, extractions) -> dict:
@@ -103,7 +103,10 @@ def score_case(case: dict, extractions) -> dict:
 
 
 def extract_candidates(document: str, api_key: str, *, transport=post_solar,
-                       telemetry=None):
+                       telemetry=None, prompt_description=None,
+                       max_tokens=4096):
+    if max_tokens not in (4096, 8192):
+        raise ValueError("invalid candidate output budget")
     import langextract as lx
     from langextract.core.base_model import BaseLanguageModel
     from langextract.core.types import ScoredOutput
@@ -115,7 +118,8 @@ def extract_candidates(document: str, api_key: str, *, transport=post_solar,
                 trace = {}
                 try:
                     reply, model, _, _ = sender._send_payload(
-                        candidate_payload(prompt), ("extractions",),
+                        candidate_payload(prompt, max_tokens=max_tokens),
+                        ("extractions",),
                         _trace=trace, timeout=CALL_TIMEOUT_SECONDS)
                 finally:
                     if telemetry is not None:
@@ -138,7 +142,7 @@ def extract_candidates(document: str, api_key: str, *, transport=post_solar,
                                attributes={"anchor": "Alpha Y is confirmed."})])
     result = lx.extract(
         text_or_documents=document,
-        prompt_description=(
+        prompt_description=prompt_description or (
             "Extract each concrete product capability or named technology phrase "
             "in every mention. Include negative, tentative, and repeated mentions "
             "without deciding their status. Copy the exact source phrase. "

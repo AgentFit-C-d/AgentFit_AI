@@ -48,6 +48,9 @@ class LangExtractSolarTrialTests(unittest.TestCase):
 
     def test_payload_keeps_candidate_schema_and_bounded_model(self):
         payload = candidate_payload("example prompt")
+        self.assertEqual(payload["max_tokens"], 4096)
+        self.assertEqual(candidate_payload("example prompt", max_tokens=8192)[
+            "max_tokens"], 8192)
         self.assertEqual(payload["model"], "solar-pro4")
         self.assertEqual(payload["messages"][1]["content"], "example prompt")
         self.assertEqual(payload["response_format"]["json_schema"]["schema"]
