@@ -12,6 +12,44 @@ from agentfit_ai.profile import FIELDS
 
 
 class PublicHoldoutTests(unittest.TestCase):
+    def test_grouped_review_cli_records_actual_cap_and_rejects_conflicts(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "grouped"
+
+            class FakeSelectorAnalyzer:
+                def __init__(self, *args, **kwargs):
+                    self.safe_calls = []
+                    assert kwargs["grouped_review"] is True
+                    assert kwargs["analysis_timeout_seconds"] == 600
+
+                def analyze_recoverable(self, document, document_id):
+                    return {"outcome": "failed", "error": "SEMANTIC_REVIEW_INVALID"}
+
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(output), "--source-selector",
+                                                "--accuracy-first", "--extended-review-window",
+                                                "--grouped-review"]), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_manifest",
+                       return_value=[self.case]), \
+                 patch("agentfit_ai.public_holdout_evaluation.fetch_document",
+                       return_value=self.document), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_key",
+                       return_value="synthetic-key"), \
+                 patch("agentfit_ai.public_holdout_evaluation.SafeTraceSourceSelectorAnalyzer",
+                       FakeSelectorAnalyzer):
+                self.assertEqual(main(), 0)
+            plan = json.loads((output / "plan.json").read_text(encoding="utf-8"))
+            self.assertTrue(plan["grouped_review"])
+            self.assertEqual(plan["review_max_tokens"], 4096)
+            self.assertNotIn("synthetic-key", (output / "plan.json").read_text())
+            for extra in ([], ["--source-selector", "--compact-review"]):
+                with self.subTest(extra=extra), patch.object(
+                        sys, "argv", ["evaluate", "--live", "--output",
+                                      str(Path(temp) / "invalid"), *extra,
+                                      "--grouped-review"]):
+                    with self.assertRaises(SystemExit):
+                        main()
+
     def test_extended_review_window_is_evaluation_only_and_records_limit(self):
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / "extended"
