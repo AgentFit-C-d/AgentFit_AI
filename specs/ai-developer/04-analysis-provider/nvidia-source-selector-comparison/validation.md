@@ -33,4 +33,5 @@
 
 - ignored 로컬 `tmp/public-prd-nvidia-selector-20260929`, `tmp/public-prd-solar-selector-long-20260929`, `tmp/public-prd-solar-selector-token-probe-20260929`, `tmp/public-prd-solar-selector-review16k-20260929`에 안전한 plan/results/summary만 남겼다. 네 묶음 모두 실제 NVIDIA·Upstage 키와 문서 전체 원문이 결과 JSON에 없음을 확인했다.
 - `plan/results/summary` SHA-256: DeepSeek `588299e4/ c58f8ff4/79f222d0`, Solar 긴 기한 `abb1efc1/87da5224/6b2899cb`, 8K 원인 조사 `6ee8e412/6e2c05c0/cd4ae337`, 16K 시험 `291fe453/f1af906e/b402325d` (각 해시 앞 8자리).
+- 구현 커밋 `36d2bf4`를 `feature/nvidia-source-selector-comparison`에 push했고 Linux CI `36537466190`의 의존성 검사·PDF Worker 메모리 제한·전체 AI 테스트가 성공했다. CI 성공은 PRD 품질 달성이나 배포 완료를 뜻하지 않는다.
 - 새 독립 실제 문서, 정답 밖 값의 사람 검토, 사용자 확인 후 Spring 저장 금지 E2E는 여전히 미검증이다.
