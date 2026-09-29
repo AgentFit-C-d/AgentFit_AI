@@ -7,11 +7,27 @@ from pathlib import Path
 from unittest.mock import patch
 
 from agentfit_ai.public_holdout import MANIFEST, load_manifest, score_profile, verify_document
-from agentfit_ai.public_holdout_evaluation import SafeTraceSolarAnalyzer, evaluate_case, main, summarize
+from agentfit_ai.public_holdout_evaluation import (SafeTraceSolarAnalyzer,
+    SafeTraceSourceSelectorAnalyzer, evaluate_case, main, summarize)
 from agentfit_ai.profile import FIELDS
 
 
 class PublicHoldoutTests(unittest.TestCase):
+    def test_section_merge_failure_reports_allowlisted_reason_only(self):
+        from agentfit_ai.solar import AnalysisError
+        from agentfit_ai.source_selector_analysis import SourceSelectorSolarAnalyzer
+
+        analyzer = SafeTraceSourceSelectorAnalyzer("synthetic-key")
+        error = AnalysisError("INVALID_EVIDENCE", "features")
+        error.detail = {"reason": "SECTION_FEATURE_CONFLICT", "private": "secret source"}
+        with patch.object(SourceSelectorSolarAnalyzer, "_first_pass_with_sections",
+                          side_effect=error):
+            with self.assertRaises(AnalysisError):
+                analyzer._first_pass_with_sections("doc", None, None, [])
+        self.assertEqual(analyzer.safe_first_pass_error,
+                         {"field": "features", "reason": "SECTION_FEATURE_CONFLICT"})
+        self.assertNotIn("secret source", json.dumps(analyzer.safe_first_pass_error))
+
     def test_section_extraction_cli_requires_review_and_records_eighteen_call_budget(self):
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / "section-extraction"

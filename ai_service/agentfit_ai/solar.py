@@ -34,6 +34,9 @@ SAFE_EVIDENCE_REASONS = frozenset({
     "INVALID_ITEM", "INVALID_VALUE", "WRONG_ROLE", "VALUE_NOT_IN_QUOTE",
     "DUPLICATE_VALUE", "INVALID_LINE_ID", "VALUE_NOT_IN_LINE",
     "AMBIGUOUS_VALUE_IN_LINE",
+    "SECTION_RANGE_INVALID", "SECTION_SOURCE_LINE_INVALID",
+    "SECTION_COVERAGE_INVALID", "SECTION_FEATURE_CONFLICT",
+    "SECTION_FEATURE_OVERFLOW",
 })
 
 
@@ -578,7 +581,7 @@ class AnalysisResult:
 
 
 class SolarAnalyzer:
-    def __init__(self, api_key: str, *, transport: Callable = post_solar, diagnostics_store=None, semantic_review=True, clock=None, evidence_contract=True, model="solar-pro4", analysis_timeout_seconds=60, field_call_timeout_seconds=40, review_max_tokens=REVIEW_MAX_TOKENS, experimental_long_timeout=False):
+    def __init__(self, api_key: str, *, transport: Callable = post_solar, diagnostics_store=None, semantic_review=True, clock=None, evidence_contract=True, model="solar-pro4", analysis_timeout_seconds=60, field_call_timeout_seconds=40, review_max_tokens=REVIEW_MAX_TOKENS, experimental_long_timeout=False, experimental_section_extraction_timeout=False):
         if type(api_key) is not str or not api_key.strip() or not api_key.isascii() or any(c.isspace() for c in api_key):
             raise AnalysisError("MISSING_OR_INVALID_KEY")
         if type(semantic_review) is not bool:
@@ -589,7 +592,10 @@ class SolarAnalyzer:
             raise ValueError("unsupported Solar model")
         if type(experimental_long_timeout) is not bool:
             raise ValueError("experimental_long_timeout must be boolean")
-        maximum = 600 if experimental_long_timeout else 120
+        if type(experimental_section_extraction_timeout) is not bool:
+            raise ValueError("section extraction timeout must be boolean")
+        maximum = (1200 if experimental_section_extraction_timeout else
+                   600 if experimental_long_timeout else 120)
         if type(analysis_timeout_seconds) is not int or not 1 <= analysis_timeout_seconds <= maximum:
             raise ValueError("invalid analysis_timeout_seconds")
         if (type(field_call_timeout_seconds) is not int or

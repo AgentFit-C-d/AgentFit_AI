@@ -40,6 +40,14 @@ def _safe_validation(item):
 class _SafeTraceMixin:
     """Capture classifications in memory without retaining provider replies."""
 
+    def _first_pass_with_sections(self, document, request, reserve_call, chunks):
+        self.safe_first_pass_error = None
+        try:
+            return super()._first_pass_with_sections(document, request, reserve_call, chunks)
+        except AnalysisError as error:
+            self.safe_first_pass_error = safe_evidence_failure(error)
+            raise
+
     def _repair_correction(self, document, errors, previous):
         correction = super()._repair_correction(document, errors, previous)
         options = correction.get("evidenceOptions", {})
@@ -123,6 +131,9 @@ def evaluate_case(case, document, analyzer, *, clock=time.monotonic,
            "unassessed_values": 0,
            "expected_unknown_fields": len(case.get("unknown_fields", [])),
            "unknown_fields_preserved": 0, "unknown_fields_non_null": 0}
+    first_pass_error = getattr(analyzer, "safe_first_pass_error", None)
+    if type(first_pass_error) is dict:
+        row["first_pass_validation"] = first_pass_error
     if outcome["outcome"] == "failed":
         return row
     profile = outcome.get("profile")

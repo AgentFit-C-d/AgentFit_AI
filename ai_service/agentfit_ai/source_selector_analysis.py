@@ -68,6 +68,7 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
         if compact_review_effort not in ("medium", "low") or (
                 not compact_review and compact_review_effort != "medium"):
             raise ValueError("compact_review_effort requires compact review")
+        kwargs["experimental_section_extraction_timeout"] = section_feature_extraction
         super().__init__(*args, **kwargs)
         if section_feature_review and not self._semantic_review:
             raise ValueError("section feature review requires semantic review")

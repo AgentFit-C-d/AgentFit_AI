@@ -25,6 +25,21 @@ def features():
 
 
 class SourceSelectorAnalysisTests(unittest.TestCase):
+    def test_section_extraction_has_own_1200_second_timeout_cap(self):
+        options = {"grouped_review": True, "group_review_max_tokens": 8192,
+                   "section_feature_review": True, "section_feature_extraction": True,
+                   "experimental_long_timeout": True}
+        analyzer = SourceSelectorSolarAnalyzer(
+            "synthetic-key", analysis_timeout_seconds=1200, **options)
+        self.assertEqual(analyzer._analysis_timeout_seconds, 1200)
+        with self.assertRaises(ValueError):
+            SourceSelectorSolarAnalyzer(
+                "synthetic-key", analysis_timeout_seconds=1201, **options)
+        options["section_feature_extraction"] = False
+        with self.assertRaises(ValueError):
+            SourceSelectorSolarAnalyzer(
+                "synthetic-key", analysis_timeout_seconds=1200, **options)
+
     def test_section_extraction_merges_two_chunks_before_review(self):
         document = "# Alpha\n- registration\n" + "context\n" * 118 + "# Next\n- checkout"
         group_replies = [{"checkedFields": list(group), "issues": []}
