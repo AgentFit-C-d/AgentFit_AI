@@ -369,6 +369,40 @@ def analyze_candidate_first(document: str, document_id: str, key: str,
         review_options["adaptive_review"] = adaptive_review
     review = run("COVERAGE_REVIEW_FAILED", lambda: reviewer(
         document, frozen, labels, key, transport=transport, **review_options))
+    return finalize_candidate_analysis(document, document_id, frozen, labels, review,
+                                       observer=observer)
+
+
+def finalize_candidate_analysis(document: str, document_id: str, frozen: dict,
+                                labels: list[dict], review: dict, *, observer=None) -> dict:
+    """Share the same validated projection across single and paired reviews."""
+    validate_candidate_labels(frozen, labels)
+    if observer is not None and not callable(observer):
+        raise ValueError("invalid candidate observer")
+    ids = {item["id"] for item in frozen["candidates"]}
+    if (type(review) is not dict or
+            set(review) != {"checkedFields", "missingFields", "wrongCandidateIds"} or
+            review["checkedFields"] != list(FIELDS)):
+        raise ValueError("invalid coverage review")
+    for name, allowed in (("missingFields", _FIELDS), ("wrongCandidateIds", ids)):
+        items = review[name]
+        if (type(items) is not list or
+                any(type(item) is not str or item not in allowed for item in items) or
+                len(set(items)) != len(items)):
+            raise ValueError("invalid coverage review")
+
+    def run(stage, operation):
+        try:
+            return operation()
+        except Exception as error:
+            code = safe_code(error.code) if isinstance(error, AnalysisError) else None
+            detail = error.code if isinstance(error, CandidateContractError) else None
+            raise CandidatePipelineError(stage, code, detail) from None
+
+    def observe(stage, state):
+        if observer is not None:
+            run("DIAGNOSTIC_FAILED", lambda: observer(stage, deepcopy(state)))
+
     wrong = set(review["wrongCandidateIds"])
     wrong_fields = {label["field"] for label in labels
                     if label["id"] in wrong and label["field"] in _FIELDS}

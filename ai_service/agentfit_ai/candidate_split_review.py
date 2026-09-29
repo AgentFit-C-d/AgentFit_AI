@@ -4,6 +4,7 @@ import json
 
 from .candidate_first_profile import _MENTION_INSTRUCTION, _source_mention, validate_candidate_labels
 from .diagnostics import safe_code
+from .deepseek_evaluation import NVIDIA_REVIEW_MODELS, NvidiaAnalyzer, post_nvidia
 from .profile import FIELDS
 from .solar import AnalysisError, SolarAnalyzer, post_solar
 
@@ -32,8 +33,8 @@ def _unique_subset(value, allowed) -> bool:
 
 def review_candidates_separately(document: str, frozen: dict,
                                 labels: list[dict], key: str,
-                                *, transport=post_solar, review_calls=None,
-                                adaptive_review=False) -> dict:
+                                *, transport=None, review_calls=None,
+                                adaptive_review=False, review_model="solar-pro4") -> dict:
     """Review all confirmed IDs before checking omissions in the full source."""
     if type(document) is not str or not document.strip():
         raise ValueError("invalid review document")
@@ -41,11 +42,15 @@ def review_candidates_separately(document: str, frozen: dict,
         raise ValueError("invalid review diagnostic collector")
     if type(adaptive_review) is not bool:
         raise ValueError("invalid adaptive review mode")
+    if review_model not in ("solar-pro4", *NVIDIA_REVIEW_MODELS):
+        raise ValueError("unsupported review model")
     validate_candidate_labels(frozen, labels)
     spans = {item["id"]: _source_mention(document, item) for item in frozen["candidates"]}
     confirmed = [{**spans[label["id"]], **label} for label in labels
                  if label["status"] == "confirmed"]
-    sender = SolarAnalyzer(key, transport=transport)
+    solar_review = review_model == "solar-pro4"
+    sender = (SolarAnalyzer(key, transport=transport or post_solar) if solar_review else
+              NvidiaAnalyzer(key, transport=transport or post_nvidia, model=review_model))
 
     def send(payload, stage, validate, *, batch_index=None, candidate_count=None,
              sub_batch_index=None):
@@ -56,7 +61,7 @@ def review_candidates_separately(document: str, frozen: dict,
                "sub_batch_index": sub_batch_index}
         try:
             reply, model, _, _ = sender._send_payload(payload, required, timeout=600, _trace=trace)
-            if not model.startswith("solar-pro4"):
+            if not (model.startswith("solar-pro4") if solar_review else model == review_model):
                 raise AnalysisError("PROVIDER_MODEL")
             if not validate(reply):
                 raise ValueError("invalid split review contract")
@@ -64,7 +69,7 @@ def review_candidates_separately(document: str, frozen: dict,
             return reply
         except AnalysisError as error:
             row["error"] = safe_code(error.code)
-            if (adaptive_review and error.code == "INCOMPLETE_RESPONSE" and
+            if (solar_review and adaptive_review and error.code == "INCOMPLETE_RESPONSE" and
                     trace.get("finish_reason") == "length" and
                     str(trace.get("model", "")).startswith("solar-pro4")):
                 raise _TokenLimitedReview(error.code) from None
