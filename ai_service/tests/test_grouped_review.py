@@ -61,6 +61,17 @@ class GroupedReviewTests(unittest.TestCase):
         self.assertEqual(variants[0]["properties"]["targetId"]["anyOf"][1]["enum"],
                          ["I0001"])
 
+    def test_optional_output_limit_is_eight_k_only(self):
+        payload = group_review_payload(DOCUMENT, profile(), GROUPS[0],
+                                       model="solar-pro4", effort="medium",
+                                       max_tokens=8192)
+        self.assertEqual(payload["max_tokens"], 8192)
+        for invalid in (0, 8193, "8192", True):
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                group_review_payload(DOCUMENT, profile(), GROUPS[0],
+                                     model="solar-pro4", effort="medium",
+                                     max_tokens=invalid)
+
     def test_existing_and_missing_issues_are_server_normalized(self):
         reply = {"checkedFields": ["features"], "issues": [
             {"field": "features", "kind": "overbroad", "targetId": "I0001",

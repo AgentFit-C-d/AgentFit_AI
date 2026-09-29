@@ -12,6 +12,46 @@ from agentfit_ai.profile import FIELDS
 
 
 class PublicHoldoutTests(unittest.TestCase):
+    def test_group_review_eight_k_requires_long_grouped_evaluation(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "group8k"
+
+            class FakeSelectorAnalyzer:
+                def __init__(self, *args, **kwargs):
+                    self.safe_calls = []
+                    assert kwargs["grouped_review"] is True
+                    assert kwargs["group_review_max_tokens"] == 8192
+                    assert kwargs["review_max_tokens"] == 8192
+
+                def analyze_recoverable(self, document, document_id):
+                    return {"outcome": "failed", "error": "INCOMPLETE_RESPONSE"}
+
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(output), "--source-selector",
+                                                "--grouped-review", "--accuracy-first",
+                                                "--extended-review-window", "--group-review-8k"]), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_manifest",
+                       return_value=[self.case]), \
+                 patch("agentfit_ai.public_holdout_evaluation.fetch_document",
+                       return_value=self.document), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_key",
+                       return_value="synthetic-key"), \
+                 patch("agentfit_ai.public_holdout_evaluation.SafeTraceSourceSelectorAnalyzer",
+                       FakeSelectorAnalyzer):
+                self.assertEqual(main(), 0)
+            plan = json.loads((output / "plan.json").read_text(encoding="utf-8"))
+            self.assertEqual(plan["review_max_tokens"], 8192)
+            self.assertTrue(plan["group_review_8k"])
+            for extra in (["--source-selector", "--grouped-review"],
+                          ["--source-selector", "--accuracy-first",
+                           "--extended-review-window"]):
+                with self.subTest(extra=extra), patch.object(
+                        sys, "argv", ["evaluate", "--live", "--output",
+                                      str(Path(temp) / "invalid"), *extra,
+                                      "--group-review-8k"]):
+                    with self.assertRaises(SystemExit):
+                        main()
+
     def test_grouped_review_cli_records_actual_cap_and_rejects_conflicts(self):
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / "grouped"

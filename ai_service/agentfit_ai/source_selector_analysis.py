@@ -43,11 +43,15 @@ project_name은 명시된 이름의 고유 부분, project_type은 제공 형태
 
 class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
     def __init__(self, *args, compact_review=False, compact_review_effort="medium",
-                 grouped_review=False, **kwargs):
+                 grouped_review=False, group_review_max_tokens=4096, **kwargs):
         if type(compact_review) is not bool:
             raise ValueError("compact_review must be boolean")
         if type(grouped_review) is not bool or (grouped_review and compact_review):
             raise ValueError("grouped_review requires non-compact review")
+        if (type(group_review_max_tokens) is not int or
+                group_review_max_tokens not in (4096, 8192) or
+                (not grouped_review and group_review_max_tokens != 4096)):
+            raise ValueError("group_review_max_tokens requires grouped review")
         if compact_review_effort not in ("medium", "low") or (
                 not compact_review and compact_review_effort != "medium"):
             raise ValueError("compact_review_effort requires compact review")
@@ -55,6 +59,7 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
         self._compact_review = compact_review
         self._compact_review_effort = compact_review_effort
         self._grouped_review = grouped_review
+        self._group_review_max_tokens = group_review_max_tokens
 
     def _semantic_review_groups(self):
         return GROUPS if self._grouped_review else super()._semantic_review_groups()
@@ -62,7 +67,8 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
     def _request_group_review(self, document, profile, fields, *, _trace=None, timeout=40):
         try:
             payload = group_review_payload(document, profile, fields, model=self._model,
-                                           effort=REVIEW_REASONING_EFFORT)
+                                           effort=REVIEW_REASONING_EFFORT,
+                                           max_tokens=self._group_review_max_tokens)
             reply, model, prompt_tokens, completion_tokens = self._send_payload(
                 payload, ("checkedFields", "issues"), _trace=_trace, timeout=timeout)
             normalized = normalize_group_review(reply, profile, document, fields)

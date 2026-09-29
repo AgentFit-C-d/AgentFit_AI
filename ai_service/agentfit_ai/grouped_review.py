@@ -19,11 +19,15 @@ def _valid_fields(fields):
             len(fields) == len(set(fields)) and set(fields) <= set(FIELDS))
 
 
-def group_review_payload(document, profile, fields, *, model, effort):
+def group_review_payload(document, profile, fields, *, model, effort,
+                         max_tokens=4096):
     if not _valid_fields(fields):
         raise ValueError("unsupported review group")
+    if type(max_tokens) is not int or max_tokens not in (4096, 8192):
+        raise ValueError("unsupported group review output limit")
     payload = review_payload(document, profile, model=model, effort=effort,
                              fields=fields)
+    payload["max_tokens"] = max_tokens
     prompt = payload["messages"][0]["content"]
     prompt = prompt.replace("10개 필드를 모두 검토한다", "지정된 필드만 검토한다")
     prompt = "\n".join(

@@ -184,6 +184,7 @@ def main():
     parser.add_argument("--extended-review-window", action="store_true")
     parser.add_argument("--compact-review", action="store_true")
     parser.add_argument("--grouped-review", action="store_true")
+    parser.add_argument("--group-review-8k", action="store_true")
     parser.add_argument("--compact-review-effort", choices=("medium", "low"),
                         default="medium")
     args = parser.parse_args()
@@ -201,6 +202,9 @@ def main():
         parser.error("compact review requires source selector mode")
     if args.grouped_review and (not args.source_selector or args.compact_review):
         parser.error("grouped review requires non-compact source selector mode")
+    if args.group_review_8k and not (args.source_selector and args.grouped_review and
+                                      args.accuracy_first and args.extended_review_window):
+        parser.error("8k grouped review requires long accuracy-first source selector")
     if args.compact_review_effort != "medium" and not args.compact_review:
         parser.error("compact review effort requires compact review mode")
     if args.extended_review_window and (not args.source_selector or
@@ -232,13 +236,15 @@ def main():
             "source_selector": args.source_selector,
             "compact_review": args.compact_review,
             "grouped_review": args.grouped_review,
+            "group_review_8k": args.group_review_8k,
             "compact_review_effort": args.compact_review_effort,
             "accuracy_first": args.accuracy_first,
             "extended_review_window": args.extended_review_window,
             "analysis_timeout_seconds": (600 if args.extended_review_window else
                                          300 if args.accuracy_first else 40),
             "field_call_timeout_seconds": 120 if args.accuracy_first else 40,
-            "review_max_tokens": (4096 if args.compact_review or args.grouped_review else
+            "review_max_tokens": (8192 if args.group_review_8k else
+                                  4096 if args.compact_review or args.grouped_review else
                                   16384 if args.accuracy_first else 8192),
             "release_gate_passed": False}
     write_safe_json(args.output / "plan.json", plan, forbidden_strings=forbidden)
@@ -255,14 +261,16 @@ def main():
             analysis_timeout_seconds=(600 if args.extended_review_window else
                                       300 if args.accuracy_first else 40),
             field_call_timeout_seconds=120 if args.accuracy_first else 40,
-            review_max_tokens=(4096 if args.compact_review or args.grouped_review else
+            review_max_tokens=(8192 if args.group_review_8k else
+                               4096 if args.compact_review or args.grouped_review else
                                16384 if args.accuracy_first else 8192),
             experimental_long_timeout=args.accuracy_first,
             repair_context_options=args.repair_context_options,
             parallel_first_pass=args.parallel_first_pass,
             **({"compact_review": args.compact_review,
                 "compact_review_effort": args.compact_review_effort,
-                "grouped_review": args.grouped_review}
+                "grouped_review": args.grouped_review,
+                "group_review_max_tokens": 8192 if args.group_review_8k else 4096}
                if args.source_selector else {}))
         row = evaluate_case(case, document, analyzer,
                             provider_calls=lambda: transport.calls)

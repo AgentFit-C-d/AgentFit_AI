@@ -25,6 +25,20 @@ def features():
 
 
 class SourceSelectorAnalysisTests(unittest.TestCase):
+    def test_grouped_eight_k_limit_changes_only_review_calls(self):
+        group_replies = [{"checkedFields": list(group), "issues": []} for group in GROUPS]
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      *(response(item) for item in group_replies)])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192).analyze_recoverable(
+                "# Alpha\n- registration", "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual([call.args[0]["max_tokens"] for call in transport.call_args_list],
+                         [4096, 4096, 8192, 8192, 8192])
+        with self.assertRaises(ValueError):
+            SourceSelectorSolarAnalyzer("synthetic-key", group_review_max_tokens=8192)
+
     def test_grouped_review_completes_only_after_three_valid_groups(self):
         group_replies = [{"checkedFields": list(group), "issues": []} for group in GROUPS]
         transport = Mock(side_effect=[response(core()), response(features()),
