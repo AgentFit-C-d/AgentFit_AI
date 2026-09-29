@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 from agentfit_ai.public_holdout import MANIFEST, load_manifest, score_profile, verify_document
 from agentfit_ai.public_holdout_evaluation import SafeTraceSolarAnalyzer, evaluate_case, main, summarize
+from agentfit_ai.profile import FIELDS
 
 
 class PublicHoldoutTests(unittest.TestCase):
@@ -99,7 +100,7 @@ class PublicHoldoutTests(unittest.TestCase):
         data = {field: None for field in (
             "project_name", "project_type", "domain", "frontend", "backend",
             "ai", "database", "deployment", "features", "external_integrations")}
-        data.update(project_name="Acme", frontend=["Vue"], features=["recipe imports"])
+        data.update(project_name="Acme", frontend=["Vue"], features=["import recipes"])
         evidence = {field: [] for field in data}
         evidence["project_name"] = [self.span(document, "# Acme")]
         evidence["frontend"] = [self.span(document, "# Acme")]
@@ -108,6 +109,64 @@ class PublicHoldoutTests(unittest.TestCase):
         self.assertEqual(result["matched_checks"], 2)
         self.assertEqual(result["wrong_evidence_checks"], 1)
         self.assertEqual(result["missing_alias_checks"], 0)
+
+    def test_evidence_may_cite_exact_value_without_list_marker(self):
+        document = "- 웹 푸시 알림\n"
+        case = {"checks": {"features": [{"aliases": ["웹 푸시 알림"],
+                                          "quote": "- 웹 푸시 알림"}]}}
+        profile = self.profile_with("features", ["웹 푸시 알림"],
+                                    [{"start": 2, "end": len(document) - 1}])
+        score = score_profile(case, document, profile)
+        self.assertEqual(score["matched_checks"], 1)
+        self.assertEqual(score["wrong_evidence_checks"], 0)
+
+    def test_same_value_cited_at_other_location_is_wrong_evidence(self):
+        document = "- 웹 푸시 알림\n계획: 웹 푸시 알림\n"
+        case = {"checks": {"features": [{"aliases": ["웹 푸시 알림"],
+                                          "quote": "- 웹 푸시 알림"}]}}
+        start = document.index("웹 푸시 알림", document.index("계획:"))
+        profile = self.profile_with("features", ["웹 푸시 알림"],
+                                    [{"start": start, "end": start + len("웹 푸시 알림")}])
+        score = score_profile(case, document, profile)
+        self.assertEqual(score["wrong_evidence_checks"], 1)
+        self.assertEqual(score["matched_checks"], 0)
+
+    def test_shared_array_span_has_indeterminate_item_evidence(self):
+        document = "Users can import recipes and create shopping lists."
+        case = {"checks": {"features": [
+            {"aliases": ["import recipes"], "quote": "import recipes"},
+            {"aliases": ["create shopping lists"], "quote": "create shopping lists"}]}}
+        profile = self.profile_with("features", ["import recipes", "create shopping lists"],
+                                    [{"start": 0, "end": len(document)}])
+        score = score_profile(case, document, profile)
+        self.assertEqual(score["matched_checks"], 0)
+        self.assertEqual(score["indeterminate_evidence_checks"], 2)
+        self.assertEqual(sum(score[name] for name in (
+            "matched_checks", "wrong_evidence_checks", "missing_alias_checks",
+            "indeterminate_evidence_checks")), score["total_checks"])
+
+    def test_one_value_matching_two_gold_checks_is_indeterminate(self):
+        document = "Users can import recipes and export recipes."
+        case = {"checks": {"features": [
+            {"aliases": ["recipes"], "quote": "import recipes"},
+            {"aliases": ["recipes"], "quote": "export recipes"}]}}
+        start = document.index("import recipes")
+        profile = self.profile_with("features", ["import recipes"],
+                                    [{"start": start, "end": start + len("import recipes")}])
+        score = score_profile(case, document, profile)
+        self.assertEqual(score["matched_checks"], 0)
+        self.assertEqual(score["indeterminate_evidence_checks"], 2)
+
+    def test_alias_match_outside_gold_anchor_is_indeterminate(self):
+        document = "Users can import recipes through a URL. Recipe import is listed elsewhere."
+        case = {"checks": {"features": [{"aliases": ["Recipe import"],
+                                          "quote": "import recipes through a URL"}]}}
+        start = document.index("Recipe import")
+        profile = self.profile_with("features", ["Recipe import"],
+                                    [{"start": start, "end": start + len("Recipe import")}])
+        score = score_profile(case, document, profile)
+        self.assertEqual(score["indeterminate_evidence_checks"], 1)
+        self.assertEqual(score["wrong_evidence_checks"], 0)
 
     def test_evaluation_retains_counts_without_profile_or_source(self):
         document = verify_document(self.case, self.document.encode())
@@ -132,6 +191,8 @@ class PublicHoldoutTests(unittest.TestCase):
         self.assertNotIn("document", row)
         summary = summarize([row], planned=3)
         self.assertEqual(summary["needs_confirmation_cases"], 1)
+        self.assertEqual(summary["indeterminate_evidence_checks"], 0)
+        self.assertEqual(summary["score_version"], "public-evidence-v2")
         self.assertFalse(summary["release_gate_passed"])
 
     def test_safe_trace_keeps_final_failure_reason_without_raw_detail(self):
@@ -153,6 +214,14 @@ class PublicHoldoutTests(unittest.TestCase):
     def span(document, quote):
         start = document.index(quote)
         return {"documentId": "public-acme", "start": start, "end": start + len(quote)}
+
+    @staticmethod
+    def profile_with(field, value, spans):
+        data = dict.fromkeys(FIELDS)
+        evidence = {name: [] for name in FIELDS}
+        data[field] = value
+        evidence[field] = spans
+        return {"data": data, "evidence": evidence}
 
 
 if __name__ == "__main__":

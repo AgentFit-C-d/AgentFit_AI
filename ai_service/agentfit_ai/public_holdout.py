@@ -10,6 +10,7 @@ from .profile import ARRAY_FIELDS, FIELDS
 
 
 MAX_DOCUMENT_BYTES = 100_000
+SCORE_VERSION = "public-evidence-v2"
 MANIFEST = (Path(__file__).resolve().parents[2] /
             "specs/ai-developer/04-analysis-provider/public-holdout-corpus/manifest.json")
 _REPO = re.compile(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+\Z")
@@ -92,13 +93,31 @@ def fetch_document(case):
     return verify_document(case, body)
 
 
-def _covered(document, spans, quote):
-    start = document.index(quote)
-    end = start + len(quote)
-    return any(type(span) is dict and type(span.get("start")) is int
-               and type(span.get("end")) is int
-               and span["start"] <= start and span["end"] >= end
-               for span in spans)
+def _citation_state(document, spans, quote, value, peers):
+    anchor = document.index(quote)
+    positions = []
+    cursor = 0
+    while True:
+        offset = quote.find(value, cursor)
+        if offset < 0:
+            break
+        positions.append((anchor + offset, anchor + offset + len(value)))
+        cursor = offset + 1
+    if not positions:
+        return "indeterminate"
+    ambiguous = False
+    for start, end in positions:
+        for span in spans:
+            if (type(span) is not dict or type(span.get("start")) is not int
+                    or type(span.get("end")) is not int
+                    or not span["start"] <= start or span["end"] < end):
+                continue
+            excerpt = document[span["start"]:span["end"]]
+            if any(other in excerpt for other in peers):
+                ambiguous = True
+            else:
+                return "matched"
+    return "indeterminate" if ambiguous else "wrong"
 
 
 def _matches(value, aliases):
@@ -113,7 +132,7 @@ def score_profile(case, document, profile):
     data, evidence = profile["data"], profile["evidence"]
     if set(data) != set(FIELDS) or set(evidence) != set(FIELDS):
         raise ValueError("invalid public profile")
-    matched = wrong_evidence = missing_alias = unassessed = 0
+    matched = wrong_evidence = missing_alias = indeterminate = unassessed = 0
     for field in FIELDS:
         value = data[field]
         values = [] if value is None else value if field in ARRAY_FIELDS else [value]
@@ -123,15 +142,30 @@ def score_profile(case, document, profile):
         if type(spans) is not list:
             raise ValueError("invalid public profile")
         checks = case["checks"].get(field, [])
-        for check in checks:
-            if not any(_matches(item, check["aliases"]) for item in values):
+        candidates = [[index for index, item in enumerate(values)
+                       if _matches(item, check["aliases"])] for check in checks]
+        for check_index, (check, matches) in enumerate(zip(checks, candidates)):
+            if not matches:
                 missing_alias += 1
-            elif not _covered(document, spans, check["quote"]):
-                wrong_evidence += 1
+            elif (len(matches) != 1 or any(matches[0] in other
+                                           for other_index, other in enumerate(candidates)
+                                           if other_index != check_index)):
+                indeterminate += 1
             else:
-                matched += 1
+                index = matches[0]
+                state = _citation_state(document, spans, check["quote"], values[index],
+                                        [item for other_index, item in enumerate(values)
+                                         if other_index != index])
+                if state == "matched":
+                    matched += 1
+                elif state == "wrong":
+                    wrong_evidence += 1
+                else:
+                    indeterminate += 1
         unassessed += sum(not any(_matches(item, check["aliases"])
                                   for check in checks) for item in values)
     return {"total_checks": sum(len(items) for items in case["checks"].values()),
             "matched_checks": matched, "wrong_evidence_checks": wrong_evidence,
-            "missing_alias_checks": missing_alias, "unassessed_values": unassessed}
+            "missing_alias_checks": missing_alias,
+            "indeterminate_evidence_checks": indeterminate,
+            "unassessed_values": unassessed}

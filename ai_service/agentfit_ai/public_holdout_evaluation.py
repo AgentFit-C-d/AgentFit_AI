@@ -9,7 +9,7 @@ from pathlib import Path
 
 from .diagnostics import safe_code
 from .false_complete_evaluation import write_safe_json
-from .public_holdout import MANIFEST, fetch_document, load_manifest, score_profile
+from .public_holdout import MANIFEST, SCORE_VERSION, fetch_document, load_manifest, score_profile
 from .recoverable_draft_evaluation import (CountingTransport,
                                            _structural_evidence_errors, load_key)
 from .recoverable_solar_analysis import RecoverableSolarAnalyzer
@@ -61,6 +61,7 @@ def evaluate_case(case, document, analyzer, *, clock=time.monotonic,
             "complete", "needs_confirmation", "failed"):
         raise ValueError("invalid public evaluation outcome")
     row = {"id": case["id"], "outcome": outcome["outcome"],
+           "score_version": SCORE_VERSION,
            "error": (safe_code(outcome["error"]) if outcome.get("error") is not None
                      else None),
            "elapsed_ms": round((clock() - started) * 1000),
@@ -70,7 +71,8 @@ def evaluate_case(case, document, analyzer, *, clock=time.monotonic,
            "scored": False, "structural_evidence_errors": 0,
            "total_checks": sum(len(items) for items in case["checks"].values()),
            "matched_checks": 0, "wrong_evidence_checks": 0,
-           "missing_alias_checks": 0, "unassessed_values": 0}
+           "missing_alias_checks": 0, "indeterminate_evidence_checks": 0,
+           "unassessed_values": 0}
     if outcome["outcome"] == "failed":
         return row
     profile = outcome.get("profile")
@@ -87,6 +89,7 @@ def summarize(rows, *, planned):
     counts = Counter(row["outcome"] for row in rows)
     scored = [row for row in rows if row["scored"]]
     return {
+        "score_version": SCORE_VERSION,
         "planned_cases": planned, "evaluated_cases": len(rows),
         "complete_cases": counts["complete"],
         "needs_confirmation_cases": counts["needs_confirmation"],
@@ -95,6 +98,8 @@ def summarize(rows, *, planned):
         "matched_checks": sum(row["matched_checks"] for row in scored),
         "wrong_evidence_checks": sum(row["wrong_evidence_checks"] for row in scored),
         "missing_alias_checks": sum(row["missing_alias_checks"] for row in scored),
+        "indeterminate_evidence_checks": sum(
+            row["indeterminate_evidence_checks"] for row in scored),
         "unassessed_values": sum(row["unassessed_values"] for row in scored),
         "unscored_cases": len(rows) - len(scored),
         "max_provider_calls": max((row["provider_calls"] for row in rows), default=0),
@@ -127,7 +132,8 @@ def main():
     key = load_key(args.env_file)
     forbidden = (key, *(document for _, document in documents))
     args.output.mkdir(parents=True, exist_ok=False)
-    plan = {"model": "solar-pro4", "partition": args.partition,
+    plan = {"model": "solar-pro4", "score_version": SCORE_VERSION,
+            "partition": args.partition,
             "manifest_sha256": hashlib.sha256(args.manifest.read_bytes()).hexdigest(),
             "sources": [{"id": case["id"], "repo": case["repo"],
                          "commit": case["commit"], "path": case["path"],
