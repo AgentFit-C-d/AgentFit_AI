@@ -63,6 +63,13 @@ def _safe_section_candidate_counts(metrics):
 class _SafeTraceMixin:
     """Capture classifications in memory without retaining provider replies."""
 
+    def analyze_recoverable(self, document, document_id):
+        self.safe_calls = []
+        self.safe_repair_option_counts = {"fields": 0, "choices": 0}
+        self.safe_first_pass_error = None
+        self.safe_section_candidate_counts = None
+        return super().analyze_recoverable(document, document_id)
+
     def _observe_section_feature_candidates(self, metrics):
         self.safe_section_candidate_counts = _safe_section_candidate_counts(metrics)
 

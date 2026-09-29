@@ -22,6 +22,8 @@ class PublicHoldoutTests(unittest.TestCase):
         self.assertIsNone(analyzer.safe_section_candidate_counts)
         analyzer._observe_section_feature_candidates(valid)
         self.assertEqual(analyzer.safe_section_candidate_counts, valid)
+        self.assertEqual(analyzer.analyze_recoverable("", "next")["outcome"], "failed")
+        self.assertIsNone(analyzer.safe_section_candidate_counts)
 
         class FakeAnalyzer:
             safe_section_candidate_counts = valid
