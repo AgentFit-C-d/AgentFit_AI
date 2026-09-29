@@ -7,6 +7,7 @@
 - 전체 AI 테스트 505건 통과. 평가 CLI의 기존 예상 `--live required` 문구가 출력됐지만 종료 코드는 0이다. `pip check`에서 의존성 문제는 없었다.
 - 로컬 Uvicorn TCP에서 실제 합성 PDF를 보내 기존 분석 응답이 반환되는 것을 확인했다.
 - 독립 리뷰를 요청했으나 리뷰어의 셸 setup 오류로 파일을 읽지 못했다. 리뷰 완료로 간주하지 않는다.
+- 구현 커밋 `606caaf`를 `feature/pdf-worker-memory-limit` 브랜치에 push했다.
 
 ## 검증 범위와 남은 문제
 
