@@ -64,7 +64,7 @@ class FullCandidateGroundingTests(unittest.TestCase):
     def test_pinned_cases_preflight_and_line_endings(self):
         from agentfit_ai import full_candidate_grounding_evaluation as trial
 
-        original = trial.CASES_PATH.read_bytes()
+        original = trial.CASES_PATH.read_bytes().replace(b"\r\n", b"\n")
         self.assertEqual(len(trial.load_cases()), 4)
         with patch.object(Path, "read_bytes", return_value=original.replace(
                 b"\n", b"\r\n")):

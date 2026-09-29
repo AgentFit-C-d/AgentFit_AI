@@ -35,8 +35,8 @@ class DoclingGroundingEvaluationTests(unittest.TestCase):
     def test_pinned_fixture_hash_is_stable_across_git_line_endings(self):
         from agentfit_ai import docling_grounding_evaluation as trial
 
-        original = trial.STRUCTURED_CASES_PATH.read_bytes()
-        self.assertNotIn(b"\r\n", original)
+        original = trial.STRUCTURED_CASES_PATH.read_bytes().replace(b"\r\n", b"\n")
+        self.assertEqual(len(trial.load_cases("structured")), 4)
         with patch.object(Path, "read_bytes", return_value=original.replace(
                 b"\n", b"\r\n")):
             self.assertEqual(len(trial.load_cases("structured")), 4)

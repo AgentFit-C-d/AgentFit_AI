@@ -55,7 +55,9 @@ def _field_summaries(document, frozen, before, after, profile):
         values = {document[spans[item['id']]['start']:spans[item['id']]['end']]
                   for item in kept}
         oversized = sum(len(value) > MAX_TEXT_CODE_POINTS for value in values)
-        reason = ('oversized_value' if oversized else
+        reason = ('source_name_expression' if field == 'project_name' and len(values) > 1 and
+                  profile['data'][field] is not None else
+                  'oversized_value' if oversized else
                   'multiple_scalar_values' if field not in ARRAY_FIELDS and len(values) > 1 else
                   'array_limit' if field in ARRAY_FIELDS and len(values) > MAX_ARRAY_ITEMS else
                   'retained' if values else 'empty')

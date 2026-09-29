@@ -9,6 +9,7 @@ from .diagnostics import safe_code
 from .profile import ARRAY_FIELDS, FIELDS, MAX_ARRAY_ITEMS, MAX_TEXT_CODE_POINTS
 from .profile import validate_profile
 from .solar import AnalysisError, SolarAnalyzer, post_solar
+from .source_name_expressions import source_name_expression
 
 
 _FIELDS = frozenset(FIELDS)
@@ -308,7 +309,14 @@ def project_candidate_profile(document: str, document_id: str,
                 break
             unique.setdefault(value, []).append(span)
         else:
-            if ((field not in ARRAY_FIELDS and len(unique) > 1) or
+            if field == 'project_name' and len(unique) > 1:
+                expression = source_name_expression(document, entries)
+                # Preserve the written expression for confirmation, not automatic resolution.
+                unresolved.append(field)
+                if expression is not None:
+                    data[field], span = expression
+                    evidence[field] = [span]
+            elif ((field not in ARRAY_FIELDS and len(unique) > 1) or
                     (field in ARRAY_FIELDS and len(unique) > MAX_ARRAY_ITEMS)):
                 unresolved.append(field)
             elif unique:
