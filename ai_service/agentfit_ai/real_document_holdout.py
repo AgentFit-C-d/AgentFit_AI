@@ -12,7 +12,8 @@ from .docling_structured_trial import convert_structured_pdf_bytes
 from .false_complete_evaluation import write_safe_json
 from .langextract_solar_trial import load_key
 from .profile import FIELDS
-from .solar import AnalysisError, SolarAnalyzer, post_solar_inline
+from .solar import (AnalysisError, SolarAnalyzer, post_solar_inline,
+                    safe_evidence_failure)
 
 
 ALLOWED_HASHES = {
@@ -225,6 +226,9 @@ def evaluate_cases(cases: list[PreparedCase], key: str,
         except AnalysisError as error:
             row.update(outcome="failed", error=safe_code(error.code),
                        diagnostic=safe_trace(error.diagnostics))
+            evidence_failure = safe_evidence_failure(error)
+            if evidence_failure is not None:
+                row["evidence_failure"] = evidence_failure
         except Exception:
             row.update(outcome="failed", error="TRIAL_FAILURE")
         rows.append(row)

@@ -122,6 +122,9 @@ class RealDocumentHoldoutTests(unittest.TestCase):
 
         private = "private-source-fragment"
         error = AnalysisError("INVALID_EVIDENCE")
+        error.field = "features"
+        error.detail = {"reason": "QUOTE_NOT_FOUND", "itemIndex": 1,
+                        "quote": private}
         error.diagnostics = {"elapsed_ms": 42, "calls": [{
             "stage": "repair", "outcome": "validation_failed",
             "validation_error": {"detail": private}}]}
@@ -134,6 +137,8 @@ class RealDocumentHoldoutTests(unittest.TestCase):
         result = evaluate_cases([case], "test-key",
                                 analyzer_factory=lambda _: FailingAnalyzer())
         self.assertEqual(result["failed"], 1)
+        self.assertEqual(result["rows"][0]["evidence_failure"], {
+            "field": "features", "reason": "QUOTE_NOT_FOUND", "itemIndex": 1})
         self.assertNotIn(private, json.dumps(result))
 
 
