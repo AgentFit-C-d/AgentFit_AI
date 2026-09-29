@@ -4,5 +4,6 @@
 - 양성 정답의 최초 미일치를 grounded/classified/reviewed/projected로 구분한다. 실행되지 않은 단계는 null·unobserved다. expect_null은 최종 Profile에서만 채점한다.
 - 모델 호출 실패 전에 도달한 단계가 결과에 보존된다. 확인 필요 제안의 실패 ID는 `suggestion_failed_check_ids`로 자동 완료 점수와 별도로 기록한다. 원문·정답 문자열·후보 값은 진단 결과에 포함하지 않는다.
 - 전체 로컬 테스트: 822개 실행, 6개 건너뜀, 나머지 통과. diff 공백 검사 통과.
+- 코드 커밋 `8977ed8` push와 Linux CI 실행 36613246144 성공을 확인했다.
 - 승인된 H02를 source-occurrences·stage-diagnostics 모드로 평가 중이다. 실행 결과를 기다리는 중이며 정확도 개선을 주장하지 않는다.
 - 진단의 양성 정답 검사는 기존 contains_any 규칙이다. 값의 포함 여부가 맞아도 문서 전체의 누락·잘못된 추가 항목·오확정·근거 의미가 모두 맞음을 뜻하지 않는다.
