@@ -62,6 +62,40 @@ class DefaultServiceQualityBaselineTests(unittest.TestCase):
                "provider_calls": 2, "elapsed_ms": 10, "error": None}
         self.assertFalse(aggregate([row], planned=1)["gate"]["all_complete_cases_correct"])
 
+    def test_timeout_identifies_stage_without_leaking_diagnostic_payload(self):
+        class Analyzer:
+            def __init__(self, key, **kwargs):
+                pass
+
+            def analyze(self, document, case_id):
+                error = AnalysisError("PROVIDER_TIMEOUT")
+                error.diagnostics = {"calls": [
+                    {"stage": "core", "outcome": "validated", "elapsed_ms": 8000,
+                     "provider_elapsed_ms": 7900, "raw": "private source"},
+                    {"stage": "semantic_review", "outcome": "failed", "elapsed_ms": 32000,
+                     "provider_elapsed_ms": 32000, "error": "PROVIDER_TIMEOUT",
+                     "validation_errors": [{"detail": "private source"}]},
+                ]}
+                raise error
+
+        row = run_case({"id": "CASE-3", "kind": "full", "document": "private source",
+                        "gold": {}}, "private-key", analyzer_factory=Analyzer,
+                       provider=lambda *_: b"")
+        self.assertEqual([call["stage"] for call in row["call_timings"]],
+                         ["core", "semantic_review"])
+        self.assertEqual(aggregate([row], planned=1)["timeout_stages"],
+                         {"semantic_review": 1})
+        self.assertNotIn("private source", json.dumps(row))
+
+    def test_untrusted_stage_and_outcome_are_not_saved(self):
+        from agentfit_ai.default_service_quality_baseline import project_call_timings
+        calls = project_call_timings({"calls": [{
+            "stage": "private source", "outcome": "private response",
+            "elapsed_ms": -1, "provider_elapsed_ms": "private source"}]})
+        self.assertEqual(calls, [])
+        self.assertEqual(project_call_timings({"calls": [{
+            "stage": {"private": "source"}, "outcome": ["private response"]}]}), [])
+
     def test_report_rejects_source_and_secret(self):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "new"

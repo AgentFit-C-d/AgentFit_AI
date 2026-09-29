@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import statistics
 import time
 from collections import Counter
 from pathlib import Path
@@ -20,6 +21,31 @@ CODE_PATHS = (
     "ai_service/agentfit_ai/default_service_quality_baseline.py",
 )
 FORBIDDEN_KEYS = frozenset({"document", "raw", "response", "api_key", "profile", "gold"})
+CALL_STAGES = frozenset({"core", "features", "repair", "semantic_review",
+                         "semantic_repair", "semantic_recheck"})
+CALL_OUTCOMES = frozenset({"started", "response_received", "validated",
+                           "validation_failed", "semantic_failed", "failed"})
+
+
+def project_call_timings(diagnostic):
+    """Return only fixed vocabulary and nonnegative counters from analyzer diagnostics."""
+    if type(diagnostic) is not dict or type(diagnostic.get("calls")) is not list:
+        return []
+    calls = []
+    for call in diagnostic["calls"][:6]:
+        if type(call) is not dict:
+            continue
+        stage, outcome = call.get("stage"), call.get("outcome")
+        if (type(stage) is not str or type(outcome) is not str
+                or stage not in CALL_STAGES or outcome not in CALL_OUTCOMES):
+            continue
+        projected = {"stage": stage, "outcome": outcome}
+        for key in ("elapsed_ms", "provider_elapsed_ms", "request_bytes",
+                    "response_bytes", "prompt_tokens", "completion_tokens"):
+            value = call.get(key)
+            projected[key] = value if type(value) is int and value >= 0 else None
+        calls.append(projected)
+    return calls
 
 
 def run_case(case, key, *, analyzer_factory=SolarAnalyzer, provider=post_solar_inline,
@@ -36,7 +62,8 @@ def run_case(case, key, *, analyzer_factory=SolarAnalyzer, provider=post_solar_i
                 "error": safe_code(error.code), "provider_calls": transport.calls or getattr(error, "provider_calls", 0),
                 "elapsed_ms": round((clock() - start) * 1000),
                 "matched": None, "gold_total": 10 if case["kind"] == "full" else len(case["gold"]),
-                "false_confirmations": None, "mismatch_fields": [], "passed": False}
+                "false_confirmations": None, "mismatch_fields": [], "passed": False,
+                "call_timings": project_call_timings(getattr(error, "diagnostics", None))}
     score = (full_score(result.profile, case["gold"]) if case["kind"] == "full"
              else focus_score(case, result.profile))
     return {"id": case["id"], "kind": case["kind"], "outcome": "complete",
@@ -44,12 +71,25 @@ def run_case(case, key, *, analyzer_factory=SolarAnalyzer, provider=post_solar_i
             "elapsed_ms": round((clock() - start) * 1000),
             "matched": score["matched"], "gold_total": score["total"],
             "false_confirmations": score["false_confirmations"],
-            "mismatch_fields": score.get("mismatch_fields", []), "passed": score["passed"]}
+            "mismatch_fields": score.get("mismatch_fields", []), "passed": score["passed"],
+            "call_timings": project_call_timings(getattr(result, "diagnostics", None))}
 
 
 def aggregate(rows, *, planned=20):
     outcomes = Counter(row["outcome"] for row in rows)
     completed = [row for row in rows if row["outcome"] == "complete"]
+    by_stage = {stage: [] for stage in CALL_STAGES}
+    timeout_stages = Counter()
+    for row in rows:
+        calls = row.get("call_timings", [])
+        for call in calls:
+            if call["elapsed_ms"] is not None:
+                by_stage[call["stage"]].append(call["elapsed_ms"])
+        if row.get("error") == "PROVIDER_TIMEOUT" and calls:
+            timeout_stages[calls[-1]["stage"]] += 1
+    stage_latency_ms = {stage: {"calls": len(times),
+                                 "median": statistics.median(times), "max": max(times)}
+                        for stage, times in sorted(by_stage.items()) if times}
     gate = {
         "all_cases_accounted": len(rows) == planned,
         "zero_failed_cases": outcomes["failed"] == 0,
@@ -68,6 +108,8 @@ def aggregate(rows, *, planned=20):
             "max_provider_calls": max((row["provider_calls"] for row in rows), default=0),
             "max_elapsed_ms": max((row["elapsed_ms"] for row in rows), default=0),
             "errors": dict(Counter(row["error"] for row in rows if row["error"])),
+            "timeout_stages": dict(sorted(timeout_stages.items())),
+            "stage_latency_ms": stage_latency_ms,
             "gate": gate, "passed": bool(rows) and all(gate.values()),
             "limitation": "Synthetic reused cases; mirrors Worker analyzer settings, not the subprocess or HTTP path. Full-case non-null mismatches are counted as false confirmations; semantic evidence is not independently adjudicated. This does not establish production readiness."}
 
