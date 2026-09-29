@@ -11,6 +11,8 @@
 - 선행 실험 종료: GLM max 스트리밍 PID2192/셸14136 exit1, 결과 candidate-rejection-stream-h02-20260930-v1.json finished/code_unchanged=true. HTTP200/최초 이벤트 및370,483ms/368,410ms까지 연결 유지 확인. 두 응답 모두 length/content_bytes=0이라 의미 점수 없음. 토큰 usage는 없어 정확한 추론 토큰 수는 미측정. 기본 제품 어댑터 변경 없음. 셸76468/79888/14136은 모두 종료됐으며 재시작 금지.
 - v3 종료: 수정0e51a48 push,CI36645812354 success. 셸67871/PID35228 exit0,finished/code_unchanged=true。두 호출8,840ms/5,194ms,전체14,040ms. 대표29개,그룹 배정35/41·미대표/미포함6개. 지정4/6→5/6,backend C03 실패 유지. 다른9필드/관측 labels 동일,needs_confirmation.
 - 원문 대조:29개 그룹의41후보 전체를 로컬에서 읽었다.3개 다중 그룹은 반복/별칭/동작 문맥과 맞았으나 미대표C142/C147/C165/C168의 구체 동작과 대표C129의 기대효과 등 의미 문제가 남는다. 앞부분 중첩 대표와 뒤쪽 미포함의 위치 편향은 가설이며 추가 진단 전 확정하지 않는다. validation.md에 판단·제한·후속 우선순위 기록.
-- 다음: 최종 평가 문서·plan·ledger 기록을 commit/push하여Task3 마무리. 이후 고정 입력의 후보 순서 진단 또는 근거 있는 의미 오류 보완으로 이어간다. 종료된 모든 세션은 재시작하지 않는다. SDD workspace는 .superpowers/sdd/plan-candidate-feature-curation이며 다른 plan 디렉터리는 보존한다. 이번 턴은 재현 진단·원인 확인·수정·실제 개선 증거로 progress다.
+- Task3 완료: 평가 문서28bfb48 commit/push,task-done의 a774923..HEAD diff --check exit0. 코드 전체 테스트899/6skip과 정확한 구현CI는 위와 같다. 전체 목표는 미완료이며 같은worktree를 재사용한다. 이전SDD ledger는 장기 목표 재개 근거로 보존한다.
+- 순서 진단 종료: 셸28849/PID15464 exit0,finished/code_unchanged=true,29,763ms。결과 candidate-feature-curation-order-h02-20260930-v1.json. 입력 순서만 역순일 때9대표/최초 미대표0/검토 미포함41/지정5/6. C009에22개 독립 동작이 과도하게 묶였고, 검토는 대표9개 자신까지 미포함 지목. 후보 순서 민감성 신호이며 단일 비교의 인과/반복 효과는 미확인. 역순을 제품에 적용하지 않는다.
+- 다음: 대표 자신/미대표의 결정 가능한 상태는 서버가 계산하고 모델은 서로 다른 대표-구성원 포함 관계만 판단하는 SDD 보완을 설계한다. 원래v3/역순 완료 분할을 고정하여 검토만 비교한다. 아직 새 구조의 코드/브랜치 없음. 종료된 모든 세션은 재시작하지 않는다. 이번 턴은 진단·구조적 실패 수정·실측 개선과 새 검토 모순 확인으로 progress다.
 - 전체 남은 관문: 대표 구성 외의 의미 오류/원문 누락, 여러 문서 반복, HTTP/Spring 확인 및 저장 연동. 기능 완료와 서비스 목표 완료를 구분한다.
 - 보호: 다른 worktree의 사용자 소유 work/harness/service-readiness는 수정하지 않는다.
