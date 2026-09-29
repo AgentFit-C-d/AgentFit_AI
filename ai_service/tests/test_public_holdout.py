@@ -12,6 +12,47 @@ from agentfit_ai.profile import FIELDS
 
 
 class PublicHoldoutTests(unittest.TestCase):
+    def test_section_extraction_cli_requires_review_and_records_eighteen_call_budget(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "section-extraction"
+
+            class FakeSelectorAnalyzer:
+                def __init__(self, *args, **kwargs):
+                    self.safe_calls = []
+                    assert kwargs["section_feature_extraction"] is True
+                    assert kwargs["section_feature_review"] is True
+                    assert kwargs["analysis_timeout_seconds"] == 1200
+
+                def analyze_recoverable(self, document, document_id):
+                    return {"outcome": "failed", "error": "INVALID_EVIDENCE"}
+
+            flags = ["--source-selector", "--grouped-review", "--group-review-8k",
+                     "--accuracy-first", "--extended-review-window",
+                     "--section-feature-review", "--section-feature-extraction"]
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(output), *flags]), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_manifest",
+                       return_value=[self.case]), \
+                 patch("agentfit_ai.public_holdout_evaluation.fetch_document",
+                       return_value=self.document), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_key",
+                       return_value="synthetic-key"), \
+                 patch("agentfit_ai.public_holdout_evaluation.SafeTraceSourceSelectorAnalyzer",
+                       FakeSelectorAnalyzer):
+                self.assertEqual(main(), 0)
+            plan = json.loads((output / "plan.json").read_text(encoding="utf-8"))
+            self.assertTrue(plan["section_feature_extraction"])
+            self.assertEqual(plan["max_provider_calls"], 18)
+            self.assertEqual(plan["analysis_timeout_seconds"], 1200)
+            self.assertEqual(plan["feature_section_extraction_max_tokens"], 4096)
+            self.assertNotIn("synthetic-key", json.dumps(plan))
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(Path(temp) / "invalid"),
+                                                *flags[:-2],
+                                                "--section-feature-extraction"]):
+                with self.assertRaises(SystemExit):
+                    main()
+
     def test_section_review_cli_requires_long_eight_k_grouped_mode(self):
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / "sections"

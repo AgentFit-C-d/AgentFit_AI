@@ -186,6 +186,7 @@ def main():
     parser.add_argument("--grouped-review", action="store_true")
     parser.add_argument("--group-review-8k", action="store_true")
     parser.add_argument("--section-feature-review", action="store_true")
+    parser.add_argument("--section-feature-extraction", action="store_true")
     parser.add_argument("--compact-review-effort", choices=("medium", "low"),
                         default="medium")
     args = parser.parse_args()
@@ -210,6 +211,8 @@ def main():
             args.source_selector and args.grouped_review and args.group_review_8k and
             args.accuracy_first and args.extended_review_window):
         parser.error("section feature review requires long 8k grouped source selector")
+    if args.section_feature_extraction and not args.section_feature_review:
+        parser.error("section feature extraction requires section feature review")
     if args.compact_review_effort != "medium" and not args.compact_review:
         parser.error("compact review effort requires compact review mode")
     if args.extended_review_window and (not args.source_selector or
@@ -243,12 +246,17 @@ def main():
             "grouped_review": args.grouped_review,
             "group_review_8k": args.group_review_8k,
             "section_feature_review": args.section_feature_review,
-            "max_provider_calls": 12 if args.section_feature_review else 6,
+            "section_feature_extraction": args.section_feature_extraction,
+            "max_provider_calls": (18 if args.section_feature_extraction else
+                                   12 if args.section_feature_review else 6),
             "feature_section_max_tokens": 8192 if args.section_feature_review else None,
+            "feature_section_extraction_max_tokens": (
+                4096 if args.section_feature_extraction else None),
             "compact_review_effort": args.compact_review_effort,
             "accuracy_first": args.accuracy_first,
             "extended_review_window": args.extended_review_window,
-            "analysis_timeout_seconds": (600 if args.extended_review_window else
+            "analysis_timeout_seconds": (1200 if args.section_feature_extraction else
+                                         600 if args.extended_review_window else
                                          300 if args.accuracy_first else 40),
             "field_call_timeout_seconds": 120 if args.accuracy_first else 40,
             "review_max_tokens": (8192 if args.group_review_8k else
@@ -266,7 +274,8 @@ def main():
         analyzer = analyzer_type(
             key, transport=transport, model=args.source_selector_model, evidence_contract=True,
             semantic_review=True,
-            analysis_timeout_seconds=(600 if args.extended_review_window else
+            analysis_timeout_seconds=(1200 if args.section_feature_extraction else
+                                      600 if args.extended_review_window else
                                       300 if args.accuracy_first else 40),
             field_call_timeout_seconds=120 if args.accuracy_first else 40,
             review_max_tokens=(8192 if args.group_review_8k else
@@ -279,6 +288,7 @@ def main():
                 "compact_review_effort": args.compact_review_effort,
                 "grouped_review": args.grouped_review,
                 "section_feature_review": args.section_feature_review,
+                "section_feature_extraction": args.section_feature_extraction,
                 "group_review_max_tokens": 8192 if args.group_review_8k else 4096}
                if args.source_selector else {}))
         row = evaluate_case(case, document, analyzer,
