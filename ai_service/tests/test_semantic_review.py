@@ -52,6 +52,23 @@ class SemanticPipelineTests(unittest.TestCase):
         analyzer=SolarAnalyzer("synthetic-key", evidence_contract=False,transport=transport,**kwargs)
         return analyzer,transport
 
+    def test_opt_in_review_input_labels_existing_array_items(self):
+        profile=cited_to_profile("Alpha registration","doc",dict(core(),**features()))
+        analyzer=SolarAnalyzer("synthetic-key",evidence_contract=False,
+                               transport=Mock())
+        analyzer._send_payload=Mock(return_value=(verdict(),"solar-pro4",0,0))
+        analyzer._request_review("Alpha registration",profile)
+        baseline=analyzer._send_payload.call_args.args[0]
+        analyzer._request_review("Alpha registration",profile,indexed_draft=True)
+        indexed=analyzer._send_payload.call_args.args[0]
+        base_text=baseline["messages"][1]["content"]
+        indexed_text=indexed["messages"][1]["content"]
+        self.assertNotIn("Existing array item index guide",base_text)
+        self.assertIn("Existing array item index guide",indexed_text)
+        self.assertIn('"itemIndex": 0',indexed_text)
+        self.assertEqual(baseline["response_format"],indexed["response_format"])
+        self.assertEqual(baseline["reasoning_effort"],indexed["reasoning_effort"])
+
     def test_default_requires_review_and_sums_usage(self):
         analyzer,transport=self.run_case([core(),features(),verdict()])
         result=analyzer.analyze("Alpha registration","doc")
