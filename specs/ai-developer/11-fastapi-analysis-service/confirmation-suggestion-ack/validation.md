@@ -13,3 +13,5 @@
 ## 제한
 
 AI 내부 계약의 질문 누락은 막았지만 Spring과 Frontend가 질문 집합·초안 버전·사용자 확인을 원자적으로 저장하고 재조회하는지는 확인되지 않았다. 의미 정확도와 독립 실제 문서 검증도 미달이다. 복구 모드는 운영 기본값으로 활성화하지 않는다.
+
+프로젝트 가상환경의 전체 **583건 테스트**와 staged diff check가 통과했다. 코드 커밋 `5a655f8`을 `feature/confirmation-suggestion-ack`에 push했고 [AI service Linux checks](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36525559918)가 성공했다.
