@@ -22,6 +22,7 @@
 ## 자동 테스트
 
 - `python -m unittest discover -s tests -q`: 807건 실행, 6건 건너뜀, 나머지 통과 (Windows 로컬 가상환경).
+- GitHub Actions `AI service Linux checks` 실행 36606393845: 성공. Linux 테스트와 PDF 워커 메모리 제한 검사가 통과했다.
 - 정확한 인용 위치, 모호한 반복 인용 보류, 전체 ID 판정, 충돌 및 기능 수 제한, 검토 누락, 실패 단계 표시는 단위 테스트로 확인했다.
 
 ## 승격 판단
