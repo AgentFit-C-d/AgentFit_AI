@@ -11,12 +11,13 @@ def ground(document, extractions):
     return module.ground_anchored_extractions(document, extractions)
 
 
-def candidate(quote, anchor=None, interval=None):
+def candidate(quote, anchor=None, interval=None, alignment_status=None):
     attributes = {"anchor": anchor} if anchor is not None else None
     char_interval = (SimpleNamespace(start_pos=interval[0], end_pos=interval[1])
                      if interval is not None else None)
     return SimpleNamespace(extraction_class="candidate", extraction_text=quote,
-                           attributes=attributes, char_interval=char_interval)
+                           attributes=attributes, char_interval=char_interval,
+                           alignment_status=alignment_status)
 
 
 class AnchoredGroundingTests(unittest.TestCase):
@@ -49,6 +50,21 @@ class AnchoredGroundingTests(unittest.TestCase):
         document = "후보 DB는 PinoDB다. 운영 DB는 PinoDB로 확정했다."
         row, = ground(document, [candidate(
             "PinoDB", "운영 DB는 PinoDB로 확정했다.", (7, 13))])
+        self.assertEqual(row["status"], "review")
+
+    def test_partial_library_interval_does_not_override_exact_anchor(self):
+        document = "실시간 알림을 제공한다."
+        row, = ground(document, [candidate(
+            "실시간 알림", "실시간 알림을 제공한다.", (0, 3),
+            SimpleNamespace(value="match_lesser"))])
+        self.assertEqual((row["status"], row["start"], row["end"]),
+                         ("exact", 0, 6))
+
+    def test_exact_library_conflict_still_blocks_anchor(self):
+        document = "후보 DB는 PinoDB다. 운영 DB는 PinoDB로 확정했다."
+        row, = ground(document, [candidate(
+            "PinoDB", "운영 DB는 PinoDB로 확정했다.", (7, 13),
+            SimpleNamespace(value="match_exact"))])
         self.assertEqual(row["status"], "review")
 
     def test_invalid_anchor_blocks_unique_quote_fallback(self):

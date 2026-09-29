@@ -51,7 +51,10 @@ def ground_anchored_extractions(document: str, extractions: list) -> tuple[dict,
             continue
         end = start + len(quote)
         interval = getattr(item, "char_interval", None)
-        if interval is not None:
+        partial_match = (reason == "anchor" and
+                         getattr(getattr(item, "alignment_status", None),
+                                 "value", None) == "match_lesser")
+        if interval is not None and not partial_match:
             library_start = getattr(interval, "start_pos", None)
             library_end = getattr(interval, "end_pos", None)
             if (type(library_start) is not int or type(library_end) is not int or

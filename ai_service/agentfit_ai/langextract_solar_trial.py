@@ -70,7 +70,10 @@ def score_case(case: dict, extractions) -> dict:
                                validate_alignment(document, quotes, numbered))
     aligned = ground_anchored_extractions(document, items)
     source_recovered_count = sum(
-        row["status"] == "exact" and item.char_interval is None
+        row["status"] == "exact" and (
+            item.char_interval is None or
+            getattr(getattr(item, "alignment_status", None), "value", None)
+            == "match_lesser")
         for row, item in zip(aligned, items))
     located = []
     for quote, item in zip(quotes, items):
@@ -108,8 +111,8 @@ def score_case(case: dict, extractions) -> dict:
             "duplicate_span_count": duplicate_span_count}
 
 
-def run_case(case: dict, api_key: str, *, transport=post_solar,
-             telemetry=None) -> dict:
+def extract_candidates(document: str, api_key: str, *, transport=post_solar,
+                       telemetry=None):
     import langextract as lx
     from langextract.core.base_model import BaseLanguageModel
     from langextract.core.types import ScoredOutput
@@ -136,14 +139,14 @@ def run_case(case: dict, api_key: str, *, transport=post_solar,
                                     output=json.dumps(reply, ensure_ascii=False))]
 
     example = lx.data.ExampleData(
-        text="후보 DB는 PinoDB다. 운영 DB는 PinoDB로 확정했다.",
+        text="Alpha Y is proposed. Alpha Y is confirmed.",
         extractions=[
-            lx.data.Extraction("candidate", "PinoDB",
-                               attributes={"anchor": "후보 DB는 PinoDB다."}),
-            lx.data.Extraction("candidate", "PinoDB",
-                               attributes={"anchor": "운영 DB는 PinoDB로 확정했다."})])
+            lx.data.Extraction("candidate", "Y",
+                               attributes={"anchor": "Alpha Y is proposed."}),
+            lx.data.Extraction("candidate", "Y",
+                               attributes={"anchor": "Alpha Y is confirmed."})])
     result = lx.extract(
-        text_or_documents=case["document"],
+        text_or_documents=document,
         prompt_description=(
             "Extract each concrete product capability or named technology phrase "
             "in every mention. Include negative, tentative, and repeated mentions "
@@ -154,10 +157,49 @@ def run_case(case: dict, api_key: str, *, transport=post_solar,
         use_schema_constraints=False, fence_output=False,
         max_char_buffer=4000, batch_length=1, max_workers=1,
         extraction_passes=1, show_progress=False)
-    return score_case(case, result.extractions)
+    return result.extractions
 
 
-def _run_safe_case(case: dict, key: str) -> dict:
+def run_case(case: dict, api_key: str, *, transport=post_solar,
+             telemetry=None) -> dict:
+    return score_case(case, extract_candidates(
+        case["document"], api_key, transport=transport, telemetry=telemetry))
+
+
+def _safe_extraction(document: str, key: str) -> dict:
+    started = time.monotonic()
+    telemetry = {}
+    try:
+        entry = {"extractions": extract_candidates(document, key,
+                                                    telemetry=telemetry)}
+    except AnalysisError as error:
+        entry = {"error": safe_code(error.code)}
+    except Exception:
+        entry = {"error": "TRIAL_FAILURE"}
+    entry["elapsed_ms"] = round((time.monotonic() - started) * 1000)
+    entry["telemetry"] = telemetry
+    return entry
+
+
+def _run_safe_case(case: dict, key: str, *, extraction_cache=None) -> dict:
+    if extraction_cache is not None:
+        document = case["document"]
+        if document not in extraction_cache:
+            extraction_cache[document] = _safe_extraction(document, key)
+        entry = extraction_cache[document]
+        if "error" in entry:
+            result = {"case_id": case["id"], "outcome": "failed",
+                      "error": entry["error"]}
+        else:
+            try:
+                result = score_case(case, entry["extractions"])
+                result["outcome"] = "completed"
+            except Exception:
+                result = {"case_id": case["id"], "outcome": "failed",
+                          "error": "TRIAL_FAILURE"}
+        result["elapsed_ms"] = entry["elapsed_ms"]
+        result.update(entry["telemetry"])
+        return result
     started = time.monotonic()
     telemetry = {}
     try:
@@ -207,8 +249,9 @@ def main() -> int:
         result = {"version": data["version"], "outcome": "running",
                   "total": len(targets), "rows": []}
         write_safe_json(args.output, result, forbidden_strings=forbidden)
+        extraction_cache = {}
         for case in targets:
-            row = _run_safe_case(case, key)
+            row = _run_safe_case(case, key, extraction_cache=extraction_cache)
             result["rows"].append(row)
             write_safe_json(args.output, result, forbidden_strings=forbidden)
             print(json.dumps(row), flush=True)
@@ -225,6 +268,10 @@ def main() -> int:
                                              for row in result["rows"])
         result["source_recovered"] = sum(row.get("source_recovered_count", 0)
                                          for row in result["rows"])
+        result["provider_calls"] = len(extraction_cache)
+        result["unique_extracted_candidates"] = sum(
+            len(entry["extractions"]) for entry in extraction_cache.values()
+            if "extractions" in entry)
         result["outcome"] = "completed" if result["failed"] == 0 else "partial"
         write_safe_json(args.output, result, forbidden_strings=forbidden)
         return 0 if result["failed"] == 0 else 1
