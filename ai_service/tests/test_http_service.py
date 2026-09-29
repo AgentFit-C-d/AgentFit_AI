@@ -2,12 +2,16 @@
 
 import unittest
 import asyncio
+import socket
+import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
 from threading import Event
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 from httpx import ASGITransport, AsyncClient
+import uvicorn
 
 from agentfit_ai.http_service import create_app
 from agentfit_ai.profile import FIELDS, validate_profile
@@ -359,6 +363,184 @@ class InternalAnalysisHttpTests(unittest.TestCase):
         busy, accepted = asyncio.run(run())
         self.assertEqual(busy[0]["status"], 503)
         self.assertEqual(accepted[0]["status"], 200)
+
+    def test_default_analysis_uses_request_worker(self):
+        async def worker(document, document_id, key, deadline):
+            self.assertEqual((document, document_id, key),
+                             ("AgentFit", "doc_1", "test-key"))
+            self.assertGreater(deadline, asyncio.get_running_loop().time())
+            return {"error": "PROVIDER_TIMEOUT"}
+
+        with patch.dict("os.environ", {"UPSTAGE_API_KEY": "test-key"}), patch(
+                "agentfit_ai.http_service.run_analysis_process", side_effect=worker):
+            client = TestClient(create_app(internal_token="local-secret"))
+            response = client.post("/internal/v1/analyze", content=b"AgentFit",
+                                   headers={"Authorization": "Bearer local-secret",
+                                            "X-Document-Id": "doc_1", "X-Request-Id": "req_1",
+                                            "X-Document-Kind": "TEXT",
+                                            "Content-Type": "text/plain"})
+        self.assertEqual(response.status_code, 502)
+        self.assertEqual(response.json(), {"error": "PROVIDER_TIMEOUT"})
+
+    def test_default_worker_deadline_returns_504_and_releases_slot(self):
+        async def worker(*_):
+            await asyncio.sleep(10)
+
+        with patch.dict("os.environ", {"UPSTAGE_API_KEY": "test-key"}), patch(
+                "agentfit_ai.http_service.run_analysis_process", side_effect=worker):
+            client = TestClient(create_app(internal_token="local-secret", max_inflight=1,
+                                           request_timeout_seconds=1))
+            headers = {"Authorization": "Bearer local-secret", "X-Document-Id": "doc_1",
+                       "X-Request-Id": "req_1", "X-Document-Kind": "TEXT",
+                       "Content-Type": "text/plain"}
+            first = client.post("/internal/v1/analyze", content=b"AgentFit", headers=headers)
+            second = client.post("/internal/v1/analyze", content=b"AgentFit", headers=headers)
+        self.assertEqual(first.status_code, 504)
+        self.assertEqual(first.json(), {"error": "ANALYSIS_DEADLINE_EXCEEDED"})
+        self.assertEqual(second.status_code, 504)
+
+    def test_pdf_is_not_started_when_less_than_its_worker_limit_remains(self):
+        client = TestClient(create_app(internal_token="local-secret",
+                                       analyze=lambda *_: None,
+                                       request_timeout_seconds=1))
+        with patch("agentfit_ai.http_service.extract_document") as extract:
+            response = client.post("/internal/v1/analyze", content=sample_pdf(["AgentFit"]),
+                                   headers={"Authorization": "Bearer local-secret",
+                                            "X-Document-Id": "doc_1", "X-Request-Id": "req_1",
+                                            "X-Document-Kind": "PDF",
+                                            "Content-Type": "application/pdf"})
+        self.assertEqual(response.status_code, 504)
+        self.assertEqual(response.json(), {"error": "ANALYSIS_DEADLINE_EXCEEDED"})
+        extract.assert_not_called()
+
+    def test_disconnected_default_request_cancels_worker_and_releases_slot(self):
+        started = asyncio.Event()
+        stopped = asyncio.Event()
+        disconnected = asyncio.Event()
+
+        async def worker(*_):
+            started.set()
+            try:
+                await asyncio.sleep(10)
+            finally:
+                stopped.set()
+
+        app = create_app(internal_token="local-secret", max_inflight=1)
+
+        async def run():
+            scope = {"type": "http", "asgi": {"version": "3.0"},
+                     "http_version": "1.1", "method": "POST", "scheme": "http",
+                     "path": "/internal/v1/analyze", "raw_path": b"/internal/v1/analyze",
+                     "query_string": b"", "client": ("127.0.0.1", 10000),
+                     "server": ("127.0.0.1", 8000),
+                     "headers": [(b"authorization", b"Bearer local-secret"),
+                                 (b"x-document-id", b"doc_1"),
+                                 (b"x-request-id", b"req_1"),
+                                 (b"x-document-kind", b"TEXT"),
+                                 (b"content-type", b"text/plain")]}
+            sent = []
+            received = 0
+
+            async def receive():
+                nonlocal received
+                received += 1
+                if received == 1:
+                    return {"type": "http.request", "body": b"AgentFit", "more_body": False}
+                await disconnected.wait()
+                return {"type": "http.disconnect"}
+
+            async def send(message):
+                sent.append(message)
+
+            task = asyncio.create_task(app(scope, receive, send))
+            await asyncio.wait_for(started.wait(), timeout=2)
+            disconnected.set()
+            await asyncio.wait_for(task, timeout=2)
+            self.assertTrue(stopped.is_set())
+            self.assertEqual(sent, [])
+
+        with patch.dict("os.environ", {"UPSTAGE_API_KEY": "test-key"}), patch(
+                "agentfit_ai.http_service.run_analysis_process", side_effect=worker):
+            asyncio.run(run())
+
+    def test_already_disconnected_request_does_not_start_worker(self):
+        called = []
+
+        async def worker(*_):
+            called.append(True)
+            return {"error": "PROVIDER_TIMEOUT"}
+
+        app = create_app(internal_token="local-secret", max_inflight=1)
+
+        async def run():
+            scope = {"type": "http", "asgi": {"version": "3.0"},
+                     "http_version": "1.1", "method": "POST", "scheme": "http",
+                     "path": "/internal/v1/analyze", "raw_path": b"/internal/v1/analyze",
+                     "query_string": b"", "client": ("127.0.0.1", 10000),
+                     "server": ("127.0.0.1", 8000),
+                     "headers": [(b"authorization", b"Bearer local-secret"),
+                                 (b"x-document-id", b"doc_1"),
+                                 (b"x-request-id", b"req_1"),
+                                 (b"x-document-kind", b"TEXT"),
+                                 (b"content-type", b"text/plain")]}
+            received = 0
+            sent = []
+
+            async def receive():
+                nonlocal received
+                received += 1
+                return ({"type": "http.request", "body": b"AgentFit", "more_body": False}
+                        if received == 1 else {"type": "http.disconnect"})
+
+            async def send(message):
+                sent.append(message)
+
+            await app(scope, receive, send)
+            return sent
+
+        with patch.dict("os.environ", {"UPSTAGE_API_KEY": "test-key"}), patch(
+                "agentfit_ai.http_service.run_analysis_process", side_effect=worker):
+            sent = asyncio.run(run())
+        self.assertEqual(called, [])
+        self.assertEqual(sent, [])
+
+    def test_tcp_disconnect_cancels_running_analysis(self):
+        started = Event()
+        cancelled = Event()
+
+        async def worker(*_):
+            started.set()
+            try:
+                await asyncio.sleep(10)
+            finally:
+                cancelled.set()
+
+        app = create_app(internal_token="local-secret", max_inflight=1)
+        server = uvicorn.Server(uvicorn.Config(
+            app, host="127.0.0.1", port=0, access_log=False, log_level="error"))
+        thread = threading.Thread(target=server.run, daemon=True)
+        with patch.dict("os.environ", {"UPSTAGE_API_KEY": "test-key"}), patch(
+                "agentfit_ai.http_service.run_analysis_process", side_effect=worker):
+            thread.start()
+            try:
+                for _ in range(100):
+                    if server.started and server.servers:
+                        break
+                    time.sleep(.05)
+                self.assertTrue(server.started)
+                port = server.servers[0].sockets[0].getsockname()[1]
+                with socket.create_connection(("127.0.0.1", port), timeout=2) as client:
+                    client.sendall(
+                        b"POST /internal/v1/analyze HTTP/1.1\r\n"
+                        b"Host: 127.0.0.1\r\nAuthorization: Bearer local-secret\r\n"
+                        b"X-Document-Id: doc_1\r\nX-Request-Id: req_1\r\n"
+                        b"X-Document-Kind: TEXT\r\nContent-Type: text/plain\r\n"
+                        b"Content-Length: 8\r\n\r\nAgentFit")
+                    self.assertTrue(started.wait(timeout=2))
+                self.assertTrue(cancelled.wait(timeout=2))
+            finally:
+                server.should_exit = True
+                thread.join(timeout=5)
 
 
 if __name__ == "__main__":

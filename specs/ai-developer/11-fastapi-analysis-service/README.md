@@ -22,6 +22,8 @@ python -m uvicorn agentfit_ai.http_service:app --host 127.0.0.1 --port 8000
 
 동시 분석 수와 업로드 기한은 [수용 제한 명세](../12-analysis-admission-control/spec.md)를 따른다.
 
+기본 Solar 분석은 [요청 수명주기 명세](../13-analysis-request-lifecycle/spec.md)에 따라 요청별 프로세스로 실행된다. 전체 기한의 기본값은 60초이며 `AGENTFIT_REQUEST_TIMEOUT_SECONDS`로 1~120초를 설정할 수 있다.
+
 ## 검증
 
 `requirements-dev.txt`를 설치한 환경에서 `python -m unittest discover -s tests -q`를 실행한다. 실제 Provider 호출과 Spring 저장 검증은 이 HTTP 경계 테스트에 포함되지 않는다.

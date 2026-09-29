@@ -9,19 +9,22 @@ from threading import BoundedSemaphore
 
 from fastapi import FastAPI, Request
 from fastapi.concurrency import run_in_threadpool
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 
+from .analysis_process import AnalysisProcessError, run_analysis_process
 from .diagnostics import safe_code
-from .document_extraction import (MAX_FILE_BYTES, DocumentExtractionError,
+from .document_extraction import (MAX_FILE_BYTES, PDF_TIMEOUT_SECONDS,
+                                  DocumentExtractionError,
                                   extract_document)
 from .profile import FIELDS, ProfileValidationError, validate_profile
 from .recoverable_draft import SAFE_REASONS
-from .solar import AnalysisError, SolarAnalyzer
+from .solar import AnalysisError
 
 
 IDENTIFIER = re.compile(r"[A-Za-z0-9_-]{1,128}\Z")
 MEDIA_TYPES = {"PDF": "application/pdf", "MARKDOWN": "text/markdown",
                "TEXT": "text/plain"}
+_DISCONNECTED = object()
 
 
 def _error(status: int, code: str) -> JSONResponse:
@@ -42,12 +45,47 @@ class _AdmittedResponse(JSONResponse):
             self._release()
 
 
-def _solar_analysis(document: str, document_id: str) -> dict:
+class _AbortedResponse(Response):
+    """Finish a disconnected request without sending onto its closed socket."""
+
+    def __init__(self, release):
+        super().__init__(status_code=204)
+        self._release = release
+
+    async def __call__(self, scope, receive, send):
+        self._release()
+
+
+async def _wait_for_disconnect(request: Request) -> None:
+    while True:
+        message = await request.receive()
+        if message["type"] == "http.disconnect":
+            return
+        await asyncio.sleep(.05)
+
+
+async def _run_default_analysis(request: Request, document: str, document_id: str,
+                                deadline: float) -> dict:
     key = os.environ.get("UPSTAGE_API_KEY", "")
     if not key:
         raise AnalysisError("MISSING_OR_INVALID_KEY")
-    result = SolarAnalyzer(key, analysis_timeout_seconds=40).analyze(document, document_id)
-    return {"outcome": "complete", "profile": result.profile}
+    if await request.is_disconnected():
+        return _DISCONNECTED
+    worker = asyncio.create_task(run_analysis_process(document, document_id, key, deadline))
+    disconnect = asyncio.create_task(_wait_for_disconnect(request))
+    try:
+        async with asyncio.timeout_at(deadline):
+            done, _ = await asyncio.wait({worker, disconnect},
+                                         return_when=asyncio.FIRST_COMPLETED)
+            if disconnect in done:
+                return _DISCONNECTED
+            return await worker
+    finally:
+        if not worker.done():
+            worker.cancel()
+        if not disconnect.done():
+            disconnect.cancel()
+        await asyncio.gather(worker, disconnect, return_exceptions=True)
 
 
 def _media_type_valid(value: str | None, kind: str) -> bool:
@@ -125,13 +163,15 @@ def _bounded_setting(value: int | None, name: str, default: int, maximum: int) -
 def create_app(*, internal_token: str | None = None,
                analyze: Callable[[str, str], dict] | None = None,
                max_inflight: int | None = None,
-               upload_timeout_seconds: int | None = None) -> FastAPI:
+               upload_timeout_seconds: int | None = None,
+               request_timeout_seconds: int | None = None) -> FastAPI:
     """Create a process-local adapter; Spring still owns persistence and public success."""
     token = os.environ.get("AGENTFIT_INTERNAL_TOKEN", "") if internal_token is None else internal_token
-    analyze_document = _solar_analysis if analyze is None else analyze
     limit = _bounded_setting(max_inflight, "AGENTFIT_MAX_INFLIGHT_ANALYSES", 2, 8)
     upload_timeout = _bounded_setting(upload_timeout_seconds,
                                       "AGENTFIT_UPLOAD_TIMEOUT_SECONDS", 10, 30)
+    request_timeout = _bounded_setting(request_timeout_seconds,
+                                       "AGENTFIT_REQUEST_TIMEOUT_SECONDS", 60, 120)
     slots = BoundedSemaphore(limit)
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 
@@ -185,6 +225,7 @@ def create_app(*, internal_token: str | None = None,
                                 headers={"Retry-After": "1"})
 
         release_here = True
+        deadline = asyncio.get_running_loop().time() + request_timeout
 
         def finish(status: int, content: dict) -> _AdmittedResponse:
             nonlocal release_here
@@ -199,12 +240,15 @@ def create_app(*, internal_token: str | None = None,
         body = bytearray()
         try:
             try:
-                async with asyncio.timeout(upload_timeout):
+                async with asyncio.timeout_at(min(
+                        deadline, asyncio.get_running_loop().time() + upload_timeout)):
                     async for chunk in request.stream():
                         if len(body) + len(chunk) > MAX_FILE_BYTES:
                             return fail(413, "DOCUMENT_TOO_LARGE")
                         body.extend(chunk)
             except TimeoutError:
+                if asyncio.get_running_loop().time() >= deadline:
+                    return fail(504, "ANALYSIS_DEADLINE_EXCEEDED")
                 return fail(408, "DOCUMENT_UPLOAD_TIMEOUT")
             raw = bytes(body)
             if kind == "TEXT":
@@ -214,8 +258,24 @@ def create_app(*, internal_token: str | None = None,
                     return fail(422, "DOCUMENT_INVALID_UTF8")
             else:
                 content = raw
-            extracted = await run_in_threadpool(extract_document, kind, content)
-            outcome = await run_in_threadpool(analyze_document, extracted.text, document_id)
+            if (kind == "PDF" and asyncio.get_running_loop().time() +
+                    PDF_TIMEOUT_SECONDS + 1 >= deadline):
+                return fail(504, "ANALYSIS_DEADLINE_EXCEEDED")
+            async with asyncio.timeout_at(deadline):
+                extracted = await run_in_threadpool(extract_document, kind, content)
+            if analyze is None:
+                outcome = await _run_default_analysis(request, extracted.text,
+                                                      document_id, deadline)
+                if outcome is _DISCONNECTED:
+                    response = _AbortedResponse(slots.release)
+                    release_here = False
+                    return response
+            else:
+                async with asyncio.timeout_at(deadline):
+                    outcome = await run_in_threadpool(analyze, extracted.text, document_id)
+            if type(outcome) is dict and set(outcome) == {"error"}:
+                code = safe_code(outcome["error"])
+                return fail(503 if code == "MISSING_OR_INVALID_KEY" else 502, code)
             if type(outcome) is not dict or outcome.get("outcome") not in (
                     "complete", "needs_confirmation", "failed"):
                 return fail(500, "INTERNAL_ERROR")
@@ -242,6 +302,11 @@ def create_app(*, internal_token: str | None = None,
         except AnalysisError as error:
             status = 503 if error.code == "MISSING_OR_INVALID_KEY" else 502
             return fail(status, safe_code(error.code))
+        except AnalysisProcessError as error:
+            status = 504 if error.code == "ANALYSIS_DEADLINE_EXCEEDED" else 502
+            return fail(status, error.code)
+        except TimeoutError:
+            return fail(504, "ANALYSIS_DEADLINE_EXCEEDED")
         except ProfileValidationError as error:
             return fail(502, safe_code(error.code))
         except Exception:

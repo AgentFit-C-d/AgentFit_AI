@@ -172,6 +172,22 @@ PROVIDER_WORKER_CODES = frozenset((
 ))
 
 
+def post_solar_inline(payload: dict, api_key: str, timeout: float) -> bytes:
+    """Use the same bounded HTTP protocol inside an already isolated request worker."""
+    from .provider_worker import _fetch
+
+    output = _fetch(ENDPOINT, payload, api_key, timeout)
+    if len(output) > MAX_RESPONSE_BYTES + 1:
+        raise AnalysisError("RESPONSE_TOO_LARGE")
+    if output[:1] == b"S":
+        return output[1:]
+    if output[:1] == b"E":
+        code = output[1:].decode("ascii", errors="ignore")
+        if code in PROVIDER_WORKER_CODES:
+            raise AnalysisError(code)
+    raise AnalysisError("PROVIDER_NETWORK")
+
+
 def _provider_worker_environment() -> dict[str, str]:
     allowed = ("SystemRoot", "WINDIR", "PATH", "SSL_CERT_FILE", "SSL_CERT_DIR",
                "HTTPS_PROXY", "HTTP_PROXY", "NO_PROXY", "https_proxy",
