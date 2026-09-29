@@ -25,6 +25,65 @@ def features():
 
 
 class SourceSelectorAnalysisTests(unittest.TestCase):
+    def test_section_extraction_merges_two_chunks_before_review(self):
+        document = "# Alpha\n- registration\n" + "context\n" * 118 + "# Next\n- checkout"
+        group_replies = [{"checkedFields": list(group), "issues": []}
+                         for group in GROUPS[:2]]
+        section_replies = [{"checkedRange": {"start": start, "end": end},
+                            "issues": []} for start, end in ((1, 120), (121, 122))]
+        transport = Mock(side_effect=[
+            response(core()), response(features()),
+            response({"features": confirmed(122, role="user_action")}),
+            *(response(item) for item in group_replies + section_replies),
+        ])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192, section_feature_review=True,
+            section_feature_extraction=True).analyze_recoverable(document, "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual(result["profile"]["data"]["features"],
+                         ["registration", "checkout"])
+        self.assertEqual(transport.call_count, 7)
+        self.assertNotIn("[L122] - checkout", transport.call_args_list[1].args[0]
+                         ["messages"][1]["content"])
+
+    def test_section_extraction_last_chunk_failure_is_not_partial_complete(self):
+        document = "# Alpha\n- registration\n" + "context\n" * 118 + "# Next\n- checkout"
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      response({"features": confirmed(2, role="user_action")})])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192, section_feature_review=True,
+            section_feature_extraction=True).analyze_recoverable(document, "doc")
+        self.assertEqual(result["outcome"], "failed")
+        self.assertEqual(result["error"], "INVALID_EVIDENCE")
+        self.assertEqual(transport.call_count, 3)
+
+    def test_section_extraction_requires_section_review(self):
+        with self.assertRaises(ValueError):
+            SourceSelectorSolarAnalyzer("synthetic-key", grouped_review=True,
+                                        group_review_max_tokens=8192,
+                                        section_feature_extraction=True)
+
+    def test_section_extraction_uses_eighteen_calls_with_repair_and_seven_chunks(self):
+        document = "# Alpha\n- registration\n" + "context\n" * 838
+        feature_chunks = [features(), *({"features": None} for _ in range(6))]
+        groups = [{"checkedFields": list(group), "issues": []} for group in GROUPS[:2]]
+        reviews = [{"checkedRange": {"start": start, "end": start + 119},
+                    "issues": []} for start in range(1, 841, 120)]
+        transport = Mock(side_effect=[
+            response(core("BOLD_1")),
+            *(response(item) for item in feature_chunks),
+            response({"project_name": confirmed(1)}),
+            *(response(item) for item in groups + reviews),
+        ])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192, section_feature_review=True,
+            section_feature_extraction=True).analyze_recoverable(document, "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual(transport.call_count, 18)
+
     def test_section_feature_review_completes_only_after_all_ranges(self):
         document = "# Alpha\n- registration\n" + "context\n" * 118 + "# Next\n- checkout"
         replies = [{"checkedFields": list(group), "issues": []} for group in GROUPS[:2]]

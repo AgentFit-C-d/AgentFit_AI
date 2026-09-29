@@ -49,11 +49,14 @@
 **Files:**
 - Modify: `ai_service/agentfit_ai/solar.py`
 - Modify: `ai_service/agentfit_ai/source_selector_analysis.py`
+- Modify: `ai_service/agentfit_ai/section_feature_extraction.py`
 - Test: `ai_service/tests/test_source_selector_analysis.py`
+- Test: `ai_service/tests/test_section_feature_extraction.py`
 
 **Interfaces:**
 - Base hook: `SolarAnalyzer._request_section_features(document, chunk, *, _trace=None, timeout=40)`는 기본적으로 안전 실패. 기존 내부 `request(..., source_section=None)`이 명시된 경우에만 hook을 호출한다.
-- `SourceSelectorSolarAnalyzer(..., section_feature_extraction=False, ...)`는 `section_feature_review=True`와 8K grouped 모드에서만 활성화한다. `_first_pass(request, reserve_call)`은 core 1회, 각 청크 features 1회, Task 1의 통합을 반환한다. `_max_provider_calls()`는 이 모드에서 18이다.
+- 기존 `_first_pass(request, reserve_call)` 시그니처와 병렬 모드를 보존하기 위해 base `_first_pass_with_sections(document, request, reserve_call, chunks)`를 경유한다. 기본 구현은 기존 `_first_pass`를 호출한다.
+- `SourceSelectorSolarAnalyzer(..., section_feature_extraction=False, ...)`는 `section_feature_review=True`와 8K grouped 모드에서만 활성화한다. 선택형 `_first_pass_with_sections`는 core 1회, 각 청크 features 1회, Task 1의 통합을 반환한다. `_max_provider_calls()`는 이 모드에서 18이다.
 - 마지막 청크 실패 및 병합 오류에서 Profile을 완성하거나 검토 완료로 표시하지 않는다. 기존 근거 구조 수정 1회와 A/B·모든 기능 청크 검토는 그대로 둔다.
 
 - [ ] 2청크 정상 통합, 마지막 실패·absence 충돌·18호출 상한, 기존 모드 불변 테스트를 작성해 실패를 확인한다.

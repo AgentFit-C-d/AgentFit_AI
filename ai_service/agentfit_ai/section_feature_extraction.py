@@ -102,27 +102,28 @@ def merge_section_features(document, chunks, replies):
         raise EvidenceError("SECTION_COVERAGE_INVALID", "features") from None
     entries = [normalize_section_features(document, chunk, reply)
                for chunk, reply in zip(chunks, replies)]
-    chosen = []
-    seen_values = set()
+    sourced_items = []
     absence = None
     for entry in entries:
         if entry is None:
             continue
         if entry["state"] == "absent":
-            if chosen:
-                raise EvidenceError("SECTION_FEATURE_CONFLICT", "features")
             if absence is None:
                 absence = entry
             continue
-        if absence is not None:
-            raise EvidenceError("SECTION_FEATURE_CONFLICT", "features")
         for item in entry["items"]:
-            value, _ = source_span(document, item["lineId"], item["selector"])
-            if value not in seen_values:
-                chosen.append(item)
-                seen_values.add(value)
-                if len(chosen) > 30:
-                    raise EvidenceError("SECTION_FEATURE_OVERFLOW", "features")
+            value, span = source_span(document, item["lineId"], item["selector"])
+            sourced_items.append((span["start"], value, item))
+    if absence is not None and sourced_items:
+        raise EvidenceError("SECTION_FEATURE_CONFLICT", "features")
+    chosen = []
+    seen_values = set()
+    for _, value, item in sorted(sourced_items, key=lambda entry: entry[0]):
+        if value not in seen_values:
+            chosen.append(item)
+            seen_values.add(value)
+            if len(chosen) > 30:
+                raise EvidenceError("SECTION_FEATURE_OVERFLOW", "features")
     if chosen:
         return {"state": "confirmed", "items": chosen}
     return absence

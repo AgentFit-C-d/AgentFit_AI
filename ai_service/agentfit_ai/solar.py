@@ -633,6 +633,12 @@ class SolarAnalyzer:
     def _request_section_feature_review(self, document, profile, chunk, *, _trace=None, timeout=40):
         raise AnalysisError("SEMANTIC_REVIEW_INVALID")
 
+    def _request_section_features(self, document, chunk, *, _trace=None, timeout=40):
+        raise AnalysisError("INVALID_EVIDENCE", "features")
+
+    def _first_pass_with_sections(self, document, request, reserve_call, chunks):
+        return self._first_pass(request, reserve_call)
+
     def _contract_version(self):
         return CONTRACT_VERSION if self._evidence_contract else "legacy-lines"
 
@@ -732,7 +738,7 @@ class SolarAnalyzer:
             return call
 
         def request(names, purpose, correction=None, *, stage=None, review_profile=None,
-                    review_section=None, _reserved_call=None):
+                    review_section=None, source_section=None, _reserved_call=None):
             remaining = deadline - self._clock()
             if remaining <= 0:
                 if _reserved_call is not None:
@@ -755,8 +761,14 @@ class SolarAnalyzer:
                         reply = self._request_group_review(document, review_profile, names,
                                                            _trace=trace, timeout=remaining)
                 else:
-                    reply = self._request_fields(document, names, purpose, correction, _trace=trace,
-                                                 timeout=min(self._field_call_timeout_seconds, remaining))
+                    if source_section is not None:
+                        reply = self._request_section_features(
+                            document, source_section, _trace=trace,
+                            timeout=min(self._field_call_timeout_seconds, remaining))
+                    else:
+                        reply = self._request_fields(document, names, purpose, correction,
+                                                     _trace=trace,
+                                                     timeout=min(self._field_call_timeout_seconds, remaining))
                 if self._clock() >= deadline:
                     raise AnalysisError("ANALYSIS_DEADLINE")
             except AnalysisError as error:
@@ -779,7 +791,8 @@ class SolarAnalyzer:
                         prompt_tokens=reply[2], completion_tokens=reply[3])
             replies.append(reply)
             return reply[0]
-        candidate = self._first_pass(request, reserve_call)
+        candidate = self._first_pass_with_sections(document, request, reserve_call,
+                                                   section_chunks)
         errors = []
         for field in FIELDS:
             isolated = dict.fromkeys(FIELDS)

@@ -56,6 +56,11 @@ class SectionFeatureExtractionTests(unittest.TestCase):
             merge_section_features("- checkout\n- missing\n- settings",
                                    ((1, 1), (3, 3)), [confirmed(1), confirmed(3)])
 
+    def test_merge_orders_items_by_source_even_if_model_reverses_them(self):
+        result = merge_section_features("- settings\n- checkout", ((1, 2),),
+                                        [confirmed(2, 1)])
+        self.assertEqual([item["lineId"] for item in result["items"]], [1, 2])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -10,6 +10,9 @@ from .profile import FIELDS
 from .semantic_review import REVIEW_REASONING_EFFORT, ReviewValidationError
 from .section_feature_review import (split_feature_sections, validate_section_coverage,
                                      section_review_payload, normalize_section_review)
+from .section_feature_extraction import (section_extraction_payload,
+                                         normalize_section_features,
+                                         merge_section_features)
 from .solar import AnalysisError, FREQUENCY_PENALTY, REASONING_EFFORT, _reject_unconfirmed, source_lines
 from .source_selector import CONTRACT_VERSION, selector_schema, selector_to_profile
 
@@ -46,7 +49,8 @@ project_name은 명시된 이름의 고유 부분, project_type은 제공 형태
 class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
     def __init__(self, *args, compact_review=False, compact_review_effort="medium",
                  grouped_review=False, group_review_max_tokens=4096,
-                 section_feature_review=False, **kwargs):
+                 section_feature_review=False, section_feature_extraction=False,
+                 **kwargs):
         if type(compact_review) is not bool:
             raise ValueError("compact_review must be boolean")
         if type(grouped_review) is not bool or (grouped_review and compact_review):
@@ -58,6 +62,9 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
         if (type(section_feature_review) is not bool or
                 section_feature_review and (not grouped_review or group_review_max_tokens != 8192)):
             raise ValueError("section feature review requires 8k grouped review")
+        if (type(section_feature_extraction) is not bool or
+                section_feature_extraction and not section_feature_review):
+            raise ValueError("section feature extraction requires section review")
         if compact_review_effort not in ("medium", "low") or (
                 not compact_review and compact_review_effort != "medium"):
             raise ValueError("compact_review_effort requires compact review")
@@ -69,6 +76,7 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
         self._grouped_review = grouped_review
         self._group_review_max_tokens = group_review_max_tokens
         self._section_feature_review = section_feature_review
+        self._section_feature_extraction = section_feature_extraction
 
     def _semantic_review_groups(self):
         return GROUPS if self._grouped_review else super()._semantic_review_groups()
@@ -86,7 +94,37 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
         return chunks
 
     def _max_provider_calls(self):
+        if self._section_feature_extraction:
+            return 18
         return 12 if self._section_feature_review else super()._max_provider_calls()
+
+    def _first_pass_with_sections(self, document, request, reserve_call, chunks):
+        if not self._section_feature_extraction:
+            return super()._first_pass_with_sections(document, request, reserve_call, chunks)
+        core = tuple(field for field in FIELDS if field != "features")
+        candidate = request(core, "Extract confirmed technology and integrations, including external backup storage. Exclude evaluation candidates and examples.")
+        replies = [request(("features",), "Extract only this section's confirmed product and operational features.",
+                           stage="features", source_section=chunk)
+                   for chunk in chunks]
+        try:
+            candidate["features"] = merge_section_features(document, chunks, replies)
+        except EvidenceError as error:
+            failure = AnalysisError("INVALID_EVIDENCE", "features")
+            failure.detail = error.detail()
+            raise failure from None
+        return candidate
+
+    def _request_section_features(self, document, chunk, *, _trace=None, timeout=40):
+        try:
+            payload = section_extraction_payload(document, chunk, model=self._model)
+            reply, model, prompt_tokens, completion_tokens = self._send_payload(
+                payload, ("features",), _trace=_trace, timeout=timeout)
+            normalized = normalize_section_features(document, chunk, reply)
+        except EvidenceError as error:
+            failure = AnalysisError("INVALID_EVIDENCE", "features")
+            failure.detail = error.detail()
+            raise failure from None
+        return {"features": normalized}, model, prompt_tokens, completion_tokens
 
     def _request_section_feature_review(self, document, profile, chunk, *, _trace=None,
                                         timeout=40):
