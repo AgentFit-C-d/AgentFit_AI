@@ -21,4 +21,4 @@
 ## 3. 결과
 
 - [x] 세 실문서를 승인 범위 내에서 라이브 평가하고 실험 결과의 한계를 `validation.md`에 기록한다.
-- [ ] 로컬·Linux 테스트와 diff를 확인하고 `feature/real-document-holdout-evaluation` 브랜치에 push한다.
+- [x] 로컬·Linux 테스트와 diff를 확인하고 `feature/real-document-holdout-evaluation` 브랜치에 push한다.
