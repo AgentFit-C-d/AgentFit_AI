@@ -165,7 +165,7 @@ def section_curation_payload(document, chunks, entry, *, model):
         value, _ = source_span(document, ref, item["selector"])
         candidates.append({"id": f"F{index:04d}", "value": value,
                            "headings": [line["text"] for line in
-                                        _heading_context(lines, ref)]})
+                                        _heading_context(lines, ref + 1)]})
     ids = [candidate["id"] for candidate in candidates]
     schema = {"type": "object", "properties": {
         "selectedIds": {"type": "array", "minItems": 1, "maxItems": 30,
@@ -199,7 +199,7 @@ def normalize_section_curation(entry, reply):
     indexes = []
     for item in ids:
         if (type(item) is not str or len(item) != 5 or item[0] != "F" or
-                not item[1:].isdigit()):
+                any(digit not in "0123456789" for digit in item[1:])):
             raise EvidenceError("INVALID_ITEM", "features")
         index = int(item[1:]) - 1
         if not 0 <= index < len(entry["items"]) or index in indexes:

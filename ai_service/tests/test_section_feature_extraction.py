@@ -1,3 +1,4 @@
+import json
 import unittest
 
 from agentfit_ai.evidence import EvidenceError
@@ -34,12 +35,21 @@ class SectionFeatureExtractionTests(unittest.TestCase):
                                             {"selectedIds": ["F0003", "F0001"]})
         self.assertEqual([item["lineId"] for item in result["items"]], [1, 3])
         for selected in ([], ["F0001", "F0001"], ["F9999"],
-                         ["F0001"] * 31):
+                         ["F０００１"], ["F000²"], ["F0001"] * 31):
             with self.subTest(selected=selected), self.assertRaises(EvidenceError):
                 normalize_section_curation(entry, {"selectedIds": selected})
         with self.assertRaises(EvidenceError):
             normalize_section_curation(entry, {"selectedIds": ["F0001"],
                                                "private": "injected"})
+
+    def test_heading_candidate_uses_its_own_heading_context(self):
+        document = "# Product\n## Old feature\n## New feature"
+        entry = collect_section_features(document, ((1, 3),), [confirmed(3)])
+        payload = section_curation_payload(document, ((1, 3),), entry,
+                                           model="solar-pro4")
+        candidate = json.loads(payload["messages"][1]["content"])["candidates"][0]
+        self.assertEqual(candidate["value"], "New feature")
+        self.assertEqual(candidate["headings"], ["# Product", "## New feature"])
 
     def test_merge_reports_only_numeric_candidate_counts(self):
         observed = []
