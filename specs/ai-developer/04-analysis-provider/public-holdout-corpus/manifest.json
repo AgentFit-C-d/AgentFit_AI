@@ -1,0 +1,67 @@
+{
+  "version": "public-holdout-v1",
+  "partition": "held-out",
+  "cases": [
+    {
+      "id": "actual-product",
+      "repo": "actualbudget/actual",
+      "commit": "eb28966d6ca549236dd08b163ffc8570c710e712",
+      "path": "PRODUCT.md",
+      "sha256": "a254e53f9306722a1db72bc6d3d30be94876aa91447330461a698d0160a3b5d9",
+      "checks": {
+        "project_name": [
+          {"aliases": ["Actual Budget", "Actual"], "quote": "Actual Budget is a local-first personal finance tool"}
+        ],
+        "domain": [
+          {"aliases": ["personal finance", "finance"], "quote": "personal finance tool built around envelope budgeting"}
+        ],
+        "features": [
+          {"aliases": ["envelope budgeting", "envelope budget"], "quote": "built around envelope budgeting"},
+          {"aliases": ["reconciling accounts", "reconcile accounts"], "quote": "reconciling accounts, categorizing transactions"}
+        ]
+      }
+    },
+    {
+      "id": "mealie-readme",
+      "repo": "mealie-recipes/mealie",
+      "commit": "9f0e221fe9b2ca1ec89d9af1c7b8a785d5b0e048",
+      "path": "README.md",
+      "sha256": "7a87d6463aba4d2050b89eb4e069b18e5b25ba268372234edbd8d6e8b34650fc",
+      "checks": {
+        "project_name": [
+          {"aliases": ["Mealie"], "quote": "Mealie is a self hosted recipe manager"}
+        ],
+        "frontend": [
+          {"aliases": ["Vue"], "quote": "reactive frontend built in Vue"}
+        ],
+        "deployment": [
+          {"aliases": ["Docker"], "quote": "Easy **Docker** deployment"}
+        ],
+        "features": [
+          {"aliases": ["recipe import", "importing from a URL"], "quote": "importing from a URL"},
+          {"aliases": ["Meal Planner", "meal planning"], "quote": "Use the **Meal Planner**"},
+          {"aliases": ["Shopping List"], "quote": "ingredients on your **Shopping List**"},
+          {"aliases": ["Cookbooks"], "quote": "Group recipes into **Cookbooks**"}
+        ]
+      }
+    },
+    {
+      "id": "immich-readme",
+      "repo": "immich-app/immich",
+      "commit": "a9d102234b8b190cc13b6ac948f4049aa15abb42",
+      "path": "README.md",
+      "sha256": "27b511ae6ee3be2295c4c1e0674dd0ac5b0c6023d9fdd9187869b1605ff56fad",
+      "checks": {
+        "project_type": [
+          {"aliases": ["photo and video management", "photo management"], "quote": "self-hosted photo and video management solution"}
+        ],
+        "features": [
+          {"aliases": ["Upload and view videos and photos", "upload photos"], "quote": "Upload and view videos and photos"},
+          {"aliases": ["auto backup", "automatic backup"], "quote": "Auto backup when the app is opened"},
+          {"aliases": ["facial recognition", "face recognition"], "quote": "Facial recognition and clustering"},
+          {"aliases": ["search by metadata", "metadata search"], "quote": "Search by metadata, objects, faces, and CLIP"}
+        ]
+      }
+    }
+  ]
+}

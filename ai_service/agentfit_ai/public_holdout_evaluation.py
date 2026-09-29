@@ -1,0 +1,113 @@
+"""One-pass public-document evaluation with source-free artifacts."""
+
+import argparse
+import hashlib
+import json
+import time
+from collections import Counter
+from pathlib import Path
+
+from .diagnostics import safe_code
+from .false_complete_evaluation import write_safe_json
+from .public_holdout import MANIFEST, fetch_document, load_manifest, score_profile
+from .recoverable_draft_evaluation import (CountingTransport,
+                                           _structural_evidence_errors, load_key)
+from .recoverable_solar_evaluation import solar_factory
+from .solar import post_solar_inline
+
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def evaluate_case(case, document, analyzer, *, clock=time.monotonic,
+                  provider_calls=0):
+    started = clock()
+    outcome = analyzer.analyze_recoverable(document, case["id"])
+    if type(outcome) is not dict or outcome.get("outcome") not in (
+            "complete", "needs_confirmation", "failed"):
+        raise ValueError("invalid public evaluation outcome")
+    row = {"id": case["id"], "outcome": outcome["outcome"],
+           "error": (safe_code(outcome["error"]) if outcome.get("error") is not None
+                     else None),
+           "elapsed_ms": round((clock() - started) * 1000),
+           "provider_calls": provider_calls() if callable(provider_calls) else provider_calls,
+           "questions": len(outcome.get("questions", [])),
+           "scored": False, "structural_evidence_errors": 0,
+           "total_checks": sum(len(items) for items in case["checks"].values()),
+           "matched_checks": 0, "wrong_evidence_checks": 0,
+           "missing_alias_checks": 0, "unassessed_values": 0}
+    if outcome["outcome"] == "failed":
+        return row
+    profile = outcome.get("profile")
+    row["structural_evidence_errors"] = _structural_evidence_errors(
+        document, case["id"], profile)
+    if row["structural_evidence_errors"]:
+        return row
+    row.update(score_profile(case, document, profile))
+    row["scored"] = True
+    return row
+
+
+def summarize(rows, *, planned):
+    counts = Counter(row["outcome"] for row in rows)
+    scored = [row for row in rows if row["scored"]]
+    return {
+        "planned_cases": planned, "evaluated_cases": len(rows),
+        "complete_cases": counts["complete"],
+        "needs_confirmation_cases": counts["needs_confirmation"],
+        "failed_cases": counts["failed"],
+        "scored_profiles": len(scored),
+        "matched_checks": sum(row["matched_checks"] for row in scored),
+        "wrong_evidence_checks": sum(row["wrong_evidence_checks"] for row in scored),
+        "missing_alias_checks": sum(row["missing_alias_checks"] for row in scored),
+        "unassessed_values": sum(row["unassessed_values"] for row in scored),
+        "unscored_cases": len(rows) - len(scored),
+        "max_provider_calls": max((row["provider_calls"] for row in rows), default=0),
+        "max_elapsed_ms": max((row["elapsed_ms"] for row in rows), default=0),
+        "release_gate_passed": False,
+        "release_gate_note": "Three English public product documents and partial labels do not prove service readiness",
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Pinned public holdout evaluation")
+    parser.add_argument("--live", action="store_true")
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--env-file", type=Path)
+    args = parser.parse_args()
+    if not args.live:
+        parser.error("--live required")
+    if args.output.exists():
+        parser.error("output already exists")
+    cases = load_manifest()
+    documents = [(case, fetch_document(case)) for case in cases]
+    key = load_key(args.env_file)
+    forbidden = (key, *(document for _, document in documents))
+    args.output.mkdir(parents=True, exist_ok=False)
+    plan = {"model": "solar-pro4", "partition": "held-out-initial",
+            "manifest_sha256": hashlib.sha256(MANIFEST.read_bytes()).hexdigest(),
+            "sources": [{"id": case["id"], "repo": case["repo"],
+                         "commit": case["commit"], "path": case["path"],
+                         "sha256": case["sha256"]} for case, _ in documents],
+            "one_analysis_per_case": True, "release_gate_passed": False}
+    write_safe_json(args.output / "plan.json", plan, forbidden_strings=forbidden)
+    rows = []
+    for case, document in documents:
+        transport = CountingTransport(post_solar_inline)
+        analyzer = solar_factory(key, transport=transport)
+        row = evaluate_case(case, document, analyzer,
+                            provider_calls=lambda: transport.calls)
+        rows.append(row)
+        write_safe_json(args.output / "results.json", rows,
+                        forbidden_strings=forbidden)
+        write_safe_json(args.output / "summary.json",
+                        summarize(rows, planned=len(cases)),
+                        forbidden_strings=forbidden)
+        print(json.dumps({"id": row["id"], "outcome": row["outcome"],
+                          "matched_checks": row["matched_checks"],
+                          "elapsed_ms": row["elapsed_ms"]}), flush=True)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
