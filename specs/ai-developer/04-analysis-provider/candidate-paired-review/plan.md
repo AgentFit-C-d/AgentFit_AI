@@ -17,7 +17,7 @@
 
 - [x] 1. `tests/test_candidate_paired_review.py`에 NVIDIA 경로·반환 모델 거절·length 분할 부재 및 최종 변환 동등성의 실패 테스트를 먼저 쓴다. `candidate_split_review.py`의 `review_model` 선택과 `candidate_first_profile.py`의 `finalize_candidate_analysis` 분리를 구현한다. 관련 기존 테스트도 통과해야 한다.
 - [x] 2. `candidate_paired_review.py`에 `evaluate_paired(case, solar_key, nvidia_key, models, *, extractor=None, classifier=None, reviewer=None, on_update=None)`와 CLI를 구현한다. 준비된 단일 문서에서 추출·분류1회, deep copy로 모델별 검토/최종 변환을 실행한다. 모델 실패와 공통 실패, 키 사전 차단, 안전한 ID·집계만 출력하는 계약을 RED→GREEN으로 검증한다. CLI는 manifest의 기존 hash·전처리·case-id를 재사용하고 repeatable `--review-model`을 지원한다. 기본 비교 순서는 solar-pro4,deepseek-ai/deepseek-v4.1-flash.
-- [ ] 3. 관련 및 전체 테스트·diff 검사·독립 리뷰·commit/push·Linux CI를 확인한다. 승인된 H02 실제 비교를 실행해 프로세스/부분 결과를 추적하고, source 위치를 로컬에서 대조해 backend 판정과 이름 투영의 원인을 기록한다. 평가 개선과 배포 가능 여부를 분리한다.
+- [x] 3. 관련 및 전체 테스트·diff 검사·독립 리뷰·commit/push·Linux CI를 확인한다. 승인된 H02 실제 비교를 실행해 프로세스/부분 결과를 추적하고, source 위치를 로컬에서 대조해 backend 판정과 이름 투영의 원인을 기록한다. 평가 개선과 배포 가능 여부를 분리한다.
 
 ## 실행 기록
 
@@ -25,4 +25,4 @@
 - 명세·계획 작성 후 사용자의 목표 단위 자율 승인을 적용해 직접 진행한다.
 - 작업1: 누락 인자/함수의 RED6건을 확인하고 기존 회귀와 함께21건 GREEN.
 - 작업2: 누락 비교기 RED5건, 설정 진단 누락 RED1건을 확인한 뒤 CLI 포함 새12건 및 기존 관련15건(총27건) GREEN. `on_update`는 공통 입력 준비와 모델별 종료 시 안전한 부분 집계를 deep copy로 전달한다. 부분 파일의 `state=running`은 종료가 아니며 `finished`만 최종 집계다.
-- 작업3 진행: 전체848건(6건 건너뜀)·독립 리뷰·코드5c82f5c push·Linux CI36625914141 성공 확인. --env-file의 argparse 필수 지정은 경미한 정리로 보류했다. 승인된 H02를 PID5468/세션60976으로 실행했고 아직 실제 비교가 완료되지 않았다. 상세 추적은 validation.md를 따른다.
+- 작업3 완료: 전체848건(6건 건너뜀)·독립 리뷰·코드5c82f5c push·Linux CI36625914141 성공 확인. --env-file의 argparse 필수 지정은 경미한 정리로 보류했다. 승인된 H02의 비교 종료와 두 모델 결과를 확인했다. Solar4/6·DeepSeek5/6이지만 DeepSeek의 더 많은 제외와 backend 골드의 범위 불명확성이 남아 모델 승격은 하지 않는다. 상세 근거는 validation.md를 따른다. 이 평가 기능 완료는 실사용 목표 완료가 아니다.
