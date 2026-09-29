@@ -2,7 +2,7 @@ import hashlib
 import unittest
 
 from agentfit_ai.public_holdout import load_manifest, score_profile, verify_document
-from agentfit_ai.public_holdout_evaluation import evaluate_case, summarize
+from agentfit_ai.public_holdout_evaluation import SafeTraceSolarAnalyzer, evaluate_case, summarize
 
 
 class PublicHoldoutTests(unittest.TestCase):
@@ -98,6 +98,21 @@ class PublicHoldoutTests(unittest.TestCase):
         summary = summarize([row], planned=3)
         self.assertEqual(summary["needs_confirmation_cases"], 1)
         self.assertFalse(summary["release_gate_passed"])
+
+    def test_safe_trace_keeps_final_failure_reason_without_raw_detail(self):
+        analyzer = SafeTraceSolarAnalyzer("synthetic-key", evidence_contract=True)
+        diagnostic = {"calls": [{"call": 3, "stage": "repair",
+                                "outcome": "validation_failed", "error": "INVALID_EVIDENCE",
+                                "validation_error": {"field": "features",
+                                                     "reason": "QUOTE_NOT_FOUND",
+                                                     "itemIndex": 0, "matchCount": 0,
+                                                     "private": "secret source"}}]}
+        analyzer._save_diagnostic(diagnostic, {3: b"private model reply"})
+        self.assertEqual(analyzer.safe_calls,
+                         [{"call": 3, "stage": "repair", "outcome": "validation_failed",
+                           "error": "INVALID_EVIDENCE",
+                           "validation": [{"field": "features", "reason": "QUOTE_NOT_FOUND",
+                                           "itemIndex": 0, "matchCount": 0}]}])
 
     @staticmethod
     def span(document, quote):

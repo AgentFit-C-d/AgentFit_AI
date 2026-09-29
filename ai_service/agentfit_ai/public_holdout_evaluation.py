@@ -12,11 +12,45 @@ from .false_complete_evaluation import write_safe_json
 from .public_holdout import MANIFEST, fetch_document, load_manifest, score_profile
 from .recoverable_draft_evaluation import (CountingTransport,
                                            _structural_evidence_errors, load_key)
-from .recoverable_solar_evaluation import solar_factory
-from .solar import post_solar_inline
+from .recoverable_solar_analysis import RecoverableSolarAnalyzer
+from .solar import AnalysisError, post_solar_inline, safe_evidence_failure
 
 
 ROOT = Path(__file__).resolve().parents[2]
+_STAGES = frozenset({"core", "features", "repair", "semantic_review",
+                     "semantic_repair", "semantic_recheck"})
+_OUTCOMES = frozenset({"started", "failed", "validated",
+                       "validation_failed", "semantic_failed"})
+
+
+def _safe_validation(item):
+    if type(item) is not dict:
+        return None
+    error = AnalysisError(item.get("code"), item.get("field"))
+    error.detail = item.get("detail")
+    return safe_evidence_failure(error)
+
+
+class SafeTraceSolarAnalyzer(RecoverableSolarAnalyzer):
+    """Capture classifications in memory without retaining provider replies."""
+
+    def _save_diagnostic(self, diagnostic, raw_responses):
+        self.safe_calls = []
+        for call in diagnostic["calls"]:
+            validations = [_safe_validation(item)
+                           for item in call.get("validation_errors", [])]
+            final = call.get("validation_error")
+            if type(final) is dict:
+                validations.append(_safe_validation({"code": "INVALID_EVIDENCE",
+                                                     "field": final.get("field"),
+                                                     "detail": final}))
+            row = {"call": call["call"],
+                   "stage": call["stage"] if call.get("stage") in _STAGES else "unknown",
+                   "outcome": (call["outcome"] if call.get("outcome") in _OUTCOMES
+                               else "unknown"),
+                   "error": safe_code(call["error"]) if call.get("error") else None,
+                   "validation": [item for item in validations if item is not None]}
+            self.safe_calls.append(row)
 
 
 def evaluate_case(case, document, analyzer, *, clock=time.monotonic,
@@ -32,6 +66,7 @@ def evaluate_case(case, document, analyzer, *, clock=time.monotonic,
            "elapsed_ms": round((clock() - started) * 1000),
            "provider_calls": provider_calls() if callable(provider_calls) else provider_calls,
            "questions": len(outcome.get("questions", [])),
+           "calls": getattr(analyzer, "safe_calls", []),
            "scored": False, "structural_evidence_errors": 0,
            "total_checks": sum(len(items) for items in case["checks"].values()),
            "matched_checks": 0, "wrong_evidence_checks": 0,
@@ -74,17 +109,23 @@ def main():
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--env-file", type=Path)
+    parser.add_argument("--case-id", action="append")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live required")
     if args.output.exists():
         parser.error("output already exists")
     cases = load_manifest()
+    if args.case_id:
+        selected = set(args.case_id)
+        if len(selected) != len(args.case_id) or not selected <= {case["id"] for case in cases}:
+            parser.error("invalid case selection")
+        cases = [case for case in cases if case["id"] in selected]
     documents = [(case, fetch_document(case)) for case in cases]
     key = load_key(args.env_file)
     forbidden = (key, *(document for _, document in documents))
     args.output.mkdir(parents=True, exist_ok=False)
-    plan = {"model": "solar-pro4", "partition": "held-out-initial",
+    plan = {"model": "solar-pro4", "partition": "tuning-after-initial-holdout",
             "manifest_sha256": hashlib.sha256(MANIFEST.read_bytes()).hexdigest(),
             "sources": [{"id": case["id"], "repo": case["repo"],
                          "commit": case["commit"], "path": case["path"],
@@ -94,7 +135,9 @@ def main():
     rows = []
     for case, document in documents:
         transport = CountingTransport(post_solar_inline)
-        analyzer = solar_factory(key, transport=transport)
+        analyzer = SafeTraceSolarAnalyzer(
+            key, transport=transport, model="solar-pro4", evidence_contract=True,
+            semantic_review=True, analysis_timeout_seconds=40)
         row = evaluate_case(case, document, analyzer,
                             provider_calls=lambda: transport.calls)
         rows.append(row)

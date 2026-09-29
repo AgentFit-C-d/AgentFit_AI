@@ -1,6 +1,6 @@
 {
   "version": "public-holdout-v1",
-  "partition": "held-out",
+  "partition": "tuning",
   "cases": [
     {
       "id": "actual-product",

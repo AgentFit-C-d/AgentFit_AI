@@ -49,7 +49,7 @@ def load_manifest(path=MANIFEST):
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     if type(data) is not dict or set(data) != {"version", "partition", "cases"}:
         raise ValueError("invalid public manifest")
-    if data["version"] != "public-holdout-v1" or data["partition"] != "held-out":
+    if data["version"] != "public-holdout-v1" or data["partition"] != "tuning":
         raise ValueError("invalid public manifest")
     cases = data["cases"]
     if type(cases) is not list or not cases or any(type(case) is not dict
