@@ -4,6 +4,7 @@
 
 - `--group-review-8k`는 원문 선택자·3묶음 검토·정확도 우선·긴 기한 평가 조합에서만 사용한다. 각 의미 검토 payload의 출력 상한을 8,192로, plan의 실제 상한도 8,192로 기록한다. 기본 묶음 상한 4,096과 서비스 경로는 유지한다.
 - 전체 `python -m unittest discover -s tests -q`: 640건 통과. 단위 테스트는 허용·금지 조합, 분석기 옵션, 추출 호출의 기존 4,096상한을 확인했다.
+- 구현 커밋 `7ac6311`을 `feature/grouped-review-8k`에 push했고 Linux CI `36544817202`가 성공했다. CI는 PRD 정확도 합격을 뜻하지 않는다.
 
 ## Campfire 튜닝 PRD 1건
 
@@ -11,6 +12,15 @@
 - 첫 의미 검토 묶음은 2,077/8,192토큰, 둘째는 5,682/8,192토큰으로 응답을 완성하고 의미 이슈를 반환했다. 마지막 `features` 묶음은 8,192/8,192토큰 상한에 닿아 미완료였다. 세 묶음 완주 조건에 따라 자동 확정하지 않았다.
 - 부분 정답 6/7, 누락 1, 정답 밖 값 32개 미검토. 이전 4,096 실행과 모델 응답이 달라 상한 증가의 인과 효과나 정확도 개선량으로 해석하지 않는다.
 - ignored 로컬 `tmp/public-prd-grouped-8k-campfire-20260929`의 plan/results/summary SHA-256 앞 8자리: `6083722e/1838e6fc/a9c3fe63`. 평가 파일은 키·문서 전체 포함 시 쓰기를 거부하며 원본 응답·Profile을 기록하지 않는다.
+
+## 지원 모델 탐색: 같은 Campfire 1건씩
+
+| 전체 분석 모델 | 결과 | 도달한 단계 | 부분 정답 | 정답 밖 값 |
+|---|---|---|---:|---:|
+| GLM 5.3 | `failed`, `PROVIDER_TIMEOUT` | 첫 core 추출 120초 제한 | 미채점 | 미채점 |
+| Kimi K3 | 확인 필요, `SEMANTIC_REVIEW_INVALID` | 첫 그룹 유효 이슈, 둘째 그룹 `DUPLICATE_TARGET` | 6/7 | 32 |
+
+GLM은 의미 검토에 도달하지 않았고 Kimi는 4호출·137,774ms에 보류됐다. 두 모델 모두 기본값 후보로 볼 수 없다. 모델 전체를 바꾼 별도 1회 실행이어서 검토 모델만의 성능이나 Solar와의 인과 차이를 말할 수 없다. ignored 로컬 `tmp/public-prd-grouped-8k-glm-campfire-20260929`, `tmp/public-prd-grouped-8k-kimi-campfire-20260929`의 plan/results/summary 해시 앞 8자리: 각각 `bc0198c7/308a8cbf/04dd5961`, `67196134/df211126/0d4e4fb7`.
 
 ## 판단
 

@@ -7,4 +7,5 @@
 3. 실패 테스트: CLI `--group-review-8k`는 source selector·grouped·accuracy-first·extended 조건에서만 허용되고 plan과 analyzer에 8,192를 기록한다.
 4. CLI 연결 후 관련 테스트와 전체 테스트를 실행한다.
 5. 이미 튜닝한 Campfire 1건을 실제 실행해 세 묶음 완주·오확정·토큰을 기록한다. 첫 문서가 유효할 때만 튜닝 5건으로 확대한다.
+   같은 계약을 지원 모델로 탐색할 때는 모델별 추출·검토 실패 단계를 분리 기록하고 모델 인과 비교를 주장하지 않는다.
 6. 결과와 한계를 validation에 기록하고 `feature/grouped-review-8k`로 push해 Linux CI를 확인한다. 기본값으로 승격하지 않는다.
