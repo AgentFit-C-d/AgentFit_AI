@@ -8,27 +8,27 @@
 
 ## 작업 1: partition 경계
 
-- [ ] `load_manifest(path=MANIFEST, *, expected_partition="tuning")` 실패 테스트: 기대값 불일치, 지원하지 않는 partition, 기존 기본값.
-- [ ] 테스트 실패 확인 후 정확한 기대값만 허용하도록 구현한다.
-- [ ] 관련 테스트 통과.
+- [x] `load_manifest(path=MANIFEST, *, expected_partition="tuning")` 실패 테스트: 기대값 불일치, 지원하지 않는 partition, 기존 기본값.
+- [x] 테스트 실패 확인 후 정확한 기대값만 허용하도록 구현한다.
+- [x] 관련 테스트 통과.
 
 ## 작업 2: CLI 입력 경계
 
-- [ ] 별도 manifest 경로·partition을 선택하고 결과 plan에 실제 partition·manifest 해시를 쓰는 실패 테스트를 만든다. 잘못된 입력은 모델 호출 전 실패해야 한다.
-- [ ] 테스트 실패 확인 후 CLI 인수와 선택 함수를 최소 변경으로 구현한다.
-- [ ] 관련 테스트 통과.
+- [x] 별도 manifest 경로·partition 선택의 실패 테스트를 만들고, 잘못된 입력이 출력 디렉터리 생성 전 거부됨을 확인한다.
+- [x] 테스트 실패 확인 후 CLI 인수와 plan 메타데이터를 최소 변경으로 구현한다.
+- [x] 관련 테스트 통과.
 
 ## 작업 3: 고정 코퍼스
 
-- [ ] 5개 고정 커밋의 SHA-256 및 수작업 별칭·정확 인용을 manifest에 기재한다.
-- [ ] 전체 문서의 해시·UTF-8·인용 유일성 검증을 실행한다.
-- [ ] 최초 모델 호출 전에 manifest를 스테이징하고 diff를 확인한다.
+- [x] 5개 고정 커밋의 SHA-256 및 수작업 별칭·정확 인용을 manifest에 기재한다.
+- [x] 전체 문서의 해시·UTF-8·인용 유일성 검증을 실행한다.
+- [x] 최초 모델 호출 전에 manifest를 커밋 `3b1b77b`로 고정한다.
 
 ## 작업 4: 1회 라이브 평가와 기록
 
-- [ ] 고정 manifest로 문서당 한 번 `solar-pro4`를 호출해 ignored 로컬 결과에 기록한다.
-- [ ] 결과·한계·산출물 해시를 validation에 적고 manifest를 `tuning`으로 전환한다.
-- [ ] 전체 테스트·diff check·feature 브랜치 push·Linux CI를 확인한다.
+- [x] 고정 manifest로 문서당 한 번 `solar-pro4`를 호출해 ignored 로컬 결과에 기록한다.
+- [x] 결과·한계·산출물 해시를 validation에 적고 manifest를 `tuning`으로 전환한다.
+- [x] 전체 테스트·diff check·feature 브랜치 push·Linux CI를 확인한다.
 
 ## 검토 초점
 

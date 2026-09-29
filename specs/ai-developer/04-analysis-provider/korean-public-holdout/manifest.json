@@ -1,6 +1,6 @@
 {
   "version": "public-holdout-v1",
-  "partition": "heldout",
+  "partition": "tuning",
   "cases": [
     {
       "id": "todaywhere-readme",

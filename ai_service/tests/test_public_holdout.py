@@ -15,6 +15,12 @@ class PublicHoldoutTests(unittest.TestCase):
         self.assertEqual([case["id"] for case in cases],
                          ["actual-product", "mealie-readme", "immich-readme"])
 
+    def test_consumed_korean_corpus_is_tuning_not_fresh_holdout(self):
+        path = MANIFEST.parent.parent / "korean-public-holdout/manifest.json"
+        cases = load_manifest(path)
+        self.assertEqual(len(cases), 5)
+        self.assertEqual(len({case["repo"] for case in cases}), 5)
+
     def test_manifest_partition_must_match_explicit_evaluation_purpose(self):
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / "manifest.json"
