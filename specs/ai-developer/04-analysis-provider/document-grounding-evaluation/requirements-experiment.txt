@@ -1,0 +1,4 @@
+# Offline opt-in comparison only; do not add to the service environment yet.
+langextract==1.7.0
+docling-slim[convert-core,format-pdf,cli]==2.130.0
+packaging==26.0

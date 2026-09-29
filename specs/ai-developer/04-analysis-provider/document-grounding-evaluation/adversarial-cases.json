@@ -1,0 +1,241 @@
+{
+  "version": "document-grounding-adversarial-v1",
+  "partition": "tuning",
+  "held_out": false,
+  "cases": [
+    {
+      "id": "R01",
+      "category": "repeat",
+      "pair": "r1",
+      "document": "운영 DB 후보는 MallowDB다. 운영 DB는 MallowDB로 확정했다.",
+      "candidate": {
+        "field": "database",
+        "state": "present",
+        "start": 10,
+        "end": 18
+      },
+      "expected_decision": "review"
+    },
+    {
+      "id": "R02",
+      "category": "repeat",
+      "pair": "r1",
+      "document": "운영 DB 후보는 MallowDB다. 운영 DB는 MallowDB로 확정했다.",
+      "candidate": {
+        "field": "database",
+        "state": "present",
+        "start": 28,
+        "end": 36
+      },
+      "expected_decision": "allow"
+    },
+    {
+      "id": "R03",
+      "category": "repeat",
+      "pair": "r2",
+      "document": "과거 버전에서 WillowAI를 사용했다. 현재 운영 AI는 WillowAI로 확정했다.",
+      "candidate": {
+        "field": "ai",
+        "state": "present",
+        "start": 8,
+        "end": 16
+      },
+      "expected_decision": "review"
+    },
+    {
+      "id": "R04",
+      "category": "repeat",
+      "pair": "r2",
+      "document": "과거 버전에서 WillowAI를 사용했다. 현재 운영 AI는 WillowAI로 확정했다.",
+      "candidate": {
+        "field": "ai",
+        "state": "present",
+        "start": 34,
+        "end": 42
+      },
+      "expected_decision": "allow"
+    },
+    {
+      "id": "R05",
+      "category": "repeat",
+      "pair": "r3",
+      "document": "다른 제품은 CedarPay를 사용한다. 이 제품의 결제 연동은 CedarPay로 확정했다.",
+      "candidate": {
+        "field": "integrations",
+        "state": "present",
+        "start": 7,
+        "end": 15
+      },
+      "expected_decision": "review"
+    },
+    {
+      "id": "R06",
+      "category": "repeat",
+      "pair": "r3",
+      "document": "다른 제품은 CedarPay를 사용한다. 이 제품의 결제 연동은 CedarPay로 확정했다.",
+      "candidate": {
+        "field": "integrations",
+        "state": "present",
+        "start": 36,
+        "end": 44
+      },
+      "expected_decision": "allow"
+    },
+    {
+      "id": "N01",
+      "category": "negation",
+      "pair": "n1",
+      "document": "사용자에게 실시간 알림을 제공한다.",
+      "candidate": {
+        "field": "features",
+        "state": "present",
+        "start": 6,
+        "end": 12
+      },
+      "expected_decision": "allow"
+    },
+    {
+      "id": "N02",
+      "category": "negation",
+      "pair": "n1",
+      "document": "사용자에게 실시간 알림을 제공하지 않는다.",
+      "candidate": {
+        "field": "features",
+        "state": "present",
+        "start": 6,
+        "end": 12
+      },
+      "expected_decision": "review"
+    },
+    {
+      "id": "N03",
+      "category": "negation",
+      "pair": "n2",
+      "document": "운영 AI는 AmberAI를 사용하지 않기로 확정했다.",
+      "candidate": {
+        "field": "ai",
+        "state": "absent",
+        "start": 7,
+        "end": 14
+      },
+      "expected_decision": "allow"
+    },
+    {
+      "id": "N04",
+      "category": "negation",
+      "pair": "n2",
+      "document": "운영 AI는 AmberAI를 사용하기로 확정했다.",
+      "candidate": {
+        "field": "ai",
+        "state": "absent",
+        "start": 7,
+        "end": 14
+      },
+      "expected_decision": "review"
+    },
+    {
+      "id": "N05",
+      "category": "negation",
+      "pair": "n3",
+      "document": "외부 저장소 연동은 없다.",
+      "candidate": {
+        "field": "integrations",
+        "state": "absent",
+        "start": 0,
+        "end": 9
+      },
+      "expected_decision": "allow"
+    },
+    {
+      "id": "N06",
+      "category": "negation",
+      "pair": "n3",
+      "document": "외부 저장소 연동을 제공한다.",
+      "candidate": {
+        "field": "integrations",
+        "state": "absent",
+        "start": 0,
+        "end": 9
+      },
+      "expected_decision": "review"
+    },
+    {
+      "id": "P01",
+      "category": "proposal",
+      "pair": "p1",
+      "document": "팀 채팅은 검토안이다.",
+      "candidate": {
+        "field": "features",
+        "state": "present",
+        "start": 0,
+        "end": 4
+      },
+      "expected_decision": "review"
+    },
+    {
+      "id": "P02",
+      "category": "proposal",
+      "pair": "p1",
+      "document": "팀 채팅을 출시 기능으로 확정했다.",
+      "candidate": {
+        "field": "features",
+        "state": "present",
+        "start": 0,
+        "end": 4
+      },
+      "expected_decision": "allow"
+    },
+    {
+      "id": "P03",
+      "category": "proposal",
+      "pair": "p2",
+      "document": "경로 추천을 다음 분기에 도입할 예정이다.",
+      "candidate": {
+        "field": "features",
+        "state": "present",
+        "start": 0,
+        "end": 5
+      },
+      "expected_decision": "review"
+    },
+    {
+      "id": "P04",
+      "category": "proposal",
+      "pair": "p2",
+      "document": "경로 추천을 이번 릴리스에 포함하기로 확정했다.",
+      "candidate": {
+        "field": "features",
+        "state": "present",
+        "start": 0,
+        "end": 5
+      },
+      "expected_decision": "allow"
+    },
+    {
+      "id": "P05",
+      "category": "proposal",
+      "pair": "p3",
+      "document": "파일 공유는 아직 결정하지 않았다.",
+      "candidate": {
+        "field": "features",
+        "state": "present",
+        "start": 0,
+        "end": 5
+      },
+      "expected_decision": "review"
+    },
+    {
+      "id": "P06",
+      "category": "proposal",
+      "pair": "p3",
+      "document": "파일 공유를 제공하기로 확정했다.",
+      "candidate": {
+        "field": "features",
+        "state": "present",
+        "start": 0,
+        "end": 5
+      },
+      "expected_decision": "allow"
+    }
+  ]
+}
