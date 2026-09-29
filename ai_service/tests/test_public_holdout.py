@@ -100,6 +100,28 @@ class PublicHoldoutTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             verify_document(self.case, b"x" * 100001)
 
+    def test_explicit_unknown_fields_are_validated_and_must_not_overlap_gold(self):
+        case = {**self.case, "unknown_fields": ["ai", "database"]}
+        self.assertEqual(verify_document(case, self.document.encode()), self.document)
+        for fields in (["ai", "ai"], ["ai", "not_a_field"], ["frontend"]):
+            with self.subTest(fields=fields), self.assertRaises(ValueError):
+                verify_document({**self.case, "unknown_fields": fields},
+                                self.document.encode())
+
+    def test_explicit_unknown_fields_count_null_and_non_null_separately(self):
+        case = {**self.case, "unknown_fields": ["ai", "database"]}
+        data = {field: None for field in FIELDS}
+        evidence = {field: [] for field in FIELDS}
+        score = score_profile(case, self.document, {"data": data, "evidence": evidence})
+        self.assertEqual(score["expected_unknown_fields"], 2)
+        self.assertEqual(score["unknown_fields_preserved"], 2)
+        self.assertEqual(score["unknown_fields_non_null"], 0)
+        data["ai"] = ["unsupported model"]
+        score = score_profile(case, self.document, {"data": data, "evidence": evidence})
+        self.assertEqual(score["unknown_fields_preserved"], 1)
+        self.assertEqual(score["unknown_fields_non_null"], 1)
+        self.assertEqual(score["unassessed_values"], 0)
+
     def test_partial_score_separates_value_evidence_and_unassessed_fields(self):
         document = verify_document(self.case, self.document.encode())
         data = {field: None for field in (
@@ -227,8 +249,29 @@ class PublicHoldoutTests(unittest.TestCase):
         summary = summarize([row], planned=3)
         self.assertEqual(summary["needs_confirmation_cases"], 1)
         self.assertEqual(summary["indeterminate_evidence_checks"], 0)
-        self.assertEqual(summary["score_version"], "public-evidence-v3")
+        self.assertEqual(summary["score_version"], "public-evidence-v4")
         self.assertFalse(summary["release_gate_passed"])
+
+    def test_evaluation_summarizes_explicit_unknown_fields_without_raw_values(self):
+        case = {**self.case, "unknown_fields": ["ai"]}
+        document = verify_document(case, self.document.encode())
+        data = {field: None for field in FIELDS}
+        evidence = {field: [] for field in FIELDS}
+
+        class FakeAnalyzer:
+            def analyze_recoverable(self, text, case_id):
+                return {"outcome": "needs_confirmation", "error": None,
+                        "profile": {"data": data, "evidence": evidence},
+                        "fieldStates": {}, "questions": []}
+
+        row = evaluate_case(case, document, FakeAnalyzer())
+        self.assertEqual(row["expected_unknown_fields"], 1)
+        self.assertEqual(row["unknown_fields_preserved"], 1)
+        self.assertEqual(row["unknown_fields_non_null"], 0)
+        summary = summarize([row], planned=1)
+        self.assertEqual(summary["expected_unknown_fields"], 1)
+        self.assertEqual(summary["unknown_fields_preserved"], 1)
+        self.assertNotIn("profile", summary)
 
     def test_safe_trace_keeps_final_failure_reason_without_raw_detail(self):
         analyzer = SafeTraceSolarAnalyzer("synthetic-key", evidence_contract=True)

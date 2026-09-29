@@ -10,7 +10,7 @@ from .profile import ARRAY_FIELDS, FIELDS
 
 
 MAX_DOCUMENT_BYTES = 100_000
-SCORE_VERSION = "public-evidence-v3"
+SCORE_VERSION = "public-evidence-v4"
 MANIFEST = (Path(__file__).resolve().parents[2] /
             "specs/ai-developer/04-analysis-provider/public-holdout-corpus/manifest.json")
 _REPO = re.compile(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+\Z")
@@ -20,8 +20,9 @@ _HEX64 = re.compile(r"[0-9a-f]{64}\Z")
 
 
 def _check_case(case):
-    if (type(case) is not dict or set(case) !=
-            {"id", "repo", "commit", "path", "sha256", "checks"}):
+    required = {"id", "repo", "commit", "path", "sha256", "checks"}
+    if (type(case) is not dict or not required <= set(case)
+            or set(case) - required not in (set(), {"unknown_fields"})):
         raise ValueError("invalid public case")
     if (type(case["id"]) is not str or not re.fullmatch(r"[a-z0-9-]{1,64}", case["id"])
             or type(case["repo"]) is not str or not _REPO.fullmatch(case["repo"])
@@ -34,6 +35,12 @@ def _check_case(case):
     checks = case["checks"]
     if type(checks) is not dict or not checks or not set(checks) <= set(FIELDS):
         raise ValueError("invalid public checks")
+    unknown_fields = case.get("unknown_fields", [])
+    if (type(unknown_fields) is not list or len(unknown_fields) != len(set(
+            field for field in unknown_fields if type(field) is str))
+            or any(type(field) is not str or field not in FIELDS or field in checks
+                   for field in unknown_fields)):
+        raise ValueError("invalid public unknown fields")
     for items in checks.values():
         if type(items) is not list or not items:
             raise ValueError("invalid public checks")
@@ -139,8 +146,15 @@ def score_profile(case, document, profile):
     if set(data) != set(FIELDS) or set(evidence) != set(FIELDS):
         raise ValueError("invalid public profile")
     matched = wrong_evidence = missing_alias = indeterminate = unassessed = 0
+    unknown_fields = case.get("unknown_fields", [])
+    unknown_preserved = unknown_non_null = 0
     for field in FIELDS:
         value = data[field]
+        if field in unknown_fields:
+            if value is None:
+                unknown_preserved += 1
+            else:
+                unknown_non_null += 1
         values = [] if value is None else value if field in ARRAY_FIELDS else [value]
         if type(values) is not list or any(type(item) is not str for item in values):
             raise ValueError("invalid public profile")
@@ -168,10 +182,14 @@ def score_profile(case, document, profile):
                     wrong_evidence += 1
                 else:
                     indeterminate += 1
-        unassessed += sum(not any(_matches(item, check["aliases"])
-                                  for check in checks) for item in values)
+        if field not in unknown_fields:
+            unassessed += sum(not any(_matches(item, check["aliases"])
+                                      for check in checks) for item in values)
     return {"total_checks": sum(len(items) for items in case["checks"].values()),
             "matched_checks": matched, "wrong_evidence_checks": wrong_evidence,
             "missing_alias_checks": missing_alias,
             "indeterminate_evidence_checks": indeterminate,
-            "unassessed_values": unassessed}
+            "unassessed_values": unassessed,
+            "expected_unknown_fields": len(unknown_fields),
+            "unknown_fields_preserved": unknown_preserved,
+            "unknown_fields_non_null": unknown_non_null}

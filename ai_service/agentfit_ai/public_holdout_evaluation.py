@@ -88,7 +88,9 @@ def evaluate_case(case, document, analyzer, *, clock=time.monotonic,
            "total_checks": sum(len(items) for items in case["checks"].values()),
            "matched_checks": 0, "wrong_evidence_checks": 0,
            "missing_alias_checks": 0, "indeterminate_evidence_checks": 0,
-           "unassessed_values": 0}
+           "unassessed_values": 0,
+           "expected_unknown_fields": len(case.get("unknown_fields", [])),
+           "unknown_fields_preserved": 0, "unknown_fields_non_null": 0}
     if outcome["outcome"] == "failed":
         return row
     profile = outcome.get("profile")
@@ -117,6 +119,9 @@ def summarize(rows, *, planned):
         "indeterminate_evidence_checks": sum(
             row["indeterminate_evidence_checks"] for row in scored),
         "unassessed_values": sum(row["unassessed_values"] for row in scored),
+        "expected_unknown_fields": sum(row["expected_unknown_fields"] for row in scored),
+        "unknown_fields_preserved": sum(row["unknown_fields_preserved"] for row in scored),
+        "unknown_fields_non_null": sum(row["unknown_fields_non_null"] for row in scored),
         "unscored_cases": len(rows) - len(scored),
         "repair_option_fields": sum(row.get("repair_option_counts", {}).get(
             "fields", 0) for row in rows),

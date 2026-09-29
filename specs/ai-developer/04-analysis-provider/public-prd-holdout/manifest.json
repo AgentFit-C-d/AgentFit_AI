@@ -1,0 +1,94 @@
+{
+  "version": "public-holdout-v1",
+  "partition": "heldout",
+  "cases": [
+    {
+      "id": "dereel-prd",
+      "repo": "veryfaraway/DeReel",
+      "commit": "c9ef28c92c832008247a43bec1729943c43aa6cc",
+      "path": "docs/PRD.md",
+      "sha256": "17e0a88d2b10e9e1d73323980fc0332e0df25f3a58d80d5dd4109030c6dacbd4",
+      "checks": {
+        "project_name": [{"aliases": ["DeReel"], "quote": "# DeReel — Data Extraction & REEL Engine"}],
+        "project_type": [{"aliases": ["자동화 알림 도구", "개인용"], "quote": "**실용 목적:** 본인이 실제로 사용하는 개인용 자동화 알림 도구"}],
+        "domain": [{"aliases": ["재고", "가격 변동", "쇼핑 플랫폼"], "quote": "여러 쇼핑 플랫폼을 자동으로 크롤링하여 조건 충족 시 즉시 알림을 발송하는 시스템을 구축한다."}],
+        "features": [
+          {"aliases": ["에어팟", "Apple 리퍼비시"], "quote": "- [ ] Apple 리퍼비시 스토어에서 **에어팟 제품군** 재고 여부 크롤링"},
+          {"aliases": ["목표 가격", "목표가"], "quote": "- [ ] 제품별 **목표 가격 설정** — 현재 가격이 목표가 이하일 때만 알림"}
+        ],
+        "external_integrations": [{"aliases": ["Telegram"], "quote": "- [ ] **Telegram** 단일 채널 우선 지원"}]
+      },
+      "unknown_fields": ["ai"]
+    },
+    {
+      "id": "truetwo-prd",
+      "repo": "raehy19/TrueTwo",
+      "commit": "0312c763416a5cd60be03cad2cbea4c80ab300fa",
+      "path": "docs/project/PRD.md",
+      "sha256": "12296dd41ea3423b26689cfdb7245709e403906983ff45aef93b7836617cf896",
+      "checks": {
+        "project_name": [{"aliases": ["하루진진거"], "quote": "`하루진진거` = 우리 서비스."}],
+        "project_type": [{"aliases": ["데일리 게임", "게임"], "quote": "다른 가족 구성원이 가짜를 추리하는 데일리 게임이다."}],
+        "domain": [{"aliases": ["가족", "데일리 게임"], "quote": "가족이 매일 한 명씩 자신의 하루를 진짜 2개 + 가짜 1개(=진진거 한 판) 형식으로 공유하고"}],
+        "features": [
+          {"aliases": ["가짜 후보", "AI 가짜"], "quote": "AI가 그럴듯한 가짜 후보를 제안하고 사람이 마지막에 살을 붙여 등록한다."},
+          {"aliases": ["가족 풀이", "가짜 추리"], "quote": "가족 내부 풀이·코멘트·랭킹이 1차 핵심 루프"}
+        ]
+      }
+    },
+    {
+      "id": "campfire-prd",
+      "repo": "wlsdks/campfire",
+      "commit": "51cb404cebc546d1a1f3615c519f0b0b0efb719d",
+      "path": "PRD.md",
+      "sha256": "60ca7a99360ca70aeab4bf72a6ac672e2cb69f8a504bf26dccd5062ebc60d3f1",
+      "checks": {
+        "project_name": [{"aliases": ["Pick"], "quote": "# Pick PRD (Product Requirements Document)"}],
+        "domain": [{"aliases": ["강의 참여", "실시간 강의"], "quote": "실시간 강의 참여 플랫폼. 강사와 학생의 상호작용이 핵심."}],
+        "frontend": [{"aliases": ["React 19", "React"], "quote": "- **프론트엔드**: React 19 + Vite 7 + Tailwind CSS v4 + Framer Motion"}],
+        "backend": [{"aliases": ["Firebase Realtime Database", "Firebase"], "quote": "- **백엔드**: Firebase Realtime Database (서버리스)"}],
+        "database": [{"aliases": ["Firebase Realtime Database", "Firebase"], "quote": "- **백엔드**: Firebase Realtime Database (서버리스)"}],
+        "ai": [{"aliases": ["Gemini 2.0 Flash", "Gemini"], "quote": "| AI 심사 | 강사 | 완료 | Gemini 2.0 Flash × 7명 심사위원 (순차 평가) |"}],
+        "features": [{"aliases": ["학생 게스트 접속", "QR", "게스트 접속"], "quote": "| 학생 게스트 접속 | 학생 | 완료 | QR/링크로 닉네임 입력만으로 참여 |"}]
+      },
+      "unknown_fields": ["deployment"]
+    },
+    {
+      "id": "gongsi-mcp-prd",
+      "repo": "dolseom/gongsi-mcp",
+      "commit": "18d4511426c5498b801091f9a4b4942f09dbf235",
+      "path": "PRD.md",
+      "sha256": "34a08c488d0eea3b2baacf46288f139edd43174f03acc4dc64cb023a3ee93301",
+      "checks": {
+        "project_name": [{"aliases": ["gongsi-mcp"], "quote": "**프로젝트 코드명**: `gongsi-mcp`"}],
+        "project_type": [{"aliases": ["MCP 서버"], "quote": "# PRD — 기업집단 공시 특화 MCP 서버"}],
+        "domain": [{"aliases": ["기업집단 공시", "공시담당자", "MCP 서버"], "quote": "DART 전자공시 + 공정위 기업집단포털을 한 몸으로 묶어, **공시담당자가 과태료를 맞지 않게 만드는** MCP 서버"}],
+        "backend": [{"aliases": ["Node.js", "TypeScript"], "quote": "| 런타임 | **Node.js ≥ 22.13** | `node:sqlite` 내장 요건."}],
+        "database": [{"aliases": ["node:sqlite", "SQLite"], "quote": "| 캐시 | **`node:sqlite`** (내장) | ✅ 결정(2026-07-29). corp_code 인덱스 + 원문 캐시."}],
+        "deployment": [{"aliases": ["npm"], "quote": "| 배포 | npm + Claude Code plugin marketplace | §8 |"}],
+        "features": [{"aliases": ["공시의무 판정", "공시 의무", "룰 엔진"], "quote": "단순 API 래퍼가 아닌 **공시의무 판정 룰 엔진**(법령·고시 코드화)"}],
+        "external_integrations": [{"aliases": ["OpenDART", "DART"], "quote": "OpenDART 83개 API + 공정위 기업집단포털 15개 API를 **14개 MCP 도구**로 압축"}]
+      },
+      "unknown_fields": ["frontend", "ai"]
+    },
+    {
+      "id": "price-kr-prd",
+      "repo": "price-kr/price.kr",
+      "commit": "d22fe6cda773ec90c0591bbc1d64bdda608eba77",
+      "path": "docs/PRD.md",
+      "sha256": "566a2892276ab29fab5d08a9721777ed947308f7704a616448f2da21d6d4a9bc",
+      "checks": {
+        "project_name": [{"aliases": ["가격.kr"], "quote": "집단 지성 오픈소스 단축 URL 서비스 — 가격.kr"}],
+        "project_type": [{"aliases": ["단축 URL 서비스", "단축 URL"], "quote": "집단 지성 오픈소스 단축 URL 서비스 — 가격.kr"}],
+        "domain": [{"aliases": ["단축 URL", "커뮤니티", "리다이렉트"], "quote": "커뮤니티가 투표하여 선정한 최적의 목적지"}],
+        "frontend": [{"aliases": ["Next.js"], "quote": "**프레임워크 & 호스팅:** Next.js, Vercel Free 플랜"}],
+        "backend": [{"aliases": ["Cloudflare Workers", "Workers"], "quote": "**라우팅 처리:** Cloudflare Workers — `Host` 헤더에서 서브도메인 추출"}],
+        "database": [{"aliases": ["Cloudflare KV"], "quote": "**캐시 및 스토리지:** Cloudflare KV (무료:"}],
+        "deployment": [{"aliases": ["Vercel", "Cloudflare"], "quote": "**아키텍처:** Cloudflare (리다이렉트 엔진) + Vercel Free (웹 앱) 하이브리드 구조"}],
+        "features": [{"aliases": ["302 Redirect", "리다이렉트"], "quote": "Cloudflare KV에서 키워드를 조회하여 **최종 목적지 URL로 `302 Redirect`** 를 수행합니다."}],
+        "external_integrations": [{"aliases": ["GitHub"], "quote": "GitHub의 Issue와 PR(Pull Request), 그리고 커뮤니티 투표(Emoji)"}]
+      },
+      "unknown_fields": ["ai"]
+    }
+  ]
+}
