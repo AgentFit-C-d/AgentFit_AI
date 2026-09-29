@@ -23,7 +23,7 @@ from .solar import AnalysisError, post_solar_inline, safe_evidence_failure
 
 
 ROOT = Path(__file__).resolve().parents[2]
-_STAGES = frozenset({"core", "features", "repair", "semantic_review",
+_STAGES = frozenset({"core", "features", "feature_curation", "repair", "semantic_review",
                      "semantic_repair", "semantic_recheck"})
 _OUTCOMES = frozenset({"started", "failed", "validated",
                        "validation_failed", "semantic_failed"})
@@ -68,10 +68,15 @@ class _SafeTraceMixin:
         self.safe_repair_option_counts = {"fields": 0, "choices": 0}
         self.safe_first_pass_error = None
         self.safe_section_candidate_counts = None
+        self.safe_section_selection_count = None
         return super().analyze_recoverable(document, document_id)
 
     def _observe_section_feature_candidates(self, metrics):
         self.safe_section_candidate_counts = _safe_section_candidate_counts(metrics)
+
+    def _observe_section_feature_selection(self, count):
+        self.safe_section_selection_count = (count if type(count) is int and
+                                             1 <= count <= 30 else None)
 
     def _first_pass_with_sections(self, document, request, reserve_call, chunks):
         self.safe_first_pass_error = None
@@ -171,6 +176,9 @@ def evaluate_case(case, document, analyzer, *, clock=time.monotonic,
         getattr(analyzer, "safe_section_candidate_counts", None))
     if section_counts is not None:
         row["section_candidate_counts"] = section_counts
+    selection_count = getattr(analyzer, "safe_section_selection_count", None)
+    if type(selection_count) is int and 1 <= selection_count <= 30:
+        row["section_selection_count"] = selection_count
     if outcome["outcome"] == "failed":
         return row
     profile = outcome.get("profile")
@@ -235,6 +243,7 @@ def main():
     parser.add_argument("--group-review-8k", action="store_true")
     parser.add_argument("--section-feature-review", action="store_true")
     parser.add_argument("--section-feature-extraction", action="store_true")
+    parser.add_argument("--section-feature-curation", action="store_true")
     parser.add_argument("--compact-review-effort", choices=("medium", "low"),
                         default="medium")
     args = parser.parse_args()
@@ -261,6 +270,8 @@ def main():
         parser.error("section feature review requires long 8k grouped source selector")
     if args.section_feature_extraction and not args.section_feature_review:
         parser.error("section feature extraction requires section feature review")
+    if args.section_feature_curation and not args.section_feature_extraction:
+        parser.error("section feature curation requires section feature extraction")
     if args.compact_review_effort != "medium" and not args.compact_review:
         parser.error("compact review effort requires compact review mode")
     if args.extended_review_window and (not args.source_selector or
@@ -295,11 +306,14 @@ def main():
             "group_review_8k": args.group_review_8k,
             "section_feature_review": args.section_feature_review,
             "section_feature_extraction": args.section_feature_extraction,
-            "max_provider_calls": (18 if args.section_feature_extraction else
+            "section_feature_curation": args.section_feature_curation,
+            "max_provider_calls": (19 if args.section_feature_curation else
+                                   18 if args.section_feature_extraction else
                                    12 if args.section_feature_review else 6),
             "feature_section_max_tokens": 8192 if args.section_feature_review else None,
             "feature_section_extraction_max_tokens": (
                 4096 if args.section_feature_extraction else None),
+            "feature_curation_max_tokens": 4096 if args.section_feature_curation else None,
             "compact_review_effort": args.compact_review_effort,
             "accuracy_first": args.accuracy_first,
             "extended_review_window": args.extended_review_window,
@@ -337,6 +351,7 @@ def main():
                 "grouped_review": args.grouped_review,
                 "section_feature_review": args.section_feature_review,
                 "section_feature_extraction": args.section_feature_extraction,
+                "section_feature_curation": args.section_feature_curation,
                 "group_review_max_tokens": 8192 if args.group_review_8k else 4096}
                if args.source_selector else {}))
         row = evaluate_case(case, document, analyzer,

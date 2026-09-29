@@ -12,7 +12,10 @@ from .section_feature_review import (split_feature_sections, validate_section_co
                                      section_review_payload, normalize_section_review)
 from .section_feature_extraction import (section_extraction_payload,
                                          normalize_section_features,
-                                         merge_section_features)
+                                         merge_section_features,
+                                         collect_section_features,
+                                         section_curation_payload,
+                                         normalize_section_curation)
 from .solar import AnalysisError, FREQUENCY_PENALTY, REASONING_EFFORT, _reject_unconfirmed, source_lines
 from .source_selector import CONTRACT_VERSION, selector_schema, selector_to_profile
 
@@ -50,6 +53,7 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
     def __init__(self, *args, compact_review=False, compact_review_effort="medium",
                  grouped_review=False, group_review_max_tokens=4096,
                  section_feature_review=False, section_feature_extraction=False,
+                 section_feature_curation=False,
                  **kwargs):
         if type(compact_review) is not bool:
             raise ValueError("compact_review must be boolean")
@@ -65,6 +69,9 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
         if (type(section_feature_extraction) is not bool or
                 section_feature_extraction and not section_feature_review):
             raise ValueError("section feature extraction requires section review")
+        if (type(section_feature_curation) is not bool or
+                section_feature_curation and not section_feature_extraction):
+            raise ValueError("section feature curation requires section extraction")
         if compact_review_effort not in ("medium", "low") or (
                 not compact_review and compact_review_effort != "medium"):
             raise ValueError("compact_review_effort requires compact review")
@@ -78,6 +85,7 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
         self._group_review_max_tokens = group_review_max_tokens
         self._section_feature_review = section_feature_review
         self._section_feature_extraction = section_feature_extraction
+        self._section_feature_curation = section_feature_curation
 
     def _semantic_review_groups(self):
         return GROUPS if self._grouped_review else super()._semantic_review_groups()
@@ -95,6 +103,8 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
         return chunks
 
     def _max_provider_calls(self):
+        if self._section_feature_curation:
+            return 19
         if self._section_feature_extraction:
             return 18
         return 12 if self._section_feature_review else super()._max_provider_calls()
@@ -108,9 +118,21 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
                            stage="features", source_section=chunk)
                    for chunk in chunks]
         try:
-            candidate["features"] = merge_section_features(
-                document, chunks, replies,
-                observer=self._observe_section_feature_candidates)
+            if self._section_feature_curation:
+                entry = collect_section_features(
+                    document, chunks, replies,
+                    observer=self._observe_section_feature_candidates)
+                if (entry is not None and entry["state"] == "confirmed" and
+                        len(entry["items"]) > 30):
+                    selected = request(("features",), "Select representative confirmed features.",
+                                       stage="feature_curation", curation=(chunks, entry))
+                    entry = selected["features"]
+                    self._observe_section_feature_selection(len(entry["items"]))
+                candidate["features"] = entry
+            else:
+                candidate["features"] = merge_section_features(
+                    document, chunks, replies,
+                    observer=self._observe_section_feature_candidates)
         except EvidenceError as error:
             failure = AnalysisError("INVALID_EVIDENCE", "features")
             failure.detail = error.detail()
@@ -118,6 +140,9 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
         return candidate
 
     def _observe_section_feature_candidates(self, metrics):
+        pass
+
+    def _observe_section_feature_selection(self, count):
         pass
 
     def _request_section_features(self, document, chunk, *, _trace=None, timeout=40):
@@ -131,6 +156,20 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
             failure.detail = error.detail()
             raise failure from None
         return {"features": normalized}, model, prompt_tokens, completion_tokens
+
+    def _request_feature_curation(self, document, chunks, entry, *, _trace=None,
+                                  timeout=40):
+        try:
+            payload = section_curation_payload(document, chunks, entry,
+                                               model=self._model)
+            reply, model, prompt_tokens, completion_tokens = self._send_payload(
+                payload, ("selectedIds",), _trace=_trace, timeout=timeout)
+            selected = normalize_section_curation(entry, reply)
+        except EvidenceError as error:
+            failure = AnalysisError("INVALID_EVIDENCE", "features")
+            failure.detail = error.detail()
+            raise failure from None
+        return {"features": selected}, model, prompt_tokens, completion_tokens
 
     def _request_section_feature_review(self, document, profile, chunk, *, _trace=None,
                                         timeout=40):

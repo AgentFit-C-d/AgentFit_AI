@@ -3,7 +3,8 @@ import unittest
 from agentfit_ai.evidence import EvidenceError
 from agentfit_ai.section_feature_extraction import (
     section_extraction_payload, normalize_section_features,
-    merge_section_features)
+    merge_section_features, collect_section_features,
+    section_curation_payload, normalize_section_curation)
 
 
 def confirmed(*lines):
@@ -13,6 +14,33 @@ def confirmed(*lines):
 
 
 class SectionFeatureExtractionTests(unittest.TestCase):
+    def test_curation_collects_overflow_without_changing_public_merge_limit(self):
+        document = "\n".join(f"- feature {number}" for number in range(1, 32))
+        chunks = ((1, 30), (31, 31))
+        replies = [confirmed(*range(1, 31)), confirmed(31)]
+        collected = collect_section_features(document, chunks, replies)
+        self.assertEqual(len(collected["items"]), 31)
+        with self.assertRaises(EvidenceError):
+            merge_section_features(document, chunks, replies)
+
+    def test_curation_selects_only_known_unique_ids_in_source_order(self):
+        document = "- checkout\n- settings\n- search"
+        entry = collect_section_features(document, ((1, 3),), [confirmed(1, 2, 3)])
+        payload = section_curation_payload(document, ((1, 3),), entry,
+                                           model="solar-pro4")
+        self.assertEqual(payload["max_tokens"], 4096)
+        self.assertIn("F0001", payload["messages"][1]["content"])
+        result = normalize_section_curation(entry,
+                                            {"selectedIds": ["F0003", "F0001"]})
+        self.assertEqual([item["lineId"] for item in result["items"]], [1, 3])
+        for selected in ([], ["F0001", "F0001"], ["F9999"],
+                         ["F0001"] * 31):
+            with self.subTest(selected=selected), self.assertRaises(EvidenceError):
+                normalize_section_curation(entry, {"selectedIds": selected})
+        with self.assertRaises(EvidenceError):
+            normalize_section_curation(entry, {"selectedIds": ["F0001"],
+                                               "private": "injected"})
+
     def test_merge_reports_only_numeric_candidate_counts(self):
         observed = []
         document = "- checkout\n- checkout settings\n- checkout\n- no features"

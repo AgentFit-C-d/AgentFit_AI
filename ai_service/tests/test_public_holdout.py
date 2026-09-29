@@ -13,6 +13,59 @@ from agentfit_ai.profile import FIELDS
 
 
 class PublicHoldoutTests(unittest.TestCase):
+    def test_section_curation_cli_requires_extraction_and_records_nineteen_calls(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "curation"
+
+            class FakeSelectorAnalyzer:
+                safe_calls = []
+
+                def __init__(self, *args, **kwargs):
+                    assert kwargs["section_feature_curation"] is True
+                    assert kwargs["section_feature_extraction"] is True
+
+                def analyze_recoverable(self, _document, _id):
+                    return {"outcome": "failed", "error": "INVALID_EVIDENCE"}
+
+            flags = ["--source-selector", "--grouped-review", "--group-review-8k",
+                     "--accuracy-first", "--extended-review-window",
+                     "--section-feature-review", "--section-feature-extraction",
+                     "--section-feature-curation"]
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(output), *flags]), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_manifest",
+                       return_value=[self.case]), \
+                 patch("agentfit_ai.public_holdout_evaluation.fetch_document",
+                       return_value=self.document), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_key",
+                       return_value="synthetic-key"), \
+                 patch("agentfit_ai.public_holdout_evaluation.SafeTraceSourceSelectorAnalyzer",
+                       FakeSelectorAnalyzer):
+                self.assertEqual(main(), 0)
+            plan = json.loads((output / "plan.json").read_text(encoding="utf-8"))
+            self.assertTrue(plan["section_feature_curation"])
+            self.assertEqual(plan["max_provider_calls"], 19)
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(Path(temp) / "invalid"),
+                                                *flags[:-2], "--section-feature-curation"]):
+                with self.assertRaises(SystemExit):
+                    main()
+
+    def test_section_curation_selection_count_is_allowlisted(self):
+        class FakeAnalyzer:
+            safe_section_selection_count = 17
+
+            def analyze_recoverable(self, _document, _id):
+                return {"outcome": "failed", "error": "INVALID_EVIDENCE"}
+
+        self.assertEqual(evaluate_case(self.case, self.document, FakeAnalyzer())
+                         ["section_selection_count"], 17)
+        for invalid in (0, 31, True, "secret source"):
+            FakeAnalyzer.safe_section_selection_count = invalid
+            row = evaluate_case(self.case, self.document, FakeAnalyzer())
+            self.assertNotIn("section_selection_count", row)
+            self.assertNotIn("secret source", json.dumps(row))
+
     def test_section_candidate_counts_are_numeric_and_validated_in_output(self):
         valid = {"chunk_counts": [2, 1], "confirmed_chunks": 2,
                  "null_chunks": 0, "absent_chunks": 0, "total_items": 3,

@@ -642,6 +642,10 @@ class SolarAnalyzer:
     def _request_section_features(self, document, chunk, *, _trace=None, timeout=40):
         raise AnalysisError("INVALID_EVIDENCE", "features")
 
+    def _request_feature_curation(self, document, chunks, entry, *, _trace=None,
+                                  timeout=40):
+        raise AnalysisError("INVALID_EVIDENCE", "features")
+
     def _first_pass_with_sections(self, document, request, reserve_call, chunks):
         return self._first_pass(request, reserve_call)
 
@@ -744,7 +748,8 @@ class SolarAnalyzer:
             return call
 
         def request(names, purpose, correction=None, *, stage=None, review_profile=None,
-                    review_section=None, source_section=None, _reserved_call=None):
+                    review_section=None, source_section=None, curation=None,
+                    _reserved_call=None):
             remaining = deadline - self._clock()
             if remaining <= 0:
                 if _reserved_call is not None:
@@ -767,7 +772,11 @@ class SolarAnalyzer:
                         reply = self._request_group_review(document, review_profile, names,
                                                            _trace=trace, timeout=remaining)
                 else:
-                    if source_section is not None:
+                    if curation is not None:
+                        reply = self._request_feature_curation(
+                            document, curation[0], curation[1], _trace=trace,
+                            timeout=min(self._field_call_timeout_seconds, remaining))
+                    elif source_section is not None:
                         reply = self._request_section_features(
                             document, source_section, _trace=trace,
                             timeout=min(self._field_call_timeout_seconds, remaining))

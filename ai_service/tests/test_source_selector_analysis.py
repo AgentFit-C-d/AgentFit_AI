@@ -25,6 +25,80 @@ def features():
 
 
 class SourceSelectorAnalysisTests(unittest.TestCase):
+    def test_section_curation_requires_extraction_and_has_nineteen_call_cap(self):
+        with self.assertRaises(ValueError):
+            SourceSelectorSolarAnalyzer("synthetic-key", grouped_review=True,
+                                        group_review_max_tokens=8192,
+                                        section_feature_review=True,
+                                        section_feature_curation=True)
+        analyzer = SourceSelectorSolarAnalyzer(
+            "synthetic-key", grouped_review=True, group_review_max_tokens=8192,
+            section_feature_review=True, section_feature_extraction=True,
+            section_feature_curation=True)
+        self.assertEqual(analyzer._max_provider_calls(), 19)
+
+    def test_section_curation_selects_overflow_ids_before_review(self):
+        document = ("# Alpha\n" +
+                    "".join(f"- feature {number}\n" for number in range(1, 31)) +
+                    "context\n" * 89 + "# Next\n- feature 31")
+        first = {"features": {"state": "confirmed", "items": [
+            {"lineId": line, "selector": "BODY", "role": "user_action"}
+            for line in range(2, 32)]}}
+        groups = [{"checkedFields": list(group), "issues": []} for group in GROUPS[:2]]
+        sections = [{"checkedRange": {"start": start, "end": end}, "issues": []}
+                    for start, end in ((1, 120), (121, 122))]
+        transport = Mock(side_effect=[
+            response(core()), response(first),
+            response({"features": confirmed(122, role="user_action")}),
+            response({"selectedIds": ["F0031", "F0001"]}),
+            *(response(item) for item in groups + sections)])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192, section_feature_review=True,
+            section_feature_extraction=True,
+            section_feature_curation=True).analyze_recoverable(document, "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual(result["profile"]["data"]["features"],
+                         ["feature 1", "feature 31"])
+        self.assertEqual(transport.call_count, 8)
+
+    def test_section_curation_rejects_unknown_id_without_profile(self):
+        document = ("# Alpha\n" +
+                    "".join(f"- feature {number}\n" for number in range(1, 31)) +
+                    "context\n" * 89 + "# Next\n- feature 31")
+        first = {"features": {"state": "confirmed", "items": [
+            {"lineId": line, "selector": "BODY", "role": "user_action"}
+            for line in range(2, 32)]}}
+        transport = Mock(side_effect=[
+            response(core()), response(first),
+            response({"features": confirmed(122, role="user_action")}),
+            response({"selectedIds": ["F9999"]})])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192, section_feature_review=True,
+            section_feature_extraction=True,
+            section_feature_curation=True).analyze_recoverable(document, "doc")
+        self.assertEqual(result["outcome"], "failed")
+        self.assertEqual(result["error"], "INVALID_EVIDENCE")
+        self.assertEqual(transport.call_count, 4)
+
+    def test_section_curation_skips_extra_call_for_thirty_or_fewer(self):
+        document = "# Alpha\n- registration\n" + "context\n" * 118 + "# Next\n- checkout"
+        groups = [{"checkedFields": list(group), "issues": []} for group in GROUPS[:2]]
+        sections = [{"checkedRange": {"start": start, "end": end}, "issues": []}
+                    for start, end in ((1, 120), (121, 122))]
+        transport = Mock(side_effect=[
+            response(core()), response(features()),
+            response({"features": confirmed(122, role="user_action")}),
+            *(response(item) for item in groups + sections)])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192, section_feature_review=True,
+            section_feature_extraction=True,
+            section_feature_curation=True).analyze_recoverable(document, "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual(transport.call_count, 7)
+
     def test_section_extraction_has_own_1200_second_timeout_cap(self):
         options = {"grouped_review": True, "group_review_max_tokens": 8192,
                    "section_feature_review": True, "section_feature_extraction": True,
