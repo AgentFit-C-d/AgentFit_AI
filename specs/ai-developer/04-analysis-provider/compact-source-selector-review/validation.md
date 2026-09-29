@@ -5,6 +5,7 @@
 - 원문 선택자 분석기에 opt-in 간결 의미 검토를 연결했다. 정상 이슈는 기존 의미 수정으로 전달하고 잘못된 대상 ID는 `SEMANTIC_REVIEW_INVALID`로 보류한다. Solar/NVIDIA의 전송 경로를 각각 모의 검증했다.
 - 평가 CLI는 간결 검토에서 실제 4,096 출력 토큰 상한과 `medium`/`low` 설정을 계획에 기록한다. 기본 분석기와 공개 Profile은 바꾸지 않았다.
 - 전체 `python -m unittest discover -s tests -q`: 623건 통과.
+- 기능 커밋 `f9a46bb`을 `feature/compact-source-selector-review`에 push했고 Linux CI `36539279165`가 성공했다. CI는 분석 정확도 합격을 뜻하지 않는다.
 
 ## 실제 문서 1건 탐색 실험
 

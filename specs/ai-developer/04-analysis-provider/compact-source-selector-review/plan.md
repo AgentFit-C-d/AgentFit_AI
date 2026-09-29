@@ -20,7 +20,7 @@
 
 - [x] 전체 테스트를 실행한다.
 - [x] 이미 튜닝에 쓴 Campfire 1건을 300초 전체 기한에서 Solar 간결 검토로 시험한다. 실패 사유를 좁힌 뒤 5건 확대 여부를 결정한다.
-- [ ] 결과·원문/키 비저장 확인을 `validation.md`에 기록하고 feature 브랜치를 push해 Linux CI를 확인한다.
+- [x] 결과·원문/키 비저장 확인을 `validation.md`에 기록하고 feature 브랜치를 push해 Linux CI를 확인한다.
 
 ## 작업 4: 출력 한도 재진단
 
