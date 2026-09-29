@@ -108,12 +108,17 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
                            stage="features", source_section=chunk)
                    for chunk in chunks]
         try:
-            candidate["features"] = merge_section_features(document, chunks, replies)
+            candidate["features"] = merge_section_features(
+                document, chunks, replies,
+                observer=self._observe_section_feature_candidates)
         except EvidenceError as error:
             failure = AnalysisError("INVALID_EVIDENCE", "features")
             failure.detail = error.detail()
             raise failure from None
         return candidate
+
+    def _observe_section_feature_candidates(self, metrics):
+        pass
 
     def _request_section_features(self, document, chunk, *, _trace=None, timeout=40):
         try:

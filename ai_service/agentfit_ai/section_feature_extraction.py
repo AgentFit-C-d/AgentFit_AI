@@ -93,7 +93,7 @@ def normalize_section_features(document, chunk, reply):
     return entry
 
 
-def merge_section_features(document, chunks, replies):
+def merge_section_features(document, chunks, replies, *, observer=None):
     if len(chunks) != len(replies):
         raise EvidenceError("SECTION_COVERAGE_INVALID", "features")
     try:
@@ -114,16 +114,32 @@ def merge_section_features(document, chunks, replies):
         for item in entry["items"]:
             value, span = source_span(document, item["lineId"], item["selector"])
             sourced_items.append((span["start"], value, item))
-    if absence is not None and sourced_items:
-        raise EvidenceError("SECTION_FEATURE_CONFLICT", "features")
     chosen = []
     seen_values = set()
     for _, value, item in sorted(sourced_items, key=lambda entry: entry[0]):
         if value not in seen_values:
             chosen.append(item)
             seen_values.add(value)
-            if len(chosen) > 30:
-                raise EvidenceError("SECTION_FEATURE_OVERFLOW", "features")
+    if observer is not None:
+        counts = [len(entry["items"]) if entry is not None and
+                  entry["state"] == "confirmed" else 0 for entry in entries]
+        metrics = {"chunk_counts": counts,
+                   "confirmed_chunks": sum(entry is not None and
+                                           entry["state"] == "confirmed" for entry in entries),
+                   "null_chunks": sum(entry is None for entry in entries),
+                   "absent_chunks": sum(entry is not None and
+                                        entry["state"] == "absent" for entry in entries),
+                   "total_items": len(sourced_items),
+                   "duplicate_items": len(sourced_items) - len(chosen),
+                   "unique_items": len(chosen)}
+        try:
+            observer(metrics)
+        except Exception:
+            pass  # Diagnostic observers must not change analysis outcomes.
+    if absence is not None and sourced_items:
+        raise EvidenceError("SECTION_FEATURE_CONFLICT", "features")
+    if len(chosen) > 30:
+        raise EvidenceError("SECTION_FEATURE_OVERFLOW", "features")
     if chosen:
         return {"state": "confirmed", "items": chosen}
     return absence

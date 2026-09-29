@@ -13,6 +13,35 @@ from agentfit_ai.profile import FIELDS
 
 
 class PublicHoldoutTests(unittest.TestCase):
+    def test_section_candidate_counts_are_numeric_and_validated_in_output(self):
+        valid = {"chunk_counts": [2, 1], "confirmed_chunks": 2,
+                 "null_chunks": 0, "absent_chunks": 0, "total_items": 3,
+                 "duplicate_items": 1, "unique_items": 2}
+        analyzer = SafeTraceSourceSelectorAnalyzer("synthetic-key")
+        analyzer._observe_section_feature_candidates({**valid, "private": "secret source"})
+        self.assertIsNone(analyzer.safe_section_candidate_counts)
+        analyzer._observe_section_feature_candidates(valid)
+        self.assertEqual(analyzer.safe_section_candidate_counts, valid)
+
+        class FakeAnalyzer:
+            safe_section_candidate_counts = valid
+
+            def analyze_recoverable(self, _document, _id):
+                return {"outcome": "failed", "error": "INVALID_EVIDENCE"}
+
+        row = evaluate_case(self.case, self.document, FakeAnalyzer())
+        self.assertEqual(row["section_candidate_counts"], valid)
+        FakeAnalyzer.safe_section_candidate_counts = {**valid, "private": "secret source"}
+        row = evaluate_case(self.case, self.document, FakeAnalyzer())
+        self.assertNotIn("section_candidate_counts", row)
+        self.assertNotIn("secret source", json.dumps(row))
+        for invalid in ({**valid, "chunk_counts": [31, 1]},
+                        {**valid, "unique_items": True},
+                        {**valid, "total_items": 4}):
+            FakeAnalyzer.safe_section_candidate_counts = invalid
+            self.assertNotIn("section_candidate_counts",
+                             evaluate_case(self.case, self.document, FakeAnalyzer()))
+
     def test_section_merge_failure_reports_allowlisted_reason_only(self):
         from agentfit_ai.solar import AnalysisError
         from agentfit_ai.source_selector_analysis import SourceSelectorSolarAnalyzer

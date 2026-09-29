@@ -37,8 +37,34 @@ def _safe_validation(item):
     return safe_evidence_failure(error)
 
 
+def _safe_section_candidate_counts(metrics):
+    names = {"chunk_counts", "confirmed_chunks", "null_chunks", "absent_chunks",
+             "total_items", "duplicate_items", "unique_items"}
+    if type(metrics) is not dict or set(metrics) != names:
+        return None
+    counts = metrics["chunk_counts"]
+    if (type(counts) is not list or not 1 <= len(counts) <= 7 or
+            any(type(count) is not int or not 0 <= count <= 30 for count in counts)):
+        return None
+    for name in names - {"chunk_counts"}:
+        value = metrics[name]
+        if type(value) is not int or not 0 <= value <= 210:
+            return None
+    if (sum(counts) != metrics["total_items"] or
+            sum(count > 0 for count in counts) != metrics["confirmed_chunks"] or
+            metrics["confirmed_chunks"] + metrics["null_chunks"] +
+            metrics["absent_chunks"] != len(counts) or
+            metrics["duplicate_items"] + metrics["unique_items"] !=
+            metrics["total_items"]):
+        return None
+    return {**metrics, "chunk_counts": counts.copy()}
+
+
 class _SafeTraceMixin:
     """Capture classifications in memory without retaining provider replies."""
+
+    def _observe_section_feature_candidates(self, metrics):
+        self.safe_section_candidate_counts = _safe_section_candidate_counts(metrics)
 
     def _first_pass_with_sections(self, document, request, reserve_call, chunks):
         self.safe_first_pass_error = None
@@ -134,6 +160,10 @@ def evaluate_case(case, document, analyzer, *, clock=time.monotonic,
     first_pass_error = getattr(analyzer, "safe_first_pass_error", None)
     if type(first_pass_error) is dict:
         row["first_pass_validation"] = first_pass_error
+    section_counts = _safe_section_candidate_counts(
+        getattr(analyzer, "safe_section_candidate_counts", None))
+    if section_counts is not None:
+        row["section_candidate_counts"] = section_counts
     if outcome["outcome"] == "failed":
         return row
     profile = outcome.get("profile")

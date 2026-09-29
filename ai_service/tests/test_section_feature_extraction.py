@@ -13,6 +13,36 @@ def confirmed(*lines):
 
 
 class SectionFeatureExtractionTests(unittest.TestCase):
+    def test_merge_reports_only_numeric_candidate_counts(self):
+        observed = []
+        document = "- checkout\n- checkout settings\n- checkout\n- no features"
+        result = merge_section_features(
+            document, ((1, 2), (3, 4)),
+            [confirmed(1, 2), confirmed(3)], observer=observed.append)
+        self.assertEqual([item["lineId"] for item in result["items"]], [1, 2])
+        self.assertEqual(observed, [{"chunk_counts": [2, 1],
+                                     "confirmed_chunks": 2, "null_chunks": 0,
+                                     "absent_chunks": 0, "total_items": 3,
+                                     "duplicate_items": 1, "unique_items": 2}])
+
+    def test_overflow_reports_counts_before_failing(self):
+        observed = []
+        document = "\n".join(f"- feature {number}" for number in range(1, 32))
+        with self.assertRaises(EvidenceError):
+            merge_section_features(document, ((1, 30), (31, 31)),
+                                   [confirmed(*range(1, 31)), confirmed(31)],
+                                   observer=observed.append)
+        self.assertEqual(observed[0]["chunk_counts"], [30, 1])
+        self.assertEqual(observed[0]["unique_items"], 31)
+
+    def test_diagnostic_observer_failure_does_not_change_merge_result(self):
+        def broken_observer(_metrics):
+            raise RuntimeError("diagnostic sink failed")
+
+        result = merge_section_features("- checkout", ((1, 1),),
+                                        [confirmed(1)], observer=broken_observer)
+        self.assertEqual(result["items"][0]["lineId"], 1)
+
     def test_payload_limits_selector_ids_to_local_lines(self):
         payload = section_extraction_payload("# Alpha\n- checkout\n# Next", (2, 2),
                                              model="solar-pro4")
