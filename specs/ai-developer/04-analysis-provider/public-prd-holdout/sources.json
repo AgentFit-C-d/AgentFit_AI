@@ -1,5 +1,5 @@
 {
-  "status": "gold-written; no model calls yet",
+  "status": "consumed-tuning; first evaluations recorded in validation.md",
   "sources": [
     {"id": "dereel-prd", "repo": "veryfaraway/DeReel", "commit": "c9ef28c92c832008247a43bec1729943c43aa6cc", "path": "docs/PRD.md", "bytes": 8850, "sha256": "17e0a88d2b10e9e1d73323980fc0332e0df25f3a58d80d5dd4109030c6dacbd4"},
     {"id": "truetwo-prd", "repo": "raehy19/TrueTwo", "commit": "0312c763416a5cd60be03cad2cbea4c80ab300fa", "path": "docs/project/PRD.md", "bytes": 22483, "sha256": "12296dd41ea3423b26689cfdb7245709e403906983ff45aef93b7836617cf896"},
