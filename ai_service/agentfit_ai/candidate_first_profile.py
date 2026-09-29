@@ -64,6 +64,34 @@ def freeze_candidates(document: str, extractions: list) -> dict:
     return {"candidates": candidates, "rejected": rejected}
 
 
+def freeze_candidate_occurrences(document: str, extractions: list) -> dict:
+    """Expand exact source phrases before deciding any occurrence's meaning."""
+    if type(document) is not str or not document.strip() or type(extractions) is not list:
+        raise ValueError("invalid candidate input")
+    positions, seen_quotes, rejected = set(), set(), []
+    for index, item in enumerate(extractions):
+        quote = getattr(item, "extraction_text", None)
+        if (getattr(item, "extraction_class", None) != "candidate" or
+                type(quote) is not str or not quote.strip()):
+            rejected.append({"index": index, "reason": "invalid_candidate"})
+            continue
+        if quote in seen_quotes:
+            continue
+        seen_quotes.add(quote)
+        start = document.find(quote)
+        if start < 0:
+            rejected.append({"index": index, "reason": "source_quote_absent"})
+            continue
+        while start >= 0:
+            positions.add((start, start + len(quote)))
+            if len(positions) > 240:
+                raise CandidateContractError("CANDIDATE_OCCURRENCE_LIMIT")
+            start = document.find(quote, start + 1)
+    candidates = [{"id": f"C{index:03d}", "start": start, "end": end}
+                  for index, (start, end) in enumerate(sorted(positions))]
+    return {"candidates": candidates, "rejected": rejected}
+
+
 def validate_candidate_labels(frozen: dict, labels: list[dict]) -> list[dict]:
     """Every exact candidate must receive exactly one field and status."""
     if (type(frozen) is not dict or set(frozen) != {"candidates", "rejected"} or
@@ -296,8 +324,11 @@ def project_candidate_profile(document: str, document_id: str,
 
 
 def analyze_candidate_first(document: str, document_id: str, key: str,
-                            *, extractor=None, transport=post_solar) -> dict:
+                            *, extractor=None, transport=post_solar,
+                            source_occurrences=False) -> dict:
     """Run the optional candidate-first path; never silently complete gaps."""
+    if type(source_occurrences) is not bool:
+        raise ValueError("invalid grounding mode")
     def run(stage, operation):
         try:
             return operation()
@@ -308,7 +339,8 @@ def analyze_candidate_first(document: str, document_id: str, key: str,
 
     extractions = run("EXTRACTION_FAILED", lambda: extract_profile_candidates(
         document, key, extractor=extractor))
-    frozen = run("GROUNDING_FAILED", lambda: freeze_candidates(
+    ground = freeze_candidate_occurrences if source_occurrences else freeze_candidates
+    frozen = run("GROUNDING_FAILED", lambda: ground(
         document, extractions))
     labels = run("CLASSIFICATION_FAILED", lambda: classify_profile_candidates(
         document, frozen, key, transport=transport))

@@ -1,6 +1,7 @@
 """Opt-in candidate-first comparison over approved redacted documents."""
 
 import argparse
+from functools import partial
 import hashlib
 import json
 from pathlib import Path
@@ -19,7 +20,7 @@ from .solar import AnalysisError
 
 _SAFE_REJECTION_REASONS = frozenset((
     "invalid_candidate", "invalid_anchor", "ambiguous_anchor",
-    "ambiguous_source", "alignment_conflict", "duplicate_span"))
+    "ambiguous_source", "alignment_conflict", "duplicate_span", "source_quote_absent"))
 
 
 def evaluate_cases(cases, key: str, *, runner=analyze_candidate_first) -> dict:
@@ -95,6 +96,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--env-file", type=Path)
     parser.add_argument("--case-id", choices=("H01", "H02", "H03"))
+    parser.add_argument("--source-occurrences", action="store_true")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live required")
@@ -112,7 +114,11 @@ def main() -> int:
     except Exception:
         parser.error("private document preflight failed")
     key = load_key(args.env_file)
-    result = evaluate_cases(select_cases(prepared, args.case_id), key)
+    runner = (partial(analyze_candidate_first, source_occurrences=True)
+              if args.source_occurrences else analyze_candidate_first)
+    result = evaluate_cases(select_cases(prepared, args.case_id), key, runner=runner)
+    result["grounding_mode"] = ("source-occurrences" if args.source_occurrences
+                                else "model-anchor")
     forbidden = (key, *(case.text for case in prepared),
                  *(str(case.get("path", "")) for case in payload["cases"]))
     args.output.parent.mkdir(parents=True, exist_ok=True)
