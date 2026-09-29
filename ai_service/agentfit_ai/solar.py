@@ -618,6 +618,12 @@ class SolarAnalyzer:
     def _observe_review_issues(self, stage, issues):
         pass
 
+    def _semantic_review_groups(self):
+        return (FIELDS,)
+
+    def _request_group_review(self, document, profile, fields, *, _trace=None, timeout=40):
+        raise AnalysisError("SEMANTIC_REVIEW_INVALID")
+
     def _contract_version(self):
         return CONTRACT_VERSION if self._evidence_contract else "legacy-lines"
 
@@ -728,7 +734,12 @@ class SolarAnalyzer:
             call_started = self._clock()
             try:
                 if review_profile is not None:
-                    reply = self._request_review(document, review_profile, _trace=trace, timeout=remaining)
+                    if names == FIELDS:
+                        reply = self._request_review(document, review_profile,
+                                                     _trace=trace, timeout=remaining)
+                    else:
+                        reply = self._request_group_review(document, review_profile, names,
+                                                           _trace=trace, timeout=remaining)
                 else:
                     reply = self._request_fields(document, names, purpose, correction, _trace=trace,
                                                  timeout=min(self._field_call_timeout_seconds, remaining))
@@ -736,6 +747,10 @@ class SolarAnalyzer:
                     raise AnalysisError("ANALYSIS_DEADLINE")
             except AnalysisError as error:
                 call.update(outcome="failed", error=safe_code(error.code))
+                detail = getattr(error, "review_detail", None)
+                if (error.code == "SEMANTIC_REVIEW_INVALID" and type(detail) is dict and
+                        detail.get("reason") in REVIEW_INVALID_REASONS):
+                    call["review_error"] = {"reason": detail["reason"]}
                 error.provider_calls = len(replies) + 1
                 error.first_pass_validated = False
                 error.repaired_fields = tuple(names) if correction is not None else ()
@@ -794,46 +809,83 @@ class SolarAnalyzer:
         self._observe_profile("pre_review", profile)
         semantic_repaired = ()
         if self._semantic_review:
-            def review_draft(current, stage):
-                value = request(FIELDS, "", stage=stage, review_profile=current)
-                call = diagnostic["calls"][-1]
-                try:
-                    issues = validate_review(value, current, len(source_lines(document)))
-                except ReviewValidationError as error:
-                    call.update(outcome="validation_failed", error="SEMANTIC_REVIEW_INVALID")
-                    if error.reason in REVIEW_INVALID_REASONS:
-                        call["review_error"] = {"reason": error.reason}
-                    raise AnalysisError("SEMANTIC_REVIEW_INVALID") from None
-                self._observe_review_issues(stage, issues)
-                call["outcome"] = "semantic_failed" if issues else "validated"
-                if issues:
-                    # Diagnostics contain classifications, never source quotes or original values.
-                    call["semantic_issues"] = [{"field": x["field"], "kind": x["kind"]} for x in issues]
-                    for field in {x["field"] for x in issues}:
-                        for source in reversed(diagnostic["calls"][:-1]):
-                            if source["stage"] in ("core", "features", "repair", "semantic_repair") and field in source["fields"]:
-                                source["outcome"] = "semantic_failed"
-                                break
-                return issues
-            issues = review_draft(profile, "semantic_review")
-            if issues:
-                semantic_repaired = tuple(field for field in FIELDS if any(x["field"] == field for x in issues))
-                candidate.update(request(semantic_repaired,
-                    "Correct the semantic issues against the original document. Preserve every supported required fact. Never hide missing facts by returning null.",
-                    {"issues": issues, "previous": {field: candidate[field] for field in semantic_repaired}},
-                    stage="semantic_repair"))
-                try:
-                    profile = self._project(document, document_id, candidate)
-                except AnalysisError as error:
-                    diagnostic["calls"][-1].update(outcome="validation_failed", error=safe_code(error.code))
-                    failure = safe_evidence_failure(error)
-                    if failure is not None:
-                        diagnostic["calls"][-1]["validation_error"] = failure
-                    raise
-                diagnostic["calls"][-1]["outcome"] = "validated"
-                self._observe_profile("post_repair", profile)
-                if review_draft(profile, "semantic_recheck"):
+            groups = self._semantic_review_groups()
+            if groups != (FIELDS,):
+                if (type(groups) is not tuple or len(groups) != 3 or
+                        any(type(group) is not tuple for group in groups) or
+                        sorted(field for group in groups for field in group) != sorted(FIELDS)):
+                    raise AnalysisError("SEMANTIC_REVIEW_INVALID")
+                all_issues = []
+                checked = []
+                for group in groups:
+                    value = request(group, "", stage="semantic_review", review_profile=profile)
+                    call = diagnostic["calls"][-1]
+                    if (type(value) is not dict or set(value) != {"checkedFields", "issues"} or
+                            type(value["checkedFields"]) is not list or
+                            value["checkedFields"] != list(group) or
+                            type(value["issues"]) is not list):
+                        call.update(outcome="validation_failed", error="SEMANTIC_REVIEW_INVALID")
+                        raise AnalysisError("SEMANTIC_REVIEW_INVALID")
+                    checked.extend(value["checkedFields"])
+                    issues = value["issues"]
+                    call["outcome"] = "semantic_failed" if issues else "validated"
+                    if issues:
+                        call["semantic_issues"] = [
+                            {"field": issue["field"], "kind": issue["kind"]}
+                            for issue in issues]
+                        for field in {issue["field"] for issue in issues}:
+                            for source in reversed(diagnostic["calls"][:-1]):
+                                if (source["stage"] in ("core", "features", "repair") and
+                                        field in source["fields"]):
+                                    source["outcome"] = "semantic_failed"
+                                    break
+                    all_issues.extend(issues)
+                if sorted(checked) != sorted(FIELDS):
+                    raise AnalysisError("SEMANTIC_REVIEW_INVALID")
+                self._observe_review_issues("semantic_review", all_issues)
+                if all_issues:
                     raise AnalysisError("SEMANTIC_REJECTED")
+            else:
+                def review_draft(current, stage):
+                    value = request(FIELDS, "", stage=stage, review_profile=current)
+                    call = diagnostic["calls"][-1]
+                    try:
+                        issues = validate_review(value, current, len(source_lines(document)))
+                    except ReviewValidationError as error:
+                        call.update(outcome="validation_failed", error="SEMANTIC_REVIEW_INVALID")
+                        if error.reason in REVIEW_INVALID_REASONS:
+                            call["review_error"] = {"reason": error.reason}
+                        raise AnalysisError("SEMANTIC_REVIEW_INVALID") from None
+                    self._observe_review_issues(stage, issues)
+                    call["outcome"] = "semantic_failed" if issues else "validated"
+                    if issues:
+                        # Diagnostics contain classifications, never source quotes or original values.
+                        call["semantic_issues"] = [{"field": x["field"], "kind": x["kind"]} for x in issues]
+                        for field in {x["field"] for x in issues}:
+                            for source in reversed(diagnostic["calls"][:-1]):
+                                if source["stage"] in ("core", "features", "repair", "semantic_repair") and field in source["fields"]:
+                                    source["outcome"] = "semantic_failed"
+                                    break
+                    return issues
+                issues = review_draft(profile, "semantic_review")
+                if issues:
+                    semantic_repaired = tuple(field for field in FIELDS if any(x["field"] == field for x in issues))
+                    candidate.update(request(semantic_repaired,
+                        "Correct the semantic issues against the original document. Preserve every supported required fact. Never hide missing facts by returning null.",
+                        {"issues": issues, "previous": {field: candidate[field] for field in semantic_repaired}},
+                        stage="semantic_repair"))
+                    try:
+                        profile = self._project(document, document_id, candidate)
+                    except AnalysisError as error:
+                        diagnostic["calls"][-1].update(outcome="validation_failed", error=safe_code(error.code))
+                        failure = safe_evidence_failure(error)
+                        if failure is not None:
+                            diagnostic["calls"][-1]["validation_error"] = failure
+                        raise
+                    diagnostic["calls"][-1]["outcome"] = "validated"
+                    self._observe_profile("post_repair", profile)
+                    if review_draft(profile, "semantic_recheck"):
+                        raise AnalysisError("SEMANTIC_REJECTED")
         def total(index):
             counts = [reply[index] for reply in replies]
             return sum(counts) if all(value is not None for value in counts) else None

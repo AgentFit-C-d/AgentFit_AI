@@ -4,6 +4,7 @@ from unittest.mock import Mock
 
 from agentfit_ai.deepseek_evaluation import MODEL
 from agentfit_ai.nvidia_source_selector import NvidiaSourceSelectorAnalyzer
+from agentfit_ai.grouped_review import GROUPS
 from agentfit_ai.profile import FIELDS
 from agentfit_ai.solar import AnalysisError
 from test_semantic_review import verdict
@@ -28,6 +29,18 @@ def features():
 
 
 class NvidiaSourceSelectorTests(unittest.TestCase):
+    def test_grouped_review_uses_nvidia_sender_for_all_three_groups(self):
+        group_replies = [{"checkedFields": list(group), "issues": []} for group in GROUPS]
+        transport = Mock(side_effect=[reply(core()), reply(features()),
+                                      *(reply(item) for item in group_replies)])
+        analyzer = NvidiaSourceSelectorAnalyzer(
+            "synthetic-nvidia-key", transport=transport, grouped_review=True)
+        result = analyzer.analyze_recoverable("# Alpha\n- registration", "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual(transport.call_count, 5)
+        self.assertTrue(all(call.args[0]["model"] == MODEL
+                            for call in transport.call_args_list))
+
     def test_compact_review_uses_nvidia_sender_and_normalizes_reply(self):
         transport = Mock(side_effect=[reply(core()), reply(features()),
                                       reply({"issues": []})])

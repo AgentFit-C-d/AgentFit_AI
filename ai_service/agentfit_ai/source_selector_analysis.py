@@ -4,9 +4,10 @@ import json
 
 from .evidence import EvidenceError
 from .compact_review import normalize_compact_review, review_payload
+from .grouped_review import GROUPS, group_review_payload, normalize_group_review
 from .line_evidence_analysis import LineEvidenceSolarAnalyzer
 from .profile import FIELDS
-from .semantic_review import ReviewValidationError
+from .semantic_review import REVIEW_REASONING_EFFORT, ReviewValidationError
 from .solar import AnalysisError, FREQUENCY_PENALTY, REASONING_EFFORT, _reject_unconfirmed, source_lines
 from .source_selector import CONTRACT_VERSION, selector_schema, selector_to_profile
 
@@ -41,15 +42,35 @@ project_name은 명시된 이름의 고유 부분, project_type은 제공 형태
 
 
 class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
-    def __init__(self, *args, compact_review=False, compact_review_effort="medium", **kwargs):
+    def __init__(self, *args, compact_review=False, compact_review_effort="medium",
+                 grouped_review=False, **kwargs):
         if type(compact_review) is not bool:
             raise ValueError("compact_review must be boolean")
+        if type(grouped_review) is not bool or (grouped_review and compact_review):
+            raise ValueError("grouped_review requires non-compact review")
         if compact_review_effort not in ("medium", "low") or (
                 not compact_review and compact_review_effort != "medium"):
             raise ValueError("compact_review_effort requires compact review")
         super().__init__(*args, **kwargs)
         self._compact_review = compact_review
         self._compact_review_effort = compact_review_effort
+        self._grouped_review = grouped_review
+
+    def _semantic_review_groups(self):
+        return GROUPS if self._grouped_review else super()._semantic_review_groups()
+
+    def _request_group_review(self, document, profile, fields, *, _trace=None, timeout=40):
+        try:
+            payload = group_review_payload(document, profile, fields, model=self._model,
+                                           effort=REVIEW_REASONING_EFFORT)
+            reply, model, prompt_tokens, completion_tokens = self._send_payload(
+                payload, ("checkedFields", "issues"), _trace=_trace, timeout=timeout)
+            normalized = normalize_group_review(reply, profile, document, fields)
+        except ReviewValidationError as error:
+            failure = AnalysisError("SEMANTIC_REVIEW_INVALID")
+            failure.review_detail = {"reason": error.reason}
+            raise failure from None
+        return normalized, model, prompt_tokens, completion_tokens
 
     def _contract_version(self):
         return CONTRACT_VERSION

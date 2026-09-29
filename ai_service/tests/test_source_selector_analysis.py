@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import Mock
 
 from agentfit_ai.profile import FIELDS
+from agentfit_ai.grouped_review import GROUPS
 from agentfit_ai.source_selector_analysis import SourceSelectorSolarAnalyzer
 from test_semantic_review import verdict
 from test_staged_analysis import response
@@ -24,6 +25,60 @@ def features():
 
 
 class SourceSelectorAnalysisTests(unittest.TestCase):
+    def test_grouped_review_completes_only_after_three_valid_groups(self):
+        group_replies = [{"checkedFields": list(group), "issues": []} for group in GROUPS]
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      *(response(item) for item in group_replies)])
+        analyzer = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True)
+        result = analyzer.analyze_recoverable("# Alpha\n- registration", "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual(transport.call_count, 5)
+        for group, call in zip(GROUPS, transport.call_args_list[2:]):
+            schema = call.args[0]["response_format"]["json_schema"]["schema"]
+            self.assertEqual(schema["properties"]["checkedFields"]["items"]["enum"],
+                             list(group))
+
+    def test_grouped_issue_holds_draft_without_semantic_repair(self):
+        replies = [{"checkedFields": list(group), "issues": []} for group in GROUPS]
+        replies[-1]["issues"] = [{"field": "features", "kind": "overbroad",
+                                  "targetId": "I0001", "sourceLineIds": []}]
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      *(response(item) for item in replies)])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True).analyze_recoverable(
+                "# Alpha\n- registration", "doc")
+        self.assertEqual(result["outcome"], "needs_confirmation")
+        self.assertEqual(result["error"], "SEMANTIC_REJECTED")
+        self.assertEqual(transport.call_count, 5)
+
+    def test_grouped_last_response_failure_never_auto_completes(self):
+        transport = Mock(side_effect=[
+            response(core()), response(features()),
+            response({"checkedFields": list(GROUPS[0]), "issues": []}),
+            response({"checkedFields": list(GROUPS[1]), "issues": []}),
+            response({"checkedFields": [], "issues": []}),
+        ])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True).analyze_recoverable(
+                "# Alpha\n- registration", "doc")
+        self.assertEqual(result["outcome"], "needs_confirmation")
+        self.assertEqual(result["error"], "SEMANTIC_REVIEW_INVALID")
+        self.assertEqual(transport.call_count, 5)
+
+    def test_grouped_review_uses_sixth_and_last_call_after_evidence_repair(self):
+        replies = [{"checkedFields": list(group), "issues": []} for group in GROUPS]
+        transport = Mock(side_effect=[
+            response(core("BOLD_1")), response(features()),
+            response({"project_name": confirmed(1)}),
+            *(response(item) for item in replies),
+        ])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True).analyze_recoverable(
+                "# Alpha\n- registration", "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual(transport.call_count, 6)
+
     def test_compact_review_empty_issues_completes_without_full_checked_fields(self):
         transport = Mock(side_effect=[response(core()), response(features()),
                                       response({"issues": []})])
