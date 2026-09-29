@@ -25,6 +25,87 @@ def features():
 
 
 class SourceSelectorAnalysisTests(unittest.TestCase):
+    def test_section_feature_review_completes_only_after_all_ranges(self):
+        document = "# Alpha\n- registration\n" + "context\n" * 118 + "# Next\n- checkout"
+        replies = [{"checkedFields": list(group), "issues": []} for group in GROUPS[:2]]
+        sections = [{"checkedRange": {"start": start, "end": end}, "issues": []}
+                    for start, end in ((1, 120), (121, 122))]
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      *(response(item) for item in replies + sections)])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192,
+            section_feature_review=True).analyze_recoverable(document, "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual(transport.call_count, 6)
+        self.assertEqual([call.args[0]["max_tokens"] for call in transport.call_args_list],
+                         [4096, 4096, 8192, 8192, 8192, 8192])
+
+    def test_section_feature_review_holds_on_last_invalid_range(self):
+        document = "# Alpha\n- registration\n" + "context\n" * 118 + "# Next\n- checkout"
+        replies = [{"checkedFields": list(group), "issues": []} for group in GROUPS[:2]]
+        sections = [{"checkedRange": {"start": 1, "end": 120}, "issues": []},
+                    {"checkedRange": {"start": 120, "end": 122}, "issues": []}]
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      *(response(item) for item in replies + sections)])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192,
+            section_feature_review=True).analyze_recoverable(document, "doc")
+        self.assertEqual(result["outcome"], "needs_confirmation")
+        self.assertEqual(result["error"], "SEMANTIC_REVIEW_INVALID")
+
+    def test_eight_sections_are_rejected_before_any_provider_call(self):
+        transport = Mock()
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192,
+            section_feature_review=True).analyze_recoverable(
+                "# Alpha\n" + "x\n" * 840, "doc")
+        self.assertEqual(result["outcome"], "failed")
+        self.assertEqual(result["error"], "CALL_LIMIT")
+        transport.assert_not_called()
+
+    def test_section_review_requires_eight_k_grouped_mode(self):
+        for options in ({}, {"grouped_review": True},
+                        {"group_review_max_tokens": 8192}):
+            with self.subTest(options=options), self.assertRaises(ValueError):
+                SourceSelectorSolarAnalyzer("synthetic-key",
+                                            section_feature_review=True, **options)
+
+    def test_section_issue_holds_draft_after_all_ranges(self):
+        replies = [{"checkedFields": list(group), "issues": []} for group in GROUPS[:2]]
+        section = {"checkedRange": {"start": 1, "end": 2}, "issues": [
+            {"field": "features", "kind": "overbroad", "targetId": "I0001",
+             "sourceLineIds": []}]}
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      *(response(item) for item in replies + [section])])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192,
+            section_feature_review=True).analyze_recoverable(
+                "# Alpha\n- registration", "doc")
+        self.assertEqual(result["outcome"], "needs_confirmation")
+        self.assertEqual(result["error"], "SEMANTIC_REJECTED")
+        self.assertEqual(transport.call_count, 5)
+
+    def test_seven_sections_use_twelve_calls_after_evidence_repair(self):
+        document = "# Alpha\n- registration\n" + "context\n" * 838
+        replies = [{"checkedFields": list(group), "issues": []} for group in GROUPS[:2]]
+        sections = [{"checkedRange": {"start": start, "end": start + 119},
+                     "issues": []} for start in range(1, 841, 120)]
+        transport = Mock(side_effect=[
+            response(core("BOLD_1")), response(features()),
+            response({"project_name": confirmed(1)}),
+            *(response(item) for item in replies + sections),
+        ])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, grouped_review=True,
+            group_review_max_tokens=8192,
+            section_feature_review=True).analyze_recoverable(document, "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual(transport.call_count, 12)
+
     def test_grouped_eight_k_limit_changes_only_review_calls(self):
         group_replies = [{"checkedFields": list(group), "issues": []} for group in GROUPS]
         transport = Mock(side_effect=[response(core()), response(features()),

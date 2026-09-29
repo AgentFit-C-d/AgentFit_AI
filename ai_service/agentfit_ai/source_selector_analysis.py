@@ -8,6 +8,8 @@ from .grouped_review import GROUPS, group_review_payload, normalize_group_review
 from .line_evidence_analysis import LineEvidenceSolarAnalyzer
 from .profile import FIELDS
 from .semantic_review import REVIEW_REASONING_EFFORT, ReviewValidationError
+from .section_feature_review import (split_feature_sections, validate_section_coverage,
+                                     section_review_payload, normalize_section_review)
 from .solar import AnalysisError, FREQUENCY_PENALTY, REASONING_EFFORT, _reject_unconfirmed, source_lines
 from .source_selector import CONTRACT_VERSION, selector_schema, selector_to_profile
 
@@ -43,7 +45,8 @@ project_name은 명시된 이름의 고유 부분, project_type은 제공 형태
 
 class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
     def __init__(self, *args, compact_review=False, compact_review_effort="medium",
-                 grouped_review=False, group_review_max_tokens=4096, **kwargs):
+                 grouped_review=False, group_review_max_tokens=4096,
+                 section_feature_review=False, **kwargs):
         if type(compact_review) is not bool:
             raise ValueError("compact_review must be boolean")
         if type(grouped_review) is not bool or (grouped_review and compact_review):
@@ -52,17 +55,52 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
                 group_review_max_tokens not in (4096, 8192) or
                 (not grouped_review and group_review_max_tokens != 4096)):
             raise ValueError("group_review_max_tokens requires grouped review")
+        if (type(section_feature_review) is not bool or
+                section_feature_review and (not grouped_review or group_review_max_tokens != 8192)):
+            raise ValueError("section feature review requires 8k grouped review")
         if compact_review_effort not in ("medium", "low") or (
                 not compact_review and compact_review_effort != "medium"):
             raise ValueError("compact_review_effort requires compact review")
         super().__init__(*args, **kwargs)
+        if section_feature_review and not self._semantic_review:
+            raise ValueError("section feature review requires semantic review")
         self._compact_review = compact_review
         self._compact_review_effort = compact_review_effort
         self._grouped_review = grouped_review
         self._group_review_max_tokens = group_review_max_tokens
+        self._section_feature_review = section_feature_review
 
     def _semantic_review_groups(self):
         return GROUPS if self._grouped_review else super()._semantic_review_groups()
+
+    def _section_feature_chunks(self, document):
+        if not self._section_feature_review:
+            return None
+        chunks = split_feature_sections(document)
+        try:
+            validate_section_coverage(chunks, len(source_lines(document)))
+        except ValueError:
+            raise AnalysisError("SEMANTIC_REVIEW_INVALID") from None
+        if len(chunks) > 7:
+            raise AnalysisError("CALL_LIMIT")
+        return chunks
+
+    def _max_provider_calls(self):
+        return 12 if self._section_feature_review else super()._max_provider_calls()
+
+    def _request_section_feature_review(self, document, profile, chunk, *, _trace=None,
+                                        timeout=40):
+        try:
+            payload = section_review_payload(document, profile, chunk, model=self._model,
+                                             effort=REVIEW_REASONING_EFFORT)
+            reply, model, prompt_tokens, completion_tokens = self._send_payload(
+                payload, ("checkedRange", "issues"), _trace=_trace, timeout=timeout)
+            normalized = normalize_section_review(reply, profile, document, chunk)
+        except ReviewValidationError as error:
+            failure = AnalysisError("SEMANTIC_REVIEW_INVALID")
+            failure.review_detail = {"reason": error.reason}
+            raise failure from None
+        return normalized, model, prompt_tokens, completion_tokens
 
     def _request_group_review(self, document, profile, fields, *, _trace=None, timeout=40):
         try:

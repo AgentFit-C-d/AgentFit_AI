@@ -41,6 +41,15 @@ class ReviewDiagnosticTests(unittest.TestCase):
         self.assertEqual(result["calls"],[{"review_error":{"reason":"ARRAY_INDEX"}},
                                           {"review_error":{"reason":"COMPACT_MISSING_SOURCE_EMPTY"}},{}])
 
+    def test_section_review_reasons_are_exported_without_raw_values(self):
+        for reason in ("CHECKED_RANGE", "SECTION_SOURCE_LINE_INVALID",
+                       "SECTION_TARGET_INVALID", "SECTION_ISSUE_CONFLICT"):
+            with self.subTest(reason=reason):
+                result = safe_diagnostics({"calls": [
+                    {"review_error": {"reason": reason, "raw": "private"}}]})
+                self.assertEqual(result["calls"],
+                                 [{"review_error": {"reason": reason}}])
+
     def test_anchored_error_reaches_safe_diagnostics(self):
         from unittest.mock import Mock
         from agentfit_ai.anchored_analysis import AnchoredAnalyzer

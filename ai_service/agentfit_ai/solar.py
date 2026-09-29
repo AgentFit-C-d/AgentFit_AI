@@ -621,7 +621,16 @@ class SolarAnalyzer:
     def _semantic_review_groups(self):
         return (FIELDS,)
 
+    def _section_feature_chunks(self, document):
+        return None
+
+    def _max_provider_calls(self):
+        return 6
+
     def _request_group_review(self, document, profile, fields, *, _trace=None, timeout=40):
+        raise AnalysisError("SEMANTIC_REVIEW_INVALID")
+
+    def _request_section_feature_review(self, document, profile, chunk, *, _trace=None, timeout=40):
         raise AnalysisError("SEMANTIC_REVIEW_INVALID")
 
     def _contract_version(self):
@@ -709,10 +718,11 @@ class SolarAnalyzer:
     def _analyze(self, document, document_id, diagnostic, raw_responses, deadline):
         started = self._clock()
         replies = []
+        section_chunks = self._section_feature_chunks(document)
         def reserve_call(names, correction=None, stage=None):
             if deadline - self._clock() <= 0:
                 raise AnalysisError("ANALYSIS_DEADLINE")
-            if len(diagnostic["calls"]) >= 6:
+            if len(diagnostic["calls"]) >= self._max_provider_calls():
                 raise AnalysisError("CALL_LIMIT")
             call = {"call": len(diagnostic["calls"]) + 1,
                     "stage": stage or ("repair" if correction is not None else "features" if names == ("features",) else "core"),
@@ -722,7 +732,7 @@ class SolarAnalyzer:
             return call
 
         def request(names, purpose, correction=None, *, stage=None, review_profile=None,
-                    _reserved_call=None):
+                    review_section=None, _reserved_call=None):
             remaining = deadline - self._clock()
             if remaining <= 0:
                 if _reserved_call is not None:
@@ -734,7 +744,11 @@ class SolarAnalyzer:
             call_started = self._clock()
             try:
                 if review_profile is not None:
-                    if names == FIELDS:
+                    if review_section is not None:
+                        reply = self._request_section_feature_review(
+                            document, review_profile, review_section,
+                            _trace=trace, timeout=remaining)
+                    elif names == FIELDS:
                         reply = self._request_review(document, review_profile,
                                                      _trace=trace, timeout=remaining)
                     else:
@@ -817,7 +831,7 @@ class SolarAnalyzer:
                     raise AnalysisError("SEMANTIC_REVIEW_INVALID")
                 all_issues = []
                 checked = []
-                for group in groups:
+                for group in (groups[:2] if section_chunks is not None else groups):
                     value = request(group, "", stage="semantic_review", review_profile=profile)
                     call = diagnostic["calls"][-1]
                     if (type(value) is not dict or set(value) != {"checkedFields", "issues"} or
@@ -840,6 +854,35 @@ class SolarAnalyzer:
                                     source["outcome"] = "semantic_failed"
                                     break
                     all_issues.extend(issues)
+                if section_chunks is not None:
+                    from .section_feature_review import merge_section_issues
+                    section_issues = []
+                    for chunk in section_chunks:
+                        value = request(("features",), "", stage="semantic_review",
+                                        review_profile=profile, review_section=chunk)
+                        call = diagnostic["calls"][-1]
+                        if (type(value) is not dict or set(value) != {"issues"} or
+                                type(value["issues"]) is not list):
+                            call.update(outcome="validation_failed", error="SEMANTIC_REVIEW_INVALID")
+                            raise AnalysisError("SEMANTIC_REVIEW_INVALID")
+                        issues = value["issues"]
+                        call["outcome"] = "semantic_failed" if issues else "validated"
+                        if issues:
+                            call["semantic_issues"] = [
+                                {"field": issue["field"], "kind": issue["kind"]}
+                                for issue in issues]
+                            for source in reversed(diagnostic["calls"][:-1]):
+                                if source["stage"] in ("core", "features", "repair") and "features" in source["fields"]:
+                                    source["outcome"] = "semantic_failed"
+                                    break
+                        section_issues.append(issues)
+                    try:
+                        all_issues.extend(merge_section_issues(section_issues))
+                    except ReviewValidationError:
+                        diagnostic["calls"][-1].update(outcome="validation_failed",
+                                                        error="SEMANTIC_REVIEW_INVALID")
+                        raise AnalysisError("SEMANTIC_REVIEW_INVALID") from None
+                    checked.append("features")
                 if sorted(checked) != sorted(FIELDS):
                     raise AnalysisError("SEMANTIC_REVIEW_INVALID")
                 self._observe_review_issues("semantic_review", all_issues)
