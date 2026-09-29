@@ -33,10 +33,10 @@
 
 **Interfaces:** `ground_anchored_extractions(document: str, extractions: list) -> tuple[dict, ...]`. 각 행은 `status`, `start`, `end`, `reason`의 안전한 값만 가진다. 원문·인용은 반환하지 않는다.
 
-- [ ] 실패 테스트: 다른 문맥의 같은 이름은 서로 다른 위치에 결속하고, 중복 anchor/원문 중복 anchor/문맥 내 후보 중복/정렬 충돌/누락·변형 문맥은 `review`로 처리한다.
-- [ ] `rtk proxy ../.venv/Scripts/python.exe -m unittest discover -s tests -p test_anchored_grounding.py -q`로 기대한 실패를 확인한다.
-- [ ] 원문 정확 문자열 검색과 중복 최종 위치 검증을 구현한다.
-- [ ] 같은 테스트로 통과를 확인하고 구현·테스트를 커밋한다.
+- [x] 실패 테스트: 다른 문맥의 같은 이름은 서로 다른 위치에 결속하고, 중복 anchor/원문 중복 anchor/문맥 내 후보 중복/정렬 충돌/누락·변형 문맥은 `review`로 처리한다.
+- [x] `rtk proxy ../.venv/Scripts/python.exe -m unittest discover -s tests -p test_anchored_grounding.py -q`로 기대한 실패를 확인한다.
+- [x] 원문 정확 문자열 검색과 중복 최종 위치 검증을 구현한다.
+- [x] 같은 테스트로 통과를 확인하고 구현·테스트를 커밋한다.
 
 ### Task 2: LangExtract 속성·Solar 스키마 연결
 
