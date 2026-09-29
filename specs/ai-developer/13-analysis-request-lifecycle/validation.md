@@ -9,6 +9,7 @@
 - 로컬 Uvicorn health·인증·분석 응답 smoke 통과.
 - 합성 문서의 실제 Solar 호출: 격리 Worker 직접 2회 `complete`, 로컬 FastAPI HTTP 경유 2회 `200 complete`, 1회 `502 PROVIDER_TIMEOUT`. 재실행에서는 완료됐다. 이 한 번의 실패 원인은 확정되지 않았으며 공급자 지연 가능성을 후속 관측 대상으로 남긴다.
 - 독립 코드 리뷰를 두 차례 요청했지만 리뷰어의 셸 환경이 동일한 setup 오류로 파일을 읽지 못했다. 독립 리뷰 완료로 간주하지 않는다.
+- 구현 커밋 `48be2c8`을 `feature/analysis-request-lifecycle` 브랜치에 push했다.
 
 ## 남은 위험
 
