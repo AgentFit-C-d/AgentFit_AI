@@ -10,7 +10,7 @@ from .profile import ARRAY_FIELDS, FIELDS
 
 
 MAX_DOCUMENT_BYTES = 100_000
-SCORE_VERSION = "public-evidence-v2"
+SCORE_VERSION = "public-evidence-v3"
 MANIFEST = (Path(__file__).resolve().parents[2] /
             "specs/ai-developer/04-analysis-provider/public-holdout-corpus/manifest.json")
 _REPO = re.compile(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+\Z")
@@ -117,7 +117,13 @@ def _citation_state(document, spans, quote, value, peers):
                 ambiguous = True
             else:
                 return "matched"
-    return "indeterminate" if ambiguous else "wrong"
+    alternate = any(
+        type(span) is dict and type(span.get("start")) is int
+        and type(span.get("end")) is int
+        and 0 <= span["start"] < span["end"] <= len(document)
+        and value in document[span["start"]:span["end"]]
+        for span in spans)
+    return "indeterminate" if ambiguous or alternate else "wrong"
 
 
 def _matches(value, aliases):

@@ -141,7 +141,7 @@ class PublicHoldoutTests(unittest.TestCase):
         self.assertEqual(score["matched_checks"], 1)
         self.assertEqual(score["wrong_evidence_checks"], 0)
 
-    def test_same_value_cited_at_other_location_is_wrong_evidence(self):
+    def test_same_value_cited_at_other_location_is_indeterminate(self):
         document = "- 웹 푸시 알림\n계획: 웹 푸시 알림\n"
         case = {"checks": {"features": [{"aliases": ["웹 푸시 알림"],
                                           "quote": "- 웹 푸시 알림"}]}}
@@ -149,8 +149,22 @@ class PublicHoldoutTests(unittest.TestCase):
         profile = self.profile_with("features", ["웹 푸시 알림"],
                                     [{"start": start, "end": start + len("웹 푸시 알림")}])
         score = score_profile(case, document, profile)
-        self.assertEqual(score["wrong_evidence_checks"], 1)
+        self.assertEqual(score["wrong_evidence_checks"], 0)
+        self.assertEqual(score["indeterminate_evidence_checks"], 1)
         self.assertEqual(score["matched_checks"], 0)
+
+    def test_gold_location_wins_when_alternate_location_is_also_cited(self):
+        document = "- 웹 푸시 알림\n계획: 웹 푸시 알림\n"
+        case = {"checks": {"features": [{"aliases": ["웹 푸시 알림"],
+                                          "quote": "- 웹 푸시 알림"}]}}
+        start = document.index("웹 푸시 알림", document.index("계획:"))
+        profile = self.profile_with("features", ["웹 푸시 알림"], [
+            {"start": start, "end": start + len("웹 푸시 알림")},
+            {"start": 2, "end": 2 + len("웹 푸시 알림")},
+        ])
+        score = score_profile(case, document, profile)
+        self.assertEqual(score["matched_checks"], 1)
+        self.assertEqual(score["wrong_evidence_checks"], 0)
 
     def test_shared_array_span_has_indeterminate_item_evidence(self):
         document = "Users can import recipes and create shopping lists."
@@ -213,7 +227,7 @@ class PublicHoldoutTests(unittest.TestCase):
         summary = summarize([row], planned=3)
         self.assertEqual(summary["needs_confirmation_cases"], 1)
         self.assertEqual(summary["indeterminate_evidence_checks"], 0)
-        self.assertEqual(summary["score_version"], "public-evidence-v2")
+        self.assertEqual(summary["score_version"], "public-evidence-v3")
         self.assertFalse(summary["release_gate_passed"])
 
     def test_safe_trace_keeps_final_failure_reason_without_raw_detail(self):
