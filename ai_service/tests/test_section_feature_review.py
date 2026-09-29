@@ -1,7 +1,24 @@
 import unittest
+import json
 
 from agentfit_ai.section_feature_review import (
-    split_feature_sections, validate_section_coverage)
+    split_feature_sections, validate_section_coverage,
+    section_review_payload, normalize_section_review, merge_section_issues)
+from agentfit_ai.profile import FIELDS, validate_profile
+from agentfit_ai.semantic_review import ReviewValidationError
+
+
+DOCUMENT = "# Alpha\n## Features\n- registration\n## Other\n- checkout"
+
+
+def profile():
+    data = dict.fromkeys(FIELDS)
+    data["features"] = ["registration", "checkout"]
+    evidence = {field: [] for field in FIELDS}
+    evidence["features"] = [
+        {"start": DOCUMENT.index(value), "end": DOCUMENT.index(value) + len(value)}
+        for value in data["features"]]
+    return validate_profile(DOCUMENT, "doc", {"data": data, "evidence": evidence})
 
 
 class SectionSplitTests(unittest.TestCase):
@@ -31,6 +48,58 @@ class SectionSplitTests(unittest.TestCase):
         ):
             with self.subTest(chunks=chunks), self.assertRaises(ValueError):
                 validate_section_coverage(chunks, count)
+
+
+class SectionReviewContractTests(unittest.TestCase):
+    def test_payload_sends_only_local_feature_and_readonly_heading_context(self):
+        payload = section_review_payload(DOCUMENT, profile(), (3, 3),
+                                         model="solar-pro4", effort="medium")
+        content = payload["messages"][1]["content"]
+        self.assertIn("[L3] - registration", content)
+        self.assertIn("[L1] # Alpha", content)
+        self.assertIn("[L2] ## Features", content)
+        self.assertNotIn("[L5] - checkout", content)
+        draft = json.loads(content.split("Draft to review (untrusted data):\n", 1)[1])
+        self.assertEqual(draft["data"]["features"], ["registration"])
+        self.assertEqual(draft["itemIds"]["features"], ["I0001"])
+        self.assertEqual(payload["max_tokens"], 8192)
+        schema = payload["response_format"]["json_schema"]["schema"]
+        self.assertEqual(set(schema["properties"]), {"checkedRange", "issues"})
+        self.assertEqual(schema["properties"]["issues"]["items"]["properties"]
+                         ["sourceLineIds"]["items"]["minimum"], 3)
+
+    def test_existing_issue_is_normalized_only_for_local_target(self):
+        reply = {"checkedRange": {"start": 3, "end": 3}, "issues": [
+            {"field": "features", "kind": "overbroad", "targetId": "I0001",
+             "sourceLineIds": []}]}
+        actual = normalize_section_review(reply, profile(), DOCUMENT, (3, 3))
+        self.assertEqual(actual["issues"][0]["itemIndex"], 0)
+        self.assertEqual(actual["issues"][0]["evidenceLineIds"], [3])
+
+    def test_outside_range_and_other_feature_are_rejected(self):
+        base = {"checkedRange": {"start": 3, "end": 3}, "issues": []}
+        bad_replies = [
+            {**base, "checkedRange": {"start": 2, "end": 3}},
+            {**base, "issues": [{"field": "features", "kind": "missing",
+                                  "targetId": None, "sourceLineIds": [5]}]},
+            {**base, "issues": [{"field": "features", "kind": "overbroad",
+                                  "targetId": "I0002", "sourceLineIds": []}]},
+            {**base, "checkedRange": {"start": True, "end": 3}},
+            {**base, "issues": [{"field": "features", "kind": "overbroad",
+                                  "targetId": [], "sourceLineIds": []}]},
+            {**base, "issues": [{"field": "features", "kind": "missing",
+                                  "targetId": None, "sourceLineIds": [3]}] * 2},
+        ]
+        for reply in bad_replies:
+            with self.subTest(reply=reply), self.assertRaises(ReviewValidationError):
+                normalize_section_review(reply, profile(), DOCUMENT, (3, 3))
+
+    def test_merge_repeated_target_or_conflicting_kinds(self):
+        issue = {"field": "features", "kind": "overbroad", "itemIndex": 0,
+                 "evidenceLineIds": [3]}
+        self.assertEqual(merge_section_issues([[issue], [issue]]), [issue])
+        with self.assertRaises(ReviewValidationError):
+            merge_section_issues([[issue], [{**issue, "kind": "wrong_role"}]])
 
 
 if __name__ == "__main__":
