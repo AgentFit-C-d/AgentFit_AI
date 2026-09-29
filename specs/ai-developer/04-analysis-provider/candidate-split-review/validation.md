@@ -9,7 +9,16 @@
 
 ## 실행 기록
 
-H02: source-occurrences + stage-diagnostics + split-review. 첫 실행 세션 51346은 핸들이 사라졌으며 결과 파일도 없고 실행 중 Python 프로세스도 없음을 확인했다. 원인을 확정할 자료가 없어 모델 성능 점수에 포함하지 않는다. 승인된 같은 설정으로 재실행 예정이다. 이 기록만으로 프로세스 활성 여부를 판단하지 않는다.
+H02: source-occurrences + stage-diagnostics + split-review. 첫 실행 세션 51346은 핸들이 사라졌으며 결과 파일도 없고 실행 중 Python 프로세스도 없음을 확인했다. 원인을 확정할 자료가 없어 모델 성능 점수에 포함하지 않는다. 승인된 같은 설정으로 재실행했다(세션 47832, 출력 E:/AgentFit/tmp/candidate-split-review-h02-20260930-v2.json). 이 기록만으로 프로세스 활성 여부를 판단하지 않는다.
+
+코드 커밋 fc63ab8은 push했다. Linux CI 실행 36615875297 성공을 확인했다. 의존성 호환성, Linux PDF worker 메모리 제한 및 전체 테스트가 통과했다.
+
+## 실제 결과와 다음 행동
+
+- v2 세션 47832는 종료 코드 1로 끝났다. H02 667,158ms, COVERAGE_REVIEW_FAILED / INCOMPLETE_RESPONSE. 최종 Profile이 없어 6개 항목의 점수를 매길 수 없다. 검토 분리로 완주가 개선됐다는 근거를 얻지 못했다.
+- C01 이름과 C05 외부 연동은 grounded/classified=true. C06 기능은 grounded/classified=false로 최초 불일치가 grounded다. C02–C04는 expect_null이므로 최종 단계 미실행에 따라 미평가다. 이전 실행과 추출 후보가 달라 최종 차이를 검토 분리 효과로 단정할 수 없다.
+- 현 진단은 어느 후보 묶음 또는 전체 누락 검사에서 실패했는지와 finish_reason/usage를 남기지 않는다. 다음 작업은 원문·응답 내용 없이 호출 단계, 묶음 번호, 종료 사유, 토큰 수를 남겨 실패 위치를 더 좁힌다. 이 증거 전에는 토큰 부족으로 단정하거나 설정을 추가 변경하지 않는다.
+- 검토의 미완료와 초기 기능 후보 누락이 함께 남았다. 구현·코드 검증은 완료했으나 모델 품질·실사용 목표는 미완료다.
 
 ## 판단 한계
 

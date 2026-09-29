@@ -17,7 +17,7 @@
 - [x] 1. `tests/test_candidate_split_review.py`에 21개 확정 후보와 미확정 후보의 분리, 중복 값, 잘못된 ID·중복 ID·checked 누락·미완료·모델 불일치·빈 후보 테스트를 작성한다. `unittest discover -s tests -p test_candidate_split_review.py -v`에서 미구현 실패를 확인한다.
 - [x] 2. `agentfit_ai/candidate_split_review.py`의 `review_candidates_separately(document, frozen, labels, key, *, transport)`를 구현한다. 기존 validator와 source mention을 재사용하고 후보 검토 20개 묶음 뒤 누락 검사를 수행한다. 위 테스트를 통과시킨다.
 - [x] 3. `analyze_candidate_first(..., split_review=False)` 및 평가 CLI `--split-review`를 연결한다. 기본 경로와 선택 경로, 실패 시 projected 이벤트 부재·오류 후보 제외·확인 필요 처리를 회귀 검증한다. 결과에 review_mode를 기록한다.
-- [ ] 4. 전체 `python -m unittest discover -s tests -q`, diff 검사, 코드 리뷰, commit/push, CI. 승인된 manifest 해시로 H02를 source-occurrences/stage-diagnostics/split-review와 함께 1회 실행한다. 검증 기록에 결과·한계·다음 행동을 남긴다.
+- [x] 4. 전체 `python -m unittest discover -s tests -q`, diff 검사, 코드 리뷰, commit/push, CI. 승인된 manifest 해시로 H02를 source-occurrences/stage-diagnostics/split-review와 함께 1회 실행한다. 검증 기록에 결과·한계·다음 행동을 남긴다. 결과는 검토 미완료 실패이며 품질 개선 미입증이다.
 
 ## 상태 기록
 
