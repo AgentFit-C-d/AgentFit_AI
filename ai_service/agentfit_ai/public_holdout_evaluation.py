@@ -9,6 +9,7 @@ from pathlib import Path
 
 from .diagnostics import safe_code
 from .false_complete_evaluation import write_safe_json
+from .line_evidence_analysis import LineEvidenceSolarAnalyzer
 from .public_holdout import MANIFEST, SCORE_VERSION, fetch_document, load_manifest, score_profile
 from .recoverable_draft_evaluation import (CountingTransport,
                                            _structural_evidence_errors, load_key)
@@ -31,7 +32,7 @@ def _safe_validation(item):
     return safe_evidence_failure(error)
 
 
-class SafeTraceSolarAnalyzer(RecoverableSolarAnalyzer):
+class _SafeTraceMixin:
     """Capture classifications in memory without retaining provider replies."""
 
     def _repair_correction(self, document, errors, previous):
@@ -65,6 +66,14 @@ class SafeTraceSolarAnalyzer(RecoverableSolarAnalyzer):
             if timing:
                 row["timing"] = timing
             self.safe_calls.append(row)
+
+
+class SafeTraceSolarAnalyzer(_SafeTraceMixin, RecoverableSolarAnalyzer):
+    pass
+
+
+class SafeTraceLineEvidenceAnalyzer(_SafeTraceMixin, LineEvidenceSolarAnalyzer):
+    pass
 
 
 def evaluate_case(case, document, analyzer, *, clock=time.monotonic,
@@ -144,11 +153,14 @@ def main():
     parser.add_argument("--case-id", action="append")
     parser.add_argument("--repair-context-options", action="store_true")
     parser.add_argument("--parallel-first-pass", action="store_true")
+    parser.add_argument("--line-evidence", action="store_true")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live required")
     if args.output.exists():
         parser.error("output already exists")
+    if args.line_evidence and args.repair_context_options:
+        parser.error("line evidence does not use quote context options")
     cases = load_manifest(args.manifest, expected_partition=args.partition)
     if args.case_id:
         selected = set(args.case_id)
@@ -168,12 +180,15 @@ def main():
             "one_analysis_per_case": True,
             "repair_context_options": args.repair_context_options,
             "parallel_first_pass": args.parallel_first_pass,
+            "line_evidence": args.line_evidence,
             "release_gate_passed": False}
     write_safe_json(args.output / "plan.json", plan, forbidden_strings=forbidden)
     rows = []
     for case, document in documents:
         transport = CountingTransport(post_solar_inline)
-        analyzer = SafeTraceSolarAnalyzer(
+        analyzer_type = (SafeTraceLineEvidenceAnalyzer if args.line_evidence
+                         else SafeTraceSolarAnalyzer)
+        analyzer = analyzer_type(
             key, transport=transport, model="solar-pro4", evidence_contract=True,
             semantic_review=True, analysis_timeout_seconds=40,
             repair_context_options=args.repair_context_options,

@@ -32,7 +32,8 @@ SAFE_EVIDENCE_REASONS = frozenset({
     "QUOTE_NOT_IN_CONTEXT", "AMBIGUOUS_QUOTE", "QUOTE_NOT_FOUND",
     "INVALID_FIELDS", "INVALID_STATE", "INVALID_ABSENCE", "INVALID_ITEMS",
     "INVALID_ITEM", "INVALID_VALUE", "WRONG_ROLE", "VALUE_NOT_IN_QUOTE",
-    "DUPLICATE_VALUE",
+    "DUPLICATE_VALUE", "INVALID_LINE_ID", "VALUE_NOT_IN_LINE",
+    "AMBIGUOUS_VALUE_IN_LINE",
 })
 
 
@@ -606,6 +607,9 @@ class SolarAnalyzer:
     def _observe_review_issues(self, stage, issues):
         pass
 
+    def _contract_version(self):
+        return CONTRACT_VERSION if self._evidence_contract else "legacy-lines"
+
     def analyze(self, document: str, document_id: str) -> AnalysisResult:
         if type(document) is not str or not document.strip() or len(document) > 100_000:
             raise AnalysisError("INVALID_INPUT")
@@ -616,7 +620,7 @@ class SolarAnalyzer:
         started = self._clock()
         diagnostic = {"run_id": uuid4().hex, "prompt_version": PROMPT_VERSION,
                       "semantic_review_enabled": self._semantic_review,
-                      "evidence_contract": CONTRACT_VERSION if self._evidence_contract else "legacy-lines",
+                      "evidence_contract": self._contract_version(),
                       "input_codepoints": len(document), "input_bytes": len(document.encode("utf-8")),
                       "line_count": len(source_lines(document)), "calls": [],
                       "storage": "disabled" if self._diagnostics_store is None else "pending"}

@@ -12,6 +12,33 @@ from agentfit_ai.profile import FIELDS
 
 
 class PublicHoldoutTests(unittest.TestCase):
+    def test_line_evidence_flag_selects_opt_in_analyzer_and_records_plan(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "result"
+
+            class FakeLineAnalyzer:
+                def __init__(self, *args, **kwargs):
+                    self.safe_calls = []
+
+                def analyze_recoverable(self, document, document_id):
+                    return {"outcome": "failed", "error": "INVALID_EVIDENCE"}
+
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(output), "--line-evidence"]), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_manifest",
+                       return_value=[self.case]), \
+                 patch("agentfit_ai.public_holdout_evaluation.fetch_document",
+                       return_value=self.document), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_key",
+                       return_value="synthetic-key"), \
+                 patch("agentfit_ai.public_holdout_evaluation.SafeTraceLineEvidenceAnalyzer",
+                       FakeLineAnalyzer), \
+                 patch("agentfit_ai.public_holdout_evaluation.SafeTraceSolarAnalyzer",
+                       side_effect=AssertionError("base analyzer selected")):
+                self.assertEqual(main(), 0)
+            plan = json.loads((output / "plan.json").read_text(encoding="utf-8"))
+            self.assertTrue(plan["line_evidence"])
+
     def test_evaluation_accepts_repair_context_options_flag(self):
         with tempfile.TemporaryDirectory() as temp:
             with patch.object(sys, "argv", ["evaluate", "--live", "--output",
