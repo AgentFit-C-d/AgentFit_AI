@@ -5,6 +5,7 @@
 - 기본 `SolarAnalyzer`와 복구형 분석기의 opt-out 수정 요청 payload가 동일하다. opt-in은 위치 오류의 원문 인용마다 서버가 찾은 고유 문맥을 `evidenceOptions`에 넣는다. 기존 `evidence-v1` 출력·근거 검증·최대 호출 수는 유지한다.
 - 반환 문맥이 모호하면 `project_name`은 `unresolved`로 남고 결과는 `needs_confirmation`이다. 서버가 선택지를 자동 확정하지 않는다.
 - 평가 산출물에는 원문·키·모델 원본 응답을 넣지 않고, 제공한 필드와 선택지의 개수만 기록한다.
+- 프로젝트 가상환경에서 `python -m unittest discover -s tests -q`: **574건 통과**. `git diff --check`와 staged diff check 통과. `feature/repair-context-options`의 커밋 `cd1f91d`를 push했고 [AI service Linux checks](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36522488747)가 성공했다.
 
 ## 공개 한국어 튜닝 문서 관찰
 

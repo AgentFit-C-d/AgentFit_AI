@@ -4,4 +4,4 @@
 - [x] R02 복구형 opt-in 수정 payload·기존 계약 회귀
 - [x] R03 공개 튜닝 평가 선택 옵션
 - [x] R04 라이브 관찰·결과 해석
-- [ ] R05 전체 검증·feature 브랜치 push·CI
+- [x] R05 전체 검증·feature 브랜치 push·CI

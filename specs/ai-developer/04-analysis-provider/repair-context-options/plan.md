@@ -22,4 +22,4 @@
 
 - [x] 공개 평가 CLI에 `--repair-context-options`를 추가하고 plan에 설정을 기록한다.
 - [x] 한국어 튜닝 문서에서 1회 관찰 후 기준선과 다른 모델 실행이라는 제한을 명시한다.
-- [ ] 전체 테스트·diff check·feature 브랜치 push·Linux CI를 확인한다. 완전성·지연·오확정 게이트를 통과하기 전 기본값 활성화는 금지한다.
+- [x] 전체 테스트·diff check·feature 브랜치 push·Linux CI를 확인한다. 완전성·지연·오확정 게이트를 통과하기 전 기본값 활성화는 금지한다.
