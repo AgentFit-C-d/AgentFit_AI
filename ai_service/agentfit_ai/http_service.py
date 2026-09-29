@@ -203,6 +203,10 @@ def create_app(*, internal_token: str | None = None,
         supplied = authorization.removeprefix("Bearer ")
         if not authorization.startswith("Bearer ") or not hmac.compare_digest(supplied, token):
             return _error(401, "UNAUTHORIZED")
+        if (mode == "recoverable-solar" and
+                request.headers.getlist("x-agentfit-analysis-contract") !=
+                ["confirmation-v1"]):
+            return _error(428, "CONFIRMATION_CONTRACT_REQUIRED")
 
         document_id = request.headers.get("x-document-id", "")
         request_id = request.headers.get("x-request-id", "")

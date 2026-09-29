@@ -445,6 +445,7 @@ class InternalAnalysisHttpTests(unittest.TestCase):
                                    headers={"Authorization": "Bearer local-secret",
                                             "X-Document-Id": "doc_1", "X-Request-Id": "req_1",
                                             "X-Document-Kind": "TEXT",
+                                            "X-AgentFit-Analysis-Contract": "confirmation-v1",
                                             "Content-Type": "text/plain"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["questions"], [question])
@@ -452,6 +453,26 @@ class InternalAnalysisHttpTests(unittest.TestCase):
     def test_unknown_analysis_mode_fails_at_app_creation(self):
         with self.assertRaises(ValueError):
             create_app(internal_token="local-secret", analysis_mode="unknown")
+
+    def test_recoverable_mode_requires_explicit_confirmation_contract(self):
+        documents = []
+        client = TestClient(create_app(internal_token="local-secret",
+                                       analysis_mode="recoverable-solar",
+                                       analyze=lambda *args: documents.append(args)))
+        base = [("Authorization", "Bearer local-secret"),
+                ("X-Document-Id", "doc_1"), ("X-Request-Id", "req_1"),
+                ("X-Document-Kind", "TEXT"), ("Content-Type", "text/plain")]
+        variants = ([], [("X-AgentFit-Analysis-Contract", "other")],
+                    [("X-AgentFit-Analysis-Contract", "confirmation-v1"),
+                     ("X-AgentFit-Analysis-Contract", "confirmation-v1")])
+        for extra in variants:
+            with self.subTest(extra=extra):
+                response = client.post("/internal/v1/analyze", content=b"AgentFit",
+                                       headers=base + extra)
+                self.assertEqual(response.status_code, 428)
+                self.assertEqual(response.json(),
+                                 {"error": "CONFIRMATION_CONTRACT_REQUIRED"})
+        self.assertEqual(documents, [])
 
     def test_recoverable_mode_runs_through_real_child_process_without_provider(self):
         import sys
@@ -496,6 +517,7 @@ worker.main()
                                    headers={"Authorization": "Bearer local-secret",
                                             "X-Document-Id": "doc_1", "X-Request-Id": "req_1",
                                             "X-Document-Kind": "TEXT",
+                                            "X-AgentFit-Analysis-Contract": "confirmation-v1",
                                             "Content-Type": "text/plain"})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["outcome"], "needs_confirmation")
