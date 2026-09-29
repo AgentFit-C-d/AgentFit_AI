@@ -37,6 +37,13 @@ def coverage(count=31, *, uncovered=()):
             'uncoveredIds': list(uncovered)}
 
 
+def relation_response(count=31, *, uncovered=()):
+    return {'assessments': [
+        {'memberId': f'C{index:03d}', 'representativeId': 'C000',
+         'coverage': 'not_covered' if f'C{index:03d}' in uncovered else 'covered'}
+        for index in range(1, count)]}
+
+
 def response(body, *, model=MODEL, finish='stop'):
     return json.dumps({'model': model, 'choices': [{'finish_reason': finish,
         'message': {'role': 'assistant', 'content': json.dumps(body, ensure_ascii=False)}}],
@@ -64,7 +71,7 @@ class CandidateFeatureCurationTests(unittest.TestCase):
         original = copy.deepcopy((frozen, labels))
         requests, traces = [], []
         result = curate_reviewed_features(document, frozen, labels, 'PRIVATE_KEY',
-            transport=sender([response(partition()), response(coverage())], requests),
+            transport=sender([response(partition()), response(relation_response())], requests),
             call_trace=traces)
         self.assertEqual(result, {**partition(), **coverage()})
         self.assertEqual(validate_feature_curation(document, frozen, labels, result), {
@@ -75,7 +82,9 @@ class CandidateFeatureCurationTests(unittest.TestCase):
         self.assertEqual([row['id'] for row in first['candidates']],
                          [f'C{index:03d}' for index in range(31)])
         self.assertEqual(first['candidates'][0]['value'], '기록 검색')
-        self.assertEqual(second['groups'], partition()['groups'])
+        self.assertEqual(second['relations'], [
+            {'memberId': f'C{index:03d}', 'representativeId': 'C000'}
+            for index in range(1, 31)])
         self.assertEqual(second['candidates'], first['candidates'])
         self.assertEqual((frozen, labels), original)
         self.assertEqual([trace['validated'] for trace in traces], [True, True])
@@ -168,6 +177,27 @@ class CandidateFeatureCurationTests(unittest.TestCase):
         self.assertEqual(explicit['unresolvedFields'], ['features'])
         self.assertEqual(explicit['outcome'], 'needs_confirmation')
 
+    def test_final_curation_rejects_self_uncovered(self):
+        data = fixture()
+        curation = {**partition(), **coverage(uncovered=['C000'])}
+        with self.assertRaises(ValueError):
+            validate_feature_curation(*data, curation)
+        with self.assertRaises(ValueError):
+            finalize_candidate_analysis(data[0], 'case', data[1], data[2], self.verdict(),
+                                         feature_curation=curation)
+
+    def test_singleton_partition_skips_semantic_provider(self):
+        data = fixture()
+        proposed = {'groups': [
+            {'representativeId': f'C{i:03d}', 'memberIds': [f'C{i:03d}']}
+            for i in range(30)], 'unrepresentedIds': ['C030']}
+        requests, traces = [], []
+        result = curate_reviewed_features(*data, 'fake',
+            transport=sender([response(proposed)], requests), call_trace=traces)
+        self.assertEqual(len(requests), 1)
+        self.assertEqual(len(traces), 1)
+        self.assertEqual(result, {**proposed, **coverage(uncovered=['C030'])})
+
     def test_invalid_partitions_fail_before_review(self):
         document, frozen, labels = fixture(extras=(
             ('기록 검색', 'features', 'negated'), ('Go', 'backend', 'confirmed')))
@@ -224,11 +254,11 @@ class CandidateFeatureCurationTests(unittest.TestCase):
             # The second occurrence has a different context; the independent
             # reviewer says the chosen occurrence cannot represent it.
             result = curate_reviewed_features(*data, 'fake', transport=sender([
-                response(proposed), response(coverage(32, uncovered=['C031']))], requests))
+                response(proposed), response(relation_response(32, uncovered=['C031']))], requests))
             self.assertEqual(len(requests), 2)
             reviewed_partition = json.loads(requests[1]['messages'][1]['content'])
-            self.assertEqual(reviewed_partition['groups'], partition(32)['groups'])
-            self.assertEqual(reviewed_partition['unrepresentedIds'], [])
+            self.assertEqual(reviewed_partition['relations'], [
+                {'memberId': f'C{i:03d}', 'representativeId': 'C000'} for i in range(1, 32)])
             self.assertEqual(result, {**partition(32), **coverage(32, uncovered=['C031'])})
             final = finalize_candidate_analysis(data[0], 'case', data[1], data[2],
                 self.verdict(), feature_curation=result)
@@ -259,12 +289,11 @@ class CandidateFeatureCurationTests(unittest.TestCase):
 
     def test_invalid_review_and_provider_fail_closed(self):
         data = fixture()
-        good = coverage()
-        reviews = [{**good, 'checkedCandidateIds': list(reversed(good['checkedCandidateIds']))},
-                   {**good, 'checkedCandidateIds': good['checkedCandidateIds'][:-1]},
-                   {**good, 'uncoveredIds': ['C000', 'C000']},
-                   {**good, 'uncoveredIds': ['C031']}, {**good, 'uncoveredIds': [True]},
-                   {**good, 'uncoveredIds': {}}, {**good, 'extra': 'private'}, None]
+        good = relation_response()
+        reviews = [coverage(), {'assessments': good['assessments'][:-1]},
+                   {'assessments': good['assessments'] + good['assessments'][:1]},
+                   {'assessments': [True]}, {'assessments': {}},
+                   {**good, 'extra': 'private'}, None]
         for bad in reviews:
             requests, traces = [], []
             with self.subTest(bad=bad), self.assertRaises(ValueError):
@@ -287,7 +316,7 @@ class CandidateFeatureCurationTests(unittest.TestCase):
         groups['unrepresentedIds'] = ['C030']
         requests = []
         result = curate_reviewed_features(*data, 'fake', transport=sender([
-            response(groups), response(coverage(uncovered=['C030', 'C012']))], requests))
+            response(groups), response(relation_response(30, uncovered=['C012']))], requests))
         summary = validate_feature_curation(*data, result)
         self.assertEqual(summary, {'selectedIds': ['C000'],
                                   'uncoveredIds': ['C012', 'C030'], 'candidateCount': 31})
@@ -297,7 +326,7 @@ class CandidateFeatureCurationTests(unittest.TestCase):
             requests = []
             with self.subTest(replacement=replacement), self.assertRaises(ValueError):
                 curate_reviewed_features(*fixture(), 'fake', transport=sender([
-                    response(partition()), response({**coverage(), **replacement})], requests))
+                    response(partition()), response({**relation_response(), **replacement})], requests))
             self.assertEqual(len(requests), 2)
 
     def test_invalid_inputs_fail_before_provider(self):

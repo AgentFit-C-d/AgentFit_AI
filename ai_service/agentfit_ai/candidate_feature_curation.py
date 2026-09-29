@@ -85,7 +85,8 @@ def validate_feature_curation(document, frozen, reviewed_labels, curation):
         name: curation[name] for name in ('groups', 'unrepresentedIds')})
     ids = [item['id'] for item in candidates]
     if (curation['checkedCandidateIds'] != ids or
-            not _unique_subset(curation['uncoveredIds'], ids)):
+            not _unique_subset(curation['uncoveredIds'], ids) or
+            set(selected).intersection(curation['uncoveredIds'])):
         raise ValueError('invalid feature coverage')
     uncovered = set(curation['unrepresentedIds']) | set(curation['uncoveredIds'])
     return {'selectedIds': selected, 'uncoveredIds': [cid for cid in ids if cid in uncovered],
@@ -157,17 +158,6 @@ def curate_reviewed_features(document, frozen, reviewed_labels, key, *,
     partition = request(grouping, 'feature_grouping',
         lambda reply: _validate_partition(candidates, reply, allow_duplicate_values=True))
     partition = _coalesce_representatives(candidates, partition)
-    checking = _payload('agentfit_feature_coverage',
-        'Independently verify the proposed feature groups against the document. '
-        'Each candidate denotes a specific source occurrence; inspect its adjacent context '
-        'and the whole document. Check whether its assigned representative actually covers '
-        'the same capability. Similar words alone are not sufficient, and independent '
-        'operations must not disappear under a vaguely related representative. Return every '
-        'checkedCandidateId in supplied candidate order. List uncoveredIds for operations '
-        'not adequately represented, including unrepresented candidates. Do not rewrite '
-        'groups, invent IDs, output quotes or reclassify product facts in this step.',
-        {'document': document, 'candidates': candidates, **partition},
-        {'checkedCandidateIds': {**id_array, 'minItems': len(ids)}, 'uncoveredIds': id_array})
-    checked = request(checking, 'feature_coverage', lambda reply: validate_feature_curation(
-        document, frozen, reviewed_labels, {**partition, **reply}))
-    return {**partition, **checked}
+    from .candidate_feature_relations import review_feature_relations
+    return review_feature_relations(document, frozen, reviewed_labels, partition, key,
+        model=model, transport=transport, call_trace=call_trace)
