@@ -1,0 +1,17 @@
+{
+  "version": "docling-grounding-heldout-v1",
+  "cases": [
+    {"id":"R01","category":"repeat","lines":["검토 DB는 CedarDB다.","운영 DB는 CedarDB로 확정했다."],"anchor":"검토 DB는 CedarDB다.","quote":"CedarDB","field":"database","state":"present","expected_decision":"review"},
+    {"id":"R02","category":"repeat","lines":["검토 DB는 CedarDB다.","운영 DB는 CedarDB로 확정했다."],"anchor":"운영 DB는 CedarDB로 확정했다.","quote":"CedarDB","field":"database","state":"present","expected_decision":"allow"},
+    {"id":"R03","category":"repeat","lines":["API 후보는 BirchDB다.","실제 운영 DB는 BirchDB를 사용한다."],"anchor":"API 후보는 BirchDB다.","quote":"BirchDB","field":"database","state":"present","expected_decision":"review"},
+    {"id":"R04","category":"repeat","lines":["API 후보는 BirchDB다.","실제 운영 DB는 BirchDB를 사용한다."],"anchor":"실제 운영 DB는 BirchDB를 사용한다.","quote":"BirchDB","field":"database","state":"present","expected_decision":"allow"},
+    {"id":"N01","category":"negation","lines":["실시간 검색은 제공하지 않는다."],"anchor":"실시간 검색은 제공하지 않는다.","quote":"실시간 검색","field":"features","state":"present","expected_decision":"review"},
+    {"id":"N02","category":"negation","lines":["실시간 검색을 제공한다."],"anchor":"실시간 검색을 제공한다.","quote":"실시간 검색","field":"features","state":"present","expected_decision":"allow"},
+    {"id":"N03","category":"negation","lines":["AlphaDB는 사용하지 않고 BetaDB는 사용한다."],"anchor":"AlphaDB는 사용하지 않고 BetaDB는 사용한다.","quote":"AlphaDB","field":"database","state":"present","expected_decision":"review"},
+    {"id":"N04","category":"negation","lines":["AlphaDB는 사용하지 않고 BetaDB는 사용한다."],"anchor":"AlphaDB는 사용하지 않고 BetaDB는 사용한다.","quote":"BetaDB","field":"database","state":"present","expected_decision":"allow"},
+    {"id":"P01","category":"proposal","lines":["요금 계산 자동화는 다음 버전에 검토한다."],"anchor":"요금 계산 자동화는 다음 버전에 검토한다.","quote":"요금 계산 자동화","field":"features","state":"present","expected_decision":"review"},
+    {"id":"P02","category":"proposal","lines":["요금 계산 자동화를 제공한다."],"anchor":"요금 계산 자동화를 제공한다.","quote":"요금 계산 자동화","field":"features","state":"present","expected_decision":"allow"},
+    {"id":"P03","category":"proposal","lines":["채팅 알림은 초안에서 제안했다."],"anchor":"채팅 알림은 초안에서 제안했다.","quote":"채팅 알림","field":"features","state":"present","expected_decision":"review"},
+    {"id":"P04","category":"proposal","lines":["채팅 알림을 출시하기로 확정했다."],"anchor":"채팅 알림을 출시하기로 확정했다.","quote":"채팅 알림","field":"features","state":"present","expected_decision":"allow"}
+  ]
+}

@@ -1,0 +1,5 @@
+# Isolated local experiment only; do not add to the FastAPI service environment.
+docling==2.130.0
+langextract==1.7.0
+pypdf==6.19.0
+reportlab==5.0.1
