@@ -9,4 +9,4 @@
 - [x] `partition=heldout` manifest를 검증하고 첫 모델 호출 전에 커밋 `e8735b9`로 push한다.
 - [x] 평가 설정을 고정해 두 `analyze_recoverable` 구성의 최초 1회 결과를 기록한다.
 - [x] 결과 해시·한계·후속 개선 대상을 기록하고 partition을 `tuning`으로 전환한다.
-- [ ] 전체 테스트·CI를 확인하고 feature 브랜치를 push한다.
+- [x] 전체 AI 테스트 586건과 Linux CI 실행 36528413339 성공을 확인하고 feature 브랜치를 push한다.
