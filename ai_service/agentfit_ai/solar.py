@@ -589,7 +589,7 @@ class SolarAnalyzer:
             raise ValueError("unsupported Solar model")
         if type(experimental_long_timeout) is not bool:
             raise ValueError("experimental_long_timeout must be boolean")
-        maximum = 300 if experimental_long_timeout else 120
+        maximum = 600 if experimental_long_timeout else 120
         if type(analysis_timeout_seconds) is not int or not 1 <= analysis_timeout_seconds <= maximum:
             raise ValueError("invalid analysis_timeout_seconds")
         if (type(field_call_timeout_seconds) is not int or

@@ -18,6 +18,7 @@ from .public_holdout import MANIFEST, SCORE_VERSION, fetch_document, load_manife
 from .recoverable_draft_evaluation import (CountingTransport,
                                            _structural_evidence_errors, load_key)
 from .recoverable_solar_analysis import RecoverableSolarAnalyzer
+from .semantic_review import REVIEW_INVALID_REASONS
 from .solar import AnalysisError, post_solar_inline, safe_evidence_failure
 
 
@@ -64,6 +65,10 @@ class _SafeTraceMixin:
                                else "unknown"),
                    "error": safe_code(call["error"]) if call.get("error") else None,
                    "validation": [item for item in validations if item is not None]}
+            review_error = call.get("review_error")
+            if (type(review_error) is dict and
+                    review_error.get("reason") in REVIEW_INVALID_REASONS):
+                row["review_reason"] = review_error["reason"]
             timing = {name: call[name]
                       for name in ("request_bytes", "provider_elapsed_ms", "elapsed_ms")
                       if type(call.get(name)) is int and 0 <= call[name] <= 1_000_000_000}
@@ -176,6 +181,7 @@ def main():
     parser.add_argument("--source-selector-model", choices=("solar-pro4", *NVIDIA_REVIEW_MODELS),
                         default="solar-pro4")
     parser.add_argument("--accuracy-first", action="store_true")
+    parser.add_argument("--extended-review-window", action="store_true")
     parser.add_argument("--compact-review", action="store_true")
     parser.add_argument("--compact-review-effort", choices=("medium", "low"),
                         default="medium")
@@ -194,6 +200,9 @@ def main():
         parser.error("compact review requires source selector mode")
     if args.compact_review_effort != "medium" and not args.compact_review:
         parser.error("compact review effort requires compact review mode")
+    if args.extended_review_window and (not args.source_selector or
+                                        not args.accuracy_first or args.compact_review):
+        parser.error("extended review window requires non-compact accuracy-first source selector")
     nvidia_mode = args.source_selector_model != "solar-pro4"
     if nvidia_mode and args.parallel_first_pass:
         parser.error("NVIDIA source selector requires sequential calls")
@@ -221,7 +230,9 @@ def main():
             "compact_review": args.compact_review,
             "compact_review_effort": args.compact_review_effort,
             "accuracy_first": args.accuracy_first,
-            "analysis_timeout_seconds": 300 if args.accuracy_first else 40,
+            "extended_review_window": args.extended_review_window,
+            "analysis_timeout_seconds": (600 if args.extended_review_window else
+                                         300 if args.accuracy_first else 40),
             "field_call_timeout_seconds": 120 if args.accuracy_first else 40,
             "review_max_tokens": (4096 if args.compact_review else
                                   16384 if args.accuracy_first else 8192),
@@ -236,7 +247,9 @@ def main():
                          SafeTraceSolarAnalyzer)
         analyzer = analyzer_type(
             key, transport=transport, model=args.source_selector_model, evidence_contract=True,
-            semantic_review=True, analysis_timeout_seconds=300 if args.accuracy_first else 40,
+            semantic_review=True,
+            analysis_timeout_seconds=(600 if args.extended_review_window else
+                                      300 if args.accuracy_first else 40),
             field_call_timeout_seconds=120 if args.accuracy_first else 40,
             review_max_tokens=(4096 if args.compact_review else
                                16384 if args.accuracy_first else 8192),

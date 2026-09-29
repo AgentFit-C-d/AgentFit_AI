@@ -19,6 +19,13 @@ class TimeoutOptionTests(unittest.TestCase):
                               experimental_long_timeout=True)
         self.assertEqual((trial._analysis_timeout_seconds,
                           trial._field_call_timeout_seconds), (300, 120))
+        extended = SolarAnalyzer("synthetic-key", analysis_timeout_seconds=600,
+                                 field_call_timeout_seconds=120,
+                                 experimental_long_timeout=True)
+        self.assertEqual(extended._analysis_timeout_seconds, 600)
+        with self.assertRaises(ValueError):
+            SolarAnalyzer("synthetic-key", analysis_timeout_seconds=601,
+                          experimental_long_timeout=True)
 
     def test_experimental_review_token_limit_is_explicit(self):
         baseline = SolarAnalyzer("synthetic-key")

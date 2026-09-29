@@ -12,6 +12,45 @@ from agentfit_ai.profile import FIELDS
 
 
 class PublicHoldoutTests(unittest.TestCase):
+    def test_extended_review_window_is_evaluation_only_and_records_limit(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "extended"
+
+            class FakeSelectorAnalyzer:
+                def __init__(self, *args, **kwargs):
+                    self.safe_calls = []
+                    assert kwargs["analysis_timeout_seconds"] == 600
+                    assert kwargs["field_call_timeout_seconds"] == 120
+                    assert kwargs["review_max_tokens"] == 16384
+
+                def analyze_recoverable(self, document, document_id):
+                    return {"outcome": "failed", "error": "INCOMPLETE_RESPONSE"}
+
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(output), "--source-selector",
+                                                "--accuracy-first", "--extended-review-window"]), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_manifest",
+                       return_value=[self.case]), \
+                 patch("agentfit_ai.public_holdout_evaluation.fetch_document",
+                       return_value=self.document), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_key",
+                       return_value="synthetic-key"), \
+                 patch("agentfit_ai.public_holdout_evaluation.SafeTraceSourceSelectorAnalyzer",
+                       FakeSelectorAnalyzer):
+                self.assertEqual(main(), 0)
+            plan = json.loads((output / "plan.json").read_text(encoding="utf-8"))
+            self.assertEqual(plan["analysis_timeout_seconds"], 600)
+            self.assertEqual(plan["field_call_timeout_seconds"], 120)
+            self.assertEqual(plan["review_max_tokens"], 16384)
+            for extra in ([], ["--source-selector"],
+                          ["--source-selector", "--accuracy-first", "--compact-review"]):
+                with self.subTest(extra=extra), patch.object(
+                        sys, "argv", ["evaluate", "--live", "--output",
+                                      str(Path(temp) / "invalid"), *extra,
+                                      "--extended-review-window"]):
+                    with self.assertRaises(SystemExit):
+                        main()
+
     def test_compact_review_flag_is_selector_only_and_records_actual_limit(self):
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / "result"
@@ -434,6 +473,20 @@ class PublicHoldoutTests(unittest.TestCase):
         self.assertEqual(analyzer.safe_calls[0]["tokens"],
                          {"limit": 8192, "prompt": 123, "completion": 8192})
         self.assertNotIn("private", json.dumps(analyzer.safe_calls))
+
+    def test_safe_trace_records_only_allowlisted_semantic_review_reason(self):
+        analyzer = SafeTraceSolarAnalyzer("synthetic-key")
+        analyzer._save_diagnostic({"calls": [
+            {"call": 3, "stage": "semantic_review", "outcome": "validation_failed",
+             "error": "SEMANTIC_REVIEW_INVALID",
+             "review_error": {"reason": "ARRAY_INDEX", "private": "secret source"}},
+            {"call": 4, "stage": "semantic_recheck", "outcome": "validation_failed",
+             "error": "SEMANTIC_REVIEW_INVALID",
+             "review_error": {"reason": "secret source"}},
+        ]}, {})
+        self.assertEqual(analyzer.safe_calls[0]["review_reason"], "ARRAY_INDEX")
+        self.assertNotIn("review_reason", analyzer.safe_calls[1])
+        self.assertNotIn("secret source", json.dumps(analyzer.safe_calls))
 
     def test_safe_trace_retains_only_numeric_stage_timing(self):
         analyzer = SafeTraceSolarAnalyzer("synthetic-key", evidence_contract=True)
