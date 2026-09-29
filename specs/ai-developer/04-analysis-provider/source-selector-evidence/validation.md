@@ -19,6 +19,7 @@
 - 공개 평가 CLI `--source-selector`로 고정 튜닝 PRD 5건을 Solar Pro4, 40초 기한, 기본 순차 추출·의미 검토 설정에서 각각 한 번 실행했다. 산출물은 ignored `tmp/public-prd-source-selector-20260929/`에만 있다. plan·results·summary SHA-256은 각각 `50dba84fec4e11f3a89477ea877c1b6a1b9d757347b2adb936f7cb00b8c6f4bb`, `bbe31b626f964c512d127547b62cc6178524c55d8cd5386c1191bf48416efee7`, `c575e20725b180644ba059c76406342b5335556f837faf0bbd84fdf253d72692`다.
 - 결과는 자동 완료 0·확인 필요 5·실패 0이다. 채점 가능 35개 중 일치 11·누락 5·근거 판정 불가 19·확정 근거 오류 0이었다. 정답 밖 값 135개는 미평가이며, 명시적 미정 5개 중 null 유지 4·비 null 1이었다. 최대 호출 4회, 최장 40,082ms다.
 - 결과 JSON 3개에 실제 API 키나 5개 문서의 전체 원문이 포함되지 않았음을 재확인했다.
+- 구현 커밋 `443d31c`를 `feature/source-selector-evidence`에 push했다. Linux CI 실행 `36533080142`에서 의존성 검사·실제 Linux PDF 메모리 제한·전체 AI 테스트가 성공했다. CI 성공은 실제 분석 품질이나 배포 완료를 뜻하지 않는다.
 - DeReel·Campfire는 최초 core/features 구조 검증을 통과했으나 의미 검토에서 시간 초과됐다. TrueTwo는 project_type 선택 값이 200자 초과해 수정 뒤에도 `INVALID_VALUE`였다. Gongsi-MCP의 database와 Price.kr의 external_integrations도 최초에 같은 오류가 있었고 수정은 구조 검증을 통과했지만 의미 검토에서 시간 초과됐다. 전체 5건 중 4건의 의미 검토가 40초 기한을 소진했다.
 - 정답 밖 값 135개와 판정 불가 근거 19개는 선택자에 따른 값 범위가 지나치게 넓거나 라벨이 부분적인 영향이 함께 있을 수 있다. 의미 품질 개선으로 볼 근거가 없다. 이전 줄 ID 실행은 확률적 모델 응답·채점 분모가 달라 개선량의 인과 비교로 쓰지 않는다.
 
