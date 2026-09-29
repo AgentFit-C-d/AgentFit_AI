@@ -10,6 +10,7 @@ from .profile import ARRAY_FIELDS, FIELDS, MAX_ARRAY_ITEMS, MAX_TEXT_CODE_POINTS
 from .profile import validate_profile
 from .solar import AnalysisError, SolarAnalyzer, post_solar
 from .source_name_expressions import source_name_expression
+from .candidate_field_semantics import field_semantics_instructions
 
 
 _FIELDS = frozenset(FIELDS)
@@ -140,8 +141,10 @@ _MENTION_INSTRUCTION = (
     "order. Use the whole document for explicit decisions and relationships. ")
 
 
-def candidate_label_payload(document: str, candidates: list[dict]) -> dict:
+def candidate_label_payload(document: str, candidates: list[dict], *,
+                            field_semantics='legacy') -> dict:
     """Ask for semantics by ID without allowing model-written values or quotes."""
+    semantics = field_semantics_instructions(field_semantics)
     if (type(document) is not str or not document.strip() or
             type(candidates) is not list or not 1 <= len(candidates) <= 30):
         raise ValueError("invalid label payload")
@@ -175,6 +178,8 @@ def candidate_label_payload(document: str, candidates: list[dict]) -> dict:
         "features are user or product operations, not team tasks; "
         "external_integrations are named outside providers, including backup storage. "
         "Use other for anything outside these fields. " + _MENTION_INSTRUCTION)
+    if semantics:
+        system += '\n' + semantics
     return {"model": "solar-pro4", "messages": [
         {"role": "system", "content": system},
         {"role": "user", "content": json.dumps({
@@ -186,8 +191,9 @@ def candidate_label_payload(document: str, candidates: list[dict]) -> dict:
 
 
 def classify_profile_candidates(document: str, frozen: dict, key: str,
-                                *, transport=post_solar) -> list[dict]:
+                                *, transport=post_solar, field_semantics='legacy') -> list[dict]:
     """Classify source-anchored candidates in bounded ID batches."""
+    field_semantics_instructions(field_semantics)
     if (type(frozen) is not dict or set(frozen) != {"candidates", "rejected"} or
             type(frozen["candidates"]) is not list):
         raise ValueError("invalid frozen candidates")
@@ -198,7 +204,7 @@ def classify_profile_candidates(document: str, frozen: dict, key: str,
     labels = []
     for offset in range(0, len(candidates), 30):
         batch = candidates[offset:offset + 30]
-        payload = candidate_label_payload(document, batch)
+        payload = candidate_label_payload(document, batch, field_semantics=field_semantics)
         reply, model, _, _ = sender._send_payload(payload, ("labels",),
                                                    timeout=600)
         if not model.startswith("solar-pro4"):
@@ -213,8 +219,9 @@ def classify_profile_candidates(document: str, frozen: dict, key: str,
 
 
 def coverage_review_payload(document: str, frozen: dict,
-                            labels: list[dict]) -> dict:
+                            labels: list[dict], *, field_semantics='legacy') -> dict:
     """Review omissions and labels across the whole source, using IDs only."""
+    semantics = field_semantics_instructions(field_semantics)
     validate_candidate_labels(frozen, labels)
     ids = [item["id"] for item in frozen["candidates"]]
     if type(document) is not str or not document.strip():
@@ -242,6 +249,8 @@ def coverage_review_payload(document: str, frozen: dict,
         "Return all checkedFields in the supplied order, and only existing field "
         "names and candidate IDs. Never write a new quote or value. " +
         _MENTION_INSTRUCTION)
+    if semantics:
+        system += '\n' + semantics
     return {"model": "solar-pro4", "messages": [
         {"role": "system", "content": system},
         {"role": "user", "content": json.dumps({
@@ -257,8 +266,8 @@ def coverage_review_payload(document: str, frozen: dict,
 
 def review_candidate_coverage(document: str, frozen: dict,
                               labels: list[dict], key: str,
-                              *, transport=post_solar) -> dict:
-    payload = coverage_review_payload(document, frozen, labels)
+                              *, transport=post_solar, field_semantics='legacy') -> dict:
+    payload = coverage_review_payload(document, frozen, labels, field_semantics=field_semantics)
     sender = SolarAnalyzer(key, transport=transport)
     reply, model, _, _ = sender._send_payload(
         payload, ("checkedFields", "missingFields", "wrongCandidateIds"),
@@ -335,8 +344,10 @@ def project_candidate_profile(document: str, document_id: str,
 def analyze_candidate_first(document: str, document_id: str, key: str,
                             *, extractor=None, transport=post_solar,
                             source_occurrences=False, observer=None, split_review=False,
-                            review_calls=None, adaptive_review=False) -> dict:
+                            review_calls=None, adaptive_review=False,
+                            field_semantics='legacy') -> dict:
     """Run the optional candidate-first path; never silently complete gaps."""
+    field_semantics_instructions(field_semantics)
     if type(source_occurrences) is not bool:
         raise ValueError("invalid grounding mode")
     if type(split_review) is not bool:
@@ -366,10 +377,10 @@ def analyze_candidate_first(document: str, document_id: str, key: str,
         document, extractions))
     observe("grounded", frozen)
     labels = run("CLASSIFICATION_FAILED", lambda: classify_profile_candidates(
-        document, frozen, key, transport=transport))
+        document, frozen, key, transport=transport, field_semantics=field_semantics))
     observe("classified", {"frozen": frozen, "labels": labels})
     reviewer = review_candidate_coverage
-    review_options = {}
+    review_options = {'field_semantics': field_semantics}
     if split_review:
         from .candidate_split_review import review_candidates_separately
         reviewer = review_candidates_separately

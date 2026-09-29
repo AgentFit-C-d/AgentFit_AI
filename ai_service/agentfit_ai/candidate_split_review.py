@@ -7,6 +7,7 @@ from .diagnostics import safe_code
 from .deepseek_evaluation import NVIDIA_REVIEW_MODELS, NvidiaAnalyzer, post_nvidia
 from .profile import FIELDS
 from .solar import AnalysisError, SolarAnalyzer, post_solar
+from .candidate_field_semantics import field_semantics_instructions
 
 
 class _TokenLimitedReview(AnalysisError):
@@ -34,8 +35,10 @@ def _unique_subset(value, allowed) -> bool:
 def review_candidates_separately(document: str, frozen: dict,
                                 labels: list[dict], key: str,
                                 *, transport=None, review_calls=None,
-                                adaptive_review=False, review_model="solar-pro4") -> dict:
+                                adaptive_review=False, review_model="solar-pro4",
+                                field_semantics='legacy') -> dict:
     """Review all confirmed IDs before checking omissions in the full source."""
+    semantics = field_semantics_instructions(field_semantics)
     if type(document) is not str or not document.strip():
         raise ValueError("invalid review document")
     if review_calls is not None and type(review_calls) is not list:
@@ -96,7 +99,8 @@ def review_candidates_separately(document: str, frozen: dict,
             "not team tasks; database means a storage engine; external_integrations means "
             "a named outside provider. Check only these candidates, not omissions. "
             "Return checkedCandidateIds in supplied order and wrongCandidateIds only "
-            "from this batch. Never generate quotes, values or corrections. " + _MENTION_INSTRUCTION,
+            "from this batch. Never generate quotes, values or corrections. " + _MENTION_INSTRUCTION +
+            ('\n' + semantics if semantics else ''),
             {"document": document, "selections": batch},
             {"checkedCandidateIds": {**array, "minItems": len(ids)}, "wrongCandidateIds": array})
         return send(payload, "candidate_batch", lambda result: (
@@ -138,7 +142,7 @@ def review_candidates_separately(document: str, frozen: dict,
         "A representative feature can cover equivalent descriptions of that operation. "
         "Do not invent implementation technologies from generic features. Return all "
         "checkedFields in the supplied order and only existing field names. "
-        "Do not emit values, quotes or candidate IDs.",
+        "Do not emit values, quotes or candidate IDs." + ('\n' + semantics if semantics else ''),
         {"document": document, "confirmedValues": values, "fields": list(FIELDS)},
         {"checkedFields": {**fields, "minItems": len(FIELDS)}, "missingFields": fields})
     reply = send(payload, "source_coverage", lambda result: (
