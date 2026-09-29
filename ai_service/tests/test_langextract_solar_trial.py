@@ -24,6 +24,7 @@ class LangExtractSolarTrialTests(unittest.TestCase):
                          ["properties"]["extractions"]["items"]["properties"],
                          {"candidate": {"type": "string"}})
         self.assertEqual(payload["max_tokens"], 4096)
+        self.assertEqual(payload["reasoning_effort"], "none")
 
     def test_score_requires_exact_gold_span_and_candidate_local_rule(self):
         document = "팀 채팅은 검토안이다. 팀 채팅을 출시 기능으로 확정했다."
@@ -65,6 +66,37 @@ class LangExtractSolarTrialTests(unittest.TestCase):
         self.assertEqual(row["decision"], "review")
         self.assertEqual(row["duplicate_span_count"], 1)
         self.assertEqual(row["missing_candidate"], 0)
+
+    def test_unlocated_korean_suffix_mentions_recover_all_exact_occurrences(self):
+        document = "운영 DB 후보는 MallowDB다. 운영 DB는 MallowDB로 확정했다."
+        quote = "MallowDB"
+        first, second = document.index(quote), document.rindex(quote)
+        case = {"id": "T04", "document": document,
+                "candidate": {"field": "database", "state": "present",
+                              "start": second, "end": second + len(quote)},
+                "expected_decision": "allow"}
+        items = [extraction(quote, None, None), extraction(quote, None, None)]
+        row = score_case(case, items)
+        self.assertEqual(row["decision"], "allow")
+        self.assertEqual(row["resolver_exact_count"], 0)
+        self.assertEqual(row["exact_count"], 2)
+        self.assertEqual(row["missing_candidate"], 0)
+        case["candidate"] = {"field": "database", "state": "present",
+                             "start": first, "end": first + len(quote)}
+        case["expected_decision"] = "review"
+        self.assertEqual(score_case(case, items)["decision"], "review")
+
+    def test_single_unlocated_repeat_is_not_assigned_to_an_occurrence(self):
+        document = "MallowDB는 후보. MallowDB로 확정."
+        second = document.rindex("MallowDB")
+        case = {"id": "T05", "document": document,
+                "candidate": {"field": "database", "state": "present",
+                              "start": second, "end": second + 8},
+                "expected_decision": "allow"}
+        row = score_case(case, [extraction("MallowDB", None, None)])
+        self.assertEqual(row["decision"], "missing")
+        self.assertEqual(row["resolver_exact_count"], 0)
+        self.assertEqual(row["exact_count"], 0)
 
     def test_live_transport_uses_bounded_subprocess_path(self):
         from agentfit_ai import langextract_solar_trial as trial

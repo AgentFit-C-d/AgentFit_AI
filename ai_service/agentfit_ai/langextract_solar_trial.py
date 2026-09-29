@@ -40,7 +40,7 @@ def candidate_payload(prompt: str) -> dict:
         {"role": "user", "content": prompt}],
         "response_format": {"type": "json_schema", "json_schema": {
             "name": "agentfit_langextract_candidates", "strict": True, "schema": schema}},
-        "reasoning_effort": "low", "frequency_penalty": 0,
+        "reasoning_effort": "none", "frequency_penalty": 0,
         "temperature": 0, "max_tokens": 4096, "stream": False}
 
 
@@ -58,7 +58,29 @@ def score_case(case: dict, extractions) -> dict:
     numbered = [SimpleNamespace(extraction_index=index, extraction_text=quote,
                                 char_interval=item.char_interval)
                 for index, (quote, item) in enumerate(zip(quotes, items))]
-    aligned = validate_alignment(document, quotes, numbered)
+    aligned = list(validate_alignment(document, quotes, numbered))
+    resolver_exact_count = sum(row["status"] == "exact" for row in aligned)
+    for quote in dict.fromkeys(quotes):
+        indices = [index for index, value in enumerate(quotes) if value == quote]
+        if document.count(quote) != len(indices):
+            continue
+        if any(aligned[index]["status"] != "review" for index in indices):
+            continue
+        if any(type(getattr(items[index].char_interval, "start_pos", None)) is int or
+               type(getattr(items[index].char_interval, "end_pos", None)) is int
+               for index in indices):
+            continue
+        positions = []
+        cursor = 0
+        for _ in indices:
+            start = document.find(quote, cursor)
+            if start < 0:
+                break
+            positions.append((start, start + len(quote)))
+            cursor = start + len(quote)
+        if len(positions) == len(indices):
+            for index, (start, end) in zip(indices, positions):
+                aligned[index] = {"status": "exact", "start": start, "end": end}
     located = []
     for quote, item in zip(quotes, items):
         interval = item.char_interval
@@ -79,6 +101,7 @@ def score_case(case: dict, extractions) -> dict:
                 guard_candidate(document, **gold) if len(matches) == 1
                 else "missing" if not matches else "review")
     return {"case_id": case["id"], "candidate_count": len(items),
+            "resolver_exact_count": resolver_exact_count,
             "exact_count": len(exact), "evidence_exact": len(matches) == 1,
             "decision": decision,
             "false_auto_confirmation": int(decision == "allow" and expected == "review"),
