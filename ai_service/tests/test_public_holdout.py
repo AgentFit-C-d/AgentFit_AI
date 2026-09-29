@@ -12,6 +12,41 @@ from agentfit_ai.profile import FIELDS
 
 
 class PublicHoldoutTests(unittest.TestCase):
+    def test_compact_review_flag_is_selector_only_and_records_actual_limit(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "result"
+
+            class FakeSelectorAnalyzer:
+                def __init__(self, *args, **kwargs):
+                    self.safe_calls = []
+                    assert kwargs["compact_review"] is True
+                    assert kwargs["compact_review_effort"] == "low"
+
+                def analyze_recoverable(self, document, document_id):
+                    return {"outcome": "failed", "error": "SEMANTIC_REVIEW_INVALID"}
+
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(output), "--source-selector",
+                                                "--accuracy-first", "--compact-review",
+                                                "--compact-review-effort", "low"]), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_manifest",
+                       return_value=[self.case]), \
+                 patch("agentfit_ai.public_holdout_evaluation.fetch_document",
+                       return_value=self.document), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_key",
+                       return_value="synthetic-key"), \
+                 patch("agentfit_ai.public_holdout_evaluation.SafeTraceSourceSelectorAnalyzer",
+                       FakeSelectorAnalyzer):
+                self.assertEqual(main(), 0)
+            plan = json.loads((output / "plan.json").read_text(encoding="utf-8"))
+            self.assertTrue(plan["compact_review"])
+            self.assertEqual(plan["review_max_tokens"], 4096)
+            self.assertEqual(plan["compact_review_effort"], "low")
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                                str(Path(temp) / "invalid"), "--compact-review"]):
+                with self.assertRaises(SystemExit):
+                    main()
+
     def test_nvidia_selector_uses_nvidia_key_and_accuracy_first_plan(self):
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / "result"

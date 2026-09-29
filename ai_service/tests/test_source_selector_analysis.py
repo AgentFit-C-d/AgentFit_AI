@@ -24,6 +24,58 @@ def features():
 
 
 class SourceSelectorAnalysisTests(unittest.TestCase):
+    def test_compact_review_empty_issues_completes_without_full_checked_fields(self):
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      response({"issues": []})])
+        analyzer = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, compact_review=True)
+        result = analyzer.analyze_recoverable("# Alpha\n- registration", "doc")
+        self.assertEqual(result["outcome"], "complete")
+        review_payload = transport.call_args_list[2].args[0]
+        schema = review_payload["response_format"]["json_schema"]["schema"]
+        self.assertEqual(schema["required"], ["issues"])
+        self.assertEqual(review_payload["max_tokens"], 4096)
+
+    def test_compact_review_low_effort_changes_only_review_request(self):
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      response({"issues": []})])
+        analyzer = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, compact_review=True,
+            compact_review_effort="low")
+        result = analyzer.analyze_recoverable("# Alpha\n- registration", "doc")
+        self.assertEqual(result["outcome"], "complete")
+        self.assertEqual(transport.call_args_list[0].args[0]["reasoning_effort"],
+                         transport.call_args_list[1].args[0]["reasoning_effort"])
+        self.assertEqual(transport.call_args_list[2].args[0]["reasoning_effort"], "low")
+        with self.assertRaises(ValueError):
+            SourceSelectorSolarAnalyzer("synthetic-key", compact_review_effort="low")
+
+    def test_compact_review_issue_reaches_semantic_repair_with_server_evidence(self):
+        issue = {"field": "features", "kind": "overbroad",
+                 "targetId": "I0001", "sourceLineIds": []}
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      response({"issues": [issue]}),
+                                      response(features()), response({"issues": []})])
+        analyzer = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, compact_review=True)
+        result = analyzer.analyze_recoverable("# Alpha\n- registration", "doc")
+        self.assertEqual(result["outcome"], "complete")
+        correction = transport.call_args_list[3].args[0]["messages"][1]["content"]
+        self.assertIn('"itemIndex": 0', correction)
+        self.assertIn('"evidenceLineIds": [2]', correction)
+
+    def test_compact_review_invalid_target_is_not_auto_confirmed(self):
+        issue = {"field": "features", "kind": "overbroad",
+                 "targetId": "I9999", "sourceLineIds": []}
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      response({"issues": [issue]})])
+        result = SourceSelectorSolarAnalyzer(
+            "synthetic-key", transport=transport, compact_review=True).analyze_recoverable(
+                "# Alpha\n- registration", "doc")
+        self.assertEqual(result["outcome"], "needs_confirmation")
+        self.assertEqual(result["error"], "SEMANTIC_REVIEW_INVALID")
+        self.assertEqual(transport.call_count, 3)
+
     def test_first_pass_selects_server_owned_spans_without_value(self):
         transport = Mock(side_effect=[response(core()), response(features()),
                                       response(verdict())])

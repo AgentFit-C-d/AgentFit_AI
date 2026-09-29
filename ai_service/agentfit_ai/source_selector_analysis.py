@@ -3,7 +3,10 @@
 import json
 
 from .evidence import EvidenceError
+from .compact_review import normalize_compact_review, review_payload
 from .line_evidence_analysis import LineEvidenceSolarAnalyzer
+from .profile import FIELDS
+from .semantic_review import ReviewValidationError
 from .solar import AnalysisError, FREQUENCY_PENALTY, REASONING_EFFORT, _reject_unconfirmed, source_lines
 from .source_selector import CONTRACT_VERSION, selector_schema, selector_to_profile
 
@@ -38,6 +41,16 @@ project_name은 명시된 이름의 고유 부분, project_type은 제공 형태
 
 
 class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
+    def __init__(self, *args, compact_review=False, compact_review_effort="medium", **kwargs):
+        if type(compact_review) is not bool:
+            raise ValueError("compact_review must be boolean")
+        if compact_review_effort not in ("medium", "low") or (
+                not compact_review and compact_review_effort != "medium"):
+            raise ValueError("compact_review_effort requires compact review")
+        super().__init__(*args, **kwargs)
+        self._compact_review = compact_review
+        self._compact_review_effort = compact_review_effort
+
     def _contract_version(self):
         return CONTRACT_VERSION
 
@@ -50,6 +63,22 @@ class SourceSelectorSolarAnalyzer(LineEvidenceSolarAnalyzer):
             raise failure from None
         _reject_unconfirmed(document, profile)
         return profile
+
+    def _request_review(self, document, profile, *, _trace=None, timeout=40):
+        if not self._compact_review:
+            return super()._request_review(document, profile, _trace=_trace, timeout=timeout)
+        try:
+            payload = review_payload(document, profile, model=self._model,
+                                     effort=self._compact_review_effort)
+            reply, model, prompt_tokens, completion_tokens = self._send_payload(
+                payload, ("issues",), _trace=_trace, timeout=timeout)
+            issues = normalize_compact_review(reply, profile, document)
+        except ReviewValidationError as error:
+            failure = AnalysisError("SEMANTIC_REVIEW_INVALID")
+            failure.review_detail = {"reason": error.reason}
+            raise failure from None
+        return ({"checkedFields": list(FIELDS), "issues": issues},
+                model, prompt_tokens, completion_tokens)
 
     def _request_fields(self, document, names, purpose, correction=None, *,
                         _trace=None, timeout=40):

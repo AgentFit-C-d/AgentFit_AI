@@ -176,6 +176,9 @@ def main():
     parser.add_argument("--source-selector-model", choices=("solar-pro4", *NVIDIA_REVIEW_MODELS),
                         default="solar-pro4")
     parser.add_argument("--accuracy-first", action="store_true")
+    parser.add_argument("--compact-review", action="store_true")
+    parser.add_argument("--compact-review-effort", choices=("medium", "low"),
+                        default="medium")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live required")
@@ -187,6 +190,10 @@ def main():
         parser.error("source selector is exclusive with other evidence modes")
     if (args.source_selector_model != "solar-pro4" or args.accuracy_first) and not args.source_selector:
         parser.error("model comparison requires source selector mode")
+    if args.compact_review and not args.source_selector:
+        parser.error("compact review requires source selector mode")
+    if args.compact_review_effort != "medium" and not args.compact_review:
+        parser.error("compact review effort requires compact review mode")
     nvidia_mode = args.source_selector_model != "solar-pro4"
     if nvidia_mode and args.parallel_first_pass:
         parser.error("NVIDIA source selector requires sequential calls")
@@ -211,10 +218,13 @@ def main():
             "parallel_first_pass": args.parallel_first_pass,
             "line_evidence": args.line_evidence,
             "source_selector": args.source_selector,
+            "compact_review": args.compact_review,
+            "compact_review_effort": args.compact_review_effort,
             "accuracy_first": args.accuracy_first,
             "analysis_timeout_seconds": 300 if args.accuracy_first else 40,
             "field_call_timeout_seconds": 120 if args.accuracy_first else 40,
-            "review_max_tokens": 16384 if args.accuracy_first else 8192,
+            "review_max_tokens": (4096 if args.compact_review else
+                                  16384 if args.accuracy_first else 8192),
             "release_gate_passed": False}
     write_safe_json(args.output / "plan.json", plan, forbidden_strings=forbidden)
     rows = []
@@ -228,10 +238,14 @@ def main():
             key, transport=transport, model=args.source_selector_model, evidence_contract=True,
             semantic_review=True, analysis_timeout_seconds=300 if args.accuracy_first else 40,
             field_call_timeout_seconds=120 if args.accuracy_first else 40,
-            review_max_tokens=16384 if args.accuracy_first else 8192,
+            review_max_tokens=(4096 if args.compact_review else
+                               16384 if args.accuracy_first else 8192),
             experimental_long_timeout=args.accuracy_first,
             repair_context_options=args.repair_context_options,
-            parallel_first_pass=args.parallel_first_pass)
+            parallel_first_pass=args.parallel_first_pass,
+            **({"compact_review": args.compact_review,
+                "compact_review_effort": args.compact_review_effort}
+               if args.source_selector else {}))
         row = evaluate_case(case, document, analyzer,
                             provider_calls=lambda: transport.calls)
         rows.append(row)

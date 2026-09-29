@@ -28,6 +28,19 @@ def features():
 
 
 class NvidiaSourceSelectorTests(unittest.TestCase):
+    def test_compact_review_uses_nvidia_sender_and_normalizes_reply(self):
+        transport = Mock(side_effect=[reply(core()), reply(features()),
+                                      reply({"issues": []})])
+        analyzer = NvidiaSourceSelectorAnalyzer(
+            "synthetic-nvidia-key", transport=transport, compact_review=True)
+        result = analyzer.analyze_recoverable("# Alpha\n- registration", "doc")
+        self.assertEqual(result["outcome"], "complete")
+        review = transport.call_args_list[2].args[0]
+        self.assertEqual(review["model"], MODEL)
+        self.assertEqual(review["max_tokens"], 4096)
+        self.assertEqual(review["response_format"]["json_schema"]["schema"]["required"],
+                         ["issues"])
+
     def test_all_stages_route_to_deepseek_with_same_schema_and_nvidia_key(self):
         transport = Mock(side_effect=[reply(core()), reply(features()), reply(verdict())])
         analyzer = NvidiaSourceSelectorAnalyzer(
