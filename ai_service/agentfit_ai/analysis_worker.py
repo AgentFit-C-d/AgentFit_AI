@@ -4,6 +4,7 @@ import json
 import sys
 
 from .diagnostics import safe_code
+from .recoverable_solar_analysis import RecoverableSolarAnalyzer
 from .solar import AnalysisError, SolarAnalyzer, post_solar_inline
 
 
@@ -17,14 +18,23 @@ def execute_request(raw: bytes) -> bytes:
         if len(raw) > MAX_INPUT_BYTES:
             return FAILED
         request = json.loads(raw)
-        if (type(request) is not dict or set(request) != {"document", "documentId", "key"}
+        if (type(request) is not dict or set(request) not in
+                ({"document", "documentId", "key"},
+                 {"document", "documentId", "key", "mode"})
                 or any(type(request[name]) is not str for name in request)
-                or not request["document"] or not request["documentId"] or not request["key"]):
+                or not request["document"] or not request["documentId"] or not request["key"]
+                or ("mode" in request and request["mode"] != "recoverable-solar")):
             return FAILED
-        result = SolarAnalyzer(request["key"], transport=post_solar_inline,
-                               analysis_timeout_seconds=40).analyze(
-                                   request["document"], request["documentId"])
-        output = {"outcome": "complete", "profile": result.profile}
+        if "mode" in request:
+            output = RecoverableSolarAnalyzer(
+                request["key"], transport=post_solar_inline,
+                analysis_timeout_seconds=40).analyze_recoverable(
+                    request["document"], request["documentId"])
+        else:
+            result = SolarAnalyzer(request["key"], transport=post_solar_inline,
+                                   analysis_timeout_seconds=40).analyze(
+                                       request["document"], request["documentId"])
+            output = {"outcome": "complete", "profile": result.profile}
     except AnalysisError as error:
         output = {"error": safe_code(error.code)}
     except Exception:

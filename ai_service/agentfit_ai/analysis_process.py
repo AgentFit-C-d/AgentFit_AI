@@ -17,9 +17,12 @@ class AnalysisProcessError(Exception):
 
 
 async def run_analysis_process(document: str, document_id: str, key: str,
-                               deadline: float, *, command=None) -> dict:
-    payload = json.dumps({"document": document, "documentId": document_id,
-                          "key": key}, ensure_ascii=False).encode("utf-8")
+                               deadline: float, *, recoverable_solar: bool = False,
+                               command=None) -> dict:
+    request = {"document": document, "documentId": document_id, "key": key}
+    if recoverable_solar:
+        request["mode"] = "recoverable-solar"
+    payload = json.dumps(request, ensure_ascii=False).encode("utf-8")
     if len(payload) > MAX_INPUT_BYTES:
         raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")
     argv = command if command is not None else [
@@ -65,5 +68,15 @@ async def run_analysis_process(document: str, document_id: str, key: str,
             return result
     if (set(result) == {"outcome", "profile"} and result["outcome"] == "complete"
             and type(result["profile"]) is dict):
+        return result
+    if (set(result) == {"outcome", "error"} and result["outcome"] == "failed"
+            and type(result["error"]) is str and safe_code(result["error"]) == result["error"]
+            and recoverable_solar):
+        return result
+    if (set(result) == {"outcome", "profile", "fieldStates", "questions", "error"}
+            and result["outcome"] == "needs_confirmation" and recoverable_solar
+            and type(result["profile"]) is dict and type(result["fieldStates"]) is dict
+            and type(result["questions"]) is list and type(result["error"]) is str
+            and safe_code(result["error"]) == result["error"]):
         return result
     raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")

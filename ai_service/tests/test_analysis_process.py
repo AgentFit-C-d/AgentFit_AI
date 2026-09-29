@@ -26,6 +26,39 @@ class AnalysisProcessTests(unittest.TestCase):
             self.assertEqual(self.run_async(run()),
                              {"outcome": "complete", "profile": {"seen": None}})
 
+    def test_recoverable_mode_passes_mode_and_accepts_bounded_draft(self):
+        from agentfit_ai.analysis_process import run_analysis_process
+
+        command = [sys.executable, "-c", (
+            "import json,sys; request=json.load(sys.stdin); "
+            "print(json.dumps({'outcome':'needs_confirmation','profile':{'data':{}},"
+            "'fieldStates':{},'questions':[],'error':'PROVIDER_TIMEOUT'} "
+            "if request.get('mode')=='recoverable-solar' else {'error':'BAD_MODE'}))")]
+
+        async def run():
+            return await run_analysis_process("Alpha", "doc_1", "test-key",
+                                              asyncio.get_running_loop().time() + 5,
+                                              recoverable_solar=True, command=command)
+
+        self.assertEqual(self.run_async(run())["outcome"], "needs_confirmation")
+
+    def test_process_rejects_draft_in_default_mode(self):
+        from agentfit_ai.analysis_process import AnalysisProcessError, run_analysis_process
+
+        command = [sys.executable, "-c", (
+            "import json; print(json.dumps({'outcome':'needs_confirmation',"
+            "'profile':{},'fieldStates':{},'questions':[],"
+            "'error':'PROVIDER_TIMEOUT'}))")]
+
+        async def run():
+            return await run_analysis_process("Alpha", "doc_1", "test-key",
+                                              asyncio.get_running_loop().time() + 5,
+                                              command=command)
+
+        with self.assertRaises(AnalysisProcessError) as caught:
+            self.run_async(run())
+        self.assertEqual(caught.exception.code, "ANALYSIS_WORKER_FAILED")
+
     def test_deadline_stops_a_sleeping_worker(self):
         from agentfit_ai.analysis_process import AnalysisProcessError, run_analysis_process
 

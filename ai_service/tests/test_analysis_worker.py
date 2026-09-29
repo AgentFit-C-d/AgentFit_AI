@@ -39,6 +39,43 @@ class AnalysisWorkerTests(unittest.TestCase):
         self.assertEqual(json.loads(output), {"outcome": "complete", "profile": profile})
         self.assertEqual(analyzer.call_args.kwargs["transport"].__name__, "post_solar_inline")
 
+    def test_recoverable_mode_returns_confirmation_without_default_analyzer(self):
+        from agentfit_ai.analysis_worker import execute_request
+
+        request = json.loads(self.request())
+        request["mode"] = "recoverable-solar"
+        draft = {"outcome": "needs_confirmation", "profile": {"data": {}},
+                 "fieldStates": {}, "questions": [], "error": "PROVIDER_TIMEOUT"}
+        with patch("agentfit_ai.analysis_worker.RecoverableSolarAnalyzer") as recoverable, patch(
+                "agentfit_ai.analysis_worker.SolarAnalyzer") as default:
+            recoverable.return_value.analyze_recoverable.return_value = draft
+            output = execute_request(json.dumps(request).encode())
+        self.assertEqual(json.loads(output), draft)
+        default.assert_not_called()
+        self.assertEqual(recoverable.call_args.kwargs["analysis_timeout_seconds"], 40)
+
+    def test_unknown_worker_mode_is_rejected(self):
+        from agentfit_ai.analysis_worker import execute_request
+
+        request = json.loads(self.request())
+        request["mode"] = "unknown"
+        self.assertEqual(json.loads(execute_request(json.dumps(request).encode())),
+                         {"error": "ANALYSIS_WORKER_FAILED"})
+
+    def test_recoverable_worker_failure_does_not_echo_raw_text(self):
+        from agentfit_ai.analysis_worker import execute_request
+
+        request = json.loads(self.request())
+        request["mode"] = "recoverable-solar"
+        with patch("agentfit_ai.analysis_worker.RecoverableSolarAnalyzer") as analyzer:
+            analyzer.return_value.analyze_recoverable.return_value = {
+                "outcome": "failed", "error": "PROVIDER_TIMEOUT"}
+            output = execute_request(json.dumps(request).encode())
+        self.assertEqual(json.loads(output), {"outcome": "failed",
+                                              "error": "PROVIDER_TIMEOUT"})
+        self.assertNotIn(b"Alpha", output)
+        self.assertNotIn(b"test-key", output)
+
     def test_worker_does_not_echo_document_or_key_on_failure(self):
         from agentfit_ai.analysis_worker import execute_request
 

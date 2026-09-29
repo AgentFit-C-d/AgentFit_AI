@@ -418,6 +418,92 @@ class InternalAnalysisHttpTests(unittest.TestCase):
         self.assertEqual(response.status_code, 502)
         self.assertEqual(response.json(), {"error": "PROVIDER_TIMEOUT"})
 
+    def test_recoverable_service_mode_delivers_confirmable_draft(self):
+        data = {field: None for field in FIELDS}
+        evidence = {field: [] for field in FIELDS}
+        data["project_name"] = "AgentFit"
+        evidence["project_name"] = [{"start": 0, "end": 8}]
+        profile = validate_profile("AgentFit", "doc_1", {"data": data,
+                                                          "evidence": evidence})
+        states = {field: "unknown" for field in FIELDS}
+        states["project_name"] = "suggested"
+        question = {"field": "project_name", "reason": "REVIEW_UNAVAILABLE",
+                    "questionId": "confirm_project_name"}
+
+        async def worker(document, document_id, key, deadline, *, recoverable_solar):
+            self.assertTrue(recoverable_solar)
+            self.assertEqual((document, document_id, key), ("AgentFit", "doc_1", "test-key"))
+            return {"outcome": "needs_confirmation", "profile": profile,
+                    "fieldStates": states, "questions": [question],
+                    "error": "PROVIDER_TIMEOUT"}
+
+        with patch.dict("os.environ", {"UPSTAGE_API_KEY": "test-key",
+                                    "AGENTFIT_ANALYSIS_MODE": "recoverable-solar"}), patch(
+                "agentfit_ai.http_service.run_analysis_process", side_effect=worker):
+            client = TestClient(create_app(internal_token="local-secret"))
+            response = client.post("/internal/v1/analyze", content=b"AgentFit",
+                                   headers={"Authorization": "Bearer local-secret",
+                                            "X-Document-Id": "doc_1", "X-Request-Id": "req_1",
+                                            "X-Document-Kind": "TEXT",
+                                            "Content-Type": "text/plain"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["questions"], [question])
+
+    def test_unknown_analysis_mode_fails_at_app_creation(self):
+        with self.assertRaises(ValueError):
+            create_app(internal_token="local-secret", analysis_mode="unknown")
+
+    def test_recoverable_mode_runs_through_real_child_process_without_provider(self):
+        import sys
+        from agentfit_ai.analysis_process import run_analysis_process
+
+        child_code = """
+import agentfit_ai.analysis_worker as worker
+from agentfit_ai.profile import FIELDS, validate_profile
+from agentfit_ai.recoverable_draft import project_draft
+
+class LocalAnalyzer:
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def analyze_recoverable(self, document, document_id):
+        data = dict.fromkeys(FIELDS)
+        evidence = {field: [] for field in FIELDS}
+        data['project_name'] = document
+        evidence['project_name'] = [{'start': 0, 'end': len(document)}]
+        profile = validate_profile(document, document_id,
+                                   {'data': data, 'evidence': evidence})
+        return project_draft(document, document_id, profile, unresolved={},
+                             review_complete=False, error_code='PROVIDER_TIMEOUT',
+                             ask_suggested_when_unreviewed=True,
+                             ask_unknown_when_unreviewed=False)
+
+worker.RecoverableSolarAnalyzer = LocalAnalyzer
+worker.main()
+"""
+
+        async def child(document, document_id, key, deadline, *, recoverable_solar):
+            return await run_analysis_process(
+                document, document_id, key, deadline,
+                recoverable_solar=recoverable_solar,
+                command=[sys.executable, "-c", child_code])
+
+        with patch.dict("os.environ", {"UPSTAGE_API_KEY": "test-key"}), patch(
+                "agentfit_ai.http_service.run_analysis_process", side_effect=child):
+            client = TestClient(create_app(internal_token="local-secret",
+                                           analysis_mode="recoverable-solar"))
+            response = client.post("/internal/v1/analyze", content=b"AgentFit",
+                                   headers={"Authorization": "Bearer local-secret",
+                                            "X-Document-Id": "doc_1", "X-Request-Id": "req_1",
+                                            "X-Document-Kind": "TEXT",
+                                            "Content-Type": "text/plain"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["outcome"], "needs_confirmation")
+        self.assertEqual(response.json()["profile"]["data"]["project_name"], "AgentFit")
+        self.assertEqual(response.json()["questions"],
+                         [{"field": "project_name", "reason": "REVIEW_UNAVAILABLE",
+                           "questionId": "confirm_project_name"}])
+
     def test_default_worker_deadline_returns_504_and_releases_slot(self):
         async def worker(*_):
             await asyncio.sleep(10)

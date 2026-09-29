@@ -65,13 +65,17 @@ async def _wait_for_disconnect(request: Request) -> None:
 
 
 async def _run_default_analysis(request: Request, document: str, document_id: str,
-                                deadline: float) -> dict:
+                                deadline: float, *, recoverable_solar: bool = False) -> dict:
     key = os.environ.get("UPSTAGE_API_KEY", "")
     if not key:
         raise AnalysisError("MISSING_OR_INVALID_KEY")
     if await request.is_disconnected():
         return _DISCONNECTED
-    worker = asyncio.create_task(run_analysis_process(document, document_id, key, deadline))
+    if recoverable_solar:
+        worker = asyncio.create_task(run_analysis_process(
+            document, document_id, key, deadline, recoverable_solar=True))
+    else:
+        worker = asyncio.create_task(run_analysis_process(document, document_id, key, deadline))
     disconnect = asyncio.create_task(_wait_for_disconnect(request))
     try:
         async with asyncio.timeout_at(deadline):
@@ -167,11 +171,16 @@ def _bounded_setting(value: int | None, name: str, default: int, maximum: int) -
 
 def create_app(*, internal_token: str | None = None,
                analyze: Callable[[str, str], dict] | None = None,
+               analysis_mode: str | None = None,
                max_inflight: int | None = None,
                upload_timeout_seconds: int | None = None,
                request_timeout_seconds: int | None = None) -> FastAPI:
     """Create a process-local adapter; Spring still owns persistence and public success."""
     token = os.environ.get("AGENTFIT_INTERNAL_TOKEN", "") if internal_token is None else internal_token
+    mode = (os.environ.get("AGENTFIT_ANALYSIS_MODE", "default")
+            if analysis_mode is None else analysis_mode)
+    if mode not in ("default", "recoverable-solar"):
+        raise ValueError("invalid analysis mode")
     limit = _bounded_setting(max_inflight, "AGENTFIT_MAX_INFLIGHT_ANALYSES", 2, 8)
     upload_timeout = _bounded_setting(upload_timeout_seconds,
                                       "AGENTFIT_UPLOAD_TIMEOUT_SECONDS", 10, 30)
@@ -269,8 +278,9 @@ def create_app(*, internal_token: str | None = None,
             async with asyncio.timeout_at(deadline):
                 extracted = await run_in_threadpool(extract_document, kind, content)
             if analyze is None:
-                outcome = await _run_default_analysis(request, extracted.text,
-                                                      document_id, deadline)
+                outcome = await _run_default_analysis(
+                    request, extracted.text, document_id, deadline,
+                    recoverable_solar=(mode == "recoverable-solar"))
                 if outcome is _DISCONNECTED:
                     response = _AbortedResponse(slots.release)
                     release_here = False
