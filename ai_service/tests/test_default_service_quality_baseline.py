@@ -96,6 +96,24 @@ class DefaultServiceQualityBaselineTests(unittest.TestCase):
         self.assertEqual(project_call_timings({"calls": [{
             "stage": {"private": "source"}, "outcome": ["private response"]}]}), [])
 
+    def test_review_invalid_reason_is_allowlisted_and_counted(self):
+        from agentfit_ai.default_service_quality_baseline import project_call_timings
+        diagnostic = {"calls": [
+            {"stage": "semantic_review", "outcome": "validation_failed", "elapsed_ms": 10,
+             "review_error": {"reason": "CHECKED_FIELDS", "private": "private source"}},
+            {"stage": "semantic_recheck", "outcome": "validation_failed", "elapsed_ms": 8,
+             "review_error": {"reason": "private source"}},
+        ]}
+        calls = project_call_timings(diagnostic)
+        self.assertEqual(calls[0]["review_invalid_reason"], "CHECKED_FIELDS")
+        self.assertNotIn("review_invalid_reason", calls[1])
+        self.assertNotIn("private source", json.dumps(calls))
+        row = {"outcome": "failed", "passed": False, "matched": None,
+               "gold_total": 10, "false_confirmations": None, "provider_calls": 2,
+               "elapsed_ms": 18, "error": "SEMANTIC_REVIEW_INVALID", "call_timings": calls}
+        self.assertEqual(aggregate([row], planned=1)["review_invalid_reasons"],
+                         {"CHECKED_FIELDS": 1})
+
     def test_report_rejects_source_and_secret(self):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "new"

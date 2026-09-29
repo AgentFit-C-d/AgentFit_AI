@@ -11,6 +11,7 @@ from pathlib import Path
 from .keyed_profile_evaluation import focus_score, full_score, load_profile_cases
 from .recoverable_draft_evaluation import CountingTransport, ROOT, load_key
 from .diagnostics import safe_code
+from .semantic_review import REVIEW_INVALID_REASONS
 from .solar import AnalysisError, SolarAnalyzer, post_solar_inline
 
 
@@ -44,6 +45,10 @@ def project_call_timings(diagnostic):
                     "response_bytes", "prompt_tokens", "completion_tokens"):
             value = call.get(key)
             projected[key] = value if type(value) is int and value >= 0 else None
+        detail = call.get("review_error")
+        if (type(detail) is dict and type(detail.get("reason")) is str
+                and detail["reason"] in REVIEW_INVALID_REASONS):
+            projected["review_invalid_reason"] = detail["reason"]
         calls.append(projected)
     return calls
 
@@ -80,11 +85,14 @@ def aggregate(rows, *, planned=20):
     completed = [row for row in rows if row["outcome"] == "complete"]
     by_stage = {stage: [] for stage in CALL_STAGES}
     timeout_stages = Counter()
+    review_invalid_reasons = Counter()
     for row in rows:
         calls = row.get("call_timings", [])
         for call in calls:
             if call["elapsed_ms"] is not None:
                 by_stage[call["stage"]].append(call["elapsed_ms"])
+            if "review_invalid_reason" in call:
+                review_invalid_reasons[call["review_invalid_reason"]] += 1
         if row.get("error") == "PROVIDER_TIMEOUT" and calls:
             timeout_stages[calls[-1]["stage"]] += 1
     stage_latency_ms = {stage: {"calls": len(times),
@@ -109,6 +117,7 @@ def aggregate(rows, *, planned=20):
             "max_elapsed_ms": max((row["elapsed_ms"] for row in rows), default=0),
             "errors": dict(Counter(row["error"] for row in rows if row["error"])),
             "timeout_stages": dict(sorted(timeout_stages.items())),
+            "review_invalid_reasons": dict(sorted(review_invalid_reasons.items())),
             "stage_latency_ms": stage_latency_ms,
             "gate": gate, "passed": bool(rows) and all(gate.values()),
             "limitation": "Synthetic reused cases; mirrors Worker analyzer settings, not the subprocess or HTTP path. Full-case non-null mismatches are counted as false confirmations; semantic evidence is not independently adjudicated. This does not establish production readiness."}

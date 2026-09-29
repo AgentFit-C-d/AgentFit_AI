@@ -7,6 +7,17 @@ from agentfit_ai.solar import SolarAnalyzer, AnalysisError
 from test_staged_analysis import response, core, features
 
 class CallDiagnosticsTests(unittest.TestCase):
+    def test_invalid_semantic_review_keeps_only_fixed_reason_in_diagnostics(self):
+        transport = Mock(side_effect=[response(core()), response(features()),
+                                      response({"checkedFields": [], "issues": []})])
+        with self.assertRaises(AnalysisError) as caught:
+            SolarAnalyzer("synthetic-key", evidence_contract=False,
+                          transport=transport).analyze("Alpha registration", "doc")
+        self.assertEqual(caught.exception.code, "SEMANTIC_REVIEW_INVALID")
+        call = caught.exception.diagnostics["calls"][-1]
+        self.assertEqual(call["review_error"], {"reason": "CHECKED_FIELDS"})
+        self.assertNotIn("Alpha", json.dumps(caught.exception.diagnostics))
+
     def test_success_has_scoped_metadata_without_source(self):
         transport = Mock(side_effect=[response(core()), response(features())])
         result = SolarAnalyzer("synthetic-key", evidence_contract=False, semantic_review=False, transport=transport).analyze("Alpha registration", "private-document")

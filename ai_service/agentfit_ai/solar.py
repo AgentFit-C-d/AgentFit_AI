@@ -17,7 +17,7 @@ from urllib.request import HTTPRedirectHandler
 from .profile import FIELDS, ARRAY_FIELDS, ProfileValidationError, validate_profile
 from .diagnostics import safe_code
 from .evidence import CONTRACT_VERSION, EXTRACTION_PROMPT, EvidenceError, evidence_schema, evidence_to_profile
-from .semantic_review import REVIEW_PROMPT, REVIEW_REASONING_EFFORT, REVIEW_MAX_TOKENS, review_schema, validate_review, ReviewValidationError
+from .semantic_review import REVIEW_PROMPT, REVIEW_REASONING_EFFORT, REVIEW_MAX_TOKENS, REVIEW_INVALID_REASONS, review_schema, validate_review, ReviewValidationError
 
 ENDPOINT = "https://api.upstage.ai/v1/chat/completions"
 MAX_RESPONSE_BYTES = 1_048_576
@@ -737,8 +737,10 @@ class SolarAnalyzer:
                 call = diagnostic["calls"][-1]
                 try:
                     issues = validate_review(value, current, len(source_lines(document)))
-                except ReviewValidationError:
+                except ReviewValidationError as error:
                     call.update(outcome="validation_failed", error="SEMANTIC_REVIEW_INVALID")
+                    if error.reason in REVIEW_INVALID_REASONS:
+                        call["review_error"] = {"reason": error.reason}
                     raise AnalysisError("SEMANTIC_REVIEW_INVALID") from None
                 call["outcome"] = "semantic_failed" if issues else "validated"
                 if issues:
