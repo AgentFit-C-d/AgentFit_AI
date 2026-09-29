@@ -1,5 +1,6 @@
 import hashlib
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -11,6 +12,16 @@ from agentfit_ai.profile import FIELDS
 
 
 class PublicHoldoutTests(unittest.TestCase):
+    def test_evaluation_accepts_repair_context_options_flag(self):
+        with tempfile.TemporaryDirectory() as temp:
+            with patch.object(sys, "argv", ["evaluate", "--live", "--output",
+                                            str(Path(temp) / "run"),
+                                            "--repair-context-options"]), \
+                 patch("agentfit_ai.public_holdout_evaluation.load_manifest",
+                       side_effect=RuntimeError("parsed")):
+                with self.assertRaisesRegex(RuntimeError, "parsed"):
+                    main()
+
     def test_frozen_manifest_has_three_distinct_sources(self):
         cases = load_manifest()
         self.assertEqual([case["id"] for case in cases],
@@ -209,6 +220,21 @@ class PublicHoldoutTests(unittest.TestCase):
                            "error": "INVALID_EVIDENCE",
                            "validation": [{"field": "features", "reason": "QUOTE_NOT_FOUND",
                                            "itemIndex": 0, "matchCount": 0}]}])
+
+    def test_safe_trace_counts_offered_options_without_retaining_source(self):
+        analyzer = SafeTraceSolarAnalyzer("synthetic-key", evidence_contract=True,
+                                          repair_context_options=True)
+        correction = analyzer._repair_correction(
+            "이번 Atlas는 앱이다.\n비교 Atlas는 게임이다.",
+            [{"field": "project_name", "code": "INVALID_EVIDENCE",
+              "detail": {"reason": "AMBIGUOUS_QUOTE", "itemIndex": 0}}],
+            {"project_name": {"state": "confirmed", "items": [
+                {"value": "Atlas", "quote": "Atlas", "context": None,
+                 "role": "product_fact"}]}})
+        self.assertEqual(len(correction["evidenceOptions"]["project_name"]["options"]), 2)
+        self.assertEqual(analyzer.safe_repair_option_counts,
+                         {"fields": 1, "choices": 2})
+        self.assertNotIn("Atlas", json.dumps(analyzer.safe_repair_option_counts))
 
     @staticmethod
     def span(document, quote):

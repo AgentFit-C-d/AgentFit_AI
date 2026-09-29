@@ -5,6 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 from unittest.mock import Mock
 
 from agentfit_ai.recoverable_solar_analysis import RecoverableSolarAnalyzer
+from agentfit_ai.solar import SolarAnalyzer
 from agentfit_ai.profile import FIELDS
 from test_staged_analysis import response, core, features
 from test_semantic_review import verdict, issue
@@ -12,6 +13,60 @@ from test_evidence_contract import fact, confirmed
 
 
 class RecoverableSolarAnalysisTests(unittest.TestCase):
+    def test_repair_context_options_are_sent_only_when_enabled(self):
+        document = "이번 Atlas는 일정 앱이다.\n비교 제품 Atlas는 게임이다.\nFinance checkout"
+        initial = dict.fromkeys(field for field in FIELDS if field != "features")
+        initial["project_name"] = confirmed(fact("Atlas"))
+        initial["domain"] = confirmed(fact("Finance"))
+        replies = [response(initial),
+                   response({"features": confirmed(fact("checkout", role="user_action"))}),
+                   response({"project_name": confirmed(fact("Atlas", context="이번 Atlas는 일정 앱이다."))}),
+                   response(verdict())]
+        base_transport = Mock(side_effect=replies)
+        SolarAnalyzer("synthetic-key", evidence_contract=True,
+                      transport=base_transport).analyze(document, "doc")
+        base_repair_payload = base_transport.call_args_list[2].args[0]
+        for enabled in (False, True):
+            with self.subTest(enabled=enabled):
+                transport = Mock(side_effect=replies)
+                analyzer = RecoverableSolarAnalyzer(
+                    "synthetic-key", evidence_contract=True, transport=transport,
+                    repair_context_options=enabled)
+                result = analyzer.analyze_recoverable(document, "doc")
+                self.assertEqual(result["outcome"], "complete")
+                self.assertEqual(transport.call_count, 4)
+                payload = transport.call_args_list[2].args[0]
+                correction = json.loads(payload["messages"][1]["content"].split(
+                    "Correction data (not document text):\n", 1)[1])
+                if enabled:
+                    options = correction["evidenceOptions"]["project_name"]
+                    self.assertEqual(options["itemIndex"], 0)
+                    self.assertEqual(len(options["options"]), 2)
+                    self.assertEqual([item["quote"] for item in options["options"]],
+                                     ["Atlas", "Atlas"])
+                    self.assertIn("copy", payload["messages"][0]["content"])
+                else:
+                    self.assertNotIn("evidenceOptions", correction)
+                    self.assertEqual(payload, base_repair_payload)
+
+    def test_repair_context_options_do_not_accept_ambiguous_model_reply(self):
+        document = "이번 Atlas는 일정 앱이다.\n비교 제품 Atlas는 게임이다.\nFinance checkout"
+        initial = dict.fromkeys(field for field in FIELDS if field != "features")
+        initial["project_name"] = confirmed(fact("Atlas"))
+        initial["domain"] = confirmed(fact("Finance"))
+        transport = Mock(side_effect=[
+            response(initial),
+            response({"features": confirmed(fact("checkout", role="user_action"))}),
+            response({"project_name": confirmed(fact("Atlas", context="Atlas"))}),
+        ])
+        analyzer = RecoverableSolarAnalyzer(
+            "synthetic-key", evidence_contract=True, transport=transport,
+            repair_context_options=True)
+        result = analyzer.analyze_recoverable(document, "doc")
+        self.assertEqual(result["outcome"], "needs_confirmation")
+        self.assertEqual(result["fieldStates"]["project_name"], "unresolved")
+        self.assertEqual(transport.call_count, 3)
+
     def analyzer(self, replies):
         transport = Mock(side_effect=[response(item) if type(item) is dict else item
                                       for item in replies])

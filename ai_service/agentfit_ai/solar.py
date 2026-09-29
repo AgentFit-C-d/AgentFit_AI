@@ -751,9 +751,9 @@ class SolarAnalyzer:
         repaired = tuple(error["field"] for error in errors)
         if errors:
             self._observe_partial_candidate(document, document_id, candidate)
-            candidate.update(request(repaired, "Correct only the requested invalid fields using exact source lines. Do not discard confirmed facts merely to pass validation.", {
-                "errors": errors, "previous": {field: candidate[field] for field in repaired},
-            }))
+            correction = self._repair_correction(
+                document, errors, {field: candidate[field] for field in repaired})
+            candidate.update(request(repaired, "Correct only the requested invalid fields using exact source lines. Do not discard confirmed facts merely to pass validation.", correction))
         try:
             profile = self._project(document, document_id, candidate)
         except AnalysisError as error:
@@ -833,6 +833,9 @@ class SolarAnalyzer:
             raise failure from None
         _reject_unconfirmed(document, profile)
         return profile
+
+    def _repair_correction(self, document, errors, previous):
+        return {"errors": errors, "previous": previous}
 
     def _request_fields(self, document, names, purpose, correction=None, *, _trace=None, timeout=40):
         if self._evidence_contract:

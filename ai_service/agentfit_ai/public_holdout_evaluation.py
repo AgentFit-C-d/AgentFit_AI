@@ -34,6 +34,15 @@ def _safe_validation(item):
 class SafeTraceSolarAnalyzer(RecoverableSolarAnalyzer):
     """Capture classifications in memory without retaining provider replies."""
 
+    def _repair_correction(self, document, errors, previous):
+        correction = super()._repair_correction(document, errors, previous)
+        options = correction.get("evidenceOptions", {})
+        self.safe_repair_option_counts = {
+            "fields": len(options),
+            "choices": sum(len(item["options"]) for item in options.values()),
+        }
+        return correction
+
     def _save_diagnostic(self, diagnostic, raw_responses):
         self.safe_calls = []
         for call in diagnostic["calls"]:
@@ -68,6 +77,8 @@ def evaluate_case(case, document, analyzer, *, clock=time.monotonic,
            "provider_calls": provider_calls() if callable(provider_calls) else provider_calls,
            "questions": len(outcome.get("questions", [])),
            "calls": getattr(analyzer, "safe_calls", []),
+           "repair_option_counts": getattr(analyzer, "safe_repair_option_counts",
+                                           {"fields": 0, "choices": 0}),
            "scored": False, "structural_evidence_errors": 0,
            "total_checks": sum(len(items) for items in case["checks"].values()),
            "matched_checks": 0, "wrong_evidence_checks": 0,
@@ -102,6 +113,10 @@ def summarize(rows, *, planned):
             row["indeterminate_evidence_checks"] for row in scored),
         "unassessed_values": sum(row["unassessed_values"] for row in scored),
         "unscored_cases": len(rows) - len(scored),
+        "repair_option_fields": sum(row.get("repair_option_counts", {}).get(
+            "fields", 0) for row in rows),
+        "repair_option_choices": sum(row.get("repair_option_counts", {}).get(
+            "choices", 0) for row in rows),
         "max_provider_calls": max((row["provider_calls"] for row in rows), default=0),
         "max_elapsed_ms": max((row["elapsed_ms"] for row in rows), default=0),
         "release_gate_passed": False,
@@ -117,6 +132,7 @@ def main():
     parser.add_argument("--manifest", type=Path, default=MANIFEST)
     parser.add_argument("--partition", choices=("tuning", "heldout"), default="tuning")
     parser.add_argument("--case-id", action="append")
+    parser.add_argument("--repair-context-options", action="store_true")
     args = parser.parse_args()
     if not args.live:
         parser.error("--live required")
@@ -138,14 +154,17 @@ def main():
             "sources": [{"id": case["id"], "repo": case["repo"],
                          "commit": case["commit"], "path": case["path"],
                          "sha256": case["sha256"]} for case, _ in documents],
-            "one_analysis_per_case": True, "release_gate_passed": False}
+            "one_analysis_per_case": True,
+            "repair_context_options": args.repair_context_options,
+            "release_gate_passed": False}
     write_safe_json(args.output / "plan.json", plan, forbidden_strings=forbidden)
     rows = []
     for case, document in documents:
         transport = CountingTransport(post_solar_inline)
         analyzer = SafeTraceSolarAnalyzer(
             key, transport=transport, model="solar-pro4", evidence_contract=True,
-            semantic_review=True, analysis_timeout_seconds=40)
+            semantic_review=True, analysis_timeout_seconds=40,
+            repair_context_options=args.repair_context_options)
         row = evaluate_case(case, document, analyzer,
                             provider_calls=lambda: transport.calls)
         rows.append(row)

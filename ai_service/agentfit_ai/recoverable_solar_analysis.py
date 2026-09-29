@@ -4,16 +4,37 @@ from contextvars import ContextVar
 
 from .diagnostics import safe_code
 from .profile import FIELDS, validate_profile
+from .repair_context_options import build_repair_context_options
 from .recoverable_draft import project_draft
 from .solar import AnalysisError, SolarAnalyzer
 
 
 class RecoverableSolarAnalyzer(SolarAnalyzer):
     def __init__(self, *args, **kwargs):
+        repair_context_options = kwargs.pop("repair_context_options", False)
+        if type(repair_context_options) is not bool:
+            raise ValueError("repair_context_options must be boolean")
         if kwargs.get("semantic_review") is False:
             raise ValueError("recoverable Solar analysis requires semantic review")
         super().__init__(*args, **kwargs)
+        self._repair_context_options = repair_context_options
         self._draft_context = ContextVar("recoverable_solar_snapshot", default=None)
+
+    def _repair_correction(self, document, errors, previous):
+        correction = super()._repair_correction(document, errors, previous)
+        if self._repair_context_options and self._evidence_contract:
+            options = build_repair_context_options(document, errors, previous)
+            if options:
+                correction["evidenceOptions"] = options
+        return correction
+
+    def _request_fields(self, document, names, purpose, correction=None, *, _trace=None, timeout=40):
+        if correction is not None and "evidenceOptions" in correction:
+            purpose += (" For evidenceOptions, choose the supported source occurrence "
+                        "and copy its quote and context exactly into the corresponding "
+                        "repaired item. Return null if no option supports the fact.")
+        return super()._request_fields(document, names, purpose, correction,
+                                       _trace=_trace, timeout=timeout)
 
     def _observe_profile(self, stage, profile):
         snapshot = self._draft_context.get()
