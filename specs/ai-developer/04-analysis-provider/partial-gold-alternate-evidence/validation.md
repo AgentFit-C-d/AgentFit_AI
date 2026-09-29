@@ -17,3 +17,5 @@
 | 0 | 4 | 1 | 7 | 0 | 9 | 4 |
 
 `FestMoment`는 여전히 `SENSITIVE_CONTENT` 사전 검사에서 실패했다. 최대 경과는 40.1초였다. 이 실행은 모델 출력도 새로 받았으므로 이전 v2 점수와 차이를 채점기만의 효과로 계산할 수 없다. 또한 판정 불가 4건은 사람 검토가 필요하며 품질 통과로 세지 않는다. `release_gate_passed=false`를 유지한다.
+
+코드 커밋 `eea507d`를 `feature/partial-gold-alternate-evidence`에 push했고 [AI service Linux checks](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36524538443)가 성공했다.
