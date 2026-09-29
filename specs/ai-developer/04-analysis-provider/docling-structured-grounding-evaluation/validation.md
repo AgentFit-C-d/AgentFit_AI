@@ -41,3 +41,4 @@
 - 12건의 누락은 N04에서 발생했다. 근거 위치와 `confirmed` 상태는 맞았지만 모델이 `database` 필드로 분류하지 못했다. 현 결과만으로 필드 오류 원인을 더 세분화할 수 없다. 표 사례 비교도 각 경로에서 모델을 별도로 호출했으므로 표준 Docling의 일반적 우위를 증명하지 않는다.
 - 안전 결과는 `E:/AgentFit/tmp/docling-plain-classified-20260930-v1.json`, `E:/AgentFit/tmp/docling-structured-classified-20260930-v1.json`, `E:/AgentFit/tmp/native-structured-classified-20260930-v1.json`, `E:/AgentFit/tmp/pypdf-structured-classified-20260930-v1.json`에 있다. 원문·후보·키·모델 응답은 기록하지 않았다.
 - 이 평가는 각 사례의 목표 후보를 채점한다. 추가 추출 후보가 실제 Profile에 들어갔을 때의 오확정, 장문·스캔 PDF, 새 실제 문서 일반화, Spring 연동, worker의 15초·512MiB 한도는 여전히 미검증이다. 표준 Docling의 이전 cold 실행은 약 19.6초·표본 RSS 약 1,018MiB여서 기본 PDF worker에는 연결하지 않았다.
+- 로컬 서비스 전체 테스트 771건 통과(선택 의존성 5건 건너뜀), 실험 venv의 Docling 실제 PDF 포함 23건 통과. 커밋 `ebbf7ec`의 [Linux CI 실행](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36588967898)도 통과했다. 이 CI는 기본 서비스 의존성만 설치하므로 선택형 Docling 실제 변환 테스트는 로컬 실험 venv에서 확인했다.
