@@ -30,8 +30,9 @@ class CandidateFirstRealEvaluationTests(unittest.TestCase):
         case = PreparedCase('H02', 'private-source-fragment', [
             {'id': 'C01', 'field': 'project_name', 'contains_any': ['Alpha']}],
             'a', 'b', None, 0, 0)
-        def runner(text, document_id, key, *, split_review, review_calls):
+        def runner(text, document_id, key, *, split_review, review_calls, adaptive_review):
             self.assertTrue(split_review)
+            self.assertTrue(adaptive_review)
             review_calls.append({'stage': 'source_coverage', 'validated': True})
             return {'outcome': 'needs_confirmation', 'profile': {'data': {'project_name': 'Alpha'}},
                     'candidateCount': 1, 'rejectedCandidateCount': 0,
@@ -43,13 +44,14 @@ class CandidateFirstRealEvaluationTests(unittest.TestCase):
             output = Path(temp) / 'result.json'
             with (patch.object(sys, 'argv', ['trial', '--live', '--manifest', str(manifest),
                     '--manifest-sha256', hashlib.sha256(raw).hexdigest(),
-                    '--output', str(output), '--split-review', '--review-diagnostics']),
+                    '--output', str(output), '--split-review', '--review-diagnostics', '--adaptive-review']),
                   patch.object(trial, 'prepare_cases', return_value=[case]),
                   patch.object(trial, 'load_key', return_value='fake-key'),
                   patch.object(trial, 'analyze_candidate_first', side_effect=runner)):
                 self.assertEqual(trial.main(), 0)
             result = json.loads(output.read_text(encoding='utf-8'))
             self.assertEqual(result['review_mode'], 'split')
+            self.assertTrue(result['adaptive_review'])
             self.assertEqual(result['complete'], 0)
             self.assertEqual(result['rows'][0]['review_calls'][0]['stage'], 'source_coverage')
 

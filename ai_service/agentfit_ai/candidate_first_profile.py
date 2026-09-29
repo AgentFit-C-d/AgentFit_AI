@@ -327,7 +327,7 @@ def project_candidate_profile(document: str, document_id: str,
 def analyze_candidate_first(document: str, document_id: str, key: str,
                             *, extractor=None, transport=post_solar,
                             source_occurrences=False, observer=None, split_review=False,
-                            review_calls=None) -> dict:
+                            review_calls=None, adaptive_review=False) -> dict:
     """Run the optional candidate-first path; never silently complete gaps."""
     if type(source_occurrences) is not bool:
         raise ValueError("invalid grounding mode")
@@ -335,6 +335,8 @@ def analyze_candidate_first(document: str, document_id: str, key: str,
         raise ValueError("invalid review mode")
     if review_calls is not None and (not split_review or type(review_calls) is not list):
         raise ValueError("review diagnostics require split review")
+    if type(adaptive_review) is not bool or (adaptive_review and not split_review):
+        raise ValueError("adaptive review requires split review")
     if observer is not None and not callable(observer):
         raise ValueError("invalid candidate observer")
     def run(stage, operation):
@@ -364,6 +366,7 @@ def analyze_candidate_first(document: str, document_id: str, key: str,
         from .candidate_split_review import review_candidates_separately
         reviewer = review_candidates_separately
         review_options["review_calls"] = review_calls
+        review_options["adaptive_review"] = adaptive_review
     review = run("COVERAGE_REVIEW_FAILED", lambda: reviewer(
         document, frozen, labels, key, transport=transport, **review_options))
     wrong = set(review["wrongCandidateIds"])

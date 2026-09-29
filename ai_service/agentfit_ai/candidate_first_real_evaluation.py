@@ -116,9 +116,12 @@ def main() -> int:
     parser.add_argument("--stage-diagnostics", action="store_true")
     parser.add_argument("--split-review", action="store_true")
     parser.add_argument("--review-diagnostics", action="store_true")
+    parser.add_argument("--adaptive-review", action="store_true")
     args = parser.parse_args()
     if args.review_diagnostics and not args.split_review:
         parser.error("--review-diagnostics requires --split-review")
+    if args.adaptive_review and not args.split_review:
+        parser.error("--adaptive-review requires --split-review")
     if not args.live:
         parser.error("--live required")
     if args.output.exists():
@@ -139,12 +142,15 @@ def main() -> int:
               if args.source_occurrences else analyze_candidate_first)
     if args.split_review:
         runner = partial(runner, split_review=True)
+    if args.adaptive_review:
+        runner = partial(runner, adaptive_review=True)
     result = evaluate_cases(select_cases(prepared, args.case_id), key, runner=runner,
                             stage_diagnostics=args.stage_diagnostics,
                             review_diagnostics=args.review_diagnostics)
     result["grounding_mode"] = ("source-occurrences" if args.source_occurrences
                                 else "model-anchor")
     result["review_mode"] = "split" if args.split_review else "combined"
+    result["adaptive_review"] = args.adaptive_review
     forbidden = (key, *(case.text for case in prepared),
                  *(str(case.get("path", "")) for case in payload["cases"]))
     args.output.parent.mkdir(parents=True, exist_ok=True)
