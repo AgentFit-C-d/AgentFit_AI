@@ -12,7 +12,7 @@
 
 - [x] 1. `tests/test_candidate_adaptive_review.py`에 length만 분할·정확한 ID 커버리지·하위 실패 중단·잘못된 계약/timeout/모델/5개 이하/기본 경로 재시도 부재를 RED로 검증한다. CLI adaptive 옵션 연결도 RED.
 - [x] 2. `candidate_split_review.py`의 `review_candidates_separately(..., adaptive_review=False)`와 `candidate_first_profile.py`의 같은 옵션, 평가 CLI를 구현한다. 작은 하위 묶음은 최대4개이고 재귀 분할은 없다. 관련 테스트 GREEN.
-- [ ] 3. 전체 테스트, diff 검사·독립 리뷰·commit/push·CI. 승인된 H02 진단 평가와 실제 프로세스를 추적하며 validation.md에 결과·판단을 기록한다.
+- [x] 3. 전체 테스트, diff 검사·독립 리뷰·commit/push·CI. 승인된 H02 진단 평가와 실제 프로세스를 추적하며 validation.md에 결과·판단을 기록한다. 실제 검토는 완주했지만 부분 정답은 4/6이며 분할 복구는 발동하지 않았다. 실사용 승격 조건은 충족하지 못했다.
 
 ## 상태
 

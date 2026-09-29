@@ -17,7 +17,7 @@ AI 파트의 초기 작업 순서는 [FastAPI 구현 계획](fastapi-implementat
 - FastAPI 내부 분석 API, 인증·입력 제한, 동시 요청 제한, 취소·기한 처리와 격리 Worker가 구현돼 있다. [서비스 명세](11-fastapi-analysis-service/spec.md), [요청 수명 주기 검증](13-analysis-request-lifecycle/validation.md), [Linux 메모리 제한 검증](14-pdf-worker-memory-limit/linux-ci/validation.md).
 - 사용자 확인 질문을 전달하는 `recoverable-solar`는 선택형 모드다. 제안·미해결 필드의 질문 완전성은 검증했지만 Spring·Frontend의 확인 및 저장 흐름은 미확인이다. [질문 계약 검증](11-fastapi-analysis-service/confirmation-suggestion-ack/validation.md).
 - 후보 추출→원문 위치 확정→분류→검토 경로는 별도 평가 실험이다. 현재 HTTP 서비스의 기본 분석기가 아니다. [후보 우선 실험](04-analysis-provider/candidate-first-profile/validation.md), [원문 위치 확장](04-analysis-provider/candidate-source-occurrences/validation.md).
-- 최신 분리 검토 H02는 응답 미완료로 실패했고 최초 기능 후보 누락도 남았다. [실제 결과](04-analysis-provider/candidate-split-review/validation.md). 실패한 호출의 위치·종료 사유·토큰 수를 확인하는 [호출 진단](04-analysis-provider/candidate-review-diagnostics/validation.md)을 진행 중이다.
+- [호출 진단](04-analysis-provider/candidate-review-diagnostics/validation.md)에서 후보20개 검토의 length/8192토큰 종료를 확인했다. 이후 [제한적 분할 검토 실험](04-analysis-provider/candidate-adaptive-review/validation.md)의 H02는 검토를 완주했으나 확인 상태이며 지정6항목 중4개만 맞았다. 분할 복구는 발동하지 않아 그 효과는 미입증이다. 프로젝트명의 최종 변환 탈락과 backend 미정 위반이 남아 있다.
 - 단위 테스트·CI 통과를 실제 문서 의미 정확도나 Spring 저장 성공으로 간주하지 않는다. 독립 문서 품질, Spring 계약·저장·확인 및 실패 응답 7일 삭제의 통합 검증이 남아 있다. 운영 적용 완료를 선언하지 않는다.
 
 ## 1단계: 문서 분석
