@@ -60,9 +60,10 @@ def score_case(case: dict, extractions) -> dict:
                 for index, (quote, item) in enumerate(zip(quotes, items))]
     aligned = list(validate_alignment(document, quotes, numbered))
     resolver_exact_count = sum(row["status"] == "exact" for row in aligned)
+    source_recovered_count = 0
     for quote in dict.fromkeys(quotes):
         indices = [index for index, value in enumerate(quotes) if value == quote]
-        if document.count(quote) != len(indices):
+        if len(indices) != 1 or document.count(quote) != 1:
             continue
         if any(aligned[index]["status"] != "review" for index in indices):
             continue
@@ -70,17 +71,10 @@ def score_case(case: dict, extractions) -> dict:
                type(getattr(items[index].char_interval, "end_pos", None)) is int
                for index in indices):
             continue
-        positions = []
-        cursor = 0
-        for _ in indices:
-            start = document.find(quote, cursor)
-            if start < 0:
-                break
-            positions.append((start, start + len(quote)))
-            cursor = start + len(quote)
-        if len(positions) == len(indices):
-            for index, (start, end) in zip(indices, positions):
-                aligned[index] = {"status": "exact", "start": start, "end": end}
+        start = document.find(quote)
+        aligned[indices[0]] = {"status": "exact", "start": start,
+                               "end": start + len(quote)}
+        source_recovered_count += 1
     located = []
     for quote, item in zip(quotes, items):
         interval = item.char_interval
@@ -100,8 +94,19 @@ def score_case(case: dict, extractions) -> dict:
     decision = ("review" if duplicated_gold else
                 guard_candidate(document, **gold) if len(matches) == 1
                 else "missing" if not matches else "review")
+    gold_quote = document[gold["start"]:gold["end"]]
+    ambiguous_alignment = int(
+        not matches and document.count(gold_quote) > 1 and
+        any(quote == gold_quote and
+            type(getattr(item.char_interval, "start_pos", None)) is not int and
+            type(getattr(item.char_interval, "end_pos", None)) is not int
+            for quote, item in zip(quotes, items)))
+    if ambiguous_alignment:
+        decision = "review"
     return {"case_id": case["id"], "candidate_count": len(items),
             "resolver_exact_count": resolver_exact_count,
+            "source_recovered_count": source_recovered_count,
+            "ambiguous_alignment": ambiguous_alignment,
             "exact_count": len(exact), "evidence_exact": len(matches) == 1,
             "decision": decision,
             "false_auto_confirmation": int(decision == "allow" and expected == "review"),
@@ -218,6 +223,10 @@ def main() -> int:
                                             for row in result["rows"])
         result["duplicate_spans"] = sum(row.get("duplicate_span_count", 0)
                                         for row in result["rows"])
+        result["ambiguous_alignments"] = sum(row.get("ambiguous_alignment", 0)
+                                             for row in result["rows"])
+        result["source_recovered"] = sum(row.get("source_recovered_count", 0)
+                                         for row in result["rows"])
         result["outcome"] = "completed" if result["failed"] == 0 else "partial"
         write_safe_json(args.output, result, forbidden_strings=forbidden)
         return 0 if result["failed"] == 0 else 1

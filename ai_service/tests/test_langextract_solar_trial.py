@@ -67,7 +67,7 @@ class LangExtractSolarTrialTests(unittest.TestCase):
         self.assertEqual(row["duplicate_span_count"], 1)
         self.assertEqual(row["missing_candidate"], 0)
 
-    def test_unlocated_korean_suffix_mentions_recover_all_exact_occurrences(self):
+    def test_unlocated_repeated_mentions_remain_ambiguous(self):
         document = "운영 DB 후보는 MallowDB다. 운영 DB는 MallowDB로 확정했다."
         quote = "MallowDB"
         first, second = document.index(quote), document.rindex(quote)
@@ -77,14 +77,28 @@ class LangExtractSolarTrialTests(unittest.TestCase):
                 "expected_decision": "allow"}
         items = [extraction(quote, None, None), extraction(quote, None, None)]
         row = score_case(case, items)
-        self.assertEqual(row["decision"], "allow")
+        self.assertEqual(row["decision"], "review")
         self.assertEqual(row["resolver_exact_count"], 0)
-        self.assertEqual(row["exact_count"], 2)
-        self.assertEqual(row["missing_candidate"], 0)
+        self.assertEqual(row["exact_count"], 0)
+        self.assertEqual(row["ambiguous_alignment"], 1)
+        self.assertEqual(row["missed_allow"], 1)
         case["candidate"] = {"field": "database", "state": "present",
                              "start": first, "end": first + len(quote)}
         case["expected_decision"] = "review"
         self.assertEqual(score_case(case, items)["decision"], "review")
+
+    def test_only_unique_unlocated_quote_can_recover_exact_location(self):
+        document = "실시간 알림을 제공한다."
+        quote = "실시간 알림"
+        case = {"id": "T06", "document": document,
+                "candidate": {"field": "features", "state": "present",
+                              "start": 0, "end": len(quote)},
+                "expected_decision": "allow"}
+        row = score_case(case, [extraction(quote, None, None)])
+        self.assertEqual(row["decision"], "allow")
+        self.assertEqual(row["resolver_exact_count"], 0)
+        self.assertEqual(row["exact_count"], 1)
+        self.assertEqual(row["source_recovered_count"], 1)
 
     def test_single_unlocated_repeat_is_not_assigned_to_an_occurrence(self):
         document = "MallowDB는 후보. MallowDB로 확정."
@@ -94,7 +108,8 @@ class LangExtractSolarTrialTests(unittest.TestCase):
                               "start": second, "end": second + 8},
                 "expected_decision": "allow"}
         row = score_case(case, [extraction("MallowDB", None, None)])
-        self.assertEqual(row["decision"], "missing")
+        self.assertEqual(row["decision"], "review")
+        self.assertEqual(row["ambiguous_alignment"], 1)
         self.assertEqual(row["resolver_exact_count"], 0)
         self.assertEqual(row["exact_count"], 0)
 
@@ -158,6 +173,8 @@ class LangExtractSolarTrialTests(unittest.TestCase):
             report = json.loads(saved)
             self.assertEqual(len(report["rows"]), 18)
             self.assertEqual(report["failed"], 1)
+            self.assertEqual(report["ambiguous_alignments"], 0)
+            self.assertEqual(report["source_recovered"], 0)
 
     def test_modified_fixture_is_rejected_before_loading_api_key(self):
         from agentfit_ai import langextract_solar_trial as trial
