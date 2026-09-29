@@ -1,7 +1,6 @@
 """Synthetic-only LangExtract extraction trial using the existing Solar transport."""
 
 import argparse
-from collections import Counter
 import hashlib
 import json
 from pathlib import Path
@@ -75,23 +74,15 @@ def score_case(case: dict, extractions) -> dict:
             getattr(getattr(item, "alignment_status", None), "value", None)
             == "match_lesser")
         for row, item in zip(aligned, items))
-    located = []
-    for quote, item in zip(quotes, items):
-        interval = item.char_interval
-        start = getattr(interval, "start_pos", None)
-        end = getattr(interval, "end_pos", None)
-        if (type(start) is int and type(end) is int and
-                0 <= start < end <= len(document) and
-                document[start:end] == quote):
-            located.append((start, end))
-    span_counts = Counter(located)
-    duplicate_span_count = sum(count - 1 for count in span_counts.values()
-                               if count > 1)
-    duplicated_gold = span_counts[(gold["start"], gold["end"])] > 1
+    duplicate_span_count = sum(row.get("duplicate_excess", 0)
+                               for row in aligned)
     exact = [row for row in aligned if row["status"] == "exact"]
     matches = [row for row in exact if (row["start"], row["end"]) ==
                (gold["start"], gold["end"])]
     gold_quote = document[gold["start"]:gold["end"]]
+    duplicated_gold = any(
+        quote == gold_quote and row["reason"] == "duplicate_span"
+        for quote, row in zip(quotes, aligned))
     ambiguous_alignment = int(
         not matches and any(quote == gold_quote and row["status"] == "review"
                             for quote, row in zip(quotes, aligned)))

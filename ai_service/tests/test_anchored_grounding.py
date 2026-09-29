@@ -36,6 +36,15 @@ class AnchoredGroundingTests(unittest.TestCase):
                                  candidate("PinoDB", "후보 DB는 PinoDB다.")])
         self.assertEqual([row["status"] for row in rows], ["review", "review"])
 
+    def test_duplicate_anchor_stays_blocked_when_one_library_interval_conflicts(self):
+        document = "PinoDB를 사용한다."
+        rows = ground(document, [
+            candidate("PinoDB", document, (1, 7)),
+            candidate("PinoDB", document, (0, 6))])
+        self.assertEqual([row["reason"] for row in rows],
+                         ["duplicate_span", "duplicate_span"])
+        self.assertEqual(sum(row.get("duplicate_excess", 0) for row in rows), 1)
+
     def test_anchor_repeated_in_document_is_ambiguous(self):
         document = "PinoDB 사용. PinoDB 사용."
         row, = ground(document, [candidate("PinoDB", "PinoDB 사용.")])

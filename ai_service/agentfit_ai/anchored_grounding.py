@@ -21,7 +21,8 @@ def ground_anchored_extractions(document: str, extractions: list) -> tuple[dict,
     if type(document) is not str or type(extractions) is not list:
         raise ValueError("invalid grounding input")
     rows = []
-    for item in extractions:
+    resolved_positions = [None] * len(extractions)
+    for index, item in enumerate(extractions):
         quote = getattr(item, "extraction_text", None)
         if (getattr(item, "extraction_class", None) != "candidate" or
                 type(quote) is not str or not quote.strip()):
@@ -50,6 +51,7 @@ def ground_anchored_extractions(document: str, extractions: list) -> tuple[dict,
             rows.append(_review("ambiguous_source"))
             continue
         end = start + len(quote)
+        resolved_positions[index] = (start, end)
         interval = getattr(item, "char_interval", None)
         partial_match = (reason == "anchor" and
                          getattr(getattr(item, "alignment_status", None),
@@ -63,9 +65,16 @@ def ground_anchored_extractions(document: str, extractions: list) -> tuple[dict,
                 continue
         rows.append({"status": "exact", "start": start, "end": end,
                      "reason": reason})
-    counts = Counter((row["start"], row["end"]) for row in rows
-                     if row["status"] == "exact")
-    return tuple(_review("duplicate_span")
-                 if row["status"] == "exact" and
-                 counts[(row["start"], row["end"])] > 1 else row
-                 for row in rows)
+    counts = Counter(position for position in resolved_positions
+                     if position is not None)
+    seen_duplicates = set()
+    result = []
+    for row, position in zip(rows, resolved_positions):
+        if position is not None and counts[position] > 1:
+            duplicate_excess = int(position in seen_duplicates)
+            seen_duplicates.add(position)
+            result.append({**_review("duplicate_span"),
+                           "duplicate_excess": duplicate_excess})
+        else:
+            result.append(row)
+    return tuple(result)

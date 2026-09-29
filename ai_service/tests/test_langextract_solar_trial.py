@@ -142,6 +142,34 @@ class LangExtractSolarTrialTests(unittest.TestCase):
         self.assertEqual(row["duplicate_span_count"], 1)
         self.assertEqual(row["missing_candidate"], 0)
 
+    def test_distinct_anchors_ignore_duplicate_partial_library_positions(self):
+        document = "PinoDB는 후보. PinoDB를 사용한다."
+        quote = "PinoDB"
+        second = document.rindex(quote)
+        case = {"id": "T07", "document": document,
+                "candidate": {"field": "database", "state": "present",
+                              "start": second, "end": second + len(quote)},
+                "expected_decision": "allow"}
+        partial = SimpleNamespace(value="match_lesser")
+        items = [extraction(quote, 0, 6, "PinoDB는 후보.", partial),
+                 extraction(quote, 0, 6, "PinoDB를 사용한다.", partial)]
+        row = score_case(case, items)
+        self.assertEqual(row["decision"], "allow")
+        self.assertEqual(row["duplicate_span_count"], 0)
+        self.assertEqual(row["missed_allow"], 0)
+
+    def test_duplicate_anchor_with_conflicting_interval_cannot_auto_confirm(self):
+        document = "PinoDB를 사용한다."
+        case = {"id": "T08", "document": document,
+                "candidate": {"field": "database", "state": "present",
+                              "start": 0, "end": 6},
+                "expected_decision": "review"}
+        row = score_case(case, [extraction("PinoDB", 1, 7, document),
+                                extraction("PinoDB", 0, 6, document)])
+        self.assertEqual(row["decision"], "review")
+        self.assertEqual(row["false_auto_confirmation"], 0)
+        self.assertEqual(row["duplicate_span_count"], 1)
+
     def test_unlocated_repeated_mentions_remain_ambiguous(self):
         document = "운영 DB 후보는 MallowDB다. 운영 DB는 MallowDB로 확정했다."
         quote = "MallowDB"

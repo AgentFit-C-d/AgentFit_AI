@@ -60,4 +60,4 @@
 - [x] 평가 루프에서 문서별 결과를 재사용하고 호출 수를 안전 집계한다.
 - [x] 전체 테스트와 `git diff --check`를 통과시킨다.
 - [x] 합성 R01/R02 실측 후 18건으로 확대한다. 자동 오확정·실패·누락·정확 위치를 이전 안전 설정과 나란히 기록한다.
-- [ ] 독립 코드 리뷰와 Linux CI를 확인하고 `feature/anchored-langextract-evaluation`에 push한다. 미달이면 기본 서비스로 병합하지 않는다.
+- [x] 독립 코드 리뷰와 Linux CI를 확인하고 `feature/anchored-langextract-evaluation`에 push한다. 발견된 중복 판정 결함 2건을 수정하고 합성 18건을 재평가했다. 기본 서비스로 병합하지 않는다.
