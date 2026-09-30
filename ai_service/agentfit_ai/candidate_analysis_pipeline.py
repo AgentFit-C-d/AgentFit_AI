@@ -15,7 +15,7 @@ from .deepseek_evaluation import MODEL, NVIDIA_REVIEW_MODELS
 from .diagnostics import safe_code
 from .nvidia_streaming import post_nvidia_streaming
 from .operation_candidates import _validate_frozen, extract_operation_candidates
-from .solar import AnalysisError, post_solar
+from .solar import AnalysisError, _reject_sensitive, post_solar
 
 
 _CONTRACT_DETAILS = frozenset((
@@ -65,6 +65,9 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
             type(max_calls) is not int or not 1 <= max_calls <= 64 or
             type(nvidia_retry_limit) is not int or nvidia_retry_limit not in (0, 1)):
         raise ValueError('invalid integrated analysis options')
+
+    _reject_sensitive(document, solar_key)
+    _reject_sensitive(document_id, solar_key)
 
     current_stage, call_count, budget_exceeded = None, 0, False
 
