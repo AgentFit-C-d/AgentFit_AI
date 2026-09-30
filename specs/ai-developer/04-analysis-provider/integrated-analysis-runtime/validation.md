@@ -23,6 +23,9 @@
 - 사용자가 공용 환경에1.7.0을 설치했다고 알렸으며 해당 환경을 수정하지 않았다. 위 평가용 venv와 사용자가 말한 공용 환경이 같은 경로라고 가정하지 않는다.
 - `git diff --check` exit0. Windows의 기존 LF/CRLF 안내는 있었으며 알고리즘 제품 `.py` 변경은0개다.
 
-## 남은 검증
+## 최종 검증과 인계
 
-독립 리뷰, 정확한 커밋의 Linux CI를 완료 후 기록한다. 이 기능은 패키지 설치와 실행 호환성 검증이며 H02 제공자 장애·의미 품질·서비스 연결을 해결했다고 주장하지 않는다.
+- 구현 커밋3fe785a9308dbb404675f5d279336baff4712131. Task1 완료 게이트도 SDK4/4 및 기존996건/991통과5제외,20.854초/exit0.
+- 독립 최종 리뷰 Critical0/Important0/Minor0. 리뷰어가 SDK4/4,skip0,0.044초와 pip check·diff 검사를 별도 실행해 통과했다. 리뷰 판단과 한계는 work/harness/integrated-analysis-runtime/review.md에 기록했다.
+- feature/integrated-analysis-runtime push 완료. 정확한 구현의 [Linux CI36679941777](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36679941777)은 completed/success. 기본 unit-and-worker-memory 및 선택형 integrated-runtime 두job 모두 성공했다. 선택형 설치·pip check·실제 SDK 실행·전체 suite 단계가 모두 통과했다.
+- 이 기능의 인수 조건은 충족했다. 실제 API0이며 H02 제공자 장애·의미 품질·HTTP 연결·Spring 저장·배포는 미완료다. 전체 실사용 목표는 active로 유지한다. 전이 의존성의 미래 조합까지 보장하지 않는다.

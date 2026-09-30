@@ -38,13 +38,13 @@
 - Consumes: `analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, solar_transport=..., nvidia_transport=..., max_calls=...)`; `extract_candidates(document, key, transport=...)`; `freeze_candidates(document, extractions)`.
 - Produces: `python -m pip install -r ai_service/requirements-integrated.txt -r ai_service/requirements-dev.txt`; ai_service에서 `python -m unittest discover -s runtime_tests -v`의 성공/실패 종료 상태. 공개 Python/HTTP 인터페이스 변경 없음.
 
-- [ ] **Step 1:** 실제 SDK 통합4테스트를 먼저 작성한다. 전체 Profile 10필드와 호출5회, 반복 인용 anchor2개·위치2개, 잘못된 JSON에서 EXTRACTION_FAILED·후속호출0, 긴 문서의 예산1에서 CALL_BUDGET_EXCEEDED·실제전송1을 검사한다. 기대 값은 합성 문서를 손으로 계산한 literal을 사용한다.
-- [ ] **Step 2:** 기존 기본 테스트 Python에서 `-m unittest discover -s runtime_tests -v`를 실행한다. Expected: LangExtract 부재로 nonzero. 깨끗한 `.venv`를 만들고 기본·개발 requirements만 설치한 뒤 같은 실패를 확인한다.
-- [ ] **Step 3:** 선택형 requirements에 `-r requirements.txt`와 `langextract==1.7.0`을 추가한다. `.venv`에서 해당 파일을 설치하고 `python -m pip check`를 실행한다. Expected: exit0/호환성 오류0.
-- [ ] **Step 4:** `.venv`에서 `python -m unittest discover -s runtime_tests -v`를 실행한다. Expected: 4/4, skip0, 실제 API0. 기존 어댑터가 가정을 위반하면 원인을 확인하고 최소 수정의 근거를 ledger에 기록한다.
-- [ ] **Step 5:** 선택형 Linux CI job과 한국어 설치·검증 README를 추가한다. 별도 job이 선택형·개발 requirements 설치, pip check, runtime_tests, 기존 전체 suite를 순서대로 실행한다.
-- [ ] **Step 6:** 기존 기본 환경과 새 `.venv`에서 각각 `python -m unittest discover -s tests -q`를 실행한다. Expected: Windows996건/990통과6제외. 새 선택형 테스트4건은 별도 집계한다. `git diff --check`와 변경 범위를 검토한다.
-- [ ] **Step 7:** product/config/test/docs를 커밋한다. Task 완료 명령은 `.venv`로 runtime_tests와 tests 전체를 모두 실행하는 PowerShell 검증 스크립트이며, 하나라도 실패하면 nonzero로 종료한다. 최종 독립 리뷰 및 필요한 수정 후 push하고 정확한 구현 커밋 CI의 두 job을 확인한다.
+- [x] **Step 1:** 실제 SDK 통합4테스트를 먼저 작성한다. 전체 Profile 10필드와 호출5회, 반복 인용 anchor2개·위치2개, 잘못된 JSON에서 EXTRACTION_FAILED·후속호출0, 긴 문서의 예산1에서 CALL_BUDGET_EXCEEDED·실제전송1을 검사한다. 기대 값은 합성 문서를 손으로 계산한 literal을 사용한다.
+- [x] **Step 2:** 기존 기본 테스트 Python에서 `-m unittest discover -s runtime_tests -v`를 실행한다. Expected: LangExtract 부재로 nonzero. 깨끗한 `.venv`를 만들고 기본·개발 requirements만 설치한 뒤 같은 실패를 확인한다.
+- [x] **Step 3:** 선택형 requirements에 `-r requirements.txt`와 `langextract==1.7.0`을 추가한다. `.venv`에서 해당 파일을 설치하고 `python -m pip check`를 실행한다. Expected: exit0/호환성 오류0.
+- [x] **Step 4:** `.venv`에서 `python -m unittest discover -s runtime_tests -v`를 실행한다. Expected: 4/4, skip0, 실제 API0. 기존 어댑터가 가정을 위반하면 원인을 확인하고 최소 수정의 근거를 ledger에 기록한다.
+- [x] **Step 5:** 선택형 Linux CI job과 한국어 설치·검증 README를 추가한다. 별도 job이 선택형·개발 requirements 설치, pip check, runtime_tests, 기존 전체 suite를 순서대로 실행한다.
+- [x] **Step 6:** 기존 기본 환경과 새 `.venv`에서 각각 `python -m unittest discover -s tests -q`를 실행한다. Expected: Windows996건/990통과6제외. 새 선택형 테스트4건은 별도 집계한다. `git diff --check`와 변경 범위를 검토한다.
+- [x] **Step 7:** product/config/test/docs를 커밋한다. Task 완료 명령은 `.venv`로 runtime_tests와 tests 전체를 모두 실행하는 PowerShell 검증 스크립트이며, 하나라도 실패하면 nonzero로 종료한다. 최종 독립 리뷰 및 필요한 수정 후 push하고 정확한 구현 커밋 CI의 두 job을 확인한다.
 
 ## 자체 검토
 
