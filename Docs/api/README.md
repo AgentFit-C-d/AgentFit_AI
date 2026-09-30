@@ -9,6 +9,8 @@
 | [공통 규칙](common.md) | 인증·접근 제어·오류·버전·보관·재시도 | 첫 Feature의 상세 계약 |
 | [프로젝트·문서 분석](01-project-analysis.md) | 개인 프로젝트·raw 문서 입력·초안·확인 저장·삭제 | 현재 Feature 설계와 동기화 |
 | [분석 확인 필요 인계안](analysis-confirmation-v1.draft.md) | AI 복구 초안의 Spring 저장·재조회·사용자 확인 경계 | Full Stack A·Frontend 합의 전 초안 |
+| [v2 확인 인계 초안](analysis-confirmation-v2.draft.md) | 후보 제안·미해결 값·질문 상태와 공개 계약 공백 | AI 내부 구현, 공개 확장 미합의 |
+| [핵심 흐름 mock 인계](core-analysis-mock-handoff.md) | 합성 로컬 실행·실패 경계·실제 Spring 연결 체크리스트 | mock 검증용, 실제 Spring 미검증 |
 | [OpenAPI 3.1 JSON](openapi.phase1.json) | 공개 세션 조회 + 프로젝트 API 7개 operation의 schema·예시 | 첫 Feature 명세, 실제 서버 아님 |
 | [역할·환경·추천](02-recommendations.draft.md) | Developer/Environment Profile·Catalog·네 가지 추천 결과 | 후속 DESIGN DRAFT |
 | [권한·설정·다운로드](03-configuration.draft.md) | 선택·Preview·최종 승인·ZIP·최소 이력·사용자 진술 | 후속 DESIGN DRAFT |

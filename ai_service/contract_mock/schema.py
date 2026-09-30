@@ -1,6 +1,7 @@
 """Validate mock traffic against the repository's unmodified public contract."""
 from functools import lru_cache
 import json
+import re
 from pathlib import Path
 
 from jsonschema import Draft202012Validator, FormatChecker
@@ -11,6 +12,20 @@ class ContractError(Exception):
     def __init__(self, status: int, code: str):
         self.status, self.code = status, code
         super().__init__(code)
+
+
+def reject_sensitive(value):
+    """Known credential patterns only; not a comprehensive data-loss scanner."""
+    if isinstance(value, dict):
+        for child in value.values():
+            reject_sensitive(child)
+    elif isinstance(value, list):
+        for child in value:
+            reject_sensitive(child)
+    elif isinstance(value, str) and re.search(
+            r'(?i)(?:api[_-]?key|password|access[_-]?token|secret)\s*[:=]\s*[\"\']?[^\s\"\']{8,}'
+            r'|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----', value):
+        raise ContractError(422, 'SENSITIVE_INPUT')
 
 
 @lru_cache(maxsize=1)

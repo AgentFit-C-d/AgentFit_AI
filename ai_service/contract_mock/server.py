@@ -2,6 +2,8 @@
 import asyncio
 import json
 import math
+import re
+from urllib.parse import unquote
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, Response
@@ -9,7 +11,7 @@ from starlette.requests import ClientDisconnect
 
 from agentfit_ai.http_service import create_app
 from .gateway import LocalAnalysisGateway, MEDIA, synthetic_analysis
-from .schema import ContractError, check
+from .schema import ContractError, check, reject_sensitive
 from .store import MockStore, identifier
 
 
@@ -59,6 +61,43 @@ async def _json(request, schema):
         raise ContractError(400, 'INVALID_INPUT') from None
     check(schema, value)
     return value
+
+
+def _display_name(request, kind):
+    names = request.headers.getlist('x-document-name')
+    if not names:
+        return None
+    if len(names) != 1 or re.search(r'%(?![0-9A-Fa-f]{2})', names[0]):
+        raise ContractError(400, 'INVALID_INPUT')
+    try:
+        name = unquote(names[0], encoding='utf-8', errors='strict')
+    except UnicodeError:
+        raise ContractError(400, 'INVALID_INPUT') from None
+    if (kind == 'TEXT' or not 1 <= len(name.strip()) <= 200
+            or any(ord(c) < 32 or ord(c) == 127 for c in name) or '/' in name or '\\' in name):
+        raise ContractError(422, 'INVALID_INPUT')
+    reject_sensitive(name)
+    return name.strip()
+
+
+async def _until_disconnect(request, operation):
+    """Only called after upload is consumed, so one task owns ASGI receive."""
+    async def disconnected():
+        while True:
+            if (await request.receive())['type'] == 'http.disconnect':
+                return
+    analysis = asyncio.create_task(operation)
+    watcher = asyncio.create_task(disconnected())
+    try:
+        done, _ = await asyncio.wait((analysis, watcher), return_when=asyncio.FIRST_COMPLETED)
+        if watcher in done:
+            raise ClientDisconnect
+        return await analysis
+    finally:
+        for task in (analysis, watcher):
+            if not task.done():
+                task.cancel()
+        await asyncio.gather(analysis, watcher, return_exceptions=True)
 
 
 def create_mock_app(*, store=None, ai_app=None, sessions=None, origin='http://127.0.0.1:8765',
@@ -135,6 +174,7 @@ def create_mock_app(*, store=None, ai_app=None, sessions=None, origin='http://12
         kind = next((k for k, v in MEDIA.items() if v == media), None)
         if kind is None:
             raise ContractError(415, 'UNSUPPORTED_DOCUMENT')
+        display_name = _display_name(request, kind)
         if project_id in active:
             raise ContractError(409, 'ANALYSIS_BUSY')
         if len(active) >= 2 or user in active.values():
@@ -158,10 +198,11 @@ def create_mock_app(*, store=None, ai_app=None, sessions=None, origin='http://12
                         raise ContractError(422, 'UNREADABLE_DOCUMENT') from None
                     if count > 100000:
                         raise ContractError(413, 'INPUT_TOO_LARGE')
-                attempt = store.begin(user, project_id, {'kind': kind, 'displayName': None,
+                attempt = store.begin(user, project_id, {'kind': kind, 'displayName': display_name,
                     'byteSize': len(body), 'characterCount': count, 'pageCount': None},
                     timeout_seconds=analysis_timeout_seconds)
-                result = await gateway.analyze(kind, body, attempt['document']['id'], request.state.request_id)
+                result = await _until_disconnect(request,
+                    gateway.analyze(kind, body, attempt['document']['id'], request.state.request_id))
                 return store.finish(user, project_id, attempt['id'], result['profile'], result['review'])
         except TimeoutError:
             failed('ANALYSIS_TIMEOUT')

@@ -5,7 +5,7 @@ from threading import RLock
 from uuid import uuid4
 
 from agentfit_ai.profile import FIELDS, _validate_value, ProfileValidationError
-from .schema import ContractError, check, check_review, schemas
+from .schema import ContractError, check, check_review, schemas, reject_sensitive
 
 
 def identifier(prefix):
@@ -14,6 +14,7 @@ def identifier(prefix):
 
 def _data(value):
     check('ProfileData', value)
+    reject_sensitive(value)
     try:
         for field in FIELDS:
             _validate_value(field, value[field])
@@ -26,6 +27,7 @@ class MockStore:
         self.clock = clock or (lambda: datetime.now(timezone.utc))
         self._lock = RLock()
         self._entries = {}
+        self._diagnostics = {}
         self.fail_next_write = False
 
     def _now(self):
@@ -47,6 +49,7 @@ class MockStore:
 
     def create(self, owner, name):
         check('CreateProjectRequest', {'name': name})
+        reject_sensitive(name)
         if not 1 <= len(name.strip()) <= 100:
             raise ContractError(422, 'INVALID_INPUT')
         with self._lock:
@@ -206,3 +209,32 @@ class MockStore:
             self._owned(owner, project_id)
             self._write_gate()
             del self._entries[project_id]
+            for key in list(self._diagnostics):
+                if key[0] == project_id:
+                    del self._diagnostics[key]
+
+    def record_failed_diagnostic(self, owner, project_id, attempt_id, payload):
+        """Test-only synthetic injection. No HTTP ingestion or diagnostic read API."""
+        with self._lock:
+            item = self._owned(owner, project_id)
+            attempt = item['attempts'].get(attempt_id)
+            if (not attempt or attempt['status'] != 'FAILED' or type(payload) is not bytes
+                    or not 0 < len(payload) <= 1_048_576):
+                raise ContractError(422, 'INVALID_INPUT')
+            expires = datetime.fromisoformat(attempt['finishedAt']) + timedelta(days=7)
+            self.purge_diagnostics()
+            if self.clock() >= expires:
+                raise ContractError(422, 'INVALID_INPUT')
+            self._diagnostics[(project_id, attempt_id)] = {'payload': payload, 'expires': expires}
+
+    def purge_diagnostics(self):
+        with self._lock:
+            expired = [key for key, value in self._diagnostics.items() if self.clock() >= value['expires']]
+            for key in expired:
+                del self._diagnostics[key]
+            return len(expired)
+
+    def diagnostic_count(self):
+        with self._lock:
+            self.purge_diagnostics()
+            return len(self._diagnostics)

@@ -21,6 +21,23 @@ def client(app, token='mock-session-a'):
 
 
 class MockHttpTests(unittest.IsolatedAsyncioTestCase):
+    async def test_pdf_text_limit_and_worker_timeout_keep_public_error_semantics(self):
+        from fastapi import FastAPI
+        from fastapi.responses import JSONResponse
+        for internal, status, public in [('DOCUMENT_TEXT_TOO_LONG', 413, 'INPUT_TOO_LARGE'),
+                                          ('PDF_TIMEOUT', 504, 'ANALYSIS_TIMEOUT')]:
+            with self.subTest(internal=internal):
+                ai = FastAPI()
+                @ai.post('/internal/v1/analyze')
+                async def reject():
+                    return JSONResponse({'error': internal}, status_code=422)
+                async with client(create_mock_app(ai_app=ai)) as http:
+                    p = await self.create_project(http)
+                    response = await http.post(f'/api/projects/{p}/analysis', content=b'%PDF-synthetic',
+                                               headers={'Content-Type': 'application/pdf'})
+                    self.assertEqual(response.status_code, status)
+                    self.assertEqual(response.json()['error']['code'], public)
+
     async def create_project(self, http):
         response = await http.post('/api/projects', json={'name': 'Plan'})
         self.assertEqual(response.status_code, 201)

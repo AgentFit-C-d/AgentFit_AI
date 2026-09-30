@@ -47,7 +47,7 @@ class LocalAnalysisGateway:
             raise ContractError(502, 'AI_INVALID_OUTPUT') from None
         if response.status_code != 200:
             code = result.get('error')
-            if code in ('DOCUMENT_TOO_LARGE', 'DOCUMENT_TOO_LONG', 'PDF_TOO_MANY_PAGES'):
+            if code in ('DOCUMENT_TOO_LARGE', 'DOCUMENT_TEXT_TOO_LONG', 'PDF_TOO_MANY_PAGES'):
                 raise ContractError(413, 'INPUT_TOO_LARGE')
             if code == 'DOCUMENT_EMPTY':
                 raise ContractError(422, 'EMPTY_DOCUMENT')
@@ -57,7 +57,7 @@ class LocalAnalysisGateway:
                 raise ContractError(422, 'UNREADABLE_DOCUMENT')
             if code == 'INVALID_ANALYSIS_RESULT':
                 raise ContractError(502, 'AI_INVALID_OUTPUT')
-            if response.status_code in (408, 504):
+            if code == 'PDF_TIMEOUT' or response.status_code in (408, 504):
                 raise ContractError(504, 'ANALYSIS_TIMEOUT')
             raise ContractError(503 if response.status_code == 503 else 502, 'AI_UNAVAILABLE')
         if result.get('requestId') != request_id or result.get('contract') != 'confirmation-v2':

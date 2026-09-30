@@ -16,6 +16,9 @@
 
 ## 다음 작업·검증 한계
 
+- 최신: Task2 d4a77c1 push/최종gate완료. Task3 실패진단/민감값/실제TCP/응답유실 및 인계 문서·CI job구현. precommit전체1117/5skip58.396초,runtime11/11 51.051초,contract34/34 9.252초,exit0,pipcheck충돌0. 전체 최종리뷰와 정확한CI는 아직 남음.
+- Task3의 TCP 끊김은 실제 RED→GREEN. 실패시점+7일만료·삭제후쓰기차단, 실제저장뒤응답유실 복구 검증. 공개v2질문 미구현과 실제Spring미검증은 Docs/api/core-analysis-mock-handoff.md 및 analysis-confirmation-v2.draft.md에 명시.
+
 - Task1 완료797b113/push/CI36724997363 성공. Task2 HTTP7+경쟁7+store9=23개 통과. 입력전 admission·삭제중 physicalslot·기한정리·근거끝범위를 RED→GREEN으로 보완했다. 전체1117/5skip44.106초,runtime11/11 38.434초,contract23/23 2.876초,exit0. Task2커밋/최종gate를 진행한다.
 - 실제 모델0회, 실제 Spring0회. Task3 합성실패진단7일·로그·localhost TCP·인계·최종리뷰가 남았다.
 
