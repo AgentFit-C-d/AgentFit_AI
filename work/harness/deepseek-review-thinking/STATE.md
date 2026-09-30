@@ -14,3 +14,6 @@
 - 최초probe 종료:session5176/exit1,3calls98.545s,false3/3,trueINVALID_RESPONSE,gatefalse,H02미실행. 별도진단session32239/exit0,2calls78.339s: schema-on은 정답JSON이 reasoning에 들어가고 content 없음, schema-off는 최종content JSON 및 parser통과. 코드불변 감사완료.
 - 후속설계: 별도v2에서 structured_output=False를 양쪽에 적용하고 thinking만 비교. 서버검증유지. 최초결과보존, 합성4회→조건부H0214회, 전체상한24회. 사용자목표내권한으로 반복승인없이 진행.
 - 일회성observer실패가 parser에 흡수되는 버그RED→GREEN 수정. 신규9/9,전체1005/1000pass5skip20.144s,SDK4/4. v2preflight 통과. 현재실제API프로세스없음, 다음호환성commit→v2probe.
+- 호환성 구현3140938 고정 후v2probe session10533/PID32492 시작. 결과 E:/AgentFit/tmp/deepseek-thinking-probe-20260930-v2.json. 프로세스 실제 handle이 live인 동안 재시작하지 않는다. H02v2는 아직 미실행. 원본 session5176/32239는 terminal이다.
+- v2probe session10533 종료/exit0.4calls320.782s,false3/3,true3/3,양쪽후보/coverage 유효,thinkingtrue reasoning 길이692/719.감사10항목통과,gate=true. 실제문서 품질은 아직미확인.
+- H02v2 session95687/PID36508 시작, E:/AgentFit/tmp/deepseek-thinking-h02-20260930-v2.json, 최대14호출, code3140938. API 실제 종료 전 코드 변경/재시작 금지. 다음은 같은 handle 확인→terminal 감사→SDD task-done→독립리뷰→필요한수정/push. feature 중간push는 진행상태 보존이며 품질/목표 완료가 아니다.

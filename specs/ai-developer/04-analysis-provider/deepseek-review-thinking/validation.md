@@ -30,3 +30,9 @@
 - 일회성 observer 오류를 공유 parser가 PROVIDER_FAILURE로 감싸고 다음 arm을 실행하는 결함을 새 테스트로 재현했다. 실패 latch를 보존해 첫 오류 후 API가 추가 실행되지 않게 수정. RED RuntimeError 미발생→GREEN, schema-free 인자 부재 RED→GREEN.
 - 수정 후9/9,0.010초. 전체1005건 중1000통과5제외,20.144초. SDK4/4,0.043초.
 - 별도v2 driver preflight 성공. SHA256 7ea2ed863566aca51b195ef8d2a4c9e03f13af6c8ba74d12aa5716e5e8904722. 동일183후보/16판단/6부분정답. 합성 gate를 다시 통과해야 실제 H02가 허용된다. 최초 결과는 덮어쓰지 않음.
+
+## v2 합성 gate
+
+- 구현3140938 고정. session10533 종료/exit0,4호출/320.782초. false/true 모두3/3 판단 및1/1 부분정답, 후보·전체coverage 계약 유효. true는 reasoning692/719자와 별도의 유효한 최종JSON 응답.
+- code/driver/snapshot hash·호출상한·실패분모 등을 확인하는10개 감사 항목 모두 통과, gate=true. 처리 시간은 속도 최적화 근거로 사용하지 않는다.
+- 이후 H02v2 session95687 시작. 이 항목 작성 시 실제183후보 결과는 아직 대기 중이며 정확도·채택 판정은 미확정이다.
