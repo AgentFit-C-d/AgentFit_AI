@@ -20,6 +20,10 @@
 
 `feature/nvidia-review-model-routing`의 `9b853390a7401df128d85735818a4c27ed7fb010` push 완료. [Linux CI36768519813](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36768519813)는2026-09-30T19:53:48Z에모든4job이success로종료됐다. 단위·실제Linux메모리·통합SDK·계약mock·핵심흐름을포함한다. 이후실제평가는별도[실행계획](live-plan.md)을따르며코드/자료freeze를유지한다.
 
-## 해석 제한
+## 별도 실제 평가 완료
+
+고정된 소스로 실제30회 평가가 종료 코드0으로 완료됐다. 계약상 유효한 초안27회·입력 거절3회·잘못된 응답 계약0회, 사용 가능한 진단의 DeepSeek309호출이며 종료 후 관련 프로세스0개다. 기존13개 증거 파일은 불변이다. [최종 보고](live-result.md)와 [구조화 집계](final-summary.json)를 남겼다. 실제 실행과 구현의 합성 검증은 별도 증거이며, 이번 실행에서도 사람 검토와 실사용 gate는 통과하지 않았다.
+
+## 남은 해석 제한
 
 로컬 검증은 선택 모델의 정확한 전달과 오류 처리 증거다. DeepSeek의 실제 문서 검토 품질 향상이나 제공자 가용성을 입증하지 않는다. gold는 사람이 검토하지 않은 임시 기준이며 `human_reviewed=false`, `release_gate_passed=false`를 유지한다. 실제Spring·DB·운영 환경은 미검증이다. 이전 진단의 첫GLM HTTP5xx 실패1건만으로 모델 일반 성능을 단정하지 않는다.

@@ -1,0 +1,486 @@
+{
+  "version": "nvidia-review-audit-v1",
+  "audited_at": "2026-09-30T21:11:21Z",
+  "process_exit_code": 0,
+  "remaining_analysis_processes": 0,
+  "source_commit": "a28254a370d7c93df447200b994c295aa01d1415",
+  "freeze_sha256": "f5e1f64b667a075046680182dba86456417af1894304916813377e61ccd3eba5",
+  "result_directory": "E:/AgentFit/output/independent-profile-v1/runs-deepseek-review-a28254a",
+  "human_reviewed": false,
+  "release_gate_passed": false,
+  "completed": 30,
+  "failed": 3,
+  "invalid": 0,
+  "valid": 27,
+  "pending": [],
+  "unstarted": 0,
+  "questions": 231,
+  "totals": {
+    "gold": 621,
+    "produced": 400,
+    "matched": 208,
+    "missing": 413,
+    "known_wrong": 0,
+    "duplicates": 3,
+    "unassessed": 189
+  },
+  "previous_evidence_unchanged": true,
+  "cases": [
+    {
+      "case_id": "PUBLIC-01",
+      "status": [
+        "valid",
+        "valid",
+        "valid"
+      ],
+      "matched": [
+        8,
+        7,
+        7
+      ],
+      "gold": 24,
+      "produced_features": [
+        0,
+        0,
+        0
+      ],
+      "matched_features": [
+        0,
+        0,
+        0
+      ],
+      "features_gold": 7,
+      "seconds": [
+        363.511166,
+        211.489667,
+        268.848756
+      ],
+      "calls": [
+        15,
+        15,
+        16
+      ]
+    },
+    {
+      "case_id": "PUBLIC-02",
+      "status": [
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "matched": [
+        0,
+        0,
+        0
+      ],
+      "gold": 31,
+      "produced_features": [
+        0,
+        0,
+        0
+      ],
+      "matched_features": [
+        0,
+        0,
+        0
+      ],
+      "features_gold": 8,
+      "seconds": [
+        0.29802,
+        0.31162,
+        0.307233
+      ],
+      "calls": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "case_id": "PUBLIC-03",
+      "status": [
+        "valid",
+        "valid",
+        "valid"
+      ],
+      "matched": [
+        11,
+        11,
+        11
+      ],
+      "gold": 14,
+      "produced_features": [
+        6,
+        10,
+        9
+      ],
+      "matched_features": [
+        6,
+        7,
+        7
+      ],
+      "features_gold": 7,
+      "seconds": [
+        160.02266,
+        133.166225,
+        136.10409
+      ],
+      "calls": [
+        10,
+        10,
+        10
+      ]
+    },
+    {
+      "case_id": "PUBLIC-06",
+      "status": [
+        "valid",
+        "valid",
+        "valid"
+      ],
+      "matched": [
+        15,
+        12,
+        10
+      ],
+      "gold": 30,
+      "produced_features": [
+        25,
+        21,
+        22
+      ],
+      "matched_features": [
+        13,
+        10,
+        9
+      ],
+      "features_gold": 23,
+      "seconds": [
+        235.140131,
+        223.197163,
+        226.42054
+      ],
+      "calls": [
+        15,
+        14,
+        14
+      ]
+    },
+    {
+      "case_id": "PUBLIC-07",
+      "status": [
+        "valid",
+        "valid",
+        "valid"
+      ],
+      "matched": [
+        14,
+        14,
+        14
+      ],
+      "gold": 18,
+      "produced_features": [
+        13,
+        14,
+        14
+      ],
+      "matched_features": [
+        11,
+        11,
+        11
+      ],
+      "features_gold": 11,
+      "seconds": [
+        60.618615,
+        68.942992,
+        62.31615
+      ],
+      "calls": [
+        7,
+        7,
+        7
+      ]
+    },
+    {
+      "case_id": "PUBLIC-08",
+      "status": [
+        "valid",
+        "valid",
+        "valid"
+      ],
+      "matched": [
+        8,
+        11,
+        9
+      ],
+      "gold": 22,
+      "produced_features": [
+        10,
+        13,
+        9
+      ],
+      "matched_features": [
+        0,
+        3,
+        1
+      ],
+      "features_gold": 8,
+      "seconds": [
+        186.779513,
+        327.547159,
+        164.035374
+      ],
+      "calls": [
+        14,
+        14,
+        14
+      ]
+    },
+    {
+      "case_id": "PUBLIC-09",
+      "status": [
+        "valid",
+        "valid",
+        "valid"
+      ],
+      "matched": [
+        0,
+        1,
+        1
+      ],
+      "gold": 7,
+      "produced_features": [
+        0,
+        0,
+        0
+      ],
+      "matched_features": [
+        0,
+        0,
+        0
+      ],
+      "features_gold": 3,
+      "seconds": [
+        62.448881,
+        65.468506,
+        69.482649
+      ],
+      "calls": [
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "case_id": "PUBLIC-10",
+      "status": [
+        "valid",
+        "valid",
+        "valid"
+      ],
+      "matched": [
+        11,
+        6,
+        11
+      ],
+      "gold": 45,
+      "produced_features": [
+        25,
+        24,
+        25
+      ],
+      "matched_features": [
+        3,
+        3,
+        3
+      ],
+      "features_gold": 28,
+      "seconds": [
+        272.992916,
+        208.964617,
+        187.357423
+      ],
+      "calls": [
+        17,
+        17,
+        16
+      ]
+    },
+    {
+      "case_id": "PUBLIC-11",
+      "status": [
+        "valid",
+        "valid",
+        "valid"
+      ],
+      "matched": [
+        4,
+        4,
+        4
+      ],
+      "gold": 10,
+      "produced_features": [
+        0,
+        0,
+        0
+      ],
+      "matched_features": [
+        0,
+        0,
+        0
+      ],
+      "features_gold": 2,
+      "seconds": [
+        79.47256,
+        49.751214,
+        111.956862
+      ],
+      "calls": [
+        8,
+        7,
+        8
+      ]
+    },
+    {
+      "case_id": "PUBLIC-12",
+      "status": [
+        "valid",
+        "valid",
+        "valid"
+      ],
+      "matched": [
+        1,
+        2,
+        1
+      ],
+      "gold": 6,
+      "produced_features": [
+        0,
+        1,
+        0
+      ],
+      "matched_features": [
+        0,
+        1,
+        0
+      ],
+      "features_gold": 2,
+      "seconds": [
+        201.633982,
+        119.441921,
+        141.283385
+      ],
+      "calls": [
+        12,
+        12,
+        12
+      ]
+    }
+  ],
+  "observed_calls": 309,
+  "unavailable_call_requests": 3,
+  "valid_seconds": {
+    "min": 49.751214,
+    "median": 160.02266,
+    "p95_nearest_rank": 327.547159,
+    "max": 363.511166
+  },
+  "all_request_seconds": 4399.31199,
+  "field_states": {
+    "suggested": 18,
+    "unknown": 39,
+    "unresolved": 213
+  },
+  "fields": {
+    "project_name": {
+      "gold": 30,
+      "produced": 22,
+      "matched": 22,
+      "missing": 8,
+      "known_wrong": 0,
+      "duplicates": 0,
+      "unassessed": 0
+    },
+    "project_type": {
+      "gold": 30,
+      "produced": 1,
+      "matched": 0,
+      "missing": 30,
+      "known_wrong": 0,
+      "duplicates": 0,
+      "unassessed": 1
+    },
+    "domain": {
+      "gold": 30,
+      "produced": 17,
+      "matched": 0,
+      "missing": 30,
+      "known_wrong": 0,
+      "duplicates": 0,
+      "unassessed": 17
+    },
+    "frontend": {
+      "gold": 42,
+      "produced": 37,
+      "matched": 30,
+      "missing": 12,
+      "known_wrong": 0,
+      "duplicates": 0,
+      "unassessed": 7
+    },
+    "backend": {
+      "gold": 48,
+      "produced": 15,
+      "matched": 13,
+      "missing": 35,
+      "known_wrong": 0,
+      "duplicates": 2,
+      "unassessed": 0
+    },
+    "ai": {
+      "gold": 6,
+      "produced": 0,
+      "matched": 0,
+      "missing": 6,
+      "known_wrong": 0,
+      "duplicates": 0,
+      "unassessed": 0
+    },
+    "database": {
+      "gold": 6,
+      "produced": 1,
+      "matched": 0,
+      "missing": 6,
+      "known_wrong": 0,
+      "duplicates": 0,
+      "unassessed": 1
+    },
+    "deployment": {
+      "gold": 30,
+      "produced": 4,
+      "matched": 4,
+      "missing": 26,
+      "known_wrong": 0,
+      "duplicates": 0,
+      "unassessed": 0
+    },
+    "features": {
+      "gold": 297,
+      "produced": 241,
+      "matched": 99,
+      "missing": 198,
+      "known_wrong": 0,
+      "duplicates": 1,
+      "unassessed": 141
+    },
+    "external_integrations": {
+      "gold": 102,
+      "produced": 62,
+      "matched": 40,
+      "missing": 62,
+      "known_wrong": 0,
+      "duplicates": 0,
+      "unassessed": 22
+    }
+  }
+}
