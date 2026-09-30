@@ -67,6 +67,24 @@ class NvidiaOnlyTests(unittest.TestCase):
         self.assertEqual(labels, [{'id': 'C000', 'field': 'project_name', 'status': 'confirmed'}])
         self.assertEqual(case.requests[0]['model'], DEEPSEEK)
 
+    def test_falsey_explicit_transport_never_selects_default_network(self):
+        case = ProviderFixture(1)
+        class LocalTransport:
+            def __bool__(self):
+                return False
+
+            def __call__(self, payload, key, timeout):
+                if payload['response_format']['json_schema']['name'] == 'agentfit_langextract_candidates':
+                    from test_candidate_feature_curation import response
+                    return response({'extractions': []}, model=payload['model'])
+                return case.transport(payload, key, timeout)
+
+        with patch.object(pipeline, 'post_nvidia_streaming',
+                          side_effect=AssertionError('default network must not be selected')):
+            result = self.invoke(case, nvidia_transport=LocalTransport())
+        self.assertEqual(result['profile']['data']['project_name'], 'TestApp')
+        self.assertEqual(len(case.requests), 4)
+
     def test_invalid_options_and_mixed_secrets_fail_before_any_extraction(self):
         bad = [('solar_key', 'other-secret'), ('solar_transport', lambda *a: b''),
                ('candidate_model', 'solar-pro4'), ('candidate_model', []),

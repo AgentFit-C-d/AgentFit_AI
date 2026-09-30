@@ -156,7 +156,7 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
         return send
 
     solar_send = metered('solar', solar_transport or post_solar)
-    nvidia_send = metered('nvidia', nvidia_transport or post_nvidia_streaming)
+    nvidia_send = metered('nvidia', post_nvidia_streaming if nvidia_transport is None else nvidia_transport)
     candidate_send = nvidia_send if nvidia_only else solar_send
     candidate_options = {'nvidia_model': candidate_model} if nvidia_only else {}
 

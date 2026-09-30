@@ -14,6 +14,9 @@
 - GREEN: 신규unit5/5, 신규runtime4/4. 실제 설치된 LangExtract1.7.0과 기존 parser/근거/분류/검토/v2를 실행하고 provider 생성만 합성 응답으로 대체.
 - 첫 전체 gate: unit1128건 중1123통과/5skip59.946초, runtime15/15 47.452초, contract36/36 9.369초, core-flow4/4 21.882초. task-done 최종 결과는 아래 기록을 따른다.
 - 기존 Python의 `<prefix>` 경고가 출력되지만 신규 테스트와 위 검증은 exit0. 기존 Windows 비지원 조건의 skip을 성공으로 집계하지 않는다.
+- 구현 커밋 `f38552d8eefebf4f6be61983df91fd373c5493fd`의 task-done gate도 전체exit0: unit1128중1123pass/5skip61.849초, runtime15/15 47.318초, contract36/36 9.166초, core-flow4/4 20.958초.
+- 독립 리뷰 Important1은 falsey 통신 객체의 기본 네트워크 대체였다. 신규 회귀 RED→`is None` 비교로 수정→전용unit6/6 GREEN. 최종 전체 gate: unit1129중1124pass/5skip62.400초, runtime15/15 47.430초, contract36/36 9.436초, core-flow4/4 21.251초. 모두exit0, 재리뷰 없이 한 번의 수정 pass 완료.
+- 원격 확인 위치: [이 기능 브랜치의 CI](https://github.com/AgentFit-C-d/AgentFit_AI/actions?query=branch%3Afeature%2Fnvidia-only-candidates). 특정 실행의 SHA·결과는 로컬 `.superpowers/sdd/plan-nvidia-only-candidates/progress.md`의 최종 push/CI 기록 및 작업 보고로 확인한다.
 
 ## 실행 방법과 잔여 검증
 
