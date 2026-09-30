@@ -1,0 +1,1407 @@
+{
+  "checked_at": "2026-09-30T22:22:42.117622+00:00",
+  "prior_files_unchanged": 73,
+  "started": [],
+  "completed": [
+    "PUBLIC-01",
+    "PUBLIC-09",
+    "PUBLIC-07"
+  ],
+  "unstarted": [],
+  "rows": [
+    {
+      "id": "PUBLIC-01",
+      "seconds": 186.633492,
+      "score_status": "valid",
+      "score_error": "REVIEW_CONFIRMATION_REQUIRED",
+      "calls": 15,
+      "probe_status": "available",
+      "fields": {
+        "project_name": {
+          "classified": {
+            "confirmedCount": 13,
+            "uniqueCount": 1,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 13,
+            "uniqueCount": 1,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "present",
+            "valueCount": 1,
+            "evidence": [
+              {
+                "start": 108,
+                "end": 117
+              },
+              {
+                "start": 863,
+                "end": 872
+              },
+              {
+                "start": 1979,
+                "end": 1988
+              },
+              {
+                "start": 2347,
+                "end": 2356
+              },
+              {
+                "start": 2467,
+                "end": 2476
+              },
+              {
+                "start": 2897,
+                "end": 2906
+              },
+              {
+                "start": 3301,
+                "end": 3310
+              },
+              {
+                "start": 3507,
+                "end": 3516
+              },
+              {
+                "start": 4309,
+                "end": 4318
+              },
+              {
+                "start": 6521,
+                "end": 6530
+              },
+              {
+                "start": 8121,
+                "end": 8130
+              },
+              {
+                "start": 8703,
+                "end": 8712
+              },
+              {
+                "start": 11158,
+                "end": 11167
+              }
+            ]
+          },
+          "registered_span_reach": {
+            "registered_present_units": 1,
+            "grounded": {
+              "exact": 1,
+              "containing": 1
+            },
+            "classified": {
+              "exact": 1,
+              "containing": 1
+            },
+            "reviewed": {
+              "exact": 1,
+              "containing": 1
+            },
+            "projected": {
+              "exact": 1,
+              "containing": 1
+            }
+          }
+        },
+        "project_type": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 1,
+            "grounded": {
+              "exact": 0,
+              "containing": 0
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "domain": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 1,
+            "grounded": {
+              "exact": 0,
+              "containing": 0
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "frontend": {
+          "classified": {
+            "confirmedCount": 9,
+            "uniqueCount": 5,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 5,
+            "uniqueCount": 4,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "present",
+            "valueCount": 4,
+            "evidence": [
+              {
+                "start": 5285,
+                "end": 5297
+              },
+              {
+                "start": 5693,
+                "end": 5705
+              },
+              {
+                "start": 5557,
+                "end": 5572
+              },
+              {
+                "start": 5742,
+                "end": 5751
+              },
+              {
+                "start": 5780,
+                "end": 5788
+              }
+            ]
+          },
+          "registered_span_reach": {
+            "registered_present_units": 5,
+            "grounded": {
+              "exact": 5,
+              "containing": 5
+            },
+            "classified": {
+              "exact": 4,
+              "containing": 4
+            },
+            "reviewed": {
+              "exact": 4,
+              "containing": 4
+            },
+            "projected": {
+              "exact": 4,
+              "containing": 4
+            }
+          }
+        },
+        "backend": {
+          "classified": {
+            "confirmedCount": 1,
+            "uniqueCount": 1,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 1,
+            "uniqueCount": 1,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "present",
+            "valueCount": 1,
+            "evidence": [
+              {
+                "start": 5615,
+                "end": 5619
+              }
+            ]
+          },
+          "registered_span_reach": {
+            "registered_present_units": 6,
+            "grounded": {
+              "exact": 6,
+              "containing": 6
+            },
+            "classified": {
+              "exact": 1,
+              "containing": 1
+            },
+            "reviewed": {
+              "exact": 1,
+              "containing": 1
+            },
+            "projected": {
+              "exact": 1,
+              "containing": 1
+            }
+          }
+        },
+        "ai": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 0,
+            "grounded": {
+              "exact": 0,
+              "containing": 0
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "database": {
+          "classified": {
+            "confirmedCount": 2,
+            "uniqueCount": 2,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 2,
+            "uniqueCount": 2,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 1,
+            "grounded": {
+              "exact": 0,
+              "containing": 1
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 1
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 1
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "deployment": {
+          "classified": {
+            "confirmedCount": 36,
+            "uniqueCount": 17,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 16,
+            "uniqueCount": 10,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 1,
+            "grounded": {
+              "exact": 1,
+              "containing": 1
+            },
+            "classified": {
+              "exact": 1,
+              "containing": 1
+            },
+            "reviewed": {
+              "exact": 1,
+              "containing": 1
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "features": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 7,
+            "grounded": {
+              "exact": 0,
+              "containing": 0
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "external_integrations": {
+          "classified": {
+            "confirmedCount": 6,
+            "uniqueCount": 3,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 1,
+            "uniqueCount": 1,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "present",
+            "valueCount": 1,
+            "evidence": [
+              {
+                "start": 6204,
+                "end": 6210
+              }
+            ]
+          },
+          "registered_span_reach": {
+            "registered_present_units": 1,
+            "grounded": {
+              "exact": 1,
+              "containing": 1
+            },
+            "classified": {
+              "exact": 1,
+              "containing": 1
+            },
+            "reviewed": {
+              "exact": 1,
+              "containing": 1
+            },
+            "projected": {
+              "exact": 1,
+              "containing": 1
+            }
+          }
+        }
+      },
+      "analysis": {
+        "outcome": "needs_confirmation",
+        "candidateCount": 143,
+        "rejectedCandidateCount": 0,
+        "unresolvedFields": [
+          "project_type",
+          "domain",
+          "frontend",
+          "database",
+          "deployment",
+          "features",
+          "external_integrations"
+        ],
+        "reviewIssueCount": 32,
+        "featureCuration": null,
+        "confirmationScope": "reported_fields",
+        "allFieldsReasons": []
+      },
+      "candidate_count": 143
+    },
+    {
+      "id": "PUBLIC-09",
+      "seconds": 62.588258,
+      "score_status": "valid",
+      "score_error": "REVIEW_CONFIRMATION_REQUIRED",
+      "calls": 6,
+      "probe_status": "available",
+      "fields": {
+        "project_name": {
+          "classified": {
+            "confirmedCount": 8,
+            "uniqueCount": 2,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 8,
+            "uniqueCount": 2,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 1,
+            "grounded": {
+              "exact": 1,
+              "containing": 1
+            },
+            "classified": {
+              "exact": 1,
+              "containing": 1
+            },
+            "reviewed": {
+              "exact": 1,
+              "containing": 1
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "project_type": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 1,
+            "grounded": {
+              "exact": 1,
+              "containing": 1
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "domain": {
+          "classified": {
+            "confirmedCount": 1,
+            "uniqueCount": 1,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 1,
+            "uniqueCount": 1,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "present",
+            "valueCount": 1,
+            "evidence": [
+              {
+                "start": 751,
+                "end": 763
+              }
+            ]
+          },
+          "registered_span_reach": {
+            "registered_present_units": 1,
+            "grounded": {
+              "exact": 0,
+              "containing": 1
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 1
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 1
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 1
+            }
+          }
+        },
+        "frontend": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 0,
+            "grounded": {
+              "exact": 0,
+              "containing": 0
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "backend": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 0,
+            "grounded": {
+              "exact": 0,
+              "containing": 0
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "ai": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 0,
+            "grounded": {
+              "exact": 0,
+              "containing": 0
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "database": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 0,
+            "grounded": {
+              "exact": 0,
+              "containing": 0
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "deployment": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 1,
+            "grounded": {
+              "exact": 0,
+              "containing": 1
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "features": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 3,
+            "grounded": {
+              "exact": 0,
+              "containing": 0
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "external_integrations": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 0,
+            "grounded": {
+              "exact": 0,
+              "containing": 0
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        }
+      },
+      "analysis": {
+        "outcome": "needs_confirmation",
+        "candidateCount": 31,
+        "rejectedCandidateCount": 1,
+        "unresolvedFields": [
+          "project_name"
+        ],
+        "reviewIssueCount": 0,
+        "featureCuration": null,
+        "confirmationScope": "all_fields",
+        "allFieldsReasons": [
+          "REJECTED_CANDIDATES"
+        ]
+      },
+      "candidate_count": 31
+    },
+    {
+      "id": "PUBLIC-07",
+      "seconds": 33.015888,
+      "score_status": "valid",
+      "score_error": "REVIEW_CONFIRMATION_REQUIRED",
+      "calls": 7,
+      "probe_status": "available",
+      "fields": {
+        "project_name": {
+          "classified": {
+            "confirmedCount": 5,
+            "uniqueCount": 1,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 5,
+            "uniqueCount": 1,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "present",
+            "valueCount": 1,
+            "evidence": [
+              {
+                "start": 32,
+                "end": 39
+              },
+              {
+                "start": 326,
+                "end": 333
+              },
+              {
+                "start": 434,
+                "end": 441
+              },
+              {
+                "start": 1028,
+                "end": 1035
+              },
+              {
+                "start": 1244,
+                "end": 1251
+              }
+            ]
+          },
+          "registered_span_reach": {
+            "registered_present_units": 1,
+            "grounded": {
+              "exact": 1,
+              "containing": 1
+            },
+            "classified": {
+              "exact": 1,
+              "containing": 1
+            },
+            "reviewed": {
+              "exact": 1,
+              "containing": 1
+            },
+            "projected": {
+              "exact": 1,
+              "containing": 1
+            }
+          }
+        },
+        "project_type": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 1,
+            "grounded": {
+              "exact": 0,
+              "containing": 1
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "domain": {
+          "classified": {
+            "confirmedCount": 1,
+            "uniqueCount": 1,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 1,
+            "uniqueCount": 1,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "present",
+            "valueCount": 1,
+            "evidence": [
+              {
+                "start": 65,
+                "end": 122
+              }
+            ]
+          },
+          "registered_span_reach": {
+            "registered_present_units": 1,
+            "grounded": {
+              "exact": 0,
+              "containing": 1
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 1
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 1
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 1
+            }
+          }
+        },
+        "frontend": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 0,
+            "grounded": {
+              "exact": 0,
+              "containing": 0
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "backend": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 0,
+            "grounded": {
+              "exact": 0,
+              "containing": 0
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "ai": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 0,
+            "grounded": {
+              "exact": 0,
+              "containing": 0
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "database": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 0,
+            "grounded": {
+              "exact": 0,
+              "containing": 0
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "deployment": {
+          "classified": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 0,
+            "uniqueCount": 0,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "null",
+            "valueCount": 0,
+            "evidence": []
+          },
+          "registered_span_reach": {
+            "registered_present_units": 1,
+            "grounded": {
+              "exact": 0,
+              "containing": 1
+            },
+            "classified": {
+              "exact": 0,
+              "containing": 0
+            },
+            "reviewed": {
+              "exact": 0,
+              "containing": 0
+            },
+            "projected": {
+              "exact": 0,
+              "containing": 0
+            }
+          }
+        },
+        "features": {
+          "classified": {
+            "confirmedCount": 11,
+            "uniqueCount": 11,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 11,
+            "uniqueCount": 11,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "present",
+            "valueCount": 11,
+            "evidence": [
+              {
+                "start": 579,
+                "end": 602
+              },
+              {
+                "start": 605,
+                "end": 613
+              },
+              {
+                "start": 650,
+                "end": 656
+              },
+              {
+                "start": 659,
+                "end": 681
+              },
+              {
+                "start": 684,
+                "end": 690
+              },
+              {
+                "start": 693,
+                "end": 701
+              },
+              {
+                "start": 704,
+                "end": 716
+              },
+              {
+                "start": 719,
+                "end": 725
+              },
+              {
+                "start": 728,
+                "end": 744
+              },
+              {
+                "start": 747,
+                "end": 753
+              },
+              {
+                "start": 788,
+                "end": 800
+              }
+            ]
+          },
+          "registered_span_reach": {
+            "registered_present_units": 11,
+            "grounded": {
+              "exact": 11,
+              "containing": 11
+            },
+            "classified": {
+              "exact": 11,
+              "containing": 11
+            },
+            "reviewed": {
+              "exact": 11,
+              "containing": 11
+            },
+            "projected": {
+              "exact": 11,
+              "containing": 11
+            }
+          }
+        },
+        "external_integrations": {
+          "classified": {
+            "confirmedCount": 10,
+            "uniqueCount": 8,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "reviewed": {
+            "confirmedCount": 3,
+            "uniqueCount": 3,
+            "overlengthIds": [],
+            "blankIds": []
+          },
+          "projected": {
+            "state": "present",
+            "valueCount": 3,
+            "evidence": [
+              {
+                "start": 755,
+                "end": 763
+              },
+              {
+                "start": 765,
+                "end": 769
+              },
+              {
+                "start": 771,
+                "end": 775
+              }
+            ]
+          },
+          "registered_span_reach": {
+            "registered_present_units": 3,
+            "grounded": {
+              "exact": 3,
+              "containing": 3
+            },
+            "classified": {
+              "exact": 3,
+              "containing": 3
+            },
+            "reviewed": {
+              "exact": 3,
+              "containing": 3
+            },
+            "projected": {
+              "exact": 3,
+              "containing": 3
+            }
+          }
+        }
+      },
+      "analysis": {
+        "outcome": "needs_confirmation",
+        "candidateCount": 32,
+        "rejectedCandidateCount": 7,
+        "unresolvedFields": [
+          "external_integrations"
+        ],
+        "reviewIssueCount": 7,
+        "featureCuration": null,
+        "confirmationScope": "all_fields",
+        "allFieldsReasons": [
+          "REJECTED_CANDIDATES"
+        ]
+      },
+      "candidate_count": 32
+    }
+  ],
+  "human_reviewed": false,
+  "release_gate_passed": false
+}
