@@ -55,9 +55,11 @@ Task2 concrete file/API map (freeze117files unchanged):
 
 - [x] Step 1: Finalizeexactstdin/output/checkpointformatsinthespecandbriefbeforeREDtests. Testactualchildsafeerrors/timeout/duplicatecheckpoint/configmismatch/rawexclusion plusin-memoryfakeproviderstatus. Expected:newrunnerAPIsmissing. Worker7/process5/input4/checkpoint5 RED→GREEN; combined21passed5.579s.
 - [x] Step 2: ImplementdefaultCLIwith--live,--env-file,--corpus,--gold,--freeze,--output; preflightall10thenperrunprocess/checkpoint. No externalcallunlessliveandallhashespass. No modeloutputinstdout/files. Actualpreflight10cases/207goldunits passed, original117filesunchanged; evaluator8d6ab064551419943e18732dd5ba96763f8cbb1faeb029ec4470f6dd78f70f49.
-- [ ] Step 3: ActualSDK+loopbacktestthroughnewworker,failedrowsretained,resumecompletedrowswithoutAPI. Fulltests/runtime_tests/commit/task-done.
+- [x] Step 3: ActualSDK+loopbacktestthroughnewworker,failedrowsretained,resumecompletedrowswithoutAPI. Fulltests/runtime_tests/commit/task-done. da49dfb; final1117tests/5skip(48.072s),runtime11pass(40.310s); Task2complete ebcb9e9..da49dfb. Push/exactCI36720782159 bothjobs success.
 
 ### Task 3: 실제30회 기준선·전체 검토·인계
+
+> 사용자 목표·비용 조건 변경으로 실제 호출 중단. 완료1/30, 중단1회 결과·고정파일 보존. 현재 모델 조합은 Solar를 포함하며 유료 승인이 없다. NVIDIA 계정의 추가 요금 없는 엔드포인트도 확인 전이다. Task3를 완료로 표시하지 않는다. 재개 시 사용자 조건과 started-only 복구를 먼저 검토하고 기존 완료 요청은 재호출하지 않는다. 원래 호출 상한30×64=1920(재시도 포함), 요청별1800초·NVIDIA503추가1회, 전체 최대15시간. 지금부터 승인된 외부 모델 호출 예산은0이다. 로컬 핵심 흐름 mock·계약 테스트는 별도 feature로 진행한다.
 
 **Files:** specfolder/validation.md,work/harness/independent-profile-evaluation/{STATE.md,review.md,REMOTE.md};ignored typedresultfiles.
 
