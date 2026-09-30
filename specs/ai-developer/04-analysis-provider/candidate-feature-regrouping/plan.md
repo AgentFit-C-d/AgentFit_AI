@@ -26,26 +26,26 @@
 **Files:** Modify ai_service/agentfit_ai/candidate_feature_curation.py; create ai_service/agentfit_ai/candidate_feature_regrouping.py; create ai_service/tests/test_candidate_feature_regrouping.py.
 **Interfaces:** `_propose_feature_partition(document,candidates,key,*,model,transport,call_trace,previous_curation=None)`는 엄격 정규화partition을 반환한다. `repair_feature_curation(document,frozen,reviewed_labels,curation,key,*,model=MODEL,transport=None,call_trace=None)->dict`는 기존4키를 반환하고 기존관계helper를소비한다.
 
-- [ ] **Step1 tests:** 테스트명을수용행동에맞춘다. complete0call독립사본; unchanged순서변경1call; 새2그룹복구+전체쌍검토2calls/입력불변/원문범위; 이전covered가새uncovered로남고finalize확인필요; 동일값대표정규화후다른IDuncertain; 잘못된입력0call; 누락/중복/외부ID/대표31개/200초과/추가키의수정분할은1callFAIL; provider/model/length/관계구조실패는1~2callFAIL·safe진단.
-- [ ] **Step2 RED:** ai_service에서 `rtk proxy E:/AgentFit/tmp/worktrees/paired-review-evaluation/.venv/Scripts/python.exe -X utf8 -m unittest discover -s tests -p test_candidate_feature_regrouping.py -v`. Expected: 새helper가없어FAIL.
-- [ ] **Step3 implement:** 공유제안helper를추출하되기존첫요청불변. 복구입력검증→합집합정규화→필요시재제안→배정동일성비교→새관계전체검토. 데이터사본과예외전파. 아직curate에자동복구연결하지않는다.
-- [ ] **Step4 GREEN/commit:** Step2및`-p test_candidate_feature_*.py` PASS. 커밋/task-done은관련전체명령.
+- [x] **Step1 tests:** 테스트명을수용행동에맞춘다. complete0call독립사본; unchanged순서변경1call; 새2그룹복구+전체쌍검토2calls/입력불변/원문범위; 이전covered가새uncovered로남고finalize확인필요; 동일값대표정규화후다른IDuncertain; 잘못된입력0call; 누락/중복/외부ID/대표31개/200초과/추가키의수정분할은1callFAIL; provider/model/length/관계구조실패는1~2callFAIL·safe진단.
+- [x] **Step2 RED:** ai_service에서 `rtk proxy E:/AgentFit/tmp/worktrees/paired-review-evaluation/.venv/Scripts/python.exe -X utf8 -m unittest discover -s tests -p test_candidate_feature_regrouping.py -v`. Expected: 새helper가없어FAIL.
+- [x] **Step3 implement:** 공유제안helper를추출하되기존첫요청불변. 복구입력검증→합집합정규화→필요시재제안→배정동일성비교→새관계전체검토. 데이터사본과예외전파. 아직curate에자동복구연결하지않는다.
+- [x] **Step4 GREEN/commit:** Step2및`-p test_candidate_feature_*.py` PASS. 커밋/task-done은관련전체명령.
 
 ### Task 2: 기존 선택형 흐름 연결
 
 **Files:** Modify candidate_feature_curation.py,tests/test_candidate_feature_curation.py; extend tests/test_candidate_feature_regrouping.py.
 **Interfaces:** Task1복구를curate의첫관계검토다음local import로1회호출. 시그니처/최종4키/기본None유지.
 
-- [ ] **Step1 RED:** 통합테스트에서초기미포함→재구성→새검토의4호출과수정실패전파를확인. 기존singleton/반복대표/미대표테스트는재구성동일답을돌려1추가호출후기존확인필요유지. Expected: 기존함수가첫검토에서반환하여새배정·실패전파assertionFAIL.
-- [ ] **Step2 implement:** 최초결과에단일복구연결. 최초정상완료는추가0회,동일수정은1회,변경수정은최대2회. 관계가없으면검토0회. 불확실을새복구로재귀호출하지않는다.
-- [ ] **Step3 verify/commit:** 관련suite및전체`rtk proxy E:/AgentFit/tmp/worktrees/paired-review-evaluation/.venv/Scripts/python.exe -X utf8 -m unittest discover -s tests -v`. Expected:기존6skip외실패0.커밋/task-done전체명령.
+- [x] **Step1 RED:** 통합테스트에서초기미포함→재구성→새검토의4호출과수정실패전파를확인. 기존singleton/반복대표/미대표테스트는재구성동일답을돌려1추가호출후기존확인필요유지. Expected: 기존함수가첫검토에서반환하여새배정·실패전파assertionFAIL.
+- [x] **Step2 implement:** 최초결과에단일복구연결. 최초정상완료는추가0회,동일수정은1회,변경수정은최대2회. 관계가없으면검토0회. 불확실을새복구로재귀호출하지않는다.
+- [x] **Step3 verify/commit:** 관련suite및전체`rtk proxy E:/AgentFit/tmp/worktrees/paired-review-evaluation/.venv/Scripts/python.exe -X utf8 -m unittest discover -s tests -v`. Expected:기존6skip외실패0.커밋/task-done전체명령.
 
 ### Task 3: 고정 입력 실측·원문 감사·리뷰
 
 **Files:** Create specs/.../candidate-feature-regrouping/validation.md; update work/harness/candidate-feature-regrouping/STATE.md. 평가driver/result는E:/AgentFit/tmp만.
 **Interfaces:** 완료된candidate-feature-relations-h02-20260930-v2.json의두curation을Task1로수정한다. 기존finalize로투영비교.
 
-- [ ] **Step1 preflight/live:** H02승인해시·snapshot183후보/41확정기능·완료v2·두curation전체검증·제품코드hash동결. Expected:0전송preflight PASS후각복구최대2회,총4회,명시종료. 새응답은ID/enum/안전개수만저장.
+- [x] **Step1 preflight/live:** H02승인해시·snapshot183후보/41확정기능·완료v2·두curation전체검증·제품코드hash동결. Expected:0전송preflight PASS후각복구최대2회,총4회,명시종료. 새응답은ID/enum/안전개수만저장.
 - [ ] **Step2 audit:** 새로운모든대표·비자기쌍을원문대조하고미포함변화/오포함/오거절/모호를구분. 원래36점수를새정답으로사용하지않는다. 다른9필드/labels보존. 품질판단은실측대로기록한다.
 - [ ] **Step3 review/publish:** 전체branch에독립리뷰1회. Important/Critical만1회수정+회귀,재리뷰없음.실험중코드변경없음.기능push·정확한LinuxCI확인. 문서만남으면task-done은base016c954..HEAD diff --check.
 
