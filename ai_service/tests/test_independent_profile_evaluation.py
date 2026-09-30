@@ -75,10 +75,17 @@ class EvaluationTest(unittest.TestCase):
         result = self.score(outcome_fixture('frontend', ['React'], [(10, 15)]))
         self.assertEqual(result['fields']['frontend']['known_wrong'], 1)
 
-    def test_wrong_field_is_known_wrong(self):
+    def test_explicitly_registered_wrong_role_is_known_wrong(self):
+        self.gold['exclusions'].append({'id': 'X002', 'fields': ['frontend'], 'reason': 'wrong_role',
+                                        'spans': [{'start': 25, 'end': 28}]})
         result = self.score(outcome_fixture('frontend', ['Vue'], [(25, 28)]))
         self.assertEqual(result['fields']['frontend']['known_wrong'], 1)
         self.assertEqual(result['fields']['backend']['missing'], 1)
+
+    def test_registration_elsewhere_does_not_prove_semantic_wrong_role(self):
+        result = self.score(outcome_fixture('frontend', ['Vue'], [(25, 28)]))
+        self.assertEqual(result['fields']['frontend']['known_wrong'], 0)
+        self.assertEqual(result['fields']['frontend']['unassessed'], 1)
 
     def test_partial_token_gets_no_substring_credit(self):
         result = self.score(outcome_fixture('frontend', ['Re'], [(0, 5)]))

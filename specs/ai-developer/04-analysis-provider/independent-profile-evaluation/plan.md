@@ -35,6 +35,8 @@ Task1 focused command (cwd ai_service): `rtk proxy ../.venv/Scripts/python.exe -
 
 Self-review: all source, gold, output and failure invariants belong Task1; process/privacy/resume belong Task2; actual complete30 and independent review/CI belong Task3. No production tuning under this branch. Release criteria remain unproved.
 
+Task1 correction: wrong-field known_wrong requires an explicit wrong_role exclusion; merely matching another field's gold is unassessed. A new regression failed1/22 before this fix and all22passed after it. This prevents source-role overlap from creating false error counts. Final whole gate is rerun for this correction.
+
 ### Task 2: 実통합 요청 실행기와 재개 가능한 안전 결과
 
 **Files:** Extend independent_profile_evaluation.py; add independent_evaluation_worker.py,test_independent_evaluation_worker.py,tests/test_independent_evaluation_runner.py; local runnerdriver.

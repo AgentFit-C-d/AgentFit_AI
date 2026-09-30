@@ -61,7 +61,7 @@ Spring저장·사용자수정량·배포환경 검증은 전체목표에 남는�
 - 입력 골드 검증은 항상 먼저 수행한다. document_id==case_id. needs_confirmation은 기존 validate_candidate_confirmation으로 전체 계약·근거를 재검증한다. failed는 정확한 contract/outcome/error 3키와 allowlisted safe code만 허용한다. 나머지는 invalid로 기록한다.
 - 반환 exact keys: version='independent-profile-score-v1', status=valid|failed|invalid, error(고정 안전 코드), human_reviewed=false, release_gate_passed=false, evidence_invalid(0|1), questions(0~10), field_states(3상태 개수), fields(10필드), items(안전한 위치 레코드).
 - 각 fields 값: assessment, gold, produced, matched, missing, known_wrong, duplicates, unassessed. missing=gold-matched. produced=matched+known_wrong+duplicates+unassessed. failed/invalid는 전 필드 matched/produced=0, missing=gold이며 분모를 유지한다.
-- 출력값의 원문 등장을 해당 필드의 검증된 evidence 안에서 **겹치는 등장까지** 전부 수집하고 구간 중복 제거한다. 모든 등장 구간이 동일한 단일 골드 단위에 정확히 대응할 때만 matched. 단일 단위가 이미 매칭됐으면 duplicate. 모든 구간이 정확한 제외 기록 또는 다른 필드 정답에 대응하면 known_wrong. 모호성 기록, 미등록 구간, 정답/제외 혼합, 여러 단위 매칭은 unassessed. 한 출력이 여러 단위를 채우지 못한다.
+- 출력값의 원문 등장을 해당 필드의 검증된 evidence 안에서 **겹치는 등장까지** 전부 수집하고 구간 중복 제거한다. 모든 등장 구간이 동일한 단일 골드 단위에 정확히 대응할 때만 matched. 단일 단위가 이미 매칭됐으면 duplicate. 모든 구간이 해당 필드의 정확한 제외 기록에 대응하면 known_wrong. 다른 필드 정답에만 등록된 경우는 의미 역할 중첩이 가능하므로 unassessed다. 오분류를 known_wrong으로 세려면 해당 필드에 wrong_role 제외 근거를 명시적으로 등록해야 한다. 모호성 기록, 미등록 구간, 정답/제외 혼합, 여러 단위 매칭은 unassessed. 한 출력이 여러 단위를 채우지 못한다.
 - 빈 배열도 1개 출력 항목이다. 근거 구간 전체가 명시적 부재 단위에 정확히 대응할 때만 matched. null은 출력0개다. 부재 단위가 없으면 빈 배열은 unassessed다.
 - 항목 레코드: field, index, value_sha256(null은 빈 배열만), occurrences(구간), occurrence_overflow(bool), classification=matched|duplicate|known_wrong|unassessed, unit_id(U ID 또는null). 최대128개 서로 다른 등장까지 기록하며 초과는 occurrences=[]/overflow=true/unassessed. 원문·값·인용·예외 내용은 반환하지 않는다.
 

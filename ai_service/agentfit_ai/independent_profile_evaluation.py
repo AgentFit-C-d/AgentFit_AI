@@ -40,12 +40,10 @@ def _classification(field, empty, positions, gold, matched):
         matched.add(ident)
         return 'matched', ident
     wrong = set().union(*(_positions(r['spans']) for r in gold['exclusions'] if field in r['fields']))
-    # A source position registered under another field is wrong here only when no
-    # position also supplies a valid same-field unit or an explicit ambiguity.
-    other = set().union(*(_positions(unit['spans']) for name in FIELDS if name != field
-                          for unit in gold['fields'][name]['units'] if unit['kind'] == 'present'))
+    # Fields can overlap semantically. Registration elsewhere is not a negative
+    # label here; only a preregistered exclusion establishes a known error.
     valid_here = set().union(*units.values())
-    if not empty and not positions & valid_here and positions <= wrong | other:
+    if not empty and not positions & valid_here and positions <= wrong:
         return 'known_wrong', None
     return 'unassessed', None
 
