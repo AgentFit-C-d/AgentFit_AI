@@ -1,15 +1,62 @@
 """Bounded NVIDIA SSE normalization for the existing completion validators."""
 
 import json
+import math
+from pathlib import Path
+import subprocess
+import sys
 
-from .deepseek_evaluation import NVIDIA_REVIEW_MODELS
-from .solar import AnalysisError, MAX_RESPONSE_BYTES, PROVIDER_WORKER_CODES, _json
+from .deepseek_evaluation import ENDPOINT, NVIDIA_REVIEW_MODELS
+from .provider_worker import MAX_INPUT_BYTES
+from .solar import (AnalysisError, MAX_RESPONSE_BYTES, PROVIDER_WORKER_CODES, _json,
+                    _provider_worker_environment)
 
 
 MAX_STREAM_BYTES = 16 * 1024 * 1024
 MAX_EVENT_BYTES = MAX_RESPONSE_BYTES
 _STREAM_CODES = PROVIDER_WORKER_CODES | {'PROVIDER_MODEL', 'INCOMPLETE_RESPONSE'}
 _FINISH_REASONS = frozenset(('stop', 'length', 'content_filter', 'tool_calls', 'function_call'))
+
+
+def post_nvidia_streaming(payload, api_key, timeout):
+    """Limit the entire streaming request, including DNS and slow events, by a child deadline."""
+    if (type(payload) is not dict or type(payload.get('model')) is not str or
+            payload['model'] not in NVIDIA_REVIEW_MODELS or
+            type(api_key) is not str or not api_key.strip() or
+            type(timeout) not in (int, float) or not 0 < timeout <= 600 or not math.isfinite(timeout)):
+        raise ValueError('invalid streaming request')
+    try:
+        request = json.dumps({'endpoint': ENDPOINT, 'payload': {**payload, 'stream': True},
+                              'key': api_key, 'timeout': timeout}, ensure_ascii=False).encode('utf-8')
+    except (TypeError, ValueError, UnicodeError):
+        raise ValueError('invalid streaming request') from None
+    if len(request) > MAX_INPUT_BYTES:
+        raise ValueError('oversized streaming request')
+    try:
+        completed = subprocess.run(
+            [sys.executable, '-m', 'agentfit_ai.nvidia_stream_worker'], input=request,
+            stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+            cwd=Path(__file__).resolve().parents[1], env=_provider_worker_environment(),
+            timeout=timeout, check=False)
+    except subprocess.TimeoutExpired:
+        raise AnalysisError('PROVIDER_TIMEOUT') from None
+    except OSError:
+        raise AnalysisError('PROVIDER_NETWORK') from None
+    output = completed.stdout
+    if completed.returncode != 0 or type(output) is not bytes or not output:
+        raise AnalysisError('PROVIDER_NETWORK')
+    if len(output) > MAX_RESPONSE_BYTES + 1:
+        raise AnalysisError('RESPONSE_TOO_LARGE')
+    if output[:1] == b'S':
+        return output[1:]
+    if output[:1] == b'E':
+        try:
+            code = output[1:].decode('ascii')
+        except UnicodeError:
+            code = None
+        if code in _STREAM_CODES:
+            raise AnalysisError(code)
+    raise AnalysisError('PROVIDER_NETWORK')
 
 
 def _sse_events(chunks):

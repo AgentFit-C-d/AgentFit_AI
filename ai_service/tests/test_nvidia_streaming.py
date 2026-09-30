@@ -1,10 +1,16 @@
 """A stream must be complete and bounded before the normal model parser sees it."""
 import json
+from contextlib import contextmanager
+from copy import deepcopy
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import subprocess
+import threading
+import time
 import unittest
 from unittest.mock import patch
 
 from agentfit_ai.deepseek_evaluation import MODEL, NvidiaAnalyzer
-from agentfit_ai.nvidia_streaming import _assemble_sse
+from agentfit_ai.nvidia_streaming import _assemble_sse, post_nvidia_streaming
 from agentfit_ai.solar import AnalysisError
 
 
@@ -20,6 +26,153 @@ def wire(events, *, done=True, newline=b'\n'):
     if done:
         parts.append(b'data: [DONE]' + newline * 2)
     return b''.join(parts)
+
+
+@contextmanager
+def local_provider(body, *, status=200, headers=None, drip=False, slow_headers=False):
+    requests = []
+    class Handler(BaseHTTPRequestHandler):
+        def do_POST(self):
+            incoming = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
+            requests.append({'payload': incoming, 'authorization': self.headers.get('Authorization'),
+                             'accept': self.headers.get('Accept')})
+            try:
+                if slow_headers:
+                    self.wfile.write(b'HTTP/1.1 200 OK\r\n')
+                    self.wfile.flush()
+                    for byte in b'Content-Type: text/event-stream\r\n\r\n':
+                        self.wfile.write(bytes([byte]))
+                        self.wfile.flush()
+                        time.sleep(0.08)
+                    return
+                self.send_response(status)
+                for name, value in dict({'Content-Type': 'text/event-stream'}, **(headers or {})).items():
+                    self.send_header(name, value)
+                self.end_headers()
+                if drip:
+                    for _ in range(60):
+                        self.wfile.write(b': heartbeat\n\n')
+                        self.wfile.flush()
+                        time.sleep(0.04)
+                else:
+                    for offset in range(0, len(body), 7):
+                        self.wfile.write(body[offset:offset + 7])
+                        self.wfile.flush()
+            except OSError:
+                pass
+
+        def log_message(self, *_):
+            pass
+    server = ThreadingHTTPServer(('127.0.0.1', 0), Handler)
+    thread = threading.Thread(target=lambda: server.serve_forever(poll_interval=0.01), daemon=True)
+    thread.start()
+    try:
+        with patch('agentfit_ai.nvidia_streaming.ENDPOINT', f'http://127.0.0.1:{server.server_port}/v1/chat/completions'):
+            yield requests
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=1)
+
+
+class StreamingTransportTests(unittest.TestCase):
+    KEY = 'local-fixture-token'
+
+    def payload(self):
+        return {'model': MODEL, 'messages': [{'role': 'user', 'content': 'invented input'}],
+                'stream': False, 'max_tokens': 512, 'chat_template_kwargs': {'thinking': False}}
+
+    def test_real_worker_streams_into_existing_parser_without_mutating_request(self):
+        original = self.payload()
+        before = deepcopy(original)
+        source = wire([event(role='assistant'), event(content='{"value":7}', finish='stop')])
+        with local_provider(source) as requests:
+            sender = NvidiaAnalyzer(self.KEY, transport=post_nvidia_streaming, model=MODEL)
+            body, model, pt, ct = sender._send_payload(original, ('value',), timeout=3)
+        self.assertEqual((body, model, pt, ct), ({'value': 7}, MODEL, None, None))
+        self.assertEqual(original, before)
+        self.assertEqual(len(requests), 1)
+        self.assertTrue(requests[0]['payload']['stream'])
+        self.assertEqual(requests[0]['payload']['max_tokens'], 512)
+        self.assertEqual(requests[0]['payload']['chat_template_kwargs'], {'thinking': False})
+        self.assertEqual(requests[0]['authorization'], 'Bearer ' + self.KEY)
+        self.assertEqual(requests[0]['accept'], 'text/event-stream')
+
+    def test_http_error_and_redirect_never_return_error_body_or_retry(self):
+        for status, code in ((401, 'PROVIDER_AUTH'), (429, 'PROVIDER_RATE_LIMIT'),
+                             (503, 'PROVIDER_UNAVAILABLE'), (400, 'PROVIDER_REQUEST'),
+                             (302, 'PROVIDER_REDIRECT')):
+            with self.subTest(status=status), local_provider(b'private body', status=status,
+                    headers={'Location': 'http://127.0.0.1:1/forbidden'}) as requests:
+                with self.assertRaises(AnalysisError) as caught:
+                    post_nvidia_streaming(self.payload(), self.KEY, 3)
+                self.assertEqual(str(caught.exception), code)
+                self.assertEqual(len(requests), 1)
+
+    def test_mime_encoding_and_declared_size_are_checked(self):
+        valid = wire([event(content='{}', finish='stop')])
+        for headers, code in (({'Content-Type': 'application/json'}, 'INVALID_RESPONSE'),
+                              ({'Content-Encoding': 'gzip'}, 'INVALID_RESPONSE'),
+                              ({'Content-Length': '99999999'}, 'RESPONSE_TOO_LARGE'),
+                              ({'Content-Length': 'invalid'}, 'INVALID_RESPONSE')):
+            with self.subTest(headers=headers), local_provider(valid, headers=headers):
+                with self.assertRaises(AnalysisError) as caught:
+                    post_nvidia_streaming(self.payload(), self.KEY, 3)
+                self.assertEqual(caught.exception.code, code)
+
+    def test_truncated_stream_partial_output_and_mismatched_model_fail_in_worker(self):
+        for source, code in ((wire([event(content='{}', finish='stop')], done=False), 'INCOMPLETE_RESPONSE'),
+                              (wire([event(content='{}', finish='stop', model='wrong')]), 'PROVIDER_MODEL'),
+                              (b'data: invalid\n\n', 'INVALID_RESPONSE')):
+            with self.subTest(code=code), local_provider(source):
+                with self.assertRaises(AnalysisError) as caught:
+                    post_nvidia_streaming(self.payload(), self.KEY, 3)
+                self.assertEqual(caught.exception.code, code)
+
+    def test_slow_headers_or_keepalive_events_cannot_extend_parent_deadline(self):
+        for mode in ('drip', 'slow_headers'):
+            with self.subTest(mode=mode), local_provider(b'', **{mode: True}):
+                started = time.monotonic()
+                with self.assertRaises(AnalysisError) as caught:
+                    post_nvidia_streaming(self.payload(), self.KEY, 0.35)
+                self.assertEqual(caught.exception.code, 'PROVIDER_TIMEOUT')
+                self.assertLess(time.monotonic() - started, 1.2)
+
+    def test_invalid_inputs_cannot_start_child(self):
+        with patch('agentfit_ai.nvidia_streaming.subprocess.run') as spawn:
+            for payload, key, timeout in (({}, self.KEY, 1), (self.payload(), '', 1),
+                                          (self.payload(), self.KEY, 0),
+                                          (self.payload(), self.KEY, True),
+                                          (self.payload(), self.KEY, float('nan')),
+                                          (self.payload(), self.KEY, float('inf')),
+                                          (self.payload(), self.KEY, 10 ** 1000),
+                                          (self.payload(), self.KEY, 601)):
+                with self.subTest(timeout=timeout), self.assertRaises(ValueError):
+                    post_nvidia_streaming(payload, key, timeout)
+            with patch('agentfit_ai.nvidia_streaming.MAX_INPUT_BYTES', 20), self.assertRaises(ValueError):
+                post_nvidia_streaming(self.payload(), self.KEY, 1)
+        self.assertEqual(spawn.call_count, 0)
+
+    def test_untrusted_child_framing_cannot_be_success_or_expose_body(self):
+        for output, returncode in ((b'Eprivate response', 0), (b'partial JSON', 0),
+                                   (b'S{}', 1), (b'', 0)):
+            with self.subTest(output=output), patch('agentfit_ai.nvidia_streaming.subprocess.run',
+                    return_value=subprocess.CompletedProcess([], returncode, stdout=output)):
+                with self.assertRaises(AnalysisError) as caught:
+                    post_nvidia_streaming(self.payload(), self.KEY, 1)
+                self.assertEqual(str(caught.exception), 'PROVIDER_NETWORK')
+
+    def test_child_gets_key_only_in_stdin_and_parent_applies_requested_timeout(self):
+        with patch('agentfit_ai.nvidia_streaming.subprocess.run',
+                return_value=subprocess.CompletedProcess([], 0, stdout=b'S{}')) as spawn:
+            self.assertEqual(post_nvidia_streaming(self.payload(), self.KEY, 2.5), b'{}')
+        arguments, options = spawn.call_args
+        self.assertNotIn(self.KEY, json.dumps(arguments))
+        self.assertNotIn(self.KEY, json.dumps(options['env']))
+        request = json.loads(options['input'])
+        self.assertEqual(request['key'], self.KEY)
+        self.assertEqual(options['timeout'], 2.5)
+        self.assertEqual(options['stderr'], subprocess.DEVNULL)
 
 
 class SSEAssemblyTests(unittest.TestCase):

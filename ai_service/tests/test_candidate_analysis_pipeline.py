@@ -92,6 +92,19 @@ class ProviderFixture:
 
 
 class IntegratedCandidateTests(unittest.TestCase):
+    def test_default_nvidia_transport_uses_streaming_and_explicit_transport_still_wins(self):
+        case = ProviderFixture(1)
+        with patch('agentfit_ai.candidate_analysis_pipeline.post_nvidia_streaming',
+                   case.transport, create=True), patch('agentfit_ai.candidate_analysis_pipeline.post_nvidia',
+                   side_effect=AssertionError('nonstream default must not be used'), create=True):
+            result = case.run(nvidia_transport=None)
+        self.assertEqual(result['outcome'], 'candidate_profile')
+        self.assertEqual(len(case.requests), 4)
+        case = ProviderFixture(1)
+        with patch('agentfit_ai.candidate_analysis_pipeline.post_nvidia_streaming',
+                   side_effect=AssertionError('explicit transport must win'), create=True):
+            self.assertEqual(case.run()['outcome'], 'candidate_profile')
+
     def test_whole_pipeline_repairs_features_and_preserves_nine_fields_and_review_gates(self):
         case = ProviderFixture(wrong=['C040'], missing=['domain'])
         events, calls, reviews = [], [], []

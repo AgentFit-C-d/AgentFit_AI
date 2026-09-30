@@ -11,8 +11,9 @@ from .candidate_first_profile import (
 )
 from .candidate_feature_curation import curate_reviewed_features
 from .candidate_split_review import review_candidates_separately
-from .deepseek_evaluation import MODEL, NVIDIA_REVIEW_MODELS, post_nvidia
+from .deepseek_evaluation import MODEL, NVIDIA_REVIEW_MODELS
 from .diagnostics import safe_code
+from .nvidia_streaming import post_nvidia_streaming
 from .operation_candidates import _validate_frozen, extract_operation_candidates
 from .solar import AnalysisError, post_solar
 
@@ -115,7 +116,7 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
         return send
 
     solar_send = metered('solar', solar_transport or post_solar)
-    nvidia_send = metered('nvidia', nvidia_transport or post_nvidia)
+    nvidia_send = metered('nvidia', nvidia_transport or post_nvidia_streaming)
 
     def extract():
         selected = extractor
