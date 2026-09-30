@@ -1,0 +1,89 @@
+{
+  "document": "# PaperTrail collaboration workspace\nThe following runtime stack is adopted for this product.\n- RenderKit: display document previews inside the application.\n- LookupKit: search saved notes for signed-in users.\n- MailRelay: send reminder emails to workspace members.\n- ArchiveJob: archive outdated notes automatically within the running product.\n- HelperLibrary is also installed; its purpose is unspecified.\n\nDevelopment-only tools:\n- TypeChecker: check source-code types during development.\n- ImageBuilder: build deployment images in CI.\n\nDeployment guide:\nOperators can self-host the service on their own machine.\n\nUndecided proposal:\nWe may add voice notes in a later release; this is not an adopted requirement.\n\nRejected scope:\nWe will not export notes publicly.\n\nOther product:\nSketchPeer, a different application, can recognize handwriting.\nA retired PaperDemo experiment to search saved notes was rejected; PaperDemo is not this product.\n\nSelected implementation for this product: Svelte is the client framework, Python is the server language, SQLite is the database engine, and ContainerOS is the production container runtime.\n",
+  "units": [
+    {
+      "quote": "display document previews",
+      "occurrence": 0,
+      "expected": "keep"
+    },
+    {
+      "quote": "search saved notes",
+      "occurrence": 0,
+      "expected": "keep"
+    },
+    {
+      "quote": "send reminder emails",
+      "occurrence": 0,
+      "expected": "keep"
+    },
+    {
+      "quote": "archive outdated notes",
+      "occurrence": 0,
+      "expected": "keep"
+    },
+    {
+      "quote": "HelperLibrary",
+      "occurrence": 0,
+      "expected": "reject"
+    },
+    {
+      "quote": "check source-code types",
+      "occurrence": 0,
+      "expected": "reject"
+    },
+    {
+      "quote": "build deployment images",
+      "occurrence": 0,
+      "expected": "reject"
+    },
+    {
+      "quote": "self-host the service",
+      "occurrence": 0,
+      "expected": "reject"
+    },
+    {
+      "quote": "add voice notes",
+      "occurrence": 0,
+      "expected": "reject"
+    },
+    {
+      "quote": "export notes publicly",
+      "occurrence": 0,
+      "expected": "reject"
+    },
+    {
+      "quote": "recognize handwriting",
+      "occurrence": 0,
+      "expected": "reject"
+    },
+    {
+      "quote": "search saved notes",
+      "occurrence": 1,
+      "expected": "reject"
+    },
+    {
+      "quote": "Svelte",
+      "occurrence": 0,
+      "expected": "keep",
+      "field": "frontend"
+    },
+    {
+      "quote": "Python",
+      "occurrence": 0,
+      "expected": "keep",
+      "field": "backend"
+    },
+    {
+      "quote": "SQLite",
+      "occurrence": 0,
+      "expected": "keep",
+      "field": "database"
+    },
+    {
+      "quote": "ContainerOS",
+      "occurrence": 0,
+      "expected": "keep",
+      "field": "deployment"
+    }
+  ]
+}
