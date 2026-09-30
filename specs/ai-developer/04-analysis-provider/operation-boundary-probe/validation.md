@@ -32,3 +32,4 @@
 - 종료 감사 **21/21 통과**: 종료, 코드·fixture·원문·요청·실행기 해시, 4호출/재시도0, 순서, 모델별 설정, 점수 분모·오류 ID·범주 일치, 변환 전 진단.
 - session `64675` / PID `35808` terminal exit 0. 원본 응답·추론·키 미저장. 현재 live 실험 없음.
 - 이번 작업은 새 합성 fixture와 일회성 원인 조사다. 제품 코드 변경이 없어 무관한 전체 로컬 테스트·전체 코드 리뷰를 추가 반복하지 않았다. 원격 CI는 push 후 정확한 HEAD로 확인한다.
+- 결과 커밋 `5d9e37802463f981c6e49c893fd31d9bf8b44e9e` push 및 [CI 36699100570](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36699100570) 두 작업의 completed/success를 확인했다. [원격 기록](../../../../work/harness/operation-boundary-probe/REMOTE.md)에 문서 마감 커밋의 확인 경로도 기록한다.
