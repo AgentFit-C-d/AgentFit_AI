@@ -1,5 +1,15 @@
 # 독립 Profile 평가 상태
 
+## 최신 상태 — 2026-09-30 Task2 구현 중
+
+- 직전 상태 보고 turn은 no progress. 이번 재개에서 Git 변경과 실제 파일을 대조하고 SDK 통합 검증을 진행했다. 전체 실사용 목표는 active/미완료다.
+- Task1 최종 HEAD ebcb9e9b6df0502f07d3f1f71533308f4b7b8a90; 원격/CI36717146470 일치 증거는 E:/AgentFit/tmp/independent-profile-task1-remote.json. 아래 초기 기록은 이력이다.
+- Task2 worker/protocol/process/preflight/checkpoint 구현. 관련21개 테스트 통과, 실제 SDK·로컬 HTTP/SSE 테스트2개 RED→GREEN(2.594초). CLI --live 없이 키/파일 읽기 금지 테스트 추가.
+- 실제10문서/207골드 사전검증 통과. 원래 production117파일 불변. evaluator SHA256 8d6ab064551419943e18732dd5ba96763f8cbb1faeb029ec4470f6dd78f70f49. 모델 API 실행0회.
+- 전체 회귀 테스트1117개/5skip(48.382초), runtime11개(41.394초) 통과; handle19183 종료0. 다음: Task2 커밋/task-done/push→Task3 사전 고정 후 30회 실제 평가. 최종 전체리뷰는 Task3 끝에1회. 테스트 통과만으로 제품 사용 가능성을 주장하지 않는다.
+
+## 이전 기록
+
 - 전체목표:실사용가능AI,계속active/미완료. 직전goalturn은progress:통합서비스구현·독립리뷰C0/I0/M0·push9af3f2a·exactCI36712248884success. 재개시clean과외부CI메타데이터일치확인.
 - 작업:기존isolated E:/AgentFit/tmp/worktrees/analysis-runtime,신규feature/independent-profile-evaluation,base9af3f2a9bcd47d5e3bb40860fe674434787b442a.
 - 발견:예약PUBLIC04는이전Immich와동일sha27b511...,PUBLIC05는기존ActualBudget계열. 예약10개를독립10개로세면오류다. 원래manifest보존,평가세트에서제외/공식다른계열2개교체.

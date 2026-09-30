@@ -25,8 +25,11 @@ def main():
     from agentfit_ai import solar, nvidia_streaming
     solar.ENDPOINT = endpoint + '/solar'
     nvidia_streaming.ENDPOINT = endpoint + '/nvidia'
-    from agentfit_ai.analysis_worker import main as worker_main
-    worker_main()
+    if sys.argv[2:] == ['evaluation']:
+        from agentfit_ai.independent_evaluation_worker import main as worker_main
+    else:
+        from agentfit_ai.analysis_worker import main as worker_main
+    raise SystemExit(worker_main())
 
 
 if __name__ == '__main__':
