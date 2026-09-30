@@ -13,6 +13,10 @@ from agentfit_ai.deepseek_evaluation import MODEL, NvidiaAnalyzer
 from agentfit_ai.nvidia_streaming import _assemble_sse, post_nvidia_streaming
 from agentfit_ai.solar import AnalysisError
 
+# Allow process startup separately from the explicit in-flight deadline tests.
+LOCAL_HTTP_TIMEOUT = 10
+IN_FLIGHT_TIMEOUT = 5
+
 
 def event(*, content=None, finish=None, model=MODEL, identity='completion-1', **delta):
     if content is not None:
@@ -29,7 +33,7 @@ def wire(events, *, done=True, newline=b'\n'):
 
 
 @contextmanager
-def local_provider(body, *, status=200, headers=None, drip=False, slow_headers=False):
+def local_provider(body, *, status=200, headers=None, drip=False, slow_headers=False, streamed=None):
     requests = []
     class Handler(BaseHTTPRequestHandler):
         def do_POST(self):
@@ -40,19 +44,23 @@ def local_provider(body, *, status=200, headers=None, drip=False, slow_headers=F
                 if slow_headers:
                     self.wfile.write(b'HTTP/1.1 200 OK\r\n')
                     self.wfile.flush()
+                    if streamed is not None:
+                        streamed.set()
                     for byte in b'Content-Type: text/event-stream\r\n\r\n':
                         self.wfile.write(bytes([byte]))
                         self.wfile.flush()
-                        time.sleep(0.08)
+                        time.sleep(0.5)
                     return
                 self.send_response(status)
                 for name, value in dict({'Content-Type': 'text/event-stream'}, **(headers or {})).items():
                     self.send_header(name, value)
                 self.end_headers()
                 if drip:
-                    for _ in range(60):
+                    for _ in range(750):
                         self.wfile.write(b': heartbeat\n\n')
                         self.wfile.flush()
+                        if streamed is not None:
+                            streamed.set()
                         time.sleep(0.04)
                 else:
                     for offset in range(0, len(body), 7):
@@ -88,7 +96,7 @@ class StreamingTransportTests(unittest.TestCase):
         source = wire([event(role='assistant'), event(content='{"value":7}', finish='stop')])
         with local_provider(source) as requests:
             sender = NvidiaAnalyzer(self.KEY, transport=post_nvidia_streaming, model=MODEL)
-            body, model, pt, ct = sender._send_payload(original, ('value',), timeout=3)
+            body, model, pt, ct = sender._send_payload(original, ('value',), timeout=LOCAL_HTTP_TIMEOUT)
         self.assertEqual((body, model, pt, ct), ({'value': 7}, MODEL, None, None))
         self.assertEqual(original, before)
         self.assertEqual(len(requests), 1)
@@ -105,7 +113,7 @@ class StreamingTransportTests(unittest.TestCase):
             with self.subTest(status=status), local_provider(b'private body', status=status,
                     headers={'Location': 'http://127.0.0.1:1/forbidden'}) as requests:
                 with self.assertRaises(AnalysisError) as caught:
-                    post_nvidia_streaming(self.payload(), self.KEY, 3)
+                    post_nvidia_streaming(self.payload(), self.KEY, LOCAL_HTTP_TIMEOUT)
                 self.assertEqual(str(caught.exception), code)
                 self.assertEqual(len(requests), 1)
 
@@ -117,7 +125,7 @@ class StreamingTransportTests(unittest.TestCase):
                               ({'Content-Length': 'invalid'}, 'INVALID_RESPONSE')):
             with self.subTest(headers=headers), local_provider(valid, headers=headers):
                 with self.assertRaises(AnalysisError) as caught:
-                    post_nvidia_streaming(self.payload(), self.KEY, 3)
+                    post_nvidia_streaming(self.payload(), self.KEY, LOCAL_HTTP_TIMEOUT)
                 self.assertEqual(caught.exception.code, code)
 
     def test_truncated_stream_partial_output_and_mismatched_model_fail_in_worker(self):
@@ -126,17 +134,31 @@ class StreamingTransportTests(unittest.TestCase):
                               (b'data: invalid\n\n', 'INVALID_RESPONSE')):
             with self.subTest(code=code), local_provider(source):
                 with self.assertRaises(AnalysisError) as caught:
-                    post_nvidia_streaming(self.payload(), self.KEY, 3)
+                    post_nvidia_streaming(self.payload(), self.KEY, LOCAL_HTTP_TIMEOUT)
                 self.assertEqual(caught.exception.code, code)
 
     def test_slow_headers_or_keepalive_events_cannot_extend_parent_deadline(self):
         for mode in ('drip', 'slow_headers'):
-            with self.subTest(mode=mode), local_provider(b'', **{mode: True}):
+            streamed = threading.Event()
+            with self.subTest(mode=mode), local_provider(b'', streamed=streamed, **{mode: True}):
                 started = time.monotonic()
                 with self.assertRaises(AnalysisError) as caught:
-                    post_nvidia_streaming(self.payload(), self.KEY, 0.35)
+                    post_nvidia_streaming(self.payload(), self.KEY, IN_FLIGHT_TIMEOUT)
                 self.assertEqual(caught.exception.code, 'PROVIDER_TIMEOUT')
-                self.assertLess(time.monotonic() - started, 1.2)
+                self.assertTrue(streamed.is_set(), 'deadline must expire during the HTTP response')
+                self.assertLess(time.monotonic() - started, IN_FLIGHT_TIMEOUT + 1.5)
+
+    def test_short_deadline_is_forwarded_unchanged_and_timeout_is_sanitized(self):
+        for deadline in (0.25, 0.35):
+            with self.subTest(deadline=deadline), patch(
+                    'agentfit_ai.nvidia_streaming.subprocess.run',
+                    side_effect=subprocess.TimeoutExpired('synthetic private command', deadline)) as spawn:
+                with self.assertRaises(AnalysisError) as caught:
+                    post_nvidia_streaming(self.payload(), self.KEY, deadline)
+            self.assertEqual(str(caught.exception), 'PROVIDER_TIMEOUT')
+            self.assertEqual(spawn.call_args.kwargs['timeout'], deadline)
+            self.assertEqual(json.loads(spawn.call_args.kwargs['input'])['timeout'], deadline)
+            self.assertEqual(spawn.call_count, 1)
 
     def test_invalid_inputs_cannot_start_child(self):
         with patch('agentfit_ai.nvidia_streaming.subprocess.run') as spawn:

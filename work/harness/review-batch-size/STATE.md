@@ -11,3 +11,7 @@
 - 실제실험terminal exit0,720.969초,12/12검증,109개정확히한번. 감사20/20통과. 후보14/16(이전13/16),부분6/6. C077오제외해소,C156(not_product_fact)·C165(not_current)오제외남음,오유지0/5. needs_confirmation. 현재live API프로세스없음.
 - 단일튜닝자료/과거baseline비교의한계유지. 실제전체정확도·인과·반복안정성·실사용완료로해석하지않는다. 기본값20유지. 다음task-done/fresh리뷰/push/CI.
 - 독립서비스준비조회:gh repo list AgentFit-C-d현재접근결과AI저장소1개뿐. 실제Spring경로미확인상태유지,질문반복없음.
+- 재개: 직전 상태 보고 턴은 no progress. 실제 Git clean feature/review-batch-size, 마지막 task-done 5 timeout 실패를 확인하고 로그를 보존했다.
+- 로컬 계측12회 정상(0.296~0.444s), 전체 계측1038pass/5skip. 간헐5실패의 원인은 재현하지 못했다. 대신 느린 응답4사례가 서버 도착 전 timeout으로 통과하는 검증 빈틈을 확인했다.
+- Event assertion 추가로 NVIDIA2 subcase/Solar2test RED. 제품 코드/시간 제한은 유지하고 테스트 전송 시작 검증·프로토콜10초/느린응답5초 예산·0.25/0.35 전달 검증으로 보완했다. 상세 transport-validation.md. 실제 H02 재호출 없음.
+- 최종 task-done exit0: 전체1040pass/5skip(1045total,49.667s), SDK4/4(0.071s). NVIDIA20/20·Solar23/23 focused도 통과. 이 working tree를 커밋하고 fresh 전체리뷰로 진행한다. 간헐 지연의 환경 원인 해결을 주장하지 않는다.

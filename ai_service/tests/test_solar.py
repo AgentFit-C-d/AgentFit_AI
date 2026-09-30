@@ -1,5 +1,6 @@
 import json
 import gzip
+import subprocess
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import threading
 import time
@@ -10,6 +11,10 @@ from agentfit_ai.profile import FIELDS
 from agentfit_ai.solar import SolarAnalyzer, AnalysisError, post_solar, candidate_to_profile
 
 KEY = "synthetic-local-test-key"
+
+# Protocol assertions need startup headroom; deadline behavior has separate tests.
+LOCAL_HTTP_TIMEOUT = 10
+IN_FLIGHT_TIMEOUT = 5
 
 
 def candidate(text="Alpha"):
@@ -170,7 +175,7 @@ class HttpTests(unittest.TestCase):
         try:
             with patch("agentfit_ai.solar.ENDPOINT",
                        f"http://127.0.0.1:{server.server_port}/chat/completions"):
-                self.assertEqual(post_solar({}, KEY, 1), b'{"ok":true}')
+                self.assertEqual(post_solar({}, KEY, LOCAL_HTTP_TIMEOUT), b'{"ok":true}')
         finally:
             server.shutdown()
             server.server_close()
@@ -193,7 +198,7 @@ class HttpTests(unittest.TestCase):
         try:
             with patch("agentfit_ai.solar.ENDPOINT",
                        f"http://127.0.0.1:{server.server_port}/chat/completions"):
-                self.assertEqual(post_solar({}, KEY, 1), b"abcdef")
+                self.assertEqual(post_solar({}, KEY, LOCAL_HTTP_TIMEOUT), b"abcdef")
         finally:
             server.shutdown()
             server.server_close()
@@ -219,23 +224,25 @@ class HttpTests(unittest.TestCase):
             with patch("agentfit_ai.solar.ENDPOINT",
                        f"http://127.0.0.1:{server.server_port}/"):
                 with self.assertRaises(AnalysisError) as caught:
-                    post_solar({}, KEY, 1)
+                    post_solar({}, KEY, LOCAL_HTTP_TIMEOUT)
             self.assertEqual(caught.exception.code, "INVALID_RESPONSE")
         finally:
             server.shutdown()
             server.server_close()
 
     def test_slow_stream_cannot_extend_total_call_timeout(self):
+        streamed = threading.Event()
         class DripHandler(BaseHTTPRequestHandler):
             def do_POST(self):
                 self.rfile.read(int(self.headers["Content-Length"]))
                 self.send_response(200)
-                self.send_header("Content-Length", "12")
+                self.send_header("Content-Length", "300")
                 self.end_headers()
                 try:
-                    for _ in range(12):
+                    for _ in range(300):
                         self.wfile.write(b"x")
                         self.wfile.flush()
+                        streamed.set()
                         time.sleep(0.1)
                 except OSError:
                     pass
@@ -251,24 +258,27 @@ class HttpTests(unittest.TestCase):
             started = time.monotonic()
             with patch("agentfit_ai.solar.ENDPOINT", endpoint):
                 with self.assertRaises(AnalysisError) as caught:
-                    post_solar({}, KEY, 0.35)
+                    post_solar({}, KEY, IN_FLIGHT_TIMEOUT)
             self.assertEqual(caught.exception.code, "PROVIDER_TIMEOUT")
-            self.assertLess(time.monotonic() - started, 0.9)
+            self.assertTrue(streamed.is_set(), "deadline must expire during the HTTP response")
+            self.assertLess(time.monotonic() - started, IN_FLIGHT_TIMEOUT + 1.5)
         finally:
             server.shutdown()
             server.server_close()
 
     def test_slow_headers_cannot_extend_total_call_timeout(self):
+        streamed = threading.Event()
         class SlowHeaders(BaseHTTPRequestHandler):
             def do_POST(self):
                 self.rfile.read(int(self.headers["Content-Length"]))
                 try:
                     self.wfile.write(b"HTTP/1.1 200 OK\r\n")
                     self.wfile.flush()
+                    streamed.set()
                     for byte in b"Content-Length: 2\r\n\r\nok":
                         self.wfile.write(bytes([byte]))
                         self.wfile.flush()
-                        time.sleep(0.05)
+                        time.sleep(0.5)
                 except OSError:
                     pass
 
@@ -283,9 +293,10 @@ class HttpTests(unittest.TestCase):
             with patch("agentfit_ai.solar.ENDPOINT",
                        f"http://127.0.0.1:{server.server_port}/chat/completions"):
                 with self.assertRaises(AnalysisError) as caught:
-                    post_solar({}, KEY, 0.25)
+                    post_solar({}, KEY, IN_FLIGHT_TIMEOUT)
             self.assertEqual(caught.exception.code, "PROVIDER_TIMEOUT")
-            self.assertLess(time.monotonic() - started, 0.7)
+            self.assertTrue(streamed.is_set(), "deadline must expire during the HTTP response")
+            self.assertLess(time.monotonic() - started, IN_FLIGHT_TIMEOUT + 1.5)
         finally:
             server.shutdown()
             server.server_close()
@@ -309,7 +320,7 @@ class HttpTests(unittest.TestCase):
             with patch("agentfit_ai.solar.ENDPOINT",
                        f"http://127.0.0.1:{server.server_port}/chat/completions"):
                 with self.assertRaises(AnalysisError) as caught:
-                    post_solar({}, KEY, 1)
+                    post_solar({}, KEY, LOCAL_HTTP_TIMEOUT)
             self.assertEqual(caught.exception.code, "PROVIDER_NETWORK")
         finally:
             server.shutdown()
@@ -334,7 +345,7 @@ class HttpTests(unittest.TestCase):
             with patch("agentfit_ai.solar.ENDPOINT",
                        f"http://127.0.0.1:{server.server_port}/chat/completions"):
                 with self.assertRaises(AnalysisError) as caught:
-                    post_solar({}, KEY, 1)
+                    post_solar({}, KEY, LOCAL_HTTP_TIMEOUT)
             self.assertEqual(caught.exception.code, "PROVIDER_NETWORK")
         finally:
             server.shutdown()
@@ -363,7 +374,7 @@ class HttpTests(unittest.TestCase):
                 with patch("agentfit_ai.solar.ENDPOINT",
                            f"http://127.0.0.1:{server.server_port}/{status}"):
                     with self.assertRaises(AnalysisError) as caught:
-                        post_solar({}, KEY, 1)
+                        post_solar({}, KEY, LOCAL_HTTP_TIMEOUT)
                 self.assertEqual(caught.exception.code, code)
             self.assertEqual(StatusHandler.requests,
                              ["/401", "/403", "/429", "/503", "/400", "/302"])
@@ -387,7 +398,7 @@ class HttpTests(unittest.TestCase):
             with patch("agentfit_ai.solar.ENDPOINT",
                        f"http://127.0.0.1:{server.server_port}/"):
                 with self.assertRaises(AnalysisError) as caught:
-                    post_solar({}, KEY, 1)
+                    post_solar({}, KEY, LOCAL_HTTP_TIMEOUT)
             self.assertEqual(caught.exception.code, "PROVIDER_NETWORK")
             self.assertNotIn(KEY, str(caught.exception))
         finally:
@@ -417,11 +428,25 @@ class HttpTests(unittest.TestCase):
             with patch("agentfit_ai.solar.ENDPOINT",
                        f"http://127.0.0.1:{server.server_port}/"):
                 with self.assertRaises(AnalysisError) as caught:
-                    post_solar({}, KEY, 1)
+                    post_solar({}, KEY, LOCAL_HTTP_TIMEOUT)
             self.assertEqual(caught.exception.code, "RESPONSE_TOO_LARGE")
         finally:
             server.shutdown()
             server.server_close()
+
+
+class ParentDeadlineTests(unittest.TestCase):
+    def test_short_deadline_is_forwarded_unchanged_and_timeout_is_sanitized(self):
+        for deadline in (0.25, 0.35):
+            with self.subTest(deadline=deadline), patch(
+                    "agentfit_ai.solar.subprocess.run",
+                    side_effect=subprocess.TimeoutExpired("synthetic private command", deadline)) as spawn:
+                with self.assertRaises(AnalysisError) as caught:
+                    post_solar({}, KEY, deadline)
+            self.assertEqual(str(caught.exception), "PROVIDER_TIMEOUT")
+            self.assertEqual(spawn.call_args.kwargs["timeout"], deadline)
+            self.assertEqual(json.loads(spawn.call_args.kwargs["input"])["timeout"], deadline)
+            self.assertEqual(spawn.call_count, 1)
 
 
 if __name__ == "__main__":
