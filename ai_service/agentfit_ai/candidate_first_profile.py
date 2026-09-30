@@ -392,13 +392,9 @@ def analyze_candidate_first(document: str, document_id: str, key: str,
                                        observer=observer)
 
 
-def finalize_candidate_analysis(document: str, document_id: str, frozen: dict,
-                                labels: list[dict], review: dict, *, observer=None,
-                                feature_curation=None) -> dict:
-    """Share the same validated projection across single and paired reviews."""
+def apply_candidate_review(frozen: dict, labels: list[dict], review: dict) -> list[dict]:
+    """Validate the full review before returning independent, safe labels."""
     validate_candidate_labels(frozen, labels)
-    if observer is not None and not callable(observer):
-        raise ValueError("invalid candidate observer")
     ids = {item["id"] for item in frozen["candidates"]}
     if (type(review) is not dict or
             set(review) != {"checkedFields", "missingFields", "wrongCandidateIds"} or
@@ -410,6 +406,18 @@ def finalize_candidate_analysis(document: str, document_id: str, frozen: dict,
                 any(type(item) is not str or item not in allowed for item in items) or
                 len(set(items)) != len(items)):
             raise ValueError("invalid coverage review")
+    wrong = set(review["wrongCandidateIds"])
+    return [{**label, "status": "irrelevant" if label["id"] in wrong else label["status"]}
+            for label in labels]
+
+
+def finalize_candidate_analysis(document: str, document_id: str, frozen: dict,
+                                labels: list[dict], review: dict, *, observer=None,
+                                feature_curation=None) -> dict:
+    """Share the same validated projection across single and paired reviews."""
+    safe_labels = apply_candidate_review(frozen, labels, review)
+    if observer is not None and not callable(observer):
+        raise ValueError("invalid candidate observer")
 
     def run(stage, operation):
         try:
@@ -426,8 +434,6 @@ def finalize_candidate_analysis(document: str, document_id: str, frozen: dict,
     wrong = set(review["wrongCandidateIds"])
     wrong_fields = {label["field"] for label in labels
                     if label["id"] in wrong and label["field"] in _FIELDS}
-    safe_labels = [{**label, "status": "irrelevant"}
-                   if label["id"] in wrong else label for label in labels]
     observe("reviewed", {"frozen": frozen, "labels": safe_labels})
     curation = None
     projection_labels = safe_labels
