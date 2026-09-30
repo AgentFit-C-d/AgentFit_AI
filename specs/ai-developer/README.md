@@ -21,6 +21,7 @@ AI 파트의 초기 작업 순서는 [FastAPI 구현 계획](fastapi-implementat
 - [호출 진단](04-analysis-provider/candidate-review-diagnostics/validation.md)에서 후보20개 검토의 length/8192토큰 종료를 확인했다. 이후 [제한적 분할 검토 실험](04-analysis-provider/candidate-adaptive-review/validation.md)의 H02는 검토를 완주했으나 확인 상태이며 지정6항목 중4개만 맞았다. 분할 복구는 발동하지 않아 그 효과는 미입증이다. 프로젝트명의 최종 변환 탈락과 backend 미정 위반이 남아 있다.
 - 단위 테스트·CI 통과를 실제 문서 의미 정확도나 Spring 저장 성공으로 간주하지 않는다. 독립 문서 품질, Spring 계약·저장·확인 및 실패 응답 7일 삭제의 통합 검증이 남아 있다. 운영 적용 완료를 선언하지 않는다.
 - 통합 진입점에도 [기존 Solar 민감값 검사](04-analysis-provider/integrated-input-guard/validation.md)를 적용했다. 추출 전에 문서·ID를 검사하며 신규5건·전체983건 통과/6건 제외 및 정확한 구현 Linux CI를 확인했다. 다음 품질 조사는 `INVALID_REVIEW_CONTRACT`의 세부 원인을 원문 없는 진단 코드로 구분하는 것이다.
+- [검토 계약 진단](04-analysis-provider/review-contract-diagnostics/validation.md)을 추가해 전체990건 통과/6건 제외, 독립 리뷰 및 정확한 구현 Linux CI를 확인했다. 새H02는 후보 검토5묶음까지 계약을 통과했지만6번째 묶음의 NVIDIA 제공자 오류가 재시도에서도 반복돼 실패했다(17호출·약45.5분). 최종 Profile과 부분정답6개는 모두 미평가이며, 계약 오류 해결이나 의미 품질 개선은 입증되지 않았다.
 
 ## 1단계: 문서 분석
 
