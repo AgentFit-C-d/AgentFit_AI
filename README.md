@@ -224,3 +224,13 @@ python -m agentfit_ai.nvidia_evaluation_runner --corpus ../specs/ai-developer/04
 요청마다64회를 보수적으로 예약하며, 누적 예약 초과·확인 만료·429/503 등 제공자 오류에서 전체 평가를 중단합니다. 예약 상한은 이 결과 폴더에 한정되며 계정 전체 실제 사용량이나 청구액이 아닙니다. 다른 실행기와 계정 할당량을 공유 관리하지 않으므로 이 평가의 동시 실행은 하지 않습니다. 제공자 오류 row가 있거나 started-only 기록이 남은 폴더는 다시 실행해도 자동 재호출하지 않습니다. 중단 원인을 확인하고 별도 승인 범위에서 후속 실험을 등록해야 합니다. 기존 결과를 삭제하거나 덮어쓰지 않습니다.
 
 기존 혼합 baseline은1/30에서 중단돼 완전한 비교가 불가능합니다. 이번 자료는 새로운 holdout이 아니며 정답은 사람 검토 전의 임시 기준입니다. 로컬 테스트와 사전 점검 성공을 모델 정확도 개선이나 출시 승인으로 해석하지 않습니다. [명세](specs/ai-developer/nvidia-evaluation-variant/spec.md) · [검증](specs/ai-developer/nvidia-evaluation-variant/validation.md)
+
+### DeepSeek 검토 모델 비교
+
+GLM 검토 단계의 제공자 오류를 조사하기 위해, 진단 평가에서 검토 모델만 DeepSeek로 선택할 수 있습니다. 아래는 현재 브랜치 코드에 맞는 **오프라인 사전 점검**입니다. 이전 freeze는 이전 기준 커밋에서만 유효합니다.
+
+```text
+python -m agentfit_ai.nvidia_evaluation_runner --call-diagnostics --review-model deepseek-ai/deepseek-v4.1-flash --corpus ../specs/ai-developer/04-analysis-provider/independent-profile-evaluation/corpus.json --gold E:/AgentFit/output/independent-profile-v1/gold-v1.json --freeze ../specs/ai-developer/nvidia-review-model-routing/freeze.json
+```
+
+선택 옵션은 진단 모드에서 무료 확인 범위의 두 모델만 허용합니다. DeepSeek 선택은 `nvidia-deepseek-review-v1`로 구분하며 이전 결과 폴더를 재사용할 수 없습니다. 기본 서비스는 GLM 검토를 유지합니다. 모델별 기존 요청 설정은 그대로 적용됩니다. 실제 비교는 무료 범위·실행 예산·새 결과 폴더를 등록한 뒤 위의 live 인자를 추가합니다. [선택 명세](specs/ai-developer/nvidia-review-model-routing/spec.md) · [검증 기록](specs/ai-developer/nvidia-review-model-routing/validation.md)

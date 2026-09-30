@@ -62,19 +62,25 @@ def _code_hashes():
             for p in sorted(paths)}
 
 
-def _experiment(call_diagnostics):
-    if type(call_diagnostics) is not bool:
+def _experiment(call_diagnostics, review_model=None):
+    if (type(call_diagnostics) is not bool or
+            (review_model is not None and (not call_diagnostics or type(review_model) is not str
+                                          or review_model not in MODELS))):
         raise ValueError
     settings = dict(SETTINGS)
+    if review_model is not None:
+        settings['review_model'] = review_model
     if call_diagnostics:
         settings['call_diagnostics'] = METADATA_VERSION
+    if review_model == 'deepseek-ai/deepseek-v4.1-flash':
+        return 'nvidia-deepseek-review', settings
     return ('nvidia-call-diagnostics' if call_diagnostics else 'nvidia-only'), settings
 
 
-def build_freeze(corpus_file, gold_file, *, call_diagnostics=False):
+def build_freeze(corpus_file, gold_file, *, call_diagnostics=False, review_model=None):
     """Build an offline snapshot; caller must save it once before live output."""
     try:
-        variant, settings = _experiment(call_diagnostics)
+        variant, settings = _experiment(call_diagnostics, review_model)
         _, identity = _data(corpus_file, gold_file)
         return {'version': variant+'-freeze-v1', 'variant': variant+'-v1',
                 'settings': settings, **identity, 'lf_normalized_files': _code_hashes()}
@@ -82,11 +88,11 @@ def build_freeze(corpus_file, gold_file, *, call_diagnostics=False):
         raise ValueError('INVALID_EVALUATION_PREFLIGHT') from None
 
 
-def prepare_evaluation(corpus_file, gold_file, freeze_file, *, call_diagnostics=False):
+def prepare_evaluation(corpus_file, gold_file, freeze_file, *, call_diagnostics=False, review_model=None):
     try:
-        variant, settings = _experiment(call_diagnostics)
+        variant, settings = _experiment(call_diagnostics, review_model)
         freeze = read_json(freeze_file)
-        expected = build_freeze(corpus_file, gold_file, call_diagnostics=call_diagnostics)
+        expected = build_freeze(corpus_file, gold_file, call_diagnostics=call_diagnostics, review_model=review_model)
         if (type(freeze) is not dict or freeze != expected
                 or type(freeze['settings']) is not dict
                 or any(type(freeze['settings'][k]) is not type(v) for k,v in settings.items())):

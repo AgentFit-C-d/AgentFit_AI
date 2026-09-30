@@ -1,6 +1,7 @@
 """Separate NVIDIA experiment; default execution only verifies local inputs."""
 import argparse
 import asyncio
+from functools import partial
 import json
 import math
 from pathlib import Path
@@ -12,10 +13,13 @@ from .independent_evaluation_corpus import validate_gold
 from .independent_evaluation_protocol import validate_score
 from .independent_evaluation_runner import _failure, _identity, _read_existing, _summary, _validate_row, _write_new
 from .independent_profile_evaluation import score_confirmation
-from .nvidia_evaluation_inputs import load_nvidia_key, prepare_evaluation, read_json, validate_free_access
+from .nvidia_evaluation_inputs import MODELS, load_nvidia_key, prepare_evaluation, read_json, validate_free_access
 from .analysis_call_metadata import validate_metadata, unavailable_metadata
+from .deepseek_evaluation import MODEL
 
 DIAGNOSTIC_VARIANT = 'nvidia-call-diagnostics-v1'
+DEEPSEEK_REVIEW_VARIANT = 'nvidia-deepseek-review-v1'
+DIAGNOSTIC_VARIANTS = (DIAGNOSTIC_VARIANT, DEEPSEEK_REVIEW_VARIANT)
 
 STOP_CODES = frozenset(code for code in SAFE_CODES if code.startswith('PROVIDER_')) | {
     'MISSING_OR_INVALID_KEY', 'ANALYSIS_DEADLINE', 'ANALYSIS_FAILURE', 'CALL_LIMIT'}
@@ -33,14 +37,18 @@ def _validate_input(document, document_id, gold, key):
 
 
 async def run_scored_process(document, document_id, gold, nvidia_key, *, timeout_seconds=1800,
-                             command=None, call_diagnostics=None):
+                             command=None, call_diagnostics=None, review_model=None):
     _validate_input(document, document_id, gold, nvidia_key)
     if (type(timeout_seconds) not in (int, float) or not math.isfinite(timeout_seconds)
             or not 0 < timeout_seconds <= 1800
+            or (review_model is not None and (call_diagnostics is None or type(review_model) is not str
+                                             or review_model not in MODELS))
             or (call_diagnostics is not None and (type(call_diagnostics) is not dict or call_diagnostics))):
         raise ValueError('INVALID_EVALUATION_INPUT')
     try:
         options = {'call_diagnostics': call_diagnostics} if call_diagnostics is not None else {}
+        if review_model is not None:
+            options['nvidia_review_model'] = review_model
         outcome = await run_analysis_process(document, document_id, nvidia_key,
             asyncio.get_running_loop().time() + timeout_seconds, nvidia_only=True, command=command, **options)
         if set(outcome) == {'error'}:
@@ -55,14 +63,15 @@ def _refresh(prepared):
     if (type(prepared) is not dict or set(prepared) != {'cases', 'metadata', 'paths'}
             or type(prepared['paths']) is not list or len(prepared['paths']) != 3):
         raise ValueError('INVALID_EVALUATION_PREFLIGHT')
-    latest = prepare_evaluation(*prepared['paths'],
-        call_diagnostics=prepared['metadata'].get('variant') == DIAGNOSTIC_VARIANT)
+    variant = prepared['metadata'].get('variant')
+    latest = prepare_evaluation(*prepared['paths'], call_diagnostics=variant in DIAGNOSTIC_VARIANTS,
+        review_model=MODEL if variant == DEEPSEEK_REVIEW_VARIANT else None)
     if latest['metadata'] != prepared['metadata']:
         raise ValueError('EXPERIMENT_CHANGED')
     return latest
 
 
-def _diagnostic_row(case, identity, row):
+def _diagnostic_row(case, identity, row, *, review_model='z-ai/glm-5.3'):
     try:
         if type(row) is not dict or 'diagnostics' not in row:
             raise ValueError
@@ -76,6 +85,9 @@ def _diagnostic_row(case, identity, row):
         provider_error = report['calls'][-1]['provider_error'] if report['calls'] else None
         if provider_error is not None and checked['score']['error'] != provider_error:
             raise ValueError
+        if any(call['requested_model'] != (review_model if call['stage'] == 'COVERAGE_REVIEW_FAILED' else MODEL)
+               for call in report['calls']):
+            raise ValueError
         return row
     except (ValueError, TypeError, KeyError):
         raise ValueError('INVALID_CHECKPOINT') from None
@@ -84,8 +96,10 @@ def _diagnostic_row(case, identity, row):
 async def evaluate(prepared, output, nvidia_key, access_file):
     prepared = _refresh(prepared)
     cases, metadata = prepared['cases'], prepared['metadata']
-    diagnostic_mode = metadata['variant'] == DIAGNOSTIC_VARIANT
-    check_row = _diagnostic_row if diagnostic_mode else _validate_row
+    diagnostic_mode = metadata['variant'] in DIAGNOSTIC_VARIANTS
+    selected_review = MODEL if metadata['variant'] == DEEPSEEK_REVIEW_VARIANT else None
+    check_row = (partial(_diagnostic_row, review_model=metadata['settings']['review_model'])
+                 if diagnostic_mode else _validate_row)
     validate_free_access(access_file, reserved_calls=0)
     for case in cases:
         _validate_input(case['document'], case['case_id'], case['gold'], nvidia_key)
@@ -121,6 +135,8 @@ async def evaluate(prepared, output, nvidia_key, access_file):
             diagnostics = {} if diagnostic_mode else None
             try:
                 options = {'call_diagnostics': diagnostics} if diagnostic_mode else {}
+                if selected_review is not None:
+                    options['review_model'] = selected_review
                 score = await run_scored_process(case['document'], case['case_id'], case['gold'], nvidia_key, **options)
                 score = validate_score(case['document'], case['gold'], score)
             except Exception:
@@ -141,7 +157,7 @@ async def evaluate(prepared, output, nvidia_key, access_file):
     if len(rows) != 30:
         raise ValueError('INCOMPLETE_RUN')
     summary = _summary(rows)
-    summary.update(version=('nvidia-call-diagnostics' if diagnostic_mode else 'nvidia-only')+'-evaluation-summary-v1',
+    summary.update(version=metadata['version'].replace('-evaluation-run-', '-evaluation-summary-'),
         variant=metadata['variant'],
         reserved_model_calls_upper_bound=len(rows)*64, baseline_status='incomplete', new_holdout=False)
     return summary
@@ -151,13 +167,15 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description='Preflight fixed NVIDIA evaluation; live requires confirmed free scope.')
     parser.add_argument('--live', action='store_true')
     parser.add_argument('--call-diagnostics', action='store_true')
+    parser.add_argument('--review-model', choices=sorted(MODELS))
     for name in ('corpus', 'gold', 'freeze'):
         parser.add_argument('--'+name, type=Path, required=True)
     for name in ('env-file', 'output', 'access-confirmation'):
         parser.add_argument('--'+name, type=Path)
     args = parser.parse_args(argv)
     try:
-        prepared = prepare_evaluation(args.corpus, args.gold, args.freeze, call_diagnostics=args.call_diagnostics)
+        prepared = prepare_evaluation(args.corpus, args.gold, args.freeze,
+            call_diagnostics=args.call_diagnostics, review_model=args.review_model)
         if not args.live:
             summary = {'mode': 'preflight', 'cases': len(prepared['cases']), 'expected': 30,
                 'gold_units': sum(len(f['units']) for c in prepared['cases'] for f in c['gold']['fields'].values()),
