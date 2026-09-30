@@ -6,7 +6,7 @@ import sys
 from .diagnostics import safe_code
 from .recoverable_solar_analysis import RecoverableSolarAnalyzer
 from .solar import AnalysisError, SolarAnalyzer, post_solar_inline
-from .analysis_call_metadata import METADATA_VERSION, unavailable_metadata, validate_metadata
+from .analysis_call_metadata import METADATA_VERSION, MODELS, unavailable_metadata, validate_metadata
 
 
 MAX_INPUT_BYTES = 500_000
@@ -38,6 +38,10 @@ def execute_request(raw: bytes) -> bytes:
                 return FAILED
             expected.add('diagnostics')
             metadata = {}
+        if 'reviewModel' in request:
+            if mode != 'integrated-nvidia' or metadata is None or request['reviewModel'] not in MODELS:
+                return FAILED
+            expected.add('reviewModel')
         if set(request) != expected:
             return FAILED
         if mode == 'integrated-candidates':
@@ -49,6 +53,8 @@ def execute_request(raw: bytes) -> bytes:
         elif mode == 'integrated-nvidia':
             from .candidate_service_worker import execute_nvidia_analysis
             options = {'call_diagnostics': metadata} if metadata is not None else {}
+            if 'reviewModel' in request:
+                options['review_model'] = request['reviewModel']
             output = execute_nvidia_analysis(request['document'], request['documentId'], request['key'], **options)
         elif mode == 'recoverable-solar':
             output = RecoverableSolarAnalyzer(

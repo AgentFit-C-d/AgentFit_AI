@@ -8,7 +8,7 @@ from .candidate_first_profile import CandidatePipelineError
 from .diagnostics import PIPELINE_FAILURE_CODES, safe_code
 from .nvidia_streaming import post_nvidia_streaming_inline
 from .solar import AnalysisError, _reject_sensitive, post_solar_inline
-from .analysis_call_metadata import build_metadata
+from .analysis_call_metadata import MODELS, build_metadata
 
 
 def execute_integrated_analysis(document, document_id, solar_key, nvidia_key):
@@ -17,9 +17,14 @@ def execute_integrated_analysis(document, document_id, solar_key, nvidia_key):
             solar_transport=post_solar_inline, nvidia_transport=post_nvidia_streaming_inline))
 
 
-def execute_nvidia_analysis(document, document_id, nvidia_key, *, call_diagnostics=None):
+def execute_nvidia_analysis(document, document_id, nvidia_key, *, call_diagnostics=None, review_model=None):
+    if review_model is not None and (call_diagnostics is None or type(review_model) is not str
+                                     or review_model not in MODELS):
+        raise ValueError('invalid diagnostic review model')
     trace = [] if call_diagnostics is not None else None
     options = {'call_trace': trace} if trace is not None else {}
+    if review_model is not None:
+        options['review_model'] = review_model
     return _execute_analysis(document, document_id, (nvidia_key,), lambda:
         analyze_nvidia_candidates(document, document_id, nvidia_key,
             nvidia_transport=post_nvidia_streaming_inline, **options),

@@ -9,7 +9,8 @@ from .analysis_worker import MAX_INPUT_BYTES, MAX_OUTPUT_BYTES
 from .candidate_confirmation import CONTRACT, validate_candidate_confirmation
 from .diagnostics import safe_code
 from .solar import _provider_worker_environment
-from .analysis_call_metadata import METADATA_VERSION, unavailable_metadata, validate_metadata
+from .analysis_call_metadata import METADATA_VERSION, MODELS, unavailable_metadata, validate_metadata
+from .deepseek_evaluation import MODEL
 
 
 class AnalysisProcessError(Exception):
@@ -21,12 +22,16 @@ class AnalysisProcessError(Exception):
 async def run_analysis_process(document: str, document_id: str, key: str,
                                deadline: float, *, recoverable_solar: bool = False,
                                integrated_candidates: bool = False, nvidia_key=None,
-                               nvidia_only: bool = False, command=None, call_diagnostics=None) -> dict:
+                               nvidia_only: bool = False, command=None, call_diagnostics=None,
+                               nvidia_review_model=None) -> dict:
     flags = (recoverable_solar, integrated_candidates, nvidia_only)
     if (any(type(flag) is not bool for flag in flags) or sum(flags) > 1
             or (integrated_candidates and (type(nvidia_key) is not str or not nvidia_key.strip()))
             or (nvidia_only and (type(key) is not str or not key.strip()))
             or (not integrated_candidates and nvidia_key is not None)
+            or (nvidia_review_model is not None and
+                (not nvidia_only or call_diagnostics is None or type(nvidia_review_model) is not str
+                 or nvidia_review_model not in MODELS))
             or (call_diagnostics is not None and
                 (not nvidia_only or type(call_diagnostics) is not dict or call_diagnostics))):
         raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")
@@ -41,6 +46,8 @@ async def run_analysis_process(document: str, document_id: str, key: str,
         request['mode'] = 'integrated-nvidia'
     if call_diagnostics is not None:
         request['diagnostics'] = METADATA_VERSION
+    if nvidia_review_model is not None:
+        request['reviewModel'] = nvidia_review_model
     payload = json.dumps(request, ensure_ascii=False).encode("utf-8")
     if len(payload) > MAX_INPUT_BYTES:
         raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")
@@ -103,6 +110,10 @@ async def run_analysis_process(document: str, document_id: str, key: str,
                 raise AnalysisProcessError('ANALYSIS_WORKER_FAILED')
             provider_error = metadata['calls'][-1]['provider_error'] if metadata['calls'] else None
             if provider_error is not None and checked.get('error') != provider_error:
+                raise AnalysisProcessError('ANALYSIS_WORKER_FAILED')
+            if nvidia_review_model is not None and any(
+                    row['requested_model'] != (nvidia_review_model if row['stage'] == 'COVERAGE_REVIEW_FAILED' else MODEL)
+                    for row in metadata['calls']):
                 raise AnalysisProcessError('ANALYSIS_WORKER_FAILED')
             call_diagnostics.update(metadata)
         return checked

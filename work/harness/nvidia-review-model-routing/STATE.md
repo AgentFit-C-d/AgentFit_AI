@@ -7,3 +7,4 @@
 - Baseline relevant diagnostics/evaluation14/14 GREEN7.611s. Prior exactcode CI36761891618 success and whole gate1231pass5skip already observed; no redundant whole baseline rerun.
 - Design: explicit review selection in diagnostic evaluator only; current pipeline option reused; defaultGLM unchanged. Parent/child strictly validate mode/model/trace; newDeepSeek variant/freeze/checkpoint prevents mislabeled comparisons. No prompt/scorer/API changes.
 - Next: commit SDD, task-start Task1, RED tests then minimal boundary wiring, Task2 evaluator/runtime/freeze, single final review/push/CI. No agents implementing; final reviewer fresh gpt-6-astra/high per skill.
+- SDD4c10cbda009a56d3020ed2f24de1fb1b5361a1e3; Task1 brief read. RED missing option/selected envelope→GREEN new+metadata14/14(2.435s), three boundary files wired; default packet preserved, model trace mismatch rejected. Task1 commit/gate then Task2 starts. Additional external calls0.
