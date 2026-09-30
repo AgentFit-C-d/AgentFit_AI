@@ -101,7 +101,7 @@ TCP 끊김은 Attempt를 INTERRUPTED로 정리하고 대기 중인 합성 AI 작
 
 ## 실제 Spring 연결 때 통과해야 할 항목
 
-별도의 `core_flow_tests`로 아래 로컬 연결을 함께 검증한다. **현재 범위는 합성 TEXT 입력과 메모리 저장이며 실제 Spring은 포함하지 않는다.**
+별도의 `core_flow_tests`로 아래 로컬 연결을 함께 검증한다. **현재 범위는 합성 TEXT·Markdown·PDF 입력과 메모리 저장이며 실제 Spring은 포함하지 않는다.**
 
 ```text
 공개 TCP 요청 → mock → ASGI FastAPI → 실제 분석 자식 프로세스
@@ -119,9 +119,11 @@ python -m unittest discover -s core_flow_tests -v
 
 실제 분석기의 10개 필드와 non-null unresolved가 초안에 보존되고, 수동 수정의 null/[] 및 출처, 재조회·중복 버전409·삭제를 검사한다. 손상된 합성 Provider 응답은 이전 초안/확인본을 유지하며 명시적 재시도로만 복구한다. 공개 연결 종료와 mock의 기한 만료가 실제 자식 프로세스와 합성 Provider socket을 종료하는지도 검사한다. 기본 mock callback을 실모델로 교체하거나 외부 연결을 허용하는 실행 옵션은 추가하지 않았다.
 
-검증 결과는 [핵심 흐름 runtime 기록](../../specs/ai-developer/core-flow-runtime-checks/validation.md)을 따른다. CI의 `core-flow-runtime` job은 이 suite를 별도로 실행한다. 실제 외부 Provider, PDF/Markdown의 이 전체 연결, 질문별 명시적 확인 UI, Spring/DB 및 운영 환경의 검증은 아래 목록에 남긴다.
+검증 결과는 [핵심 흐름 runtime 기록](../../specs/ai-developer/core-flow-runtime-checks/validation.md)을 따른다. CI의 `core-flow-runtime` job은 이 suite를 별도로 실행한다. 실제 외부 Provider, 질문별 명시적 확인 UI, Spring/DB 및 운영 환경의 검증은 아래 목록에 남긴다.
 
 `integrated-nvidia` 선택형 서비스도 실제 child·LangExtract·합성 NVIDIA SSE를 거쳐 동일 mock 저장 계약에 연결했다. 단독 경로는 Solar 키 없이 실행하며 429/503에서 자동재시도하지 않는다. 단독 API의 전체 기한/TCP 종료/ASGI 취소 시 프로세스·socket 정리, mock의 초안·확인본 보존·명시적 재요청·중복409·삭제를 별도로 검증한다. 상세 결과는 [NVIDIA 단독 연결 기록](../../specs/ai-developer/nvidia-analysis-service/validation.md)에 있다. 합성 TEXT/메모리 저장 범위이며 실제 Spring·운영 저장·실제 모델 품질 검증을 대신하지 않는다.
+
+2026-10-01 추가: [문서 입력 통합 검증](../../specs/ai-developer/document-input-runtime/validation.md)은 NVIDIA 단독 합성 경로에서 BOM·한글·이모지·CRLF Markdown과 두 페이지 PDF의 실제 파싱, 근거 위치, 수정 저장·재조회·버전 충돌·삭제를 검사한다. 잘못된 문서 8종은 추가 모델 호출 없이 거절하며 기존 저장본을 보존한다. PDF의 `pageCount`·`characterCount`는 현행 내부 응답에 전달되지 않아 mock에서는 **null**이다. 실제 OCR·복잡한 PDF 레이아웃 품질이나 Spring 저장 검증은 추가되지 않았다.
 
 - [ ] Spring이 이 요청·응답 OpenAPI와 오류/우선순위를 그대로 구현하는지 소비자 테스트 실행
 - [ ] 실제 인증 쿠키·세션 만료·Origin·소유권·다른 프로젝트 draft 접근 검증
