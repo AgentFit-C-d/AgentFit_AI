@@ -42,10 +42,13 @@ def _safe_calls(calls):
 
 
 def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
-                              transport=None, on_update=None, structured_output=True):
-    """Review the same classified occurrences with thinking false then true."""
+                              transport=None, on_update=None, structured_output=True,
+                              thinking_effort=None):
+    """Compare off/on configurations; effort metadata describes requested settings."""
     if (type(key) is not str or not key.strip() or
             type(structured_output) is not bool or
+            (thinking_effort is not None and
+             (type(thinking_effort) is not int or not 1 <= thinking_effort <= 100)) or
             (transport is not None and not callable(transport)) or
             (on_update is not None and not callable(on_update))):
         raise ValueError('invalid thinking evaluation options')
@@ -69,6 +72,7 @@ def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
                      'batch_size': 20, 'reasoned_review': True,
                      'field_semantics': 'explicit-v1', 'retry_limit': 0,
                      'structured_output': structured_output,
+                     'thinking_effort_requested': thinking_effort,
                      'schema_delivery': 'response_format' if structured_output else 'system_prompt'},
         'thinking_order': [False, True], 'active_thinking': None, 'arms': [], 'failed': 0}
 
@@ -90,6 +94,7 @@ def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
     for thinking in (False, True):
         calls, reasons, reviewed = [], [], {}
         row = {'thinking': thinking, 'outcome': 'running', 'attempted_calls': 0,
+               'reasoning_effort_requested': thinking_effort if thinking else None,
                'transport_attempts': [], 'review_calls': [], 'review_reasons': reasons}
         result['arms'].append(row)
         result['active_thinking'] = thinking
@@ -102,6 +107,8 @@ def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
                 raise ValueError('unexpected review request')
             request = deepcopy(payload)
             request['chat_template_kwargs']['thinking'] = thinking
+            if thinking and thinking_effort is not None:
+                request['chat_template_kwargs']['reasoning_effort'] = thinking_effort
             if not structured_output:
                 schema = request.pop('response_format')['json_schema']['schema']
                 request['messages'][0]['content'] += (

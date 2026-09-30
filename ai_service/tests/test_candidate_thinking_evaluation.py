@@ -88,6 +88,43 @@ class CandidateThinkingEvaluationTests(unittest.TestCase):
         self.assertEqual(good['audit_matched'], 3)
         self.assertEqual(result['failed'], 1)
 
+    def test_explicit_effort_changes_only_thinking_arm_and_records_requested_setting(self):
+        result = self.run_trial(thinking_effort=25, structured_output=False)
+        self.assertEqual(result['settings']['thinking_effort_requested'], 25)
+        self.assertEqual([arm['reasoning_effort_requested'] for arm in result['arms']], [None, 25])
+        before, after = deepcopy(self.sent[0]), deepcopy(self.sent[2])
+        self.assertEqual(before.pop('chat_template_kwargs'), {'thinking': False})
+        self.assertEqual(after.pop('chat_template_kwargs'), {'thinking': True, 'reasoning_effort': 25})
+        self.assertEqual(before, after)
+        for request in self.sent:
+            self.assertNotIn('response_format', request)
+            self.assertIn('JSON Schema:', request['messages'][0]['content'])
+            self.assertNotIn('reasoning_effort', {k: v for k, v in request.items() if k != 'chat_template_kwargs'})
+
+    def test_invalid_effort_fails_before_any_request(self):
+        for effort in (True, False, 0, -1, 101, 25.0, '25', [], {}):
+            with self.subTest(effort=effort), self.assertRaises(ValueError):
+                self.run_trial(thinking_effort=effort)
+        self.assertEqual(self.sent, [])
+
+    def test_effort_boundaries_and_none_preserve_default_requests(self):
+        for effort in (1, 100, None):
+            with self.subTest(effort=effort):
+                self.sent.clear()
+                result = self.run_trial(thinking_effort=effort)
+                self.assertEqual(result['settings']['thinking_effort_requested'], effort)
+                for request in self.sent:
+                    kwargs = request['chat_template_kwargs']
+                    expected = {'thinking': kwargs['thinking']}
+                    if kwargs['thinking'] and effort is not None:
+                        expected['reasoning_effort'] = effort
+                    self.assertEqual(kwargs, expected)
+                if effort is None:
+                    explicit_none = deepcopy(self.sent)
+                    self.sent.clear()
+                    self.run_trial()
+                    self.assertEqual(self.sent, explicit_none)
+
     def test_schema_free_pair_preserves_prompts_and_still_rejects_invalid_json(self):
         result = self.run_trial(structured_output=False)
         self.assertEqual(result['settings']['structured_output'], False)
