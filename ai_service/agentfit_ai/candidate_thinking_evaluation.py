@@ -42,9 +42,10 @@ def _safe_calls(calls):
 
 
 def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
-                              transport=None, on_update=None):
+                              transport=None, on_update=None, structured_output=True):
     """Review the same classified occurrences with thinking false then true."""
     if (type(key) is not str or not key.strip() or
+            type(structured_output) is not bool or
             (transport is not None and not callable(transport)) or
             (on_update is not None and not callable(on_update))):
         raise ValueError('invalid thinking evaluation options')
@@ -66,15 +67,21 @@ def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
         'candidate_count': len(labels), 'planned_calls': 2 * per_arm,
         'settings': {'temperature': 0, 'max_tokens': 8192, 'timeout_seconds': 600,
                      'batch_size': 20, 'reasoned_review': True,
-                     'field_semantics': 'explicit-v1', 'retry_limit': 0},
+                     'field_semantics': 'explicit-v1', 'retry_limit': 0,
+                     'structured_output': structured_output},
         'thinking_order': [False, True], 'active_thinking': None, 'arms': [], 'failed': 0}
 
+    observer_failed = False
     def emit():
+        nonlocal observer_failed
+        if observer_failed:
+            raise _ObserverFailure('progress observer failed') from None
         result['failed'] = sum(arm['outcome'] == 'failed' for arm in result['arms'])
         if on_update is not None:
             try:
                 on_update(deepcopy(result))
             except Exception:
+                observer_failed = True
                 raise _ObserverFailure('progress observer failed') from None
 
     emit()
@@ -94,6 +101,8 @@ def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
                 raise ValueError('unexpected review request')
             request = deepcopy(payload)
             request['chat_template_kwargs']['thinking'] = thinking
+            if not structured_output:
+                request.pop('response_format', None)
             row['attempted_calls'] += 1
             attempt = {'index': row['attempted_calls'], 'returned': False}
             row['transport_attempts'].append(attempt)
@@ -140,6 +149,8 @@ def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
         except _ObserverFailure:
             raise
         except Exception as error:
+            if observer_failed:
+                raise _ObserverFailure('progress observer failed') from None
             row.update(_failure(error, stage))
         row['review_elapsed_ms'] = round((time.monotonic() - started) * 1000)
         row['review_calls'] = _safe_calls(calls)

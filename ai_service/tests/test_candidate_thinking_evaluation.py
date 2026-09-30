@@ -32,8 +32,8 @@ class CandidateThinkingEvaluationTests(unittest.TestCase):
     def transport(self, payload, key, timeout):
         self.sent.append(deepcopy(payload))
         self.assertEqual((key, timeout), ('nvidia-secret', 600))
-        schema = payload['response_format']['json_schema']['name']
-        if schema == 'agentfit_candidate_label_review':
+        data = json.loads(payload['messages'][-1]['content'])
+        if 'selections' in data:
             wrong = ['C001', 'C002'] if payload['chat_template_kwargs']['thinking'] else ['C002']
             content = {'checkedCandidateIds': ['C000', 'C001', 'C002'],
                        'wrongCandidateIds': wrong,
@@ -88,13 +88,31 @@ class CandidateThinkingEvaluationTests(unittest.TestCase):
         self.assertEqual(good['audit_matched'], 3)
         self.assertEqual(result['failed'], 1)
 
+    def test_schema_free_pair_preserves_prompts_and_still_rejects_invalid_json(self):
+        result = self.run_trial(structured_output=False)
+        self.assertEqual(result['settings']['structured_output'], False)
+        self.assertTrue(all('response_format' not in request for request in self.sent))
+        a, b = deepcopy(self.sent[0]), deepcopy(self.sent[2])
+        a.pop('chat_template_kwargs')
+        b.pop('chat_template_kwargs')
+        self.assertEqual(a, b)
+        self.assertEqual(result['arms'][1]['audit_matched'], 3)
+        def invalid(payload, key, timeout):
+            reply = json.loads(self.transport(payload, key, timeout))
+            reply['choices'][0]['message']['content'] = 'not-json-private'
+            return json.dumps(reply).encode()
+        bad = self.run_trial(structured_output=False, transport=invalid)
+        self.assertEqual(bad['failed'], 2)
+        self.assertTrue(all('audit_matched' not in arm for arm in bad['arms']))
+        self.assertNotIn('not-json-private', json.dumps(bad))
+
     def test_invalid_snapshot_gold_key_and_observer_fail_before_request(self):
         bad_snapshot = {**self.snapshot, 'redacted_sha256': 'b' * 64}
         bad_case = replace(self.case, checks=[{'id': 'C01', 'field': 'bad', 'expect_null': True}])
         for overrides in ({'snapshot': bad_snapshot}, {'expected_keep': {'C999': True}},
                           {'expected_keep': {'C000': 1}}, {'expected_keep': {}},
                           {'case': bad_case}, {'key': ''}, {'key': 'PostgreSQL'},
-                          {'on_update': 1}, {'transport': 1}):
+                          {'on_update': 1}, {'transport': 1}, {'structured_output': 1}):
             with self.subTest(overrides=list(overrides)), self.assertRaises(ValueError):
                 self.run_trial(**overrides)
         self.assertEqual(self.sent, [])
@@ -118,6 +136,17 @@ class CandidateThinkingEvaluationTests(unittest.TestCase):
         def observer(report):
             if self.sent:
                 raise RuntimeError('private observer detail')
+        with self.assertRaisesRegex(RuntimeError, '^progress observer failed$'):
+            self.run_trial(on_update=observer)
+        self.assertEqual(len(self.sent), 1)
+
+    def test_one_time_callback_failure_is_not_swallowed_by_provider_parser(self):
+        raised = False
+        def observer(report):
+            nonlocal raised
+            if self.sent and not raised:
+                raised = True
+                raise OSError('private write detail')
         with self.assertRaisesRegex(RuntimeError, '^progress observer failed$'):
             self.run_trial(on_update=observer)
         self.assertEqual(len(self.sent), 1)

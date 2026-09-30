@@ -11,3 +11,6 @@
 - 구현 검증 완료: 신규7/7,전체1003건/998통과5제외20.062s,SDK4/4. 평가 전 preflight도183후보/16판단/6부분정답/최대14호출로 통과. API0.
 - 실행 환경: 새 .venv에 python-docx가 없어 기존 grounding-venv로 문서 준비. 사용자의 공용 환경은 변경하지 않음. snapshot은 hash b307...의 operation 결과 merged_refs이며 이전 rejection report의 refs와 일치 확인.
 - 다음: 구현 commit 후 합성4호출 이내→gate 통과 시 H02 14호출 이내. 중단/오류면 미평가로 기록하고 무한 재시도하지 않는다.
+- 최초probe 종료:session5176/exit1,3calls98.545s,false3/3,trueINVALID_RESPONSE,gatefalse,H02미실행. 별도진단session32239/exit0,2calls78.339s: schema-on은 정답JSON이 reasoning에 들어가고 content 없음, schema-off는 최종content JSON 및 parser통과. 코드불변 감사완료.
+- 후속설계: 별도v2에서 structured_output=False를 양쪽에 적용하고 thinking만 비교. 서버검증유지. 최초결과보존, 합성4회→조건부H0214회, 전체상한24회. 사용자목표내권한으로 반복승인없이 진행.
+- 일회성observer실패가 parser에 흡수되는 버그RED→GREEN 수정. 신규9/9,전체1005/1000pass5skip20.144s,SDK4/4. v2preflight 통과. 현재실제API프로세스없음, 다음호환성commit→v2probe.

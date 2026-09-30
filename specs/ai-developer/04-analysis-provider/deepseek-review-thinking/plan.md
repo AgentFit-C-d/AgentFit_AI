@@ -41,5 +41,7 @@
 - [x] Step 1: 입력 불변·동일 설정·실패 격리·호출 전 hash/gold 검증·출력 비밀 배제 회귀 테스트를 작성하고 import 실패를 확인한다.
 - [x] Step 2: 최소 모듈을 구현한다. 기존 helper로 두 arm을 순차 실행하고 실패는 고정 코드만 기록한다. 정답과 원문은 callback에 전달하지 않는다.
 - [x] Step 3: `python -m unittest discover -s tests -p test_candidate_thinking_evaluation.py -v`, 전체 tests와 runtime_tests를 실행한다. Expected: 모두 성공, 기존 선택 의존성 제외만 유지.
-- [ ] Step 4: 로컬 드라이버에서 소스·스냅샷·코드 hash와 최대 호출 수를 검증한다. 합성 probe가 통과할 때만 H02 false/true를 한 번 실행한다. 실패도 terminal 결과로 감사한다.
+- [x] Step 4: 로컬 드라이버에서 소스·스냅샷·코드 hash와 최대 호출 수를 검증한다. 합성 probe가 통과할 때만 H02 false/true를 한 번 실행한다. 실패도 terminal 결과로 감사한다. 결과:3호출로 gate 실패, 최초H02 미실행.
+- [x] Step 4a (실제 오류로 추가): 합성 true가 stop/58tokens/추론177자로 돌아왔지만 INVALID_RESPONSE다. 같은 합성 후보 요청에서 thinking=true를 고정하고 response_format 존재/부재만 바꾼 최대2호출을 별도 파일로 진단한다. 최종 content와 reasoning의 길이·JSON 여부·예상 키 일치 Boolean만 저장한다. 원본 probe와 H02 gate는 변경하지 않는다.
+- [ ] Step 4b: `structured_output=True` 선택 인자를 추가해 False에서는 양쪽 모두 response_format만 제거한다. schema-free에서도 불변 입력과 엄격 JSON 검증 유지 테스트를 RED→GREEN으로 완료한다. 일회성 callback 예외가 parser에서 흡수되는 재현 테스트도 RED→GREEN으로 수정한다. 전체/SDK 테스트 후 별도v2 합성4회 이내→통과 시H02 14회 이내. 전체 실험상한24, 각종 원본 결과 보존.
 - [ ] Step 5: 명세 판정 기준대로 validation.md/STATE.md를 작성하고 task-done 검증, 새 컨텍스트 전체 브랜치 리뷰, Important/Critical 단일 수정, commit/push를 완료한다.
