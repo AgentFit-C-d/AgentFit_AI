@@ -18,7 +18,12 @@
 | Task3 precommit | 기존1117개/5skip58.396초; runtime11개51.051초; contract34개9.252초, exit0; pipcheck 충돌0 |
 | 3f8ca89 CI | 36729129089의 unit-and-worker-memory, integrated-runtime, contract-mock 모두 성공 |
 | 로컬 최종 gate 재현 | 재시도 테스트의100ms 제한 때문에504를 받은1건 실패. 성공 재시도의100ms 수행을 요구하는 대신 실제 asyncio timeout을 AI 진입 후 직접 만료시키도록 테스트 수정; 기본 서버2초는 유지. lifecycle7/7 통과 후 전체gate 재실행 |
-| 최종리뷰/정확한CI | 진행 중; 완료로 간주하지 않음 |
+| 702290a 최종 gate | 기존1117개/5skip59.462초; runtime11개49.065초; contract34개8.891초, exit0; Task3 ledger 완료 |
+| 702290a 정확한CI | 36729685625 completed success |
+| 최종 독립리뷰 | 23c3235..702290a, Critical0/Important1/Minor0. 저장 전 유니코드 검증 누락을 재현·수정했고 계약36개 통과(9.545초). 상세 review.md |
+| 리뷰 수정 후 전체 gate | 기존1117개/5skip58.535초; runtime11개50.258초; contract36개9.507초, exit0 |
+
+최종 코드 push의 CI 실행번호와 HEAD 일치는 로컬 SDD ledger 및 작업의 최종 보고에 남긴다. 이전702290a CI 성공을 이후 코드 변경의 성공 근거로 재사용하지 않는다.
 
 계약 테스트는 실제 `Docs/api/openapi.phase1.json`을 검증기로 읽고 실제 FastAPI 문서 추출·v2 검증을 사용한다. 생성 모델은 합성 callback이다. TCP 테스트는 loopback만 허용하는 connect/connect_ex 가드 안에서 서버를 실행하고 종료 스레드까지 확인한다. 운영 네트워크 전체 차단·실제 모델 프로세스 취소를 증명하지 않는다.
 
@@ -30,5 +35,7 @@
 4. PDF 원문 근거는 실제 AI 파서/검증기에 의존한다. Spring mock에는 원문을 보관하지 않아 독립 PDF 근거 재추출을 하지 않는다.
 5. 합성 실패 진단은 실패 시점+7일 만료를 모의한다. 실제 전송·접근 권한·DB/백업·운영 로그 삭제와 주기 실행은 별도 구현·검증이 필요하다.
 6. credential 검사 범위는 알려진 라벨/개인키 패턴이다. 완전한 민감정보 탐지·모든 PDF Secret 거절을 주장하지 않는다.
+7. 내부 리뷰를 임의 메타데이터 저장 통로로 쓰지 않도록 contract/fieldStates/questions와 상태·질문 일치만 허용한다. 실제 Spring에도 동일 검증이 필요하다.
+8. timeout 테스트는 실제 asyncio timeout을 분석 진입 후 만료시키고 정상 재시도는 기본2초로 검증한다.100ms 내 성공 여부는 품질 기준이 아니며 처리 시간 성능은 별도 미측정이다.
 
 전체 실사용 목표는 미완료다. agent 작성 gold는 사람 검토 전 임시 기준이고, 기존10문서×3회 평가는1건 종료/1건 중단 상태를 보존한다. NVIDIA 계정/엔드포인트의 추가요금0이 확인되기 전에는 평가를 호출하지 않는다.

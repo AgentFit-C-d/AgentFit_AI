@@ -1,5 +1,14 @@
 # 핵심 분석 흐름 mock·계약 테스트 상태
 
+## 최신 확인 상태 (아래 이전 기록보다 우선)
+
+- Task1/2/3 구현·최종로컬gate 완료. 최종독립리뷰1회(/root/core_mock_final_review): Important1 유니코드 저장 오류를재현/수정. Critical0/Minor0,재리뷰없음. 최신HEAD와CI는git 및 .superpowers/sdd/plan-core-analysis-contract-tests/progress.md 마지막기록을확인한다.
+- 리뷰수정후 gate: unit1117개(5skip)58.535초,runtime11/11 50.258초,contract36/36 9.507초,exit0. 이전702290a의CI36729685625와3f8ca89의CI36729129089 성공. 이후수정커밋의CI로간주하지않으며최종push에대해다시확인한다.
+- 보존한 실패: 로컬gate1회에서100ms deadline을 재시도에도 적용한 테스트가504로 실패. 실제 asyncio.Timeout.reschedule로 만료를 직접 주입하도록 테스트만 바꿨고 정상 재시도에는 기존default2초. 서버 제한/판정기준 변경 없음. 재실행전체gate성공.
+- 모델 호출0회, NVIDIA무료상태미확인, 실제Spring미검증. .env/개인문서/운영배포 접근 없음. 독립평가자료10문서207골드·frozen117/evaluator6 불변 검증통과, release_gate_passed=false 유지.
+- 남은이번기능작업: 최종push/exactCI→로컬ledger기록마감. 핵심서비스 전체목표는미완료. 다음실제모델호출은추가요금0확인전금지,실제Spring재요청은하지않는다.
+- 인계 문서: Docs/api/core-analysis-mock-handoff.md, analysis-confirmation-v2.draft.md. 검증/설계한계: specs/ai-developer/core-analysis-contract-tests/validation.md. 공개질문재조회/명시적확인, 실제진단전송·운영삭제는미합의/미검증.
+
 ## 목표·권한·제약
 
 - 전체목표는 입력→분석→사용자 확인·수정→Spring 저장의 실사용 완결성이다. 사용자 승인으로 현재API기반 mock·계약 테스트를 구현한다. Spring 저장소는 현재 제공불가이므로 실제 연동·PostgreSQL·브라우저·운영삭제 검증은 미검증 유지.

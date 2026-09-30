@@ -58,7 +58,9 @@
 
 - [x] Step1: RED→GREEN: 성공건진단기록거절,7일직전유지/경계삭제,다른프로젝트진단보존,delete후진단재작성금지,제출원문sentinel이저장/Audit/로그/공개오류에없음,예외메시지민감값차단,저장실패기존확인값보존.
 - [x] Step2: localhost실제TCP서버+합성AI로1개핵심흐름과삭제를검증. 외부connect를차단한실행환경에서재현하고테스트후서버종료확인. 공개examples/요청응답/errorcode와Spring/DB연결검증체크리스트를작성; v2질문재조회/확인신호/진단전송은미합의·미구현으로표시.
-- [ ] Step3: 기존Linuxworkflow에contract-mock job추가,별도requirements설치,pipcheck,contract_tests실행(job15분). Frozenproduction117/evaluator6해시를재확인. 전체unit/runtime/contract테스트,최종독립코드리뷰1회(Critical/Important만1수정pass),featurepush/exactCI. Expected:mock검증완료·실제Spring未검증이명확한인계. 전체실사용목표는미완료유지.
+- Step3: 기존Linuxworkflow에contract-mock job추가,별도requirements설치,pipcheck,contract_tests실행(job15분). Frozenproduction117/evaluator6해시를재확인. 전체unit/runtime/contract테스트,최종독립코드리뷰1회(Critical/Important만1수정pass),featurepush/exactCI. Expected:mock검증완료·실제Spring未검증이명확한인계. 전체실사용목표는미완료유지.
+  - 로컬구현/전체gate/리뷰1회수정 완료: unit1117/5skip,runtime11/11,contract36/36. 실행 상세는validation.md와review.md.
+  - 최종push의 정확한HEAD/CI 결과는SDD ledger와최종보고에서 확인한다. 별도재리뷰·merge·배포를하지않는다.
 
 ## 설계·계획 검토
 

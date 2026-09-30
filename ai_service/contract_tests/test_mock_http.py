@@ -21,6 +21,36 @@ def client(app, token='mock-session-a'):
 
 
 class MockHttpTests(unittest.IsolatedAsyncioTestCase):
+    async def test_invalid_unicode_is_rejected_before_create_or_patch_commits(self):
+        async with client(create_mock_app()) as http:
+            for text in ('\ud800', '\udfff'):
+                response = await http.post('/api/projects', content=json.dumps({'name': text}),
+                                           headers={'Content-Type': 'application/json'})
+                self.assertEqual(response.status_code, 422)
+                self.assertEqual(response.json()['error']['code'], 'INVALID_INPUT')
+                self.assertEqual((await http.get('/api/projects')).json(), {'projects': []})
+            p = await self.create_project(http)
+            data = synthetic_analysis(DOCUMENT, 'doc_example')['profile']['data']
+            saved = await http.patch(f'/api/projects/{p}/profile', json={'expectedVersion': 0, 'data': data})
+            self.assertEqual(saved.status_code, 200)
+            for text in ('\ud800', '\udfff'):
+                edited = dict(data, frontend=[text])
+                response = await http.patch(f'/api/projects/{p}/profile', content=json.dumps({
+                    'expectedVersion': 1, 'data': edited}), headers={'Content-Type': 'application/json'})
+                self.assertEqual(response.status_code, 422)
+                detail = (await http.get(f'/api/projects/{p}')).json()
+                self.assertEqual(detail['confirmed'], saved.json()['confirmed'])
+                self.assertEqual(detail['project']['version'], 1)
+
+    async def test_valid_korean_and_surrogate_pair_round_trip(self):
+        async with client(create_mock_app()) as http:
+            response = await http.post('/api/projects', content=b'{"name":"\\uae30\\ud68d \\ud83d\\ude80"}',
+                                       headers={'Content-Type': 'application/json'})
+            self.assertEqual(response.status_code, 201)
+            self.assertEqual(response.json()['project']['name'], '기획 🚀')
+            p = response.json()['project']['id']
+            self.assertEqual((await http.get(f'/api/projects/{p}')).json()['project']['name'], '기획 🚀')
+
     async def test_pdf_text_limit_and_worker_timeout_keep_public_error_semantics(self):
         from fastapi import FastAPI
         from fastapi.responses import JSONResponse

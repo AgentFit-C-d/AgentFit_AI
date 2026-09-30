@@ -54,7 +54,24 @@ def _validator(name):
     return Draft202012Validator(schema, format_checker=FormatChecker())
 
 
+def _check_unicode(value):
+    # JSON escape syntax can decode to a lone surrogate that cannot be sent as UTF-8.
+    if isinstance(value, str):
+        try:
+            value.encode('utf-8')
+        except UnicodeEncodeError:
+            raise ContractError(422, 'INVALID_INPUT') from None
+    elif isinstance(value, dict):
+        for key, child in value.items():
+            _check_unicode(key)
+            _check_unicode(child)
+    elif isinstance(value, list):
+        for child in value:
+            _check_unicode(child)
+
+
 def check(name: str, value: object) -> None:
+    _check_unicode(value)
     if next(_validator(name).iter_errors(value), None) is not None:
         raise ContractError(422, 'INVALID_INPUT')
 
