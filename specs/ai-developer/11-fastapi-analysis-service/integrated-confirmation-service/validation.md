@@ -20,4 +20,6 @@
 
 Task3 커밋 전 전체 단위1073개 중1068통과/5제외(47.225초), SDK/runtime9통과(43.886초)를 확인했다. commit70d69fe의 task-done 게이트도 전체1068통과/5제외(47.185초), runtime9통과(44.892초)로 끝났다.
 
-독립 전체 리뷰1회는Critical0/Important0/Minor0이었다. 검토자는관련99/99(24.499초),runtime9/9(47.406초)를직접실행했다. [리뷰와미검증항목](../../../../work/harness/integrated-confirmation-service/review.md)에판정을기록했다. featurepush와정확한SHA의LinuxCI는최종인계시확인한다.
+독립 전체 리뷰1회는Critical0/Important0/Minor0이었다. 검토자는관련99/99(24.499초),runtime9/9(47.406초)를직접실행했다. [리뷰와미검증항목](../../../../work/harness/integrated-confirmation-service/review.md)에판정을기록했다.
+
+feature/integrated-confirmation-service를push했고,b5b203ed87d89a1536f2a73ff48217a6f53d2818의[LinuxCI36711801955](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36711801955)에서unit-and-worker-memory와integrated-runtime모두성공했다. Linux실제메모리제한,실제SDK/HTTP/SSE취소,기본/선택설치회귀를포함한다. [원격검증기록](../../../../work/harness/integrated-confirmation-service/REMOTE.md)은문서정리뒤최종HEAD확인방법도설명한다.
