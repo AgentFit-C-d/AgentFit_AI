@@ -107,6 +107,42 @@ class CandidateThinkingEvaluationTests(unittest.TestCase):
                 self.run_trial(thinking_effort=effort)
         self.assertEqual(self.sent, [])
 
+    def test_optional_shape_capture_preserves_requests_and_default_reports(self):
+        default = self.run_trial()
+        original = deepcopy(self.sent)
+        self.assertTrue(all('response_shape' not in attempt for arm in default['arms']
+                            for attempt in arm['transport_attempts']))
+        self.sent.clear()
+        captured = self.run_trial(capture_response_shape=True)
+        self.assertEqual(self.sent, original)
+        self.assertTrue(captured['settings']['capture_response_shape'])
+        self.assertTrue(all(attempt['response_shape']['issue'] is None for arm in captured['arms']
+                            for attempt in arm['transport_attempts']))
+
+    def test_shape_capture_does_not_repair_fence_or_leak_private_content(self):
+        def fenced(payload, key, timeout):
+            reply = json.loads(self.transport(payload, key, timeout))
+            reply['choices'][0]['message']['content'] = '```json\n' + reply['choices'][0]['message']['content'] + '\n```'
+            reply['choices'][0]['message']['reasoning_content'] = 'private reasoning value'
+            return json.dumps(reply).encode()
+        result = self.run_trial(capture_response_shape=True, transport=fenced)
+        self.assertEqual(len(self.sent), 2)
+        self.assertEqual(result['failed'], 2)
+        for arm in result['arms']:
+            self.assertNotIn('audit_matched', arm)
+            self.assertEqual(arm['provider_error'], 'INVALID_RESPONSE')
+            shape = arm['transport_attempts'][0]['response_shape']
+            self.assertEqual(shape['issue'], 'CONTENT_JSON')
+            self.assertTrue(shape['fenced_json'])
+        for private in (self.text, 'nvidia-secret', 'checkedCandidateIds', 'private reasoning value'):
+            self.assertNotIn(private, json.dumps(result, ensure_ascii=False))
+
+    def test_shape_option_requires_boolean_before_request(self):
+        for value in (None, 1, 'true', []):
+            with self.subTest(kind=type(value).__name__), self.assertRaises(ValueError):
+                self.run_trial(capture_response_shape=value)
+        self.assertEqual(self.sent, [])
+
     def test_effort_boundaries_and_none_preserve_default_requests(self):
         for effort in (1, 100, None):
             with self.subTest(effort=effort):

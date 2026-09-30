@@ -12,6 +12,7 @@ from .deepseek_evaluation import MODEL
 from .diagnostics import safe_code
 from .nvidia_streaming import post_nvidia_streaming
 from .real_document_holdout import score_profile
+from .review_response_diagnostics import describe_review_response
 from .solar import AnalysisError
 
 
@@ -43,10 +44,11 @@ def _safe_calls(calls):
 
 def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
                               transport=None, on_update=None, structured_output=True,
-                              thinking_effort=None):
+                              thinking_effort=None, capture_response_shape=False):
     """Compare off/on configurations; effort metadata describes requested settings."""
     if (type(key) is not str or not key.strip() or
             type(structured_output) is not bool or
+            type(capture_response_shape) is not bool or
             (thinking_effort is not None and
              (type(thinking_effort) is not int or not 1 <= thinking_effort <= 100)) or
             (transport is not None and not callable(transport)) or
@@ -73,6 +75,7 @@ def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
                      'field_semantics': 'explicit-v1', 'retry_limit': 0,
                      'structured_output': structured_output,
                      'thinking_effort_requested': thinking_effort,
+                     'capture_response_shape': capture_response_shape,
                      'schema_delivery': 'response_format' if structured_output else 'system_prompt'},
         'thinking_order': [False, True], 'active_thinking': None, 'arms': [], 'failed': 0}
 
@@ -123,6 +126,9 @@ def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
             try:
                 raw = sender(request, api_key, timeout)
                 attempt['returned'] = True
+                if capture_response_shape:
+                    attempt['response_shape'] = describe_review_response(raw,
+                        payload['response_format']['json_schema']['schema']['required'])
                 return raw
             except AnalysisError as error:
                 attempt['error'] = safe_code(error.code)
