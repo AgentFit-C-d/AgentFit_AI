@@ -27,26 +27,26 @@
 **Files:** Modify ai_service/agentfit_ai/candidate_analysis_pipeline.py,ai_service/tests/test_candidate_analysis_pipeline.py,specs/ai-developer/04-analysis-provider/integrated-candidate-analysis/README.md; Create ai_service/tests/test_candidate_transient_retry.py.
 **Interfaces:** 함수의 `nvidia_retry_limit=1`, 허용0/1. 모든 trace행은 기존7키+attempt/retry_of_call_index/provider_error. 최대2전송,첫 PROVIDER_UNAVAILABLE만2초후동일깊은복사본재시도.
 
-- [ ] **Step1 RED:** 기존 ProviderFixture를 재사용해 NVIDIA 각단계 1회5xx→복구,마지막coverage만재전송/앞단계유지,반복5xx와두번째다른오류종료,다른오류·Solar·잘못된출력·미정결과재시도없음,0off/잘못된옵션I/O0,예산1/2/4경계/대기0,입력변이격리,기존collector인덱스독립,비밀없는실패행보존을테스트한다. 기존trace키검사에3개키추가. `python -m unittest discover -s tests -p test_candidate_transient_retry.py -v` Expected:새옵션/재시도/계측부재로FAIL.
-- [ ] **Step2 implement:** metered 안에서 모든 시도를 예산 검사 후 센다. 원 요청 snapshot을 NVIDIA에만 사용한다. AnalysisError의 허용코드만 기록하고 첫UNAVAILABLE외에는전파한다. 예산 소진 시 재시도 대기 전에 budget_exceeded를설정하고기존실패계약을유지한다.
-- [ ] **Step3 GREEN:** 새테스트,기존통합20건,전체suite를실행한다. README에기본1회·0off·추가시간·64call계측·전송복구와의미성공의차이를기록하고commit한다. task-done전체suite. Expected:모두PASS.
+- [x] **Step1 RED:** 기존 ProviderFixture를 재사용해 NVIDIA 각단계 1회5xx→복구,마지막coverage만재전송/앞단계유지,반복5xx와두번째다른오류종료,다른오류·Solar·잘못된출력·미정결과재시도없음,0off/잘못된옵션I/O0,예산1/2/4경계/대기0,입력변이격리,기존collector인덱스독립,비밀없는실패행보존을테스트한다. 기존trace키검사에3개키추가. `python -m unittest discover -s tests -p test_candidate_transient_retry.py -v` Expected:새옵션/재시도/계측부재로FAIL.
+- [x] **Step2 implement:** metered 안에서 모든 시도를 예산 검사 후 센다. 원 요청 snapshot을 NVIDIA에만 사용한다. AnalysisError의 허용코드만 기록하고 첫UNAVAILABLE외에는전파한다. 예산 소진 시 재시도 대기 전에 budget_exceeded를설정하고기존실패계약을유지한다.
+- [x] **Step3 GREEN:** 새테스트,기존통합20건,전체suite를실행한다. README에기본1회·0off·추가시간·64call계측·전송복구와의미성공의차이를기록하고commit한다. task-done전체suite. Expected:모두PASS.
 
 ### Task 2: 독립 리뷰와 새 H02 평가
 
 **Files:** 임시 새driver/report E:/AgentFit/tmp/nvidia-retry-h02-20260930-v1.py/.json; Create validation.md; Modify work/harness/nvidia-transient-retry/STATE.md.
 **Interfaces:** 기존streaming H02driver를새경로로복제,nvidia_retry_limit=1명시. report에retry_attempts/transport_recoveries/failed_transport_attempts를trace에서계산한다. 이수치는최종품질점수와분리한다.
 
-- [ ] **Step1:** 새driver준비와API0사전검사. 제품코드전체에독립review1회,명세/원장판단포함. Critical/Important는한번RED→GREEN수정및전체suite,Minor는기록하고재리뷰하지않는다. Expected:블로킹결함해결후제품commit고정.
-- [ ] **Step2:** 최종revision/driver/code/source해시를고정한새보고서로H02freshlive1회실행. 같은핸들을terminal까지관찰하며재시작/제품수정금지. Expected:성공/확인/실패및6부분검사미평가분모보존.
-- [ ] **Step3:** 독립감사에서문서1·검사6·실제시도수≤64·연속call_index·attempt2가동일NVIDIA단계/모델의실패한최초행을참조·해시일치·재시도집계일치를검사한다. 실측5xx가없으면실제복구효과미관측으로보고한다. task-done은안전한감사스크립트. Expected:정확집계/해시PASS,모델품질실패는그대로남음.
+- [x] **Step1:** 새driver준비와API0사전검사. 제품코드전체에독립review1회,명세/원장판단포함. Critical/Important는한번RED→GREEN수정및전체suite,Minor는기록하고재리뷰하지않는다. Expected:블로킹결함해결후제품commit고정.
+- [x] **Step2:** 최종revision/driver/code/source해시를고정한새보고서로H02freshlive1회실행. 같은핸들을terminal까지관찰하며재시작/제품수정금지. Expected:성공/확인/실패및6부분검사미평가분모보존.
+- [x] **Step3:** 독립감사에서문서1·검사6·실제시도수≤64·연속call_index·attempt2가동일NVIDIA단계/모델의실패한최초행을참조·해시일치·재시도집계일치를검사한다. 실측5xx가없으면실제복구효과미관측으로보고한다. task-done은안전한감사스크립트. Expected:정확집계/해시PASS,모델품질실패는그대로남음.
 
 ### Task 3: 결과 기록과 게시
 
 **Files:** Modify 본plan/validation.md,STATE.md,필요한최신README.
 **Interfaces:** 실제검증/실측/리뷰범위만문서화하며실사용전체목표active유지.
 
-- [ ] **Step1:** 구현feature push와정확한구현revision CIsuccess확인. 검증된실측과미확인원인·한계를기록한다.
-- [ ] **Step2:** 최종문서commit/push,원장task-done문서범위diffcheck,작업트리상태확인. Expected:동기화/문서검사PASS,독립문서/서비스연동게이트는유지.
+- [x] **Step1:** 구현feature push와정확한구현revision CIsuccess확인. 검증된실측과미확인원인·한계를기록한다.
+- [x] **Step2:** 최종문서commit/push,원장task-done문서범위diffcheck,작업트리상태확인. Expected:동기화/문서검사PASS,독립문서/서비스연동게이트는유지.
 
 ## 자체 검토
 
