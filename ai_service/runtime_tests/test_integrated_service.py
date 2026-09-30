@@ -126,7 +126,7 @@ def provider_server(provider):
 
 
 @contextmanager
-def service(provider, *, timeout=30):
+def service(provider, *, timeout=30, internal_token='synthetic-internal'):
     processes = []
     original_spawn = asyncio.create_subprocess_exec
     async def capture(*args, **kwargs):
@@ -138,7 +138,7 @@ def service(provider, *, timeout=30):
     with provider_server(provider) as endpoint:
         async def worker(*args, **kwargs):
             return await run_analysis_process(*args, **kwargs, command=[sys.executable, str(SHIM), endpoint])
-        app = create_app(internal_token='synthetic-internal', analysis_mode='integrated-candidates',
+        app = create_app(internal_token=internal_token, analysis_mode='integrated-candidates',
                          max_inflight=1, request_timeout_seconds=timeout)
         server = uvicorn.Server(uvicorn.Config(app, host='127.0.0.1', port=0, access_log=False, log_level='error'))
         thread = threading.Thread(target=server.run, daemon=True)

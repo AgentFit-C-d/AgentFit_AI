@@ -101,6 +101,26 @@ TCP 끊김은 Attempt를 INTERRUPTED로 정리하고 대기 중인 합성 AI 작
 
 ## 실제 Spring 연결 때 통과해야 할 항목
 
+별도의 `core_flow_tests`로 아래 로컬 연결을 함께 검증한다. **현재 범위는 합성 TEXT 입력과 메모리 저장이며 실제 Spring은 포함하지 않는다.**
+
+```text
+공개 TCP 요청 → mock → ASGI FastAPI → 실제 분석 자식 프로세스
+             → 실제 LangExtract/분석기 → loopback 합성 HTTP/SSE 응답
+             → v2 근거 검증 → DRAFT → 사용자 수정 PATCH → CONFIRMED → 재조회
+```
+
+전용 환경에 기존 통합·mock 의존성을 설치한 뒤 `ai_service/`에서 실행한다.
+
+```text
+python -m pip install -r requirements-integrated.txt -r contract_mock/requirements.txt
+python -m pip check
+python -m unittest discover -s core_flow_tests -v
+```
+
+실제 분석기의 10개 필드와 non-null unresolved가 초안에 보존되고, 수동 수정의 null/[] 및 출처, 재조회·중복 버전409·삭제를 검사한다. 손상된 합성 Provider 응답은 이전 초안/확인본을 유지하며 명시적 재시도로만 복구한다. 공개 연결 종료와 mock의 기한 만료가 실제 자식 프로세스와 합성 Provider socket을 종료하는지도 검사한다. 기본 mock callback을 실모델로 교체하거나 외부 연결을 허용하는 실행 옵션은 추가하지 않았다.
+
+검증 결과는 [핵심 흐름 runtime 기록](../../specs/ai-developer/core-flow-runtime-checks/validation.md)을 따른다. CI의 `core-flow-runtime` job은 이 suite를 별도로 실행한다. 실제 외부 Provider, PDF/Markdown의 이 전체 연결, 질문별 명시적 확인 UI, Spring/DB 및 운영 환경의 검증은 아래 목록에 남긴다.
+
 - [ ] Spring이 이 요청·응답 OpenAPI와 오류/우선순위를 그대로 구현하는지 소비자 테스트 실행
 - [ ] 실제 인증 쿠키·세션 만료·Origin·소유권·다른 프로젝트 draft 접근 검증
 - [ ] Spring→FastAPI 실제 HTTP 토큰·헤더·ID·timeout·크기·오류 매핑 검증
