@@ -35,9 +35,9 @@
 - Consumes: review_candidates_separately·evaluate_thinking_reviews와기존frozen H02 helper/정규화/투영.
 - Produces: 두함수의candidate_batch_size=20 keyword;분할과호출한도에동일값적용.
 
-- [ ] Step 1: 기본20명시/생략요청동일,23confirmed+tentative에서10/10/3+coverage,1/20경계,무효값,중간실패,빈후보,adaptive10→5+5,평가양arm분할/한도/메타데이터테스트를작성한다.
-- [ ] Step 2: `python -m unittest discover -s tests -p test_review_batch_size.py -v`로RED확인. Expected:새옵션부재실패.
-- [ ] Step 3: 두함수에exact int검증·옵션전달·루프와ceil한도/메타데이터를최소수정하고focused테스트를실행한다. Expected:새테스트와기존split/thinking회귀통과.
-- [ ] Step 4: 전체tests/runtime_tests 및API0실행기preflight를실행한다. Expected:기존5skip외통과,SDK4/4,기본20첫요청기존hash동일,10요청차이는batch의존부분뿐,모의12호출로109후보누락/중복없음. 제품commit.
-- [ ] Step 5: 최대12call실제H02 1회→종료감사→유효시16/6와오제외/오유지채점. Expected:코드/hash불변·상한준수·미유효결과미채점.
+- [x] Step 1: 기본20명시/생략요청동일,23confirmed+tentative에서10/10/3+coverage,1/20경계,무효값,중간실패,빈후보,adaptive10→5+5,평가양arm분할/한도/메타데이터테스트를작성한다.
+- [x] Step 2: `python -m unittest discover -s tests -p test_review_batch_size.py -v`로RED확인. Expected:새옵션부재실패.
+- [x] Step 3: 두함수에exact int검증·옵션전달·루프와ceil한도/메타데이터를최소수정하고focused테스트를실행한다. Expected:새테스트와기존split/thinking회귀통과.
+- [x] Step 4: 전체tests/runtime_tests 및API0실행기preflight를실행한다. Expected:기존5skip외통과,SDK4/4,기본20첫요청기존hash동일,10요청차이는batch의존부분뿐,모의12호출로109후보누락/중복없음. 제품commit.
+- [x] Step 5: 최대12call실제H02 1회→종료감사→유효시16/6와오제외/오유지채점. Expected:코드/hash불변·상한준수·미유효결과미채점.
 - [ ] Step 6: 문서/task-done/fresh 전체리뷰,필요시Critical/Important단일RED→GREEN수정,featurepush/CI. Expected:증거·미확인·다음행동을분리한다.
