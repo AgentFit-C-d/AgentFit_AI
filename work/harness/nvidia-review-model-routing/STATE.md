@@ -11,3 +11,5 @@
 - Task1 complete1d45cd9, task-done14+11tests GREEN. Task2 brief read at1d45cd9. New evaluator4tests RED10errors; runtime4tests RED6errors for missing review_model, then minimal evaluator propagation implemented.
 - Task2 new+existing evaluation20/20 GREEN11.278s; real SDK/child/loopback4/4 GREEN16.835s. Default5calls DeepSeek3/GLM2 vs selectedDeepSeek5, same score; selected503/429 no retry, returned-model mismatch, timeout/cancel cleanup verified. No external provider calls.
 - Next: offline freeze and CLI preflight, Task2 commit/full gate, one final reviewer, push/exact-codeCI. Actual comparison not started, no accuracy claim.
+- 사용자 최신 목표 구체화: Docs/ai-practical-use-goal.md. 처음 보는 기획서의 근거 있는 초안→적은 사용자 수정/확인→저장. 기존95%precision/90%recall·실패5%·근거100%·중대오류0·사람수정10%·검토시간 기준 유지. 모델 지연 유예는 유지. 공개README/임시gold/합성 성공을 새 실제 기획서 일반화 검증으로 대체하지 않는다. Goal active, 기존 핵심 흐름 목표를 세부 기준으로 기록했으며 실제Spring 미검증 유지.
+- Task2 complete a28254a: 전체1244pass/5skip (units1174total/59.825s, runtime31/111.089s, contract36/5.170s, core8/27.763s). 오프라인freeze f5e1f64..., evaluator c8a0232..., 10/207/126code, 보존13파일 불변. 새 실제 평가0. 다음 단일 독립 리뷰→push/exactCI.
