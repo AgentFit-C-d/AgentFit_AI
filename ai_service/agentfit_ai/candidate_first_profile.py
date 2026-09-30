@@ -191,23 +191,33 @@ def candidate_label_payload(document: str, candidates: list[dict], *,
 
 
 def classify_profile_candidates(document: str, frozen: dict, key: str,
-                                *, transport=post_solar, field_semantics='legacy') -> list[dict]:
+                                *, transport=None, field_semantics='legacy',
+                                nvidia_model=None) -> list[dict]:
     """Classify source-anchored candidates in bounded ID batches."""
     field_semantics_instructions(field_semantics)
+    if nvidia_model is not None:
+        from .deepseek_evaluation import NvidiaAnalyzer, NVIDIA_REVIEW_MODELS
+        from .nvidia_streaming import post_nvidia_streaming
+        if type(nvidia_model) is not str or nvidia_model not in NVIDIA_REVIEW_MODELS:
+            raise ValueError('unsupported NVIDIA candidate model')
     if (type(frozen) is not dict or set(frozen) != {"candidates", "rejected"} or
             type(frozen["candidates"]) is not list):
         raise ValueError("invalid frozen candidates")
     candidates = frozen["candidates"]
     if not candidates:
         return []
-    sender = SolarAnalyzer(key, transport=transport)
+    if nvidia_model is None:
+        sender = SolarAnalyzer(key, transport=post_solar if transport is None else transport)
+    else:
+        sender = NvidiaAnalyzer(key, model=nvidia_model,
+            transport=post_nvidia_streaming if transport is None else transport)
     labels = []
     for offset in range(0, len(candidates), 30):
         batch = candidates[offset:offset + 30]
         payload = candidate_label_payload(document, batch, field_semantics=field_semantics)
         reply, model, _, _ = sender._send_payload(payload, ("labels",),
                                                    timeout=600)
-        if not model.startswith("solar-pro4"):
+        if nvidia_model is None and not model.startswith("solar-pro4"):
             raise AnalysisError("PROVIDER_MODEL")
         normalized = [{**label, "status": "irrelevant"}
                       if type(label) is dict and label.get("field") == "other"

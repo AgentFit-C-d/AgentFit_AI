@@ -102,18 +102,26 @@ def score_case(case: dict, extractions) -> dict:
             "duplicate_span_count": duplicate_span_count}
 
 
-def extract_candidates(document: str, api_key: str, *, transport=post_solar,
+def extract_candidates(document: str, api_key: str, *, transport=None,
                        telemetry=None, prompt_description=None,
-                       max_tokens=4096):
+                       max_tokens=4096, nvidia_model=None):
     if max_tokens not in (4096, 8192):
         raise ValueError("invalid candidate output budget")
+    if nvidia_model is None:
+        sender = SolarAnalyzer(api_key, transport=post_solar if transport is None else transport)
+    else:
+        from .deepseek_evaluation import NvidiaAnalyzer, NVIDIA_REVIEW_MODELS
+        from .nvidia_streaming import post_nvidia_streaming
+        if type(nvidia_model) is not str or nvidia_model not in NVIDIA_REVIEW_MODELS:
+            raise ValueError('unsupported NVIDIA candidate model')
+        sender = NvidiaAnalyzer(api_key, model=nvidia_model,
+            transport=post_nvidia_streaming if transport is None else transport)
     import langextract as lx
     from langextract.core.base_model import BaseLanguageModel
     from langextract.core.types import ScoredOutput
 
     class SolarCandidateModel(BaseLanguageModel):
         def infer(self, batch_prompts, **kwargs):
-            sender = SolarAnalyzer(api_key, transport=transport)
             for prompt in batch_prompts:
                 trace = {}
                 try:
@@ -128,7 +136,7 @@ def extract_candidates(document: str, api_key: str, *, transport=post_solar,
                             telemetry[name] = (value if type(value) is int and value >= 0
                                                else None)
                     trace.pop("raw", None)
-                if re.fullmatch(r"solar-pro4(?:-[0-9]+)?", model) is None:
+                if nvidia_model is None and re.fullmatch(r"solar-pro4(?:-[0-9]+)?", model) is None:
                     raise AnalysisError("PROVIDER_MODEL")
                 yield [ScoredOutput(score=1.0,
                                     output=json.dumps(reply, ensure_ascii=False))]

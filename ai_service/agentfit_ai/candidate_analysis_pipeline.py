@@ -45,17 +45,22 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
                                   review_model='z-ai/glm-5.3', feature_model=MODEL,
                                   extractor=None, solar_transport=None, nvidia_transport=None,
                                   observer=None, call_trace=None, review_calls=None,
-                                  max_calls=64, nvidia_retry_limit=1):
+                                  max_calls=64, nvidia_retry_limit=1, candidate_model=None):
     """Run fresh extraction through reviewed projection with one provider-call budget.
 
     Injected extractors are trusted callbacks. Only the default LangExtract adapter's
     network activity is routed through the shared meter.
     """
+    nvidia_only = candidate_model is not None
+    if nvidia_only and (type(candidate_model) is not str or candidate_model not in NVIDIA_REVIEW_MODELS
+                        or solar_key is not None or solar_transport is not None or nvidia_retry_limit != 0):
+        raise ValueError('invalid NVIDIA-only candidate options')
+    keys = (nvidia_key,) if nvidia_only else (solar_key, nvidia_key)
     if (type(document) is not str or not document.strip() or len(document) > 100_000 or
             type(document_id) is not str or not document_id.strip() or
-            any(type(key) is not str or not key.strip() for key in (solar_key, nvidia_key))):
+            any(type(key) is not str or not key.strip() for key in keys)):
         raise ValueError('invalid integrated analysis input')
-    if (any(key in document or key in document_id for key in (solar_key, nvidia_key)) or
+    if (any(key in document or key in document_id for key in keys) or
             any(type(model) is not str or model not in NVIDIA_REVIEW_MODELS
                 for model in (review_model, feature_model)) or
             any(callback is not None and not callable(callback)
@@ -66,10 +71,12 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
             type(nvidia_retry_limit) is not int or nvidia_retry_limit not in (0, 1)):
         raise ValueError('invalid integrated analysis options')
 
-    _reject_sensitive(document, solar_key)
-    _reject_sensitive(document_id, solar_key)
+    candidate_key = nvidia_key if nvidia_only else solar_key
+    _reject_sensitive(document, candidate_key)
+    _reject_sensitive(document_id, candidate_key)
 
     current_stage, call_count, budget_exceeded = None, 0, False
+    stopped_provider_code = None
 
     def run(stage, operation):
         nonlocal current_stage
@@ -79,6 +86,8 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
         except Exception as error:
             if budget_exceeded:
                 raise CandidatePipelineError(stage, detail='CALL_BUDGET_EXCEEDED') from None
+            if stopped_provider_code is not None:
+                raise CandidatePipelineError(stage, stopped_provider_code) from None
             # The finalizer already isolates observer failures from projection failures.
             if stage == 'PROJECTION_FAILED' and isinstance(error, CandidatePipelineError):
                 raise error from None
@@ -88,6 +97,8 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
             raise CandidatePipelineError(stage, code, detail) from None
         if budget_exceeded:  # A third-party extractor may catch transport exceptions.
             raise CandidatePipelineError(stage, detail='CALL_BUDGET_EXCEEDED') from None
+        if stopped_provider_code is not None:
+            raise CandidatePipelineError(stage, stopped_provider_code) from None
         return result
 
     def observe(stage, state):
@@ -96,7 +107,9 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
 
     def metered(provider, transport):
         def send(payload, key, timeout):
-            nonlocal call_count, budget_exceeded
+            nonlocal call_count, budget_exceeded, stopped_provider_code
+            if stopped_provider_code is not None:
+                raise AnalysisError(stopped_provider_code)
             original = deepcopy(payload) if provider == 'nvidia' else payload
             requested = original.get('model')
             allowed = ('solar-pro4',) if provider == 'solar' else NVIDIA_REVIEW_MODELS
@@ -122,11 +135,19 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
                     return raw
                 except AnalysisError as error:
                     row['provider_error'] = safe_code(error.code)
+                    if nvidia_only:
+                        stopped_provider_code = row['provider_error']
+                        raise
                     if error.code != 'PROVIDER_UNAVAILABLE' or attempt >= attempts:
                         raise
                     if call_count >= max_calls:
                         budget_exceeded = True
                         raise AnalysisError('PROVIDER_FAILURE') from None
+                except Exception:
+                    if nvidia_only:
+                        stopped_provider_code = row['provider_error'] = 'PROVIDER_FAILURE'
+                        raise AnalysisError('PROVIDER_FAILURE') from None
+                    raise
                 finally:
                     row['elapsed_ms'] = round((monotonic() - started) * 1000)
                     if call_trace is not None:
@@ -136,13 +157,15 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
 
     solar_send = metered('solar', solar_transport or post_solar)
     nvidia_send = metered('nvidia', nvidia_transport or post_nvidia_streaming)
+    candidate_send = nvidia_send if nvidia_only else solar_send
+    candidate_options = {'nvidia_model': candidate_model} if nvidia_only else {}
 
     def extract():
         selected = extractor
         if selected is None:
             from .langextract_solar_trial import extract_candidates
-            selected = partial(extract_candidates, transport=solar_send)
-        return extract_profile_candidates(document, solar_key, extractor=selected)
+            selected = partial(extract_candidates, transport=candidate_send, **candidate_options)
+        return extract_profile_candidates(document, candidate_key, extractor=selected)
 
     extractions = run('EXTRACTION_FAILED', extract)
     general = run('GROUNDING_FAILED', lambda: freeze_candidate_occurrences(document, extractions))
@@ -151,7 +174,8 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
     frozen = run('MERGE_FAILED', lambda: _merge_occurrences(document, general, operations))
     observe('grounded', frozen)
     labels = run('CLASSIFICATION_FAILED', lambda: classify_profile_candidates(
-        document, frozen, solar_key, transport=solar_send, field_semantics='explicit-v1'))
+        document, frozen, candidate_key, transport=candidate_send, field_semantics='explicit-v1',
+        **candidate_options))
     observe('classified', {'frozen': frozen, 'labels': labels})
     review = run('COVERAGE_REVIEW_FAILED', lambda: review_candidates_separately(
         document, frozen, labels, nvidia_key, transport=nvidia_send,
@@ -163,3 +187,22 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
     return run('PROJECTION_FAILED', lambda: finalize_candidate_analysis(
         document, document_id, frozen, labels, review,
         observer=observe if observer is not None else None, feature_curation=curation))
+
+
+def analyze_nvidia_candidates(document, document_id, nvidia_key, *,
+                              candidate_model=MODEL, review_model='z-ai/glm-5.3', feature_model=MODEL,
+                              nvidia_transport=None, observer=None, call_trace=None,
+                              review_calls=None, max_calls=64):
+    """Opt-in NVIDIA-only variant; no retries, fallback, or account/billing guarantee.
+
+    Callers own the total process deadline and must establish permission and free
+    account capacity before using the default external transport.
+    """
+    if type(candidate_model) is not str or candidate_model not in NVIDIA_REVIEW_MODELS:
+        raise ValueError('unsupported NVIDIA candidate model')
+    return analyze_integrated_candidates(
+        document, document_id, None, nvidia_key, candidate_model=candidate_model,
+        review_model=review_model, feature_model=feature_model,
+        nvidia_transport=nvidia_transport, observer=observer,
+        call_trace=call_trace, review_calls=review_calls, max_calls=max_calls,
+        nvidia_retry_limit=0)
