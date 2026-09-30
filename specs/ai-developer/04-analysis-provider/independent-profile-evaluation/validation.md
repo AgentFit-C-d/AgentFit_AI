@@ -10,6 +10,7 @@
 - 전체:1094 tests,1089pass/5skip,47.637s. 실제SDK 로컬통합9/9,46.560s. 외부모델API0.
 - 이 기록은 채점기 동작 검증이다. 새 문서에 대한 모델성능 결과는 아직 없고,의미precision/recall·수정부담·독립사람정답·Spring저장·운영완료를 증명하지 않는다.
 - 초기커밋f83ea0b를 feature/independent-profile-evaluation에 push했다. 이후 자체검토에서 다른필드등록만으로오답추론하는 위험을 발견해,명시적wrong_role제외만오답으로 세도록 수정했다. 회귀22개중1개RED→22/22GREEN(0.035s). 이 수정의 전체검증과 정확한 원격CI는 후속 기록으로 확인한다.
+- 수정코드 `bc3ae4e`: 최종1095 tests/1090pass/5skip(41.105s),실제SDK통합9/9(38.883s),task-done완료. 10source/gold검증 및 기존117파일freeze일치 재확인. 이후 수정은 plan/validation/STATE 문서 기록뿐이다.
 
 ## 남은 작업
 
