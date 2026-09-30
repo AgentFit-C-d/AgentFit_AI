@@ -37,7 +37,7 @@
 - Consumes: review_candidates_separately(..., review_calls=None, reasoned_review=False), 기존 ProviderFixture.
 - Produces: 새 review_calls 행의 contract_issue: str | None. 기존 반환/예외 계약은 동일.
 
-- [ ] **Step 1: 테스트 작성**
+- [x] **Step 1: 테스트 작성**
 
 테스트 이름과 주요 기대값:
 `test_candidate_list_violations_are_distinct`: 목록 타입/멤버/중복/누락/순서를 독립 fixture로 주고 고정 코드와 INVALID_REVIEW_CONTRACT, 요청 1회 확인.
@@ -47,22 +47,22 @@
 `test_provider_and_parser_failures_keep_original_error`: INVALID_RESPONSE, PROVIDER_MODEL, INCOMPLETE_RESPONSE, PROVIDER_UNAVAILABLE는 원래 오류와 code=None.
 `test_late_failure_stops_integrated_pipeline`: 2번째 후보 batch에서 reason 오류, 앞선 행 유지, projected 없음, semantic retry 없음.
 
-- [ ] **Step 2: RED 확인**
+- [x] **Step 2: RED 확인**
 
 Run (ai_service): `rtk proxy E:/AgentFit/tmp/worktrees/paired-review-evaluation/.venv/Scripts/python.exe -X utf8 -m unittest discover -s tests -p test_review_contract_diagnostics.py -q`
 Expected: contract_issue 누락으로 실패. 기존 실패 처리에 관한 assertion은 통과.
 
-- [ ] **Step 3: 최소 구현**
+- [x] **Step 3: 최소 구현**
 
 같은 모듈에 `_sequence_issue(value, allowed, *, complete) -> str | None`, `_candidate_contract_issue(result, ids, reasoned_review) -> str`, `_coverage_contract_issue(result) -> str` 추가. 고정 코드만 반환하고 입력 불변 유지. 내부 send에 진단 callback을 연결하고 collector가 존재하며 기존 predicate가 False일 때만 호출. 기존 predicate와 payload 그대로 유지.
 
-- [ ] **Step 4: GREEN 및 전체 회귀**
+- [x] **Step 4: GREEN 및 전체 회귀**
 
 Run: Step2 명령. Expected: 신규 테스트 모두 통과.
 Run (ai_service): `rtk proxy E:/AgentFit/tmp/worktrees/paired-review-evaluation/.venv/Scripts/python.exe -X utf8 -m unittest discover -s tests -q`
 Expected: 실패 0, 기존 플랫폼 skip 6. 이 명령을 task-done 최종 검증으로 사용.
 
-- [ ] **Step 5: 검증 기록 및 구현 commit**
+- [x] **Step 5: 검증 기록 및 구현 commit**
 
 기준 e544650, RED/GREEN/전체 결과와 한계 기록. 지정 파일만 stage/commit. Expected: 제품 변경과 테스트·문서만 포함.
 
