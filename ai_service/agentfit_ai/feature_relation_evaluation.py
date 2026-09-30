@@ -1,15 +1,19 @@
 """Frozen synthetic regression for relation judgment, not end-to-end accuracy."""
+import argparse
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
+import sys
 import time
 
 from .candidate_feature_curation import _feature_candidates, _validate_partition
 from .candidate_feature_relations import review_feature_relations
-from .deepseek_evaluation import MODEL, NVIDIA_REVIEW_MODELS
+from .deepseek_evaluation import MODEL, NVIDIA_REVIEW_MODELS, load_key
 from .diagnostics import safe_code
+from .false_complete_evaluation import write_safe_json
 from .solar import AnalysisError
 
 
@@ -169,3 +173,81 @@ def evaluate_cases(cases, key, *, model=MODEL, repeats=2, transport=None, checkp
                 if checkpoint is not None:
                     checkpoint(_summary(rows, ids, repeats))  # Disk errors stop the run.
     return _summary(rows, ids, repeats)
+
+
+def code_hashes():
+    """Cover all local analyzer dependencies, including the evaluation runner."""
+    root = Path(__file__).resolve().parent
+    return {path.name: hashlib.sha256(path.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
+            for path in sorted(root.glob('*.py'))}
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    modes = parser.add_mutually_exclusive_group(required=True)
+    modes.add_argument('--preflight', action='store_true')
+    modes.add_argument('--live', action='store_true')
+    parser.add_argument('--corpus', type=Path, default=DEFAULT_CORPUS)
+    parser.add_argument('--corpus-sha256', required=True)
+    parser.add_argument('--output', type=Path)
+    parser.add_argument('--env-file', type=Path)
+    parser.add_argument('--model', choices=NVIDIA_REVIEW_MODELS, default=MODEL)
+    parser.add_argument('--repeats', type=int, choices=(1, 2, 3), default=2)
+    args = parser.parse_args(argv)
+    if args.live and args.output is None:
+        parser.error('--output required for live evaluation')
+    if args.output is not None and (os.path.lexists(args.output) or not args.output.parent.is_dir()):
+        parser.error('output must be a new file in an existing directory')
+    try:
+        cases = load_cases(args.corpus, args.corpus_sha256)
+        before = code_hashes()
+    except (OSError, ValueError):
+        parser.error('invalid corpus, hash or code files')
+    metadata = {'corpus_sha256': args.corpus_sha256, 'code_hashes': before,
+                'model': args.model, 'repeats': args.repeats,
+                'orders': list(_ORDERS), 'scope': 'synthetic_feature_relations'}
+    initial = _summary([], [case['id'] for case in cases], args.repeats)
+    if args.preflight:
+        print(json.dumps({'state': 'preflight', 'planned': initial['planned'],
+            'corpus_sha256': args.corpus_sha256, 'model': args.model,
+            'repeats': args.repeats, 'code_file_count': len(before)}), flush=True)
+        return 0
+    try:
+        key = load_key(args.env_file)
+        if type(key) is not str or not key.strip():
+            raise ValueError('empty key')
+        # Exclusive creation protects an existing report even after the earlier check.
+        with args.output.open('x', encoding='utf-8'):
+            pass
+    except (OSError, ValueError):
+        parser.error('key unavailable or output creation failed')
+
+    def checkpoint(summary):
+        write_safe_json(args.output, {**metadata, 'state': 'in_progress', **summary},
+                        forbidden_strings=(key,))
+        print(json.dumps({'state': 'in_progress', 'completed': summary['completed'],
+            'planned': summary['planned'], 'matched': summary['matched'],
+            'failed': summary['failed']}), flush=True)
+
+    try:
+        checkpoint(initial)
+        report = evaluate_cases(cases, key, model=args.model, repeats=args.repeats,
+                                checkpoint=checkpoint)
+        after = code_hashes()
+        unchanged = before == after
+        report = {**metadata, **report, 'state': 'finished', 'code_unchanged': unchanged,
+                  'code_hashes_after': after, 'gate_passed': report['gate_passed'] and unchanged}
+        write_safe_json(args.output, report, forbidden_strings=(key,))
+        print(json.dumps({name: report[name] for name in (
+            'state', 'planned', 'completed', 'matched', 'false_covered', 'false_uncovered',
+            'uncertain', 'failed', 'order_consistency', 'repeat_consistency',
+            'code_unchanged', 'gate_passed')}), flush=True)
+        return 0 if report['gate_passed'] else 1
+    except (OSError, ValueError, KeyboardInterrupt):
+        # Never display exception text: it can contain key, source, or provider output.
+        print('Evaluation interrupted; the last stored checkpoint may be incomplete.', file=sys.stderr)
+        return 1
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

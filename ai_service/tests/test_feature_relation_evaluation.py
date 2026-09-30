@@ -1,11 +1,15 @@
 """Exercise real relation requests; replace only the external provider boundary."""
 import copy
+from contextlib import redirect_stderr, redirect_stdout
 import hashlib
+import io
 import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
+from agentfit_ai import feature_relation_evaluation as evaluation
 from agentfit_ai.feature_relation_evaluation import prepare_case, load_cases, evaluate_cases
 from agentfit_ai.solar import AnalysisError
 from test_candidate_feature_curation import response, sender
@@ -162,6 +166,102 @@ class FeatureRelationEvaluationTests(unittest.TestCase):
             evaluate_cases([case()], 'fake', transport=sender([reply('covered')] * 4, requests),
                            checkpoint=fail)
         self.assertEqual(len(requests), 1)
+
+
+class FeatureRelationCliTests(unittest.TestCase):
+    def setUp(self):
+        self.folder = tempfile.TemporaryDirectory()
+        self.addCleanup(self.folder.cleanup)
+        self.corpus = Path(self.folder.name) / 'cases.json'
+        self.output = Path(self.folder.name) / 'report.json'
+        raw = json.dumps({'cases': [case()]}, ensure_ascii=False).encode()
+        self.corpus.write_bytes(raw)
+        self.args = ['--corpus', str(self.corpus), '--corpus-sha256', hashlib.sha256(raw).hexdigest()]
+
+    def run_cli(self, options):
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            return evaluation.main(self.args + options)
+
+    def test_preflight_never_loads_key_or_calls_provider(self):
+        with (patch.object(evaluation, 'load_key', side_effect=AssertionError('key accessed')),
+                patch('agentfit_ai.candidate_feature_relations.post_nvidia',
+                      side_effect=AssertionError('network accessed'))):
+            self.assertEqual(self.run_cli(['--preflight']), 0)
+        self.assertFalse(self.output.exists())
+
+    def test_invalid_hash_existing_output_and_mode_fail_before_key_access(self):
+        self.output.write_text('KEEP', encoding='utf-8')
+        invalid_options = [[], ['--preflight', '--live'], ['--live'],
+            ['--live', '--output', str(self.output)], ['--preflight', '--repeats', '0'],
+            ['--preflight', '--model', 'unknown'], ['--preflight', '--corpus-sha256', '0' * 64]]
+        with patch.object(evaluation, 'load_key', side_effect=AssertionError('key accessed')):
+            for options in invalid_options:
+                with self.subTest(options=options), self.assertRaises(SystemExit) as caught:
+                    self.run_cli(options)
+                self.assertEqual(caught.exception.code, 2)
+        self.assertEqual(self.output.read_text(), 'KEEP')
+
+    def test_live_writes_initial_and_each_completed_row_and_safe_final(self):
+        seen = []
+        def transport(payload, key, timeout):
+            seen.append(json.loads(self.output.read_text(encoding='utf-8')))
+            return reply('covered')
+        with (patch.object(evaluation, 'load_key', return_value='PRIVATE_KEY'),
+                patch('agentfit_ai.candidate_feature_relations.post_nvidia', side_effect=transport)):
+            self.assertEqual(self.run_cli(['--live', '--output', str(self.output)]), 0)
+        self.assertEqual([row['completed'] for row in seen], [0, 1, 2, 3])
+        self.assertTrue(all(row['state'] == 'in_progress' and row['planned'] == 4 for row in seen))
+        report = json.loads(self.output.read_text(encoding='utf-8'))
+        self.assertEqual((report['state'], report['completed'], report['matched']), ('finished', 4, 4))
+        self.assertTrue(report['code_unchanged'])
+        self.assertTrue(report['gate_passed'])
+        self.assertEqual(report['corpus_sha256'], self.args[-1])
+        self.assertEqual(report['repeats'], 2)
+        self.assertIn('feature_relation_evaluation.py', report['code_hashes'])
+        for secret in ('PRIVATE_KEY', '잠금', '검토'):
+            self.assertNotIn(secret, self.output.read_text(encoding='utf-8'))
+
+    def test_output_creation_is_exclusive_even_if_another_writer_wins_race(self):
+        def load_key(_):
+            self.output.write_text('OTHER WRITER', encoding='utf-8')
+            return 'fake'
+        with (patch.object(evaluation, 'load_key', side_effect=load_key),
+                patch('agentfit_ai.candidate_feature_relations.post_nvidia',
+                      side_effect=AssertionError('network accessed')),
+                self.assertRaises(SystemExit) as caught):
+            self.run_cli(['--live', '--output', str(self.output)])
+        self.assertEqual(caught.exception.code, 2)
+        self.assertEqual(self.output.read_text(), 'OTHER WRITER')
+
+    def test_writer_failure_stops_after_first_provider_call(self):
+        requests = []
+        write = evaluation.write_safe_json
+        def faulty_write(path, report, **options):
+            if report['completed'] > 0:
+                raise OSError('disk full PRIVATE_KEY')
+            return write(path, report, **options)
+        with (patch.object(evaluation, 'load_key', return_value='PRIVATE_KEY'),
+                patch.object(evaluation, 'write_safe_json', side_effect=faulty_write),
+                patch('agentfit_ai.candidate_feature_relations.post_nvidia',
+                      side_effect=sender([reply('covered')] * 4, requests))):
+            self.assertEqual(self.run_cli(['--live', '--output', str(self.output)]), 1)
+        self.assertEqual(len(requests), 1)
+        self.assertEqual(json.loads(self.output.read_text())['completed'], 0)
+
+    def test_code_change_or_regression_failure_cannot_exit_success(self):
+        for hashes, statuses, unchanged in [
+                ([{'module.py': 'a'}, {'module.py': 'b'}], ['covered'] * 4, False),
+                ([{'module.py': 'a'}] * 2, ['covered'] * 3 + ['not_covered'], True)]:
+            with (self.subTest(unchanged=unchanged),
+                    patch.object(evaluation, 'load_key', return_value='fake'),
+                    patch.object(evaluation, 'code_hashes', side_effect=hashes),
+                    patch('agentfit_ai.candidate_feature_relations.post_nvidia',
+                          side_effect=sender([reply(s) for s in statuses], []))):
+                self.assertEqual(self.run_cli(['--live', '--output', str(self.output)]), 1)
+            report = json.loads(self.output.read_text())
+            self.assertFalse(report['gate_passed'])
+            self.assertEqual(report['code_unchanged'], unchanged)
+            self.output.unlink()
 
 
 if __name__ == '__main__':
