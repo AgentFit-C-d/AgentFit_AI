@@ -93,17 +93,9 @@ def validate_feature_curation(document, frozen, reviewed_labels, curation):
             'candidateCount': len(ids)}
 
 
-def curate_reviewed_features(document, frozen, reviewed_labels, key, *,
-                             model=MODEL, transport=None, call_trace=None):
-    """Use at most two calls to select and verify source representatives on overflow."""
-    if (type(key) is not str or not key.strip() or
-            type(model) is not str or model not in ('solar-pro4', *NVIDIA_REVIEW_MODELS) or
-            (transport is not None and not callable(transport)) or
-            (call_trace is not None and type(call_trace) is not list)):
-        raise ValueError('invalid feature curation options')
-    candidates = _feature_candidates(document, frozen, reviewed_labels)
-    if len({item['value'] for item in candidates}) <= MAX_ARRAY_ITEMS:
-        return None
+def _propose_feature_partition(document, candidates, key, *, model, transport,
+                               call_trace, previous_curation=None):
+    """Generate and strictly normalize a complete partition in one request."""
     ids = [item['id'] for item in candidates]
     id_array = {'type': 'array', 'maxItems': len(ids),
                 'items': {'type': 'string', 'enum': ids}}
@@ -136,7 +128,7 @@ def curate_reviewed_features(document, frozen, reviewed_labels, key, *,
                     row[name] = trace.get(name)
                 call_trace.append(row)
 
-    grouping = _payload('agentfit_feature_grouping',
+    instructions = (
         'Select up to 30 representative feature occurrences from these already-reviewed '
         'current-product operations. Return only supplied IDs, never new wording or offsets. '
         'Group equivalent descriptions, repeated names and suboperations only when the '
@@ -147,17 +139,49 @@ def curate_reviewed_features(document, frozen, reviewed_labels, key, *,
         'or in unrepresentedIds. Every representativeId must belong to its own memberIds. '
         'Representatives must have different source values and each value must be at most '
         '200 Unicode code points. Source context clarifies an occurrence; it does not '
-        'authorize selecting a different occurrence or inventing a broader capability.',
-        {'document': document, 'candidates': candidates},
+        'authorize selecting a different occurrence or inventing a broader capability.')
+    data = {'document': document, 'candidates': candidates}
+    stage = 'feature_grouping'
+    if previous_curation is not None:
+        from .candidate_feature_relations import _VALUE_CONTEXT_INSTRUCTION
+        instructions += (
+            ' A prior complete partition and its unresolved occurrence IDs are provided '
+            'as previousCuration. Rebuild the partition once to address those gaps. '
+            'Consider every supplied occurrence, including previously represented ones. '
+            'The prior review is feedback, not ground truth: you may change representatives '
+            'and split or merge groups when the source supports it. Preserve valid '
+            'relationships where appropriate, but do not invent broader capabilities or '
+            'force distinct operations together to erase unresolved IDs. Keep occurrences '
+            'in unrepresentedIds when no valid source representative fits the 30-item limit. '
+            + _VALUE_CONTEXT_INSTRUCTION)
+        data['previousCuration'] = {name: previous_curation[name]
+                                   for name in ('groups', 'unrepresentedIds', 'uncoveredIds')}
+        stage = 'feature_regrouping'
+    grouping = _payload('agentfit_' + stage, instructions, data,
         {'groups': {'type': 'array', 'minItems': 1, 'maxItems': MAX_ARRAY_ITEMS, 'items': {
             'type': 'object', 'properties': {
                 'representativeId': {'type': 'string', 'enum': ids},
                 'memberIds': {**id_array, 'minItems': 1}},
             'required': ['representativeId', 'memberIds'], 'additionalProperties': False}},
          'unrepresentedIds': id_array})
-    partition = request(grouping, 'feature_grouping',
+    partition = request(grouping, stage,
         lambda reply: _validate_partition(candidates, reply, allow_duplicate_values=True))
-    partition = _coalesce_representatives(candidates, partition)
+    return _coalesce_representatives(candidates, partition)
+
+
+def curate_reviewed_features(document, frozen, reviewed_labels, key, *,
+                             model=MODEL, transport=None, call_trace=None):
+    """Use at most two calls to select and verify source representatives on overflow."""
+    if (type(key) is not str or not key.strip() or
+            type(model) is not str or model not in ('solar-pro4', *NVIDIA_REVIEW_MODELS) or
+            (transport is not None and not callable(transport)) or
+            (call_trace is not None and type(call_trace) is not list)):
+        raise ValueError('invalid feature curation options')
+    candidates = _feature_candidates(document, frozen, reviewed_labels)
+    if len({item['value'] for item in candidates}) <= MAX_ARRAY_ITEMS:
+        return None
+    partition = _propose_feature_partition(document, candidates, key,
+        model=model, transport=transport, call_trace=call_trace)
     from .candidate_feature_relations import review_feature_relations
     return review_feature_relations(document, frozen, reviewed_labels, partition, key,
         model=model, transport=transport, call_trace=call_trace)
