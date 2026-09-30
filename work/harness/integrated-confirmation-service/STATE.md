@@ -6,6 +6,8 @@
 - 설계선택:후보제안보존confirmation-v2,설정선택형통합mode,요청별격리worker안에서inlineprovider호출.전체기한/취소를부모가소유. 기본mode/v1/공개Profile/모델의미는유지.
 - 명세/계획self-review:3task순차(순수계약→worker→HTTP실TCP). 모든spec요구를task에매핑,mode/키/응답exact계약과기한값일치. 후보정보가null로유실되는v1직접재사용을금지한다. 외부API/비공개문서/실키0,공용설치변경0.
 - Task1완료:confirmation-v2 제안보존/공통Profile검증,commit96269e2. 전체1049pass/5skip47.219s,SDK4/.056s.
-- Task2진행:두provider inline/요청worker/모드정합성/키stdin전달 연결. RED확인후focused50/50통과18.621s. 전체gate와commit예정. 현재외부API/비공개원문전송0.
-- 직전상태요약turn은no progress로분류,현재Git/diff재확인후Task2실행재개. Task3실제HTTP/SDK/통신중취소검증은아직미구현.
+- Task2완료:두provider inline/요청worker/모드정합성/키stdin전달 연결,e88b39c。전체1063pass/5skip48.902s,SDK4/.068s.
+- Task3진행:HTTP v2/선택형mode/1800..3600초,기존120초환경값버그수정. HTTP39/39통과4.349s. 실제SDK/HTTP runtime5/5통과45.612s,2Provider 각각 실제응답중 기한/ASGI취소/TCP종료 후 worker종료/소켓EOF/slot재사용검증.
+- runtime최초실패는테스트용Popen함수대체가Windows asyncio상속을깨뜨림(exit1/provider0)으로확인,클래스guard로수정후통과. 제품코드수정으로우회하지않음.
+- 다음:Task3전체gate/검증기록/commit/task-done→fresh전체리뷰1회→featurepush/exactCI. 외부API/비공개문서/실키사용0,공용환경수정0. 아직미push.
 - 대기중:실제Spring저장소/개인문서발췌표시권한. 이로막히지않는서비스코드/로컬검증계속. 전체실사용의품질·사람검토·Spring확인저장·실패원본7일삭제는남는다.

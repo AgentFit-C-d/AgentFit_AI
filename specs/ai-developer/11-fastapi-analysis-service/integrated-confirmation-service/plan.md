@@ -31,11 +31,11 @@
 - Produces `project_candidate_confirmation(document, document_id, result) -> dict`, `validate_candidate_confirmation(document, document_id, outcome) -> dict` in candidate_confirmation.py. spec의 exact v2 키/상태/질문/사유를 사용한다. 실패 outcome은 Task2/3 경계에서 별도로 검증한다.
 - Consumes finalize_candidate_analysis 결과: outcome,profile,unresolvedFields,rejectedCandidateCount,candidateCount,rejectedReasons,reviewIssueCount; featureCuration은 선택.
 
-- [ ] Step 1: groundednon-nullunresolved보존,확정후보suggested질문,unknown/[],전역불확실·후보0,입력불변,잘못된doc/span/sources/unknownFields,모순된candidate_profile,metadata오류,질문중복/누락/사유/상태/v1/complete 거부테스트를작성한다.
-- [ ] Step 2: `python -m unittest discover -s tests -p test_candidate_confirmation.py -v`. Expected:새함수/모듈부재RED.
-- [ ] Step 3: 공통Profile재검증을이동하고순수v2어댑터/검증기를구현한다. 출력은허용키와코드만새로생성한다.
-- [ ] Step 4: 새테스트와test_profile/test_http_service를실행한뒤전체tests/runtime_tests. Expected:기존5skip외통과/기본응답호환.
-- [ ] Step 5: 구현·테스트commit, task-done전체gate. Expected:검증증거와완료ledger.
+- [x] Step 1: groundednon-nullunresolved보존,확정후보suggested질문,unknown/[],전역불확실·후보0,입력불변,잘못된doc/span/sources/unknownFields,모순된candidate_profile,metadata오류,질문중복/누락/사유/상태/v1/complete 거부테스트를작성한다.
+- [x] Step 2: `python -m unittest discover -s tests -p test_candidate_confirmation.py -v`. Expected:새함수/모듈부재RED.
+- [x] Step 3: 공통Profile재검증을이동하고순수v2어댑터/검증기를구현한다. 출력은허용키와코드만새로생성한다.
+- [x] Step 4: 새테스트와test_profile/test_http_service를실행한뒤전체tests/runtime_tests. Expected:기존5skip외통과/기본응답호환.
+- [x] Step 5: 구현·테스트commit, task-done전체gate. Expected:검증증거와완료ledger.
 
 ### Task 2: 단일 분석 프로세스에 통합 파이프라인 연결
 
@@ -46,11 +46,11 @@
 - Extends `run_analysis_process(..., recoverable_solar=False, integrated_candidates=False, nvidia_key=None, command=None)`. 모드는상호배타적이며새키는integrated일때만허용한다. worker stdin키집합은document/documentId/key/nvidiaKey/mode=integrated-candidates. 기존입력그대로유지.
 - Produces v2확인응답 또는 exact `{contract,outcome:'failed',error}`. CandidatePipelineError의provider_code를safe_code로통과,예산오류CALL_LIMIT,나머지ANALYSIS_FAILURE. 원본예외미출력.
 
-- [ ] Step 1: inline무자식/유효SSE·형식/크기/오류·입력불변,worker파이프라인/모드·키누출·실패/미설치·oversized,processv2프레이밍/키stdin/환경제거·mode혼용테스트작성.
-- [ ] Step 2: 대상새테스트RED실행. Expected:새함수/옵션부재실패.
-- [ ] Step 3: inline·worker·process를연결하고safe코드1개추가. 기존독립post_nvidia_streaming의자식deadline유지.
-- [ ] Step 4: 대상전송/worker/process/Task1과전체tests/runtime_tests검증. Expected:기존대응회귀/모드정합성통과.
-- [ ] Step 5: commit,task-done전체gate. Expected:두키가argv/env/error에없고v2만허용.
+- [x] Step 1: inline무자식/유효SSE·형식/크기/오류·입력불변,worker파이프라인/모드·키누출·실패/미설치·oversized,processv2프레이밍/키stdin/환경제거·mode혼용테스트작성.
+- [x] Step 2: 대상새테스트RED실행. Expected:새함수/옵션부재실패.
+- [x] Step 3: inline·worker·process를연결하고safe코드1개추가. 기존독립post_nvidia_streaming의자식deadline유지.
+- [x] Step 4: 대상전송/worker/process/Task1과전체tests/runtime_tests검증. Expected:기존대응회귀/모드정합성통과.
+- [x] Step 5: commit,task-done전체gate. Expected:두키가argv/env/error에없고v2만허용.
 
 ### Task 3: HTTP 모드·실 SDK/TCP 수명주기·인계
 

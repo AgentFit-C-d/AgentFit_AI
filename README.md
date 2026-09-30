@@ -18,7 +18,40 @@ python -m unittest discover -s tests -v
 
 기능 범위와 검증 근거는 `specs/ai-developer/01-profile-contract/`에 있습니다.
 
+## 통합 확인형 서비스 — 선택형 로컬 실행
+
+Python 3.13의 프로젝트 전용 환경에서 `ai_service/`로 이동해 설치합니다.
+
+```text
+python -m pip install -r requirements-integrated.txt -r requirements-dev.txt
+```
+
+실행 프로세스의 환경 변수에 `AGENTFIT_INTERNAL_TOKEN`, `UPSTAGE_API_KEY`, `NVIDIA_API_KEY`를 설정하고 `AGENTFIT_ANALYSIS_MODE=integrated-candidates`를 선택합니다. 키는 채팅·명령 인자·Git에 넣지 않습니다. 서버는 `.env`를 자동으로 읽지 않으므로 개발 도구의 환경 변수 로딩 기능 등을 통해 주입해야 합니다. 공용 환경 대신 해당 서버 인터프리터에 LangExtract 1.7.0이 설치되어 있어야 합니다.
+
+```text
+python -m uvicorn agentfit_ai.http_service:app --host 127.0.0.1 --port 8000
+```
+
+`POST /internal/v1/analyze`는 Bearer 내부 토큰과 `X-Document-Id`, `X-Request-Id`, `X-Document-Kind`(TEXT/MARKDOWN/PDF), 해당 Content-Type, 원문 body를 받습니다. 통합 모드에서는 `X-AgentFit-Analysis-Contract: confirmation-v2` 헤더를 정확히 한 번 보내야 합니다. 헤더로 서버 모드를 바꿀 수는 없습니다.
+
+- 성공적인 분석도 `contract=confirmation-v2`, `outcome=needs_confirmation`으로 반환합니다. 실제 의미 품질이 검증되기 전에는 자동 완료하지 않습니다.
+- `profile`은 기존 10필드·원문 근거·대표 기능 최대 30개 계약을 유지합니다. `fieldStates`의 `unresolved`에도 근거가 있는 제안 값을 보존합니다. `unknown`을 제외한 필드마다 고정된 `questionId=confirm_<field>`와 질문 사유가 있습니다.
+- 전체 기한은 통합 모드 기본 1,800초, `AGENTFIT_REQUEST_TIMEOUT_SECONDS`로 1~3,600초를 설정합니다. 기본/복구 모드는 60초·최대 120초를 유지합니다. 동시 실행 기본 2개·최대 8개, 업로드 기본 10초·최대 30초입니다.
+- 계약 헤더 누락·혼용은 428, 키/SDK 미설치는 503, 기한 초과는 504, 손상된 워커 결과는 502입니다. 파이프라인 분석 실패는 200의 `outcome=failed`와 안전한 오류 코드로 반환할 수 있으므로 HTTP 상태만으로 완료를 판단하지 않습니다.
+- 분석 프로세스가 Solar/NVIDIA 통신을 직접 소유합니다. 요청 취소·연결 종료·전체 기한에 부모가 프로세스를 종료합니다. 두 키는 자식 stdin으로만 전달하며 서버는 문서·모델 원본을 저장하지 않습니다.
+
+외부 API 없이 검증하려면 설치된 환경에서 실행합니다.
+
+```text
+python -m unittest discover -s tests -q
+python -m unittest discover -s runtime_tests -v
+```
+
+실제 SDK·로컬 HTTP/SSE·TCP 연결 종료 검증은 모델 의미 정확도를 측정하지 않습니다. 실제 Spring DTO·확인/저장·버전 경쟁·실패 원본 7일 삭제 연동과 독립 문서 품질 평가는 남아 있습니다. [명세](specs/ai-developer/11-fastapi-analysis-service/integrated-confirmation-service/spec.md) · [검증 기록](specs/ai-developer/11-fastapi-analysis-service/integrated-confirmation-service/validation.md)
+
 ## Solar 텍스트 분석 — 로컬 개발
+
+> 아래 Solar 평가 수치는 과거 실험 기록입니다. 현재 HTTP 연결과 검증 범위는 [통합 확인형 서비스](#통합-확인형-서비스--선택형-로컬-실행)를 참고하세요.
 
 `ai_service/` 디렉터리에서 Python 3.12로 고정된 합성 사례를 평가합니다.
 
@@ -32,7 +65,7 @@ Python 모듈 `agentfit_ai.solar.SolarAnalyzer`는 문서 텍스트와 생성된
 
 명세·계획·작업 목록과 측정된 한계는 [Solar 분석 문서](specs/ai-developer/04-analysis-provider/README.md)에 정리되어 있습니다.
 
-프롬프트 분리 실험(`profile-v18`) 당시 단위 테스트 70건, 기존 합성 평가 24/24건, 추가 합성 사례 2/2건, 실제 문서 평가 3/4건이 통과했습니다. 최종 평가에서 성공한 건은 모두 수정 호출 없이 통과했고, 실제 문서 1건은 시간 초과로 실패했습니다. 전체 품질 기준은 충족하지 못했습니다. 자세한 내용은 [프롬프트 분리 검증 결과](specs/ai-developer/04-analysis-provider/prompt-separation/validation.md)를 참고하세요. HTTP 엔드포인트, PDF 추출, Spring 연동은 향후 작업입니다.
+프롬프트 분리 실험(`profile-v18`) 당시 단위 테스트 70건, 기존 합성 평가 24/24건, 추가 합성 사례 2/2건, 실제 문서 평가 3/4건이 통과했습니다. 최종 평가에서 성공한 건은 모두 수정 호출 없이 통과했고, 실제 문서 1건은 시간 초과로 실패했습니다. 전체 품질 기준은 충족하지 못했습니다. 자세한 내용은 [프롬프트 분리 검증 결과](specs/ai-developer/04-analysis-provider/prompt-separation/validation.md)를 참고하세요. 이후 HTTP 엔드포인트와 PDF 추출이 구현됐으며, 실제 Spring 연동은 아직 검증하지 못했습니다.
 
 고정된 안정성 평가도 실행할 수 있습니다. 분석 24건에 정상 완료 기준 유료 API 호출 72~144회가 발생하며, 네트워크 재시도는 하지 않습니다. 실행할 때마다 새로운 보고서 파일명을 사용합니다.
 

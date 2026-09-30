@@ -12,6 +12,7 @@ from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import JSONResponse, Response
 
 from .analysis_process import AnalysisProcessError, run_analysis_process
+from .candidate_confirmation import CONTRACT, validate_candidate_confirmation
 from .diagnostics import safe_code
 from .document_extraction import (MAX_FILE_BYTES, PDF_TIMEOUT_SECONDS,
                                   DocumentExtractionError,
@@ -25,6 +26,7 @@ IDENTIFIER = re.compile(r"[A-Za-z0-9_-]{1,128}\Z")
 MEDIA_TYPES = {"PDF": "application/pdf", "MARKDOWN": "text/markdown",
                "TEXT": "text/plain"}
 _DISCONNECTED = object()
+_CONFIGURATION_ERRORS = frozenset(('MISSING_OR_INVALID_KEY', 'INTEGRATED_RUNTIME_UNAVAILABLE'))
 
 
 def _error(status: int, code: str) -> JSONResponse:
@@ -65,13 +67,18 @@ async def _wait_for_disconnect(request: Request) -> None:
 
 
 async def _run_default_analysis(request: Request, document: str, document_id: str,
-                                deadline: float, *, recoverable_solar: bool = False) -> dict:
+                                deadline: float, *, recoverable_solar: bool = False,
+                                integrated_candidates: bool = False) -> dict:
     key = os.environ.get("UPSTAGE_API_KEY", "")
-    if not key:
+    nvidia_key = os.environ.get("NVIDIA_API_KEY", "") if integrated_candidates else None
+    if not key.strip() or (integrated_candidates and not nvidia_key.strip()):
         raise AnalysisError("MISSING_OR_INVALID_KEY")
     if await request.is_disconnected():
         return _DISCONNECTED
-    if recoverable_solar:
+    if integrated_candidates:
+        worker = asyncio.create_task(run_analysis_process(
+            document, document_id, key, deadline, integrated_candidates=True, nvidia_key=nvidia_key))
+    elif recoverable_solar:
         worker = asyncio.create_task(run_analysis_process(
             document, document_id, key, deadline, recoverable_solar=True))
     else:
@@ -145,7 +152,7 @@ def _checked_confirmation(outcome: dict, profile: dict, *,
 def _bounded_setting(value: int | None, name: str, default: int, maximum: int) -> int:
     if value is None:
         raw = os.environ.get(name, str(default))
-        if not raw.isascii() or not raw.isdecimal() or len(raw) > 2:
+        if not raw.isascii() or not raw.isdecimal() or len(raw) > len(str(maximum)):
             raise ValueError("invalid service setting: " + name)
         value = int(raw)
     if type(value) is not int or not 1 <= value <= maximum:
@@ -163,13 +170,15 @@ def create_app(*, internal_token: str | None = None,
     token = os.environ.get("AGENTFIT_INTERNAL_TOKEN", "") if internal_token is None else internal_token
     mode = (os.environ.get("AGENTFIT_ANALYSIS_MODE", "default")
             if analysis_mode is None else analysis_mode)
-    if mode not in ("default", "recoverable-solar"):
+    if mode not in ("default", "recoverable-solar", "integrated-candidates"):
         raise ValueError("invalid analysis mode")
     limit = _bounded_setting(max_inflight, "AGENTFIT_MAX_INFLIGHT_ANALYSES", 2, 8)
     upload_timeout = _bounded_setting(upload_timeout_seconds,
                                       "AGENTFIT_UPLOAD_TIMEOUT_SECONDS", 10, 30)
     request_timeout = _bounded_setting(request_timeout_seconds,
-                                       "AGENTFIT_REQUEST_TIMEOUT_SECONDS", 60, 120)
+                                       "AGENTFIT_REQUEST_TIMEOUT_SECONDS",
+                                       1800 if mode == 'integrated-candidates' else 60,
+                                       3600 if mode == 'integrated-candidates' else 120)
     slots = BoundedSemaphore(limit)
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 
@@ -187,9 +196,9 @@ def create_app(*, internal_token: str | None = None,
         supplied = authorization.removeprefix("Bearer ")
         if not authorization.startswith("Bearer ") or not hmac.compare_digest(supplied, token):
             return _error(401, "UNAUTHORIZED")
-        if (mode == "recoverable-solar" and
+        if (mode in ("recoverable-solar", "integrated-candidates") and
                 request.headers.getlist("x-agentfit-analysis-contract") !=
-                ["confirmation-v1"]):
+                [CONTRACT if mode == 'integrated-candidates' else "confirmation-v1"]):
             return _error(428, "CONFIRMATION_CONTRACT_REQUIRED")
 
         document_id = request.headers.get("x-document-id", "")
@@ -268,7 +277,8 @@ def create_app(*, internal_token: str | None = None,
             if analyze is None:
                 outcome = await _run_default_analysis(
                     request, extracted.text, document_id, deadline,
-                    recoverable_solar=(mode == "recoverable-solar"))
+                    recoverable_solar=(mode == "recoverable-solar"),
+                    integrated_candidates=(mode == 'integrated-candidates'))
                 if outcome is _DISCONNECTED:
                     response = _AbortedResponse(slots.release)
                     release_here = False
@@ -278,7 +288,19 @@ def create_app(*, internal_token: str | None = None,
                     outcome = await run_in_threadpool(analyze, extracted.text, document_id)
             if type(outcome) is dict and set(outcome) == {"error"}:
                 code = safe_code(outcome["error"])
-                return fail(503 if code == "MISSING_OR_INVALID_KEY" else 502, code)
+                return fail(503 if code in _CONFIGURATION_ERRORS else 502, code)
+            if mode == 'integrated-candidates':
+                if (type(outcome) is dict and set(outcome) == {'contract', 'outcome', 'error'}
+                        and outcome['contract'] == CONTRACT and outcome['outcome'] == 'failed'
+                        and type(outcome['error']) is str and safe_code(outcome['error']) == outcome['error']):
+                    return finish(200, dict(outcome, requestId=request_id))
+                try:
+                    checked = validate_candidate_confirmation(extracted.text, document_id, outcome)
+                except (TypeError, ValueError, KeyError):
+                    return fail(502, 'INVALID_ANALYSIS_RESULT')
+                return finish(200, dict(checked, requestId=request_id))
+            if type(outcome) is dict and 'contract' in outcome:
+                return fail(502, 'INVALID_ANALYSIS_RESULT')
             if type(outcome) is not dict or outcome.get("outcome") not in (
                     "complete", "needs_confirmation", "failed"):
                 return fail(500, "INTERNAL_ERROR")
@@ -305,7 +327,7 @@ def create_app(*, internal_token: str | None = None,
         except DocumentExtractionError as error:
             return fail(422, error.code)
         except AnalysisError as error:
-            status = 503 if error.code == "MISSING_OR_INVALID_KEY" else 502
+            status = 503 if error.code in _CONFIGURATION_ERRORS else 502
             return fail(status, safe_code(error.code))
         except AnalysisProcessError as error:
             status = 504 if error.code == "ANALYSIS_DEADLINE_EXCEEDED" else 502
