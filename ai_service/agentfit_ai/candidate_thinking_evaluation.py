@@ -46,12 +46,13 @@ def _safe_calls(calls):
 def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
                               transport=None, on_update=None, structured_output=True,
                               thinking_effort=None, capture_response_shape=False,
-                              normalize_json_fences=False):
+                              normalize_json_fences=False, candidate_batch_size=20):
     """Compare off/on configurations; effort metadata describes requested settings."""
     if (type(key) is not str or not key.strip() or
             type(structured_output) is not bool or
             type(capture_response_shape) is not bool or
             type(normalize_json_fences) is not bool or
+            type(candidate_batch_size) is not int or not 1 <= candidate_batch_size <= 20 or
             (thinking_effort is not None and
              (type(thinking_effort) is not int or not 1 <= thinking_effort <= 100)) or
             (transport is not None and not callable(transport)) or
@@ -67,14 +68,14 @@ def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
         raise ValueError('invalid candidate audit gold')
     expected_keep = dict(expected_keep)
     score_profile({'data': {}}, case.checks)
-    per_arm = (sum(label['status'] == 'confirmed' for label in labels) + 19) // 20 + 1
+    per_arm = (sum(label['status'] == 'confirmed' for label in labels) + candidate_batch_size - 1) // candidate_batch_size + 1
     result = {'state': 'running', 'case_id': case.id, 'held_out': False,
         'source_sha256': case.source_sha256, 'redacted_sha256': case.redacted_sha256,
         'snapshot_sha256': hashlib.sha256(json.dumps(snapshot, sort_keys=True,
             ensure_ascii=False).encode()).hexdigest(), 'review_model': MODEL,
         'candidate_count': len(labels), 'planned_calls': 2 * per_arm,
         'settings': {'temperature': 0, 'max_tokens': 8192, 'timeout_seconds': 600,
-                     'batch_size': 20, 'reasoned_review': True,
+                     'batch_size': candidate_batch_size, 'reasoned_review': True,
                      'field_semantics': 'explicit-v1', 'retry_limit': 0,
                      'structured_output': structured_output,
                      'thinking_effort_requested': thinking_effort,
@@ -155,7 +156,8 @@ def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
         try:
             verdict = review_candidates_separately(case.text, deepcopy(frozen), deepcopy(labels),
                 key, review_model=MODEL, field_semantics='explicit-v1', reasoned_review=True,
-                transport=send, review_calls=calls, review_reasons=reasons)
+                transport=send, review_calls=calls, review_reasons=reasons,
+                candidate_batch_size=candidate_batch_size)
             stage = 'PROJECTION_FAILED'
             projected = finalize_candidate_analysis(case.text, case.id, frozen, labels,
                                                      verdict, observer=observe)

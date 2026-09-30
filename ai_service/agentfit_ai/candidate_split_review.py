@@ -116,7 +116,7 @@ def review_candidates_separately(document: str, frozen: dict,
                                 *, transport=None, review_calls=None,
                                 adaptive_review=False, review_model="solar-pro4",
                                 field_semantics='legacy', reasoned_review=False,
-                                review_reasons=None) -> dict:
+                                review_reasons=None, candidate_batch_size=20) -> dict:
     """Review all confirmed IDs before checking omissions in the full source."""
     semantics = field_semantics_instructions(field_semantics)
     if type(document) is not str or not document.strip():
@@ -127,6 +127,8 @@ def review_candidates_separately(document: str, frozen: dict,
         raise ValueError("invalid adaptive review mode")
     if type(reasoned_review) is not bool:
         raise ValueError('invalid reasoned review mode')
+    if type(candidate_batch_size) is not int or not 1 <= candidate_batch_size <= 20:
+        raise ValueError('invalid candidate batch size')
     if review_reasons is not None and type(review_reasons) is not list:
         raise ValueError('invalid rejection reason collector')
     if review_model not in ("solar-pro4", *NVIDIA_REVIEW_MODELS):
@@ -212,9 +214,9 @@ def review_candidates_separately(document: str, frozen: dict,
         return reply
 
     wrong = []
-    for offset in range(0, len(confirmed), 20):
-        batch = confirmed[offset:offset + 20]
-        batch_index = offset // 20 + 1
+    for offset in range(0, len(confirmed), candidate_batch_size):
+        batch = confirmed[offset:offset + candidate_batch_size]
+        batch_index = offset // candidate_batch_size + 1
         try:
             reply = review_batch(batch, batch_index)
             wrong.extend(reply["wrongCandidateIds"])
