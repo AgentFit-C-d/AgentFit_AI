@@ -32,7 +32,13 @@ python -m unittest discover -s contract_tests -v
 | 실제 SDK·로컬 TCP 통합 | 11/11 통과 | 51.350초 |
 | Spring mock 계약 | 36/36 통과 | 11.468초 |
 
-Python의 기존 `Could not find platform independent libraries <prefix>` 안내가 출력됐지만 각 검증의 종료 코드는 0이었다. 건너뛴 테스트를 통과로 계산하지 않는다. 최종 독립 검토·push 및 정확한 커밋의 CI는 별도 확인한다.
+Python의 기존 `Could not find platform independent libraries <prefix>` 안내가 출력됐지만 각 검증의 종료 코드는 0이었다. 건너뛴 테스트를 통과로 계산하지 않는다.
+
+구현 커밋 `ea60af51d38073d4c67e2e0be5864402f4178d49`에서 SDD task-done 검증도 통과했다. 같은 테스트 수에 단위 63.889초, runtime 49.614초, 계약 10.179초였다. 이후 제품 코드 변경은 없다.
+
+최종 독립 검토 1회에서 Critical/Important/Minor 지적이 모두 없었다. 검토자가 새 6개 테스트를 직접 재실행해 통과를 확인했고, 원래 checkout의 HEAD·추적 파일 불변과 diff 검사를 확인했다. 전체 검증과 기준선 해시는 검토자가 반복 실행하지 않았다. [검토 기록](review.md)
+
+이 문서는 push 직전의 검증 기록이다. 최종 push 커밋과 그 커밋의 Linux CI 결과는 같은 작업 폴더의 `.superpowers/sdd/plan/progress.md` 및 GitHub Actions에서 확인한다. CI 완료 여부를 이 문서 작성만으로 판단하지 않는다.
 
 ## 기존 평가 기준선
 
@@ -45,6 +51,8 @@ Python의 기존 `Could not find platform independent libraries <prefix>` 안내
 
 ## 무료 사용 확인과 남은 검증
 
+2026-10-01에 [DeepSeek V4.1 Flash](https://build.nvidia.com/deepseek-ai/deepseek-v4.1-flash), [GLM 5.3](https://build.nvidia.com/z-ai/glm-5-3), [Kimi K3](https://build.nvidia.com/moonshotai/kimi-k3)의 공식 모델 페이지에서 프로토타이핑용 무료 API endpoint 안내를 확인했다. 예시 API 주소는 `https://integrate.api.nvidia.com/v1`이다. 공개 페이지를 읽었으며 로그인한 계정의 잔여 한도는 조회하지 않았다.
+
 사용자가 개인 학습·연구용 무료 안내를 전달했다. [NVIDIA 공식 FAQ](https://docs.api.nvidia.com/nim/docs/product)는 개발자 프로그램의 무료 프로토타이핑 접근을 설명하며 실제 이용자에게 제공하는 활동도 운영 이용에 포함한다. [API 시험 약관 1.4절](https://assets.ngc.nvidia.com/products/api-catalog/legal/NVIDIA%20API%20Trial%20Terms%20of%20Service.pdf)은 시험 한도와 크레딧 및 이후 별도 구독을 설명한다. 이 일반 안내만으로 현재 계정의 대상 모델·엔드포인트·잔여 무료 한도를 확인한 것은 아니다.
 
-추가 요금이 없다는 계정별 확인 전에는 외부 모델 호출을 하지 않는다. 이번 작업의 외부 모델 호출은 0회이며 유료 전환·충전·대체·재시도도 없다. 키는 읽거나 출력하지 않았다. 모델 품질 개선, 과거 실패의 실제 원인, 실제 Spring 저장 및 운영 환경은 여전히 미검증이다.
+추가 요금이 없다는 계정별 확인 전에는 외부 모델 호출을 하지 않는다. 기존 고정 조합은 추출·분류에 Solar도 사용하므로 NVIDIA 무료 안내만으로 혼합 평가 전체의 비용이 승인되는 것은 아니다. 이번 작업의 외부 모델 호출은 0회이며 유료 전환·충전·대체·재시도도 없다. 키는 읽거나 출력하지 않았다. 모델 품질 개선, 과거 실패의 실제 원인, 실제 Spring 저장 및 운영 환경은 여전히 미검증이다.
