@@ -1,5 +1,13 @@
 # 후보 검토 묶음 크기 검증
 
+## 최종 gate (2026-09-30)
+
+- 실제 평가 이후 로컬 전송 테스트 검증 빈틈을 발견해 보완했다. 근거·RED·제약·최종 수치는 [전송 검증 기록](transport-validation.md)을 따른다. 제품 코드와 실제 평가 결과는 변경하지 않았다.
+- 전체1045개 중1040통과/기존5skip(49.667s),SDK4/4(0.071s). 간헐 지연의 환경 원인은 미확인이다.
+- fresh 독립리뷰 Critical/Important/Minor 모두0; 직접 합성49/49 및 안전 메타데이터 확인. [리뷰와 판단 기록](../../../../work/harness/review-batch-size/review.md).
+- `feature/review-batch-size` push. 커밋 `4b68efa182fadbb5d93ca143774164c5a0b8b074`의 [CI36705466454](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36705466454)는 unit-and-worker-memory·integrated-runtime 모두 성공했다.
+- 아래 실험 결과14/16과단일튜닝문서한계는그대로다.기본20승격변경·PR·병합·배포없음.전체실사용목표는미완료다.
+
 ## 구현
 
 - 제품 커밋 `8f1bb99d0bae0c120121958ee6bcc900ef620833`.

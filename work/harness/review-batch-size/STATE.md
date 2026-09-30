@@ -17,3 +17,4 @@
 - 최종 task-done exit0: 전체1040pass/5skip(1045total,49.667s), SDK4/4(0.071s). NVIDIA20/20·Solar23/23 focused도 통과. 이 working tree를 커밋하고 fresh 전체리뷰로 진행한다. 간헐 지연의 환경 원인 해결을 주장하지 않는다.
 - 검증 tree 커밋d04a96b12eb601d123eec2ba098f9159dc585054. fresh gpt-6-astra/high 리뷰0Critical/0Important/0Minor,직접49/49·safe집계검증. 제외4영역의 부모 판단은review.md에 기록했다. 다음featurepush/정확한CI.
 - 다음 실사용 경계 조사: candidate_analysis_pipeline은 아직 HTTP에 연결되지 않았고 analysis_worker는default/recoverable-solar만 처리한다. 후보unresolvedFields에는 비null 제안도 남지만 confirmation-v1은unresolved=null만허용해 그대로 연결하면 손실/거절이 생긴다. 후보 제안·확인 질문 어댑터와 버전 명시, NVIDIA 호출의 요청단위 취소 검증, 장시간 실행 경계가 후속 구현 대상이다. Spring실저장/독립품질은 미완료 유지.
+- feature/review-batch-size push완료,4b68efa182fadbb5d93ca143774164c5a0b8b074 clean/tracking. 정확한CI36705466454 completed/success,두job모두통과. task1/리뷰/실험/featuregate완료. 최종문서commit후exactCI추가확인한다. 현재모델API/로컬test프로세스없음. 전체goal은active이고이번턴은progress다.

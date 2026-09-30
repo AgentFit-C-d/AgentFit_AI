@@ -40,7 +40,7 @@
 - [x] Step 3: 두함수에exact int검증·옵션전달·루프와ceil한도/메타데이터를최소수정하고focused테스트를실행한다. Expected:새테스트와기존split/thinking회귀통과.
 - [x] Step 4: 전체tests/runtime_tests 및API0실행기preflight를실행한다. Expected:기존5skip외통과,SDK4/4,기본20첫요청기존hash동일,10요청차이는batch의존부분뿐,모의12호출로109후보누락/중복없음. 제품commit.
 - [x] Step 5: 최대12call실제H02 1회→종료감사→유효시16/6와오제외/오유지채점. Expected:코드/hash불변·상한준수·미유효결과미채점.
-- [ ] Step 6: 문서/task-done/fresh 전체리뷰,필요시Critical/Important단일RED→GREEN수정,featurepush/CI. Expected:증거·미확인·다음행동을분리한다.
+- [x] Step 6: 문서/task-done/fresh 전체리뷰,필요시Critical/Important단일RED→GREEN수정,featurepush/CI. Expected:증거·미확인·다음행동을분리한다. 최종로컬1040pass/5skip·SDK4/4,리뷰0/0/0,featurepush및CI36705466454두job성공을확인했다. 전체실사용목표는미완료다.
 
 #### Step 6 검증 보완 (2026-09-30)
 
