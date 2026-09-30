@@ -50,7 +50,7 @@
 - [x] **Step2 live:** DeepSeek기존설정으로각고정분할1호출. 원문/키/응답전문저장없이개수·ID·coverage enum·종료/시간/hash만기록. Expected:종료상태검증,품질은관측대로. unknown/uncertain/구조실패구분.
 - [x] **Step3 audit:** 지정판정일치/보류/오판과2모호를원문대조. 제안선정문제와검토문제분리. 개선이없어도전체목표유지.
 - [x] **Step4 review:** 전체branch/spec/plan/ledger/ReviewFocus를독립최종리뷰1회. Important/Critical은1회RED→GREEN수정+전체suite,재리뷰없음.
-- [ ] **Step5 publish:** 기록·diff --check·commit/push·정확한구현LinuxCI확인. 기본서비스승격미실시. task-done은전체branch diff --check(문서만남은경우코드suite재실행하지않음).
+- [x] **Step5 publish:** 기록·diff --check·commit/push·정확한구현LinuxCI확인. 기본서비스승격미실시. task-done은전체branch diff --check(문서만남은경우코드suite재실행하지않음).
 
 ## Self-review
 
