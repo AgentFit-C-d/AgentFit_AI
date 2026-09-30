@@ -49,6 +49,15 @@ python -m unittest discover -s runtime_tests -v
 
 실제 SDK·로컬 HTTP/SSE·TCP 연결 종료 검증은 모델 의미 정확도를 측정하지 않습니다. 실제 Spring DTO·확인/저장·버전 경쟁·실패 원본 7일 삭제 연동과 독립 문서 품질 평가는 남아 있습니다. [명세](specs/ai-developer/11-fastapi-analysis-service/integrated-confirmation-service/spec.md) · [검증 기록](specs/ai-developer/11-fastapi-analysis-service/integrated-confirmation-service/validation.md)
 
+### 통합 분석 실패 단계 확인
+
+제공자 오류 코드가 없는 파이프라인 실패도 `error`에 고정된 단계 코드를 반환합니다.
+추출(`EXTRACTION_FAILED`), 근거 정합성(`GROUNDING_FAILED`), 운영 기능 추출(`OPERATION_EXTRACTION_FAILED`), 통합(`MERGE_FAILED`), 분류(`CLASSIFICATION_FAILED`), 누락 검토(`COVERAGE_REVIEW_FAILED`), 대표 기능 선정(`FEATURE_CURATION_FAILED`), Profile 변환(`PROJECTION_FAILED`), 진단 저장(`DIAGNOSTIC_FAILED`)을 구분합니다.
+
+호출 예산 소진은 `CALL_LIMIT`, 안전한 제공자 오류가 있으면 해당 코드가 우선합니다. 알 수 없는 단계는 `ANALYSIS_FAILURE`로 유지하며 원문·키·예외 상세는 반환하지 않습니다. `outcome=failed`와 기존 응답 형식·HTTP 상태는 그대로입니다. 단계 코드는 실패 위치를 알려주며, 모델의 오답 원인이나 품질 개선을 증명하지 않습니다.
+
+이 진단 변경은 별도 브랜치의 코드 변형입니다. 중단된 독립 평가의 기준선 실행에 이어 쓰지 않으며, 새 실제 평가는 별도 조건으로 등록해야 합니다. [명세](specs/ai-developer/analysis-failure-stages/spec.md) · [검증 결과](specs/ai-developer/analysis-failure-stages/validation.md)
+
 ## Solar 텍스트 분석 — 로컬 개발
 
 > 아래 Solar 평가 수치는 과거 실험 기록입니다. 현재 HTTP 연결과 검증 범위는 [통합 확인형 서비스](#통합-확인형-서비스--선택형-로컬-실행)를 참고하세요.

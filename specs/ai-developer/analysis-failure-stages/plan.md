@@ -23,7 +23,7 @@
 
 ### Task 1: 단계 오류 코드 보존과 경계 검증
 
-**Files:** Modify ai_service/agentfit_ai/diagnostics.py,candidate_service_worker.py; Create ai_service/tests/test_pipeline_failure_stages.py 및 tests/fixtures/failing_candidate_worker.py; Doc ai_service/README.md 및 이명세폴더validation.md/work/harness/analysis-failure-stages/STATE.md.
+**Files:** Modify ai_service/agentfit_ai/diagnostics.py,candidate_service_worker.py; Create ai_service/tests/test_pipeline_failure_stages.py 및 tests/fixtures/failing_candidate_worker.py; Doc README.md 및 이명세폴더validation.md/work/harness/analysis-failure-stages/STATE.md. 최초 계획의 ai_service/README.md는 없는 경로여서 기존 루트 README로 바로잡았다.
 **Interfaces:** `PIPELINE_FAILURE_CODES: frozenset[str]`(명세9개); execute_integrated_analysis 서명·실패DTO불변. `_provider_worker_environment`와기존run_analysis_process(command=...)테스트주입사용. fixture는합성pipeline예외만발생시키며네트워크없음.
 
 - [ ] Step1: test_pipeline_failure_stages.py에9개단계,known provider/limit우선,unknown/list/dict단계fallback,평가실패분모보존의실패테스트작성/실행. Expected:knownstage가현재ANALYSIS_FAILURE이므로RED. 성공회귀는기존worker테스트를함께실행한다.
