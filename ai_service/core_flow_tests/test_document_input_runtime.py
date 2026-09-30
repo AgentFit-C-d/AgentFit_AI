@@ -65,7 +65,8 @@ class DocumentInputRuntimeTests(unittest.TestCase):
             self.assertEqual(reopened.get(f'/api/projects/{p}').json(), detail)
             state = json.dumps(store.__dict__, ensure_ascii=False, default=str)
             for private in (provider.document, NVIDIA_KEY, SOLAR_KEY):
-                self.assertNotIn(private, state)
+                # Match JSON escapes too, including CRLF/LF in the complete source.
+                self.assertNotIn(json.dumps(private, ensure_ascii=False)[1:-1], state)
             deleted = reopened.request('DELETE', f'/api/projects/{p}', json={'confirmation': True})
             self.assertEqual(deleted.status_code, 204)
             self.assertEqual(reopened.get(f'/api/projects/{p}').status_code, 404)
