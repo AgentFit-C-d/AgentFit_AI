@@ -57,9 +57,9 @@
 **Files:** Modify http_service.py, tests/test_http_service.py, README.md. Create tests/test_integrated_confirmation_http.py, runtime_tests/test_integrated_service.py, runtime_tests/integrated_service_fixture.py, specs/ai-developer/11-fastapi-analysis-service/integrated-confirmation-service/validation.md, work/harness/integrated-confirmation-service/{STATE.md,review.md,REMOTE.md}.
 **Interfaces:** Consumes Tasks1/2. create_app의기존analysis_mode에integrated-candidates추가. `_run_default_analysis(..., integrated_candidates=False)`에서두키와모드를process로전달한다. v2검증은profile에유효한제안/질문을그대로전달한다.
 
-- [ ] Step 1: exactv2header없음/중복/v1은body/slot/분석전428,기존v1/default회귀,완료/잘못된v2/질문오류502,두키누락503,긴환경기한/함수인자일치(120/1800/3600/3601/비숫자/bool)RED테스트작성·실행. Expected:새모드미지원실패.
-- [ ] Step 2: HTTP모드·인증후계약확인·기한범위·새안전코드503·v2결과재검증연결. `_bounded_setting`문자길이는해당maximum자릿수로제한한다.
-- [ ] Step 3: 실제SDK+로컬Provider용test-onlyworker shim 작성. LangExtract parser/추출/분류/검토/대표정리/어댑터는실제코드, endpoint만loopback고정. runtime_tests/test_integrated_service.py에서실제uvicornTCP정상요청을검증한다. Expected:합성문서10필드+근거+질문,외부통신0.
-- [ ] Step 4: 로컬Solar와NVIDIA서버가응답시작Event를보낸뒤기한·취소·실TCPdisconnect를유발하는테스트작성·실행. 요청별worker PID/종료와ProviderEOF/연결종료,다음요청slot재사용을assert. Expected:가짜결과가아닌통신중중단을확인,자식Provider프로세스0.
-- [ ] Step 5: 전체tests/runtime_tests,설정/실행/오류/v2예시·Spring미완료/품질한계README및validation기록,commit/task-done. Expected:회귀통과·실측과미검증구분.
+- [x] Step 1: exactv2header없음/중복/v1은body/slot/분석전428,기존v1/default회귀,완료/잘못된v2/질문오류502,두키누락503,긴환경기한/함수인자일치(120/1800/3600/3601/비숫자/bool)RED테스트작성·실행. Expected:새모드미지원실패.
+- [x] Step 2: HTTP모드·인증후계약확인·기한범위·새안전코드503·v2결과재검증연결. `_bounded_setting`문자길이는해당maximum자릿수로제한한다.
+- [x] Step 3: 실제SDK+로컬Provider용test-onlyworker shim 작성. LangExtract parser/추출/분류/검토/대표정리/어댑터는실제코드, endpoint만loopback고정. runtime_tests/test_integrated_service.py에서실제uvicornTCP정상요청을검증한다. Expected:합성문서10필드+근거+질문,외부통신0.
+- [x] Step 4: 로컬Solar와NVIDIA서버가응답시작Event를보낸뒤기한·취소·실TCPdisconnect를유발하는테스트작성·실행. 요청별worker PID/종료와ProviderEOF/연결종료,다음요청slot재사용을assert. Expected:가짜결과가아닌통신중중단을확인,자식Provider프로세스0.
+- [x] Step 5: 전체tests/runtime_tests,설정/실행/오류/v2예시·Spring미완료/품질한계README및validation기록,commit/task-done. Expected:회귀통과·실측과미검증구분.
 - [ ] Step 6: fresh전체리뷰1회,필요시Critical/Important단일RED→GREEN수정,featurepush/정확한CI. Expected:기능연결완료와전체실사용미완료를구분한다.

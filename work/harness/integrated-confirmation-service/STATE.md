@@ -9,5 +9,5 @@
 - Task2완료:두provider inline/요청worker/모드정합성/키stdin전달 연결,e88b39c。전체1063pass/5skip48.902s,SDK4/.068s.
 - Task3진행:HTTP v2/선택형mode/1800..3600초,기존120초환경값버그수정. HTTP39/39통과4.349s. 실제SDK/HTTP runtime5/5통과45.612s,2Provider 각각 실제응답중 기한/ASGI취소/TCP종료 후 worker종료/소켓EOF/slot재사용검증.
 - runtime최초실패는테스트용Popen함수대체가Windows asyncio상속을깨뜨림(exit1/provider0)으로확인,클래스guard로수정후통과. 제품코드수정으로우회하지않음.
-- 다음:Task3전체gate/검증기록/commit/task-done→fresh전체리뷰1회→featurepush/exactCI. 외부API/비공개문서/실키사용0,공용환경수정0. 아직미push.
+- Task3코드완료:70d69fe7dbd153fdcd56e16dc9cdd5f262426426,task-done 전체1068pass/5skip47.185s,runtime9/9 44.892s. fresh전체리뷰1회C0/I0/M0,관련99/99·runtime9/9직접실행,수정없음. 다음:featurepush/exactCI. 외부API/비공개문서/실키사용0,공용환경수정0. 아직미push.
 - 대기중:실제Spring저장소/개인문서발췌표시권한. 이로막히지않는서비스코드/로컬검증계속. 전체실사용의품질·사람검토·Spring확인저장·실패원본7일삭제는남는다.
