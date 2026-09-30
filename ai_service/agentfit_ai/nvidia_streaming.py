@@ -18,8 +18,7 @@ _STREAM_CODES = PROVIDER_WORKER_CODES | {'PROVIDER_MODEL', 'INCOMPLETE_RESPONSE'
 _FINISH_REASONS = frozenset(('stop', 'length', 'content_filter', 'tool_calls', 'function_call'))
 
 
-def post_nvidia_streaming(payload, api_key, timeout):
-    """Limit the entire streaming request, including DNS and slow events, by a child deadline."""
+def _stream_request(payload, api_key, timeout):
     if (type(payload) is not dict or type(payload.get('model')) is not str or
             payload['model'] not in NVIDIA_REVIEW_MODELS or
             type(api_key) is not str or not api_key.strip() or
@@ -32,6 +31,12 @@ def post_nvidia_streaming(payload, api_key, timeout):
         raise ValueError('invalid streaming request') from None
     if len(request) > MAX_INPUT_BYTES:
         raise ValueError('oversized streaming request')
+    return request
+
+
+def post_nvidia_streaming(payload, api_key, timeout):
+    """Limit the entire streaming request, including DNS and slow events, by a child deadline."""
+    request = _stream_request(payload, api_key, timeout)
     try:
         completed = subprocess.run(
             [sys.executable, '-m', 'agentfit_ai.nvidia_stream_worker'], input=request,
@@ -42,8 +47,21 @@ def post_nvidia_streaming(payload, api_key, timeout):
         raise AnalysisError('PROVIDER_TIMEOUT') from None
     except OSError:
         raise AnalysisError('PROVIDER_NETWORK') from None
-    output = completed.stdout
-    if completed.returncode != 0 or type(output) is not bytes or not output:
+    if completed.returncode != 0:
+        raise AnalysisError('PROVIDER_NETWORK')
+    return _stream_output(completed.stdout)
+
+
+def post_nvidia_streaming_inline(payload, api_key, timeout):
+    """Use only inside a disposable analysis process whose parent owns the total deadline."""
+    from .nvidia_stream_worker import _fetch
+    request = json.loads(_stream_request(payload, api_key, timeout))
+    return _stream_output(_fetch(request['endpoint'], request['payload'],
+                                 request['key'], request['timeout']))
+
+
+def _stream_output(output):
+    if type(output) is not bytes or not output:
         raise AnalysisError('PROVIDER_NETWORK')
     if len(output) > MAX_RESPONSE_BYTES + 1:
         raise AnalysisError('RESPONSE_TOO_LARGE')

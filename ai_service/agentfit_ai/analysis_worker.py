@@ -1,4 +1,4 @@
-"""One complete Solar analysis in a disposable request process."""
+"""One complete analysis in a disposable request process."""
 
 import json
 import sys
@@ -18,14 +18,28 @@ def execute_request(raw: bytes) -> bytes:
         if len(raw) > MAX_INPUT_BYTES:
             return FAILED
         request = json.loads(raw)
-        if (type(request) is not dict or set(request) not in
-                ({"document", "documentId", "key"},
-                 {"document", "documentId", "key", "mode"})
+        if (type(request) is not dict
                 or any(type(request[name]) is not str for name in request)
-                or not request["document"] or not request["documentId"] or not request["key"]
-                or ("mode" in request and request["mode"] != "recoverable-solar")):
+                or not request.get("document") or not request.get("documentId")
+                or not request.get("key", "").strip()):
             return FAILED
-        if "mode" in request:
+        mode = request.get('mode')
+        expected = {"document", "documentId", "key"}
+        if mode == 'integrated-candidates':
+            expected |= {'mode', 'nvidiaKey'}
+        elif mode == 'recoverable-solar':
+            expected.add('mode')
+        elif mode is not None:
+            return FAILED
+        if set(request) != expected:
+            return FAILED
+        if mode == 'integrated-candidates':
+            if not request['nvidiaKey'].strip():
+                return FAILED
+            from .candidate_service_worker import execute_integrated_analysis
+            output = execute_integrated_analysis(request['document'], request['documentId'],
+                                                  request['key'], request['nvidiaKey'])
+        elif mode == 'recoverable-solar':
             output = RecoverableSolarAnalyzer(
                 request["key"], transport=post_solar_inline,
                 analysis_timeout_seconds=40).analyze_recoverable(

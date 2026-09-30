@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 from .analysis_worker import MAX_INPUT_BYTES, MAX_OUTPUT_BYTES
+from .candidate_confirmation import CONTRACT, validate_candidate_confirmation
 from .diagnostics import safe_code
 from .solar import _provider_worker_environment
 
@@ -18,10 +19,18 @@ class AnalysisProcessError(Exception):
 
 async def run_analysis_process(document: str, document_id: str, key: str,
                                deadline: float, *, recoverable_solar: bool = False,
+                               integrated_candidates: bool = False, nvidia_key=None,
                                command=None) -> dict:
+    if (type(recoverable_solar) is not bool or type(integrated_candidates) is not bool
+            or (recoverable_solar and integrated_candidates)
+            or (integrated_candidates and (type(nvidia_key) is not str or not nvidia_key.strip()))
+            or (not integrated_candidates and nvidia_key is not None)):
+        raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")
     request = {"document": document, "documentId": document_id, "key": key}
     if recoverable_solar:
         request["mode"] = "recoverable-solar"
+    if integrated_candidates:
+        request.update(mode='integrated-candidates', nvidiaKey=nvidia_key)
     payload = json.dumps(request, ensure_ascii=False).encode("utf-8")
     if len(payload) > MAX_INPUT_BYTES:
         raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")
@@ -66,6 +75,15 @@ async def run_analysis_process(document: str, document_id: str, key: str,
             raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")
         if safe_code(result["error"]) == result["error"]:
             return result
+    if integrated_candidates:
+        if (set(result) == {'contract', 'outcome', 'error'} and result['contract'] == CONTRACT
+                and result['outcome'] == 'failed' and type(result['error']) is str
+                and safe_code(result['error']) == result['error']):
+            return result
+        try:
+            return validate_candidate_confirmation(document, document_id, result)
+        except (TypeError, ValueError, KeyError):
+            raise AnalysisProcessError("ANALYSIS_WORKER_FAILED") from None
     if (set(result) == {"outcome", "profile"} and result["outcome"] == "complete"
             and type(result["profile"]) is dict):
         return result

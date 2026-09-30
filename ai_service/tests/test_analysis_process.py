@@ -1,4 +1,6 @@
 import asyncio
+from copy import deepcopy
+import json
 import os
 import sys
 import time
@@ -140,6 +142,81 @@ class AnalysisProcessTests(unittest.TestCase):
         with self.assertRaises(AnalysisProcessError) as caught:
             self.run_async(run())
         self.assertEqual(caught.exception.code, "ANALYSIS_WORKER_FAILED")
+
+
+class IntegratedProcessTests(unittest.TestCase):
+    def draft(self):
+        from test_candidate_confirmation import result
+        profile = result()['profile']
+        states = {field: 'unknown' if value is None else 'suggested'
+                  for field, value in profile['data'].items()}
+        states['frontend'] = 'unresolved'
+        return {'contract': 'confirmation-v2', 'outcome': 'needs_confirmation',
+                'profile': profile, 'fieldStates': states, 'error': 'REVIEW_CONFIRMATION_REQUIRED',
+                'questions': [{'field': field, 'questionId': 'confirm_' + field,
+                    'reason': 'REVIEW_ISSUE' if state == 'unresolved' else 'CONFIRM_SUGGESTION'}
+                    for field, state in states.items() if state != 'unknown']}
+
+    def call(self, response, **kwargs):
+        from agentfit_ai.analysis_process import run_analysis_process
+        from test_candidate_confirmation import DOCUMENT, DOCUMENT_ID
+        command = [sys.executable, '-c', 'import sys,json; json.load(sys.stdin); print(' + repr(json.dumps(response)) + ')']
+        async def run():
+            return await run_analysis_process(DOCUMENT, DOCUMENT_ID, 'synthetic-solar',
+                asyncio.get_running_loop().time() + 10, command=command, **kwargs)
+        return asyncio.run(run())
+
+    def test_integrated_v2_preserves_nonnull_unresolved_and_safe_failure(self):
+        draft = self.draft()
+        self.assertEqual(self.call(draft, integrated_candidates=True, nvidia_key='synthetic-nvidia'), draft)
+        failed = {'contract': 'confirmation-v2', 'outcome': 'failed', 'error': 'PROVIDER_TIMEOUT'}
+        self.assertEqual(self.call(failed, integrated_candidates=True, nvidia_key='synthetic-nvidia'), failed)
+
+    def test_integrated_rejects_complete_v1_corrupt_profile_and_private_failure(self):
+        from agentfit_ai.analysis_process import AnalysisProcessError
+        bad = deepcopy(self.draft())
+        bad['profile']['evidence']['frontend'][0]['documentId'] = 'wrong'
+        cases = [bad, {'outcome': 'complete', 'profile': {}},
+                 {'outcome': 'failed', 'error': 'PROVIDER_TIMEOUT'},
+                 {'contract': 'confirmation-v2', 'outcome': 'failed', 'error': 'private detail'}]
+        for response in cases:
+            with self.subTest(outcome=response['outcome']), self.assertRaises(AnalysisProcessError) as caught:
+                self.call(response, integrated_candidates=True, nvidia_key='synthetic-nvidia')
+            self.assertEqual(str(caught.exception), 'ANALYSIS_WORKER_FAILED')
+        for options in ({}, {'recoverable_solar': True}):
+            with self.subTest(options=options), self.assertRaises(AnalysisProcessError):
+                self.call(self.draft(), **options)
+
+    def test_invalid_modes_or_keys_never_launch_worker(self):
+        from agentfit_ai.analysis_process import AnalysisProcessError
+        variants = ({'integrated_candidates': True}, {'nvidia_key': 'synthetic'},
+                    {'integrated_candidates': True, 'nvidia_key': ' '},
+                    {'integrated_candidates': 1, 'nvidia_key': 'synthetic'},
+                    {'recoverable_solar': True, 'integrated_candidates': True, 'nvidia_key': 'synthetic'})
+        with patch('agentfit_ai.analysis_process.asyncio.create_subprocess_exec',
+                   side_effect=AssertionError('invalid request launched')):
+            for options in variants:
+                with self.subTest(options=options), self.assertRaises(AnalysisProcessError):
+                    self.call(self.draft(), **options)
+
+    def test_both_keys_only_cross_stdin_and_mode_is_explicit(self):
+        from agentfit_ai.analysis_process import run_analysis_process
+        from test_candidate_confirmation import DOCUMENT, DOCUMENT_ID
+        response = {'contract': 'confirmation-v2', 'outcome': 'failed', 'error': 'PROVIDER_TIMEOUT'}
+        command = [sys.executable, '-c', (
+            "import sys,os,json; r=json.load(sys.stdin); "
+            "assert set(r)=={'document','documentId','key','nvidiaKey','mode'}; "
+            "assert r['key']=='synthetic-solar' and r['nvidiaKey']=='synthetic-nvidia'; "
+            "assert r['mode']=='integrated-candidates'; "
+            "assert all(os.getenv(k) is None for k in ('UPSTAGE_API_KEY','NVIDIA_API_KEY')); "
+            "assert r['key'] not in str(sys.argv) and r['nvidiaKey'] not in str(sys.argv); "
+            'print(' + repr(json.dumps(response)) + ')')]
+        async def run():
+            return await run_analysis_process(DOCUMENT, DOCUMENT_ID, 'synthetic-solar',
+                asyncio.get_running_loop().time() + 10, integrated_candidates=True,
+                nvidia_key='synthetic-nvidia', command=command)
+        with patch.dict(os.environ, {'UPSTAGE_API_KEY': 'synthetic-solar', 'NVIDIA_API_KEY': 'synthetic-nvidia'}):
+            self.assertEqual(asyncio.run(run()), response)
 
 
 if __name__ == "__main__":

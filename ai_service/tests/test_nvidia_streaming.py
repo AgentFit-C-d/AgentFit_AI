@@ -197,6 +197,41 @@ class StreamingTransportTests(unittest.TestCase):
         self.assertEqual(options['stderr'], subprocess.DEVNULL)
 
 
+class InlineStreamingTests(unittest.TestCase):
+    def test_inline_uses_real_sse_validation_without_spawning_or_mutating(self):
+        from agentfit_ai.nvidia_streaming import post_nvidia_streaming_inline
+        payload = {'model': MODEL, 'messages': [], 'stream': False}
+        original = deepcopy(payload)
+        with local_provider(wire([event(content='{"value":7}', finish='stop')])) as requests, patch(
+                'agentfit_ai.nvidia_streaming.subprocess.run', side_effect=AssertionError('nested child')):
+            output = post_nvidia_streaming_inline(payload, 'synthetic-token', 5)
+        self.assertEqual(json.loads(output)['choices'][0]['message']['content'], '{"value":7}')
+        self.assertEqual(payload, original)
+        self.assertTrue(requests[0]['payload']['stream'])
+
+    def test_inline_rejects_bad_input_before_network(self):
+        from agentfit_ai.nvidia_streaming import post_nvidia_streaming_inline
+        with patch('agentfit_ai.nvidia_stream_worker._fetch', side_effect=AssertionError('network')):
+            for payload, key, timeout in (({}, 'key', 1), ({'model': MODEL}, '', 1),
+                    ({'model': MODEL}, 'key', True), ({'model': MODEL}, 'key', float('nan')),
+                    ({'model': MODEL}, 'key', 601), ({'model': MODEL, 'bad': object()}, 'key', 1)):
+                with self.subTest(timeout=timeout), self.assertRaises(ValueError):
+                    post_nvidia_streaming_inline(payload, key, timeout)
+            with patch('agentfit_ai.nvidia_streaming.MAX_INPUT_BYTES', 20), self.assertRaises(ValueError):
+                post_nvidia_streaming_inline({'model': MODEL}, 'key', 1)
+
+    def test_inline_framing_errors_and_oversized_output_are_safe(self):
+        from agentfit_ai.nvidia_streaming import post_nvidia_streaming_inline
+        for output, code in ((b'EPROVIDER_TIMEOUT', 'PROVIDER_TIMEOUT'),
+                             (b'Eprivate response', 'PROVIDER_NETWORK'),
+                             (b'partial', 'PROVIDER_NETWORK'), (b'', 'PROVIDER_NETWORK'),
+                             (b'S' + b'x' * 1_048_577, 'RESPONSE_TOO_LARGE')):
+            with self.subTest(code=code), patch('agentfit_ai.nvidia_stream_worker._fetch', return_value=output):
+                with self.assertRaises(AnalysisError) as caught:
+                    post_nvidia_streaming_inline({'model': MODEL}, 'key', 1)
+                self.assertEqual(str(caught.exception), code)
+
+
 class SSEAssemblyTests(unittest.TestCase):
     def assert_error(self, source, code):
         with self.assertRaises(AnalysisError) as caught:
