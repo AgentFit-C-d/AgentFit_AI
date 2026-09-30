@@ -7,3 +7,4 @@
 - 공식NVIDIA요청문제문서와SSE설명확인. 모델예제streamFalse만으로stream지원을단정하지않고2arm짧은창작문서probe먼저실행. spec/plan작성,다음driver/preflight.
 - probe실행31957/PID12084 terminalexit0. 일반HTTP200/17468ms,streamHTTP200/20841ms/firstcontent16830ms. 각stop/model/source/두동작유효. verify모든해시/분모일치. 재실행금지. 결과E:/AgentFit/tmp/nvidia-transport-probe-20260930-v1.json.
 - 현재제품수정없음/실행중인API없음. 두모드짧은성공만확인,긴요청해결/속도개선미확인. spec에boundedSSE어댑터/worker/통합default/새H02계약추가. 다음구체구현tasks추가및RED. 개인문서발췌권한대기는유지.
+- SDDTask1/2완료. Task3SSE조립기RED(새모듈부재)→11PASS. 전체965중959pass6skip. 다음Task4프로세스전송/실제로컬서버검증/통합default연결. 아직외부긴문서stream실험없음,리뷰/push/CI대기.
