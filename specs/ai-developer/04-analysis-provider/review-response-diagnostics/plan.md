@@ -37,8 +37,8 @@
 - Consumes: Solar의 MAX_RESPONSE_BYTES/_json, 기존 evaluate_thinking_reviews의 sender와 callback, 고정 H02 helper.
 - Produces: describe_review_response(raw, expected_keys)→safe형태 dict, capture_response_shape=False 선택 인자.
 
-- [ ] Step 1: 순수함수 실패분류·fence·키불일치·경계·privacy 테스트와 옵션기본호환·False/True형식실패유지·옵션bool검증 테스트를 먼저 작성하고 RED를 확인한다.
-- [ ] Step 2: 최소구현 후 focused unittest를 실행한다. Expected: 모든새테스트와기존13테스트통과;변조된응답은여전히미평가.
-- [ ] Step 3: 코드고정,전체tests/runtime_tests 검증,로컬드라이버preflight. Expected: 기존5skip외통과,고정첫20/형식2/최대2호출,API0.
-- [ ] Step 4: streaming으로두형식각1호출실행. Expected: terminal성공또는고정실패,원문출력0,실행기·코드·문서hash불변,결과의문법/키/fence유형을확정가능한범위에서만판정.
+- [x] Step 1: 순수함수 실패분류·fence·키불일치·경계·privacy 테스트와 옵션기본호환·False/True형식실패유지·옵션bool검증 테스트를 먼저 작성하고 RED를 확인한다.
+- [x] Step 2: 최소구현 후 focused unittest를 실행한다. Expected: 모든새테스트와기존13테스트통과;변조된응답은여전히미평가. 진단10/10+평가16/16.
+- [x] Step 3: 코드고정,전체tests/runtime_tests 검증,로컬드라이버preflight. Expected: 기존5skip외통과,고정첫20/형식2/최대2호출,API0. 전체1022/1017pass5skip+SDK4.
+- [x] Step 4: streaming으로두형식각1호출실행. Expected: terminal성공또는고정실패,원문출력0,실행기·코드·문서hash불변,결과의문법/키/fence유형을확정가능한범위에서만판정. 2calls90.946s, guided통과/prompt-only는완전한JSON fence포장으로실패,감사12항목통과.
 - [ ] Step 5: 결과기록·task-done·독립전체브랜치리뷰·필요한Critical/Important단일수정·featurepush/CI. Expected:검증근거와미확인이분리됨,기본서비스미변경.
