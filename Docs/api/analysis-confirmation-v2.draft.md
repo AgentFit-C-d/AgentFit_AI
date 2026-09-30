@@ -4,7 +4,9 @@
 
 ## 구현된 AI 응답
 
-`AGENTFIT_ANALYSIS_MODE=integrated-candidates`의 `/internal/v1/analyze`를 `X-AgentFit-Analysis-Contract: confirmation-v2`로 호출한다. 기존 Bearer·문서ID·요청ID·raw 입력 규칙은 유지된다.
+`AGENTFIT_ANALYSIS_MODE=integrated-candidates` 또는 `integrated-nvidia`의 `/internal/v1/analyze`를 `X-AgentFit-Analysis-Contract: confirmation-v2`로 호출한다. NVIDIA 단독 모드는 NVIDIA_API_KEY만 필요하며, 기존 v2 응답·Bearer·문서ID·요청ID·raw 입력 규칙을 공유한다. 모델 구성은 서버 환경 변수로 선택하며 클라이언트 헤더가 변경하지 않는다.
+
+두 통합 모드는 요청 전체 기한 기본1800초/최대3600초를 적용한다. NVIDIA 단독은 최대64호출·자동재시도0이며 실패 후 유료 제공자로 대체하지 않는다. 현재 계정 무료 범위와 실제 모델 품질은 미검증이므로 실제 호출0을 유지한다.
 
 | outcome | 키 | 의미 |
 | --- | --- | --- |

@@ -27,7 +27,7 @@ def execute_request(raw: bytes) -> bytes:
         expected = {"document", "documentId", "key"}
         if mode == 'integrated-candidates':
             expected |= {'mode', 'nvidiaKey'}
-        elif mode == 'recoverable-solar':
+        elif mode in ('recoverable-solar', 'integrated-nvidia'):
             expected.add('mode')
         elif mode is not None:
             return FAILED
@@ -39,6 +39,9 @@ def execute_request(raw: bytes) -> bytes:
             from .candidate_service_worker import execute_integrated_analysis
             output = execute_integrated_analysis(request['document'], request['documentId'],
                                                   request['key'], request['nvidiaKey'])
+        elif mode == 'integrated-nvidia':
+            from .candidate_service_worker import execute_nvidia_analysis
+            output = execute_nvidia_analysis(request['document'], request['documentId'], request['key'])
         elif mode == 'recoverable-solar':
             output = RecoverableSolarAnalyzer(
                 request["key"], transport=post_solar_inline,

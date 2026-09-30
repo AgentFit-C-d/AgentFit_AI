@@ -38,9 +38,9 @@ class CorruptibleProvider(Provider):
 
 
 @contextmanager
-def core_flow(provider):
+def core_flow(provider, *, analysis_mode='integrated-candidates'):
     store = MockStore()
-    with service(provider, internal_token='mock-internal') as (ai_app, _, processes):
+    with service(provider, internal_token='mock-internal', analysis_mode=analysis_mode) as (ai_app, _, processes):
         with running_server(store=store, ai_app=ai_app, analysis_timeout_seconds=45) as (origin, address):
             options = {'base_url': origin, 'trust_env': False, 'timeout': 50,
                        'headers': {'Origin': origin},

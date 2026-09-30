@@ -9,7 +9,7 @@ AgentFit의 문서 추출·분석, Profile 검증과 평가를 담당하는 AI �
 
 ## 로컬 환경 설정
 
-루트 `.env` 파일에 `UPSTAGE_API_KEY`를 설정합니다. `.env`는 커밋하지 않습니다.
+루트 `.env` 파일에 선택한 분석 경로의 API 키를 설정합니다. 기본 Solar 경로는 `UPSTAGE_API_KEY`, NVIDIA 단독 경로는 `NVIDIA_API_KEY`를 사용합니다. `.env`는 커밋하지 않습니다.
 기능 브랜치의 `ai_service/` 디렉터리에서 Python 3.12로 Profile 단위 테스트를 실행합니다.
 
 ```text
@@ -26,7 +26,16 @@ Python 3.13의 프로젝트 전용 환경에서 `ai_service/`로 이동해 설�
 python -m pip install -r requirements-integrated.txt -r requirements-dev.txt
 ```
 
-실행 프로세스의 환경 변수에 `AGENTFIT_INTERNAL_TOKEN`, `UPSTAGE_API_KEY`, `NVIDIA_API_KEY`를 설정하고 `AGENTFIT_ANALYSIS_MODE=integrated-candidates`를 선택합니다. 키는 채팅·명령 인자·Git에 넣지 않습니다. 서버는 `.env`를 자동으로 읽지 않으므로 개발 도구의 환경 변수 로딩 기능 등을 통해 주입해야 합니다. 공용 환경 대신 해당 서버 인터프리터에 LangExtract 1.7.0이 설치되어 있어야 합니다.
+실행 프로세스에 `AGENTFIT_INTERNAL_TOKEN`과 아래 모드의 키를 설정합니다. `AGENTFIT_ANALYSIS_MODE`를 생략하면 기존 기본 Solar 분석이 선택됩니다.
+
+| AGENTFIT_ANALYSIS_MODE | 필요한 모델 키 | 분석 구성 |
+| --- | --- | --- |
+| integrated-nvidia | NVIDIA_API_KEY | DeepSeek V4.1 Flash 추출·분류·기능 정리, GLM5.3 검토 |
+| integrated-candidates | UPSTAGE_API_KEY, NVIDIA_API_KEY | 기존 Solar 추출·분류와 NVIDIA 검토·기능 정리 |
+
+NVIDIA 단독 모드는 전체 최대64호출·자동재시도0이며, 429·503 등 첫 통신 실패 후 추가 전송을 중단합니다. 계정의 무료 대상·한도는 코드가 확인하지 않습니다. 현재 실제 호출은 보류 중이며 무료 범위 확인 전에는 아래 서버로 실제 문서를 분석하지 않습니다. 단독 모드를 기존 혼합 기준선 평가 결과에 이어 기록하지 않습니다.
+
+키는 채팅·명령 인자·Git에 넣지 않습니다. 서버는 `.env`를 자동으로 읽지 않으므로 개발 도구의 환경 변수 로딩 기능 등을 통해 주입해야 합니다. 해당 서버 인터프리터에 LangExtract 1.7.0이 설치되어 있어야 합니다.
 
 ```text
 python -m uvicorn agentfit_ai.http_service:app --host 127.0.0.1 --port 8000
@@ -38,7 +47,7 @@ python -m uvicorn agentfit_ai.http_service:app --host 127.0.0.1 --port 8000
 - `profile`은 기존 10필드·원문 근거·대표 기능 최대 30개 계약을 유지합니다. `fieldStates`의 `unresolved`에도 근거가 있는 제안 값을 보존합니다. `unknown`을 제외한 필드마다 고정된 `questionId=confirm_<field>`와 질문 사유가 있습니다.
 - 전체 기한은 통합 모드 기본 1,800초, `AGENTFIT_REQUEST_TIMEOUT_SECONDS`로 1~3,600초를 설정합니다. 기본/복구 모드는 60초·최대 120초를 유지합니다. 동시 실행 기본 2개·최대 8개, 업로드 기본 10초·최대 30초입니다.
 - 계약 헤더 누락·혼용은 428, 키/SDK 미설치는 503, 기한 초과는 504, 손상된 워커 결과는 502입니다. 파이프라인 분석 실패는 200의 `outcome=failed`와 안전한 오류 코드로 반환할 수 있으므로 HTTP 상태만으로 완료를 판단하지 않습니다.
-- 분석 프로세스가 Solar/NVIDIA 통신을 직접 소유합니다. 요청 취소·연결 종료·전체 기한에 부모가 프로세스를 종료합니다. 두 키는 자식 stdin으로만 전달하며 서버는 문서·모델 원본을 저장하지 않습니다.
+- 분석 프로세스가 선택된 제공자 통신을 직접 소유합니다. 요청 취소·연결 종료·전체 기한에 부모가 프로세스를 종료합니다. 필요한 키만 자식 stdin으로 전달하며, NVIDIA 단독 모드는 Solar 키를 읽거나 전달하지 않습니다. 서버는 문서·모델 원본을 저장하지 않습니다.
 
 외부 API 없이 검증하려면 설치된 환경에서 실행합니다.
 
@@ -48,6 +57,8 @@ python -m unittest discover -s runtime_tests -v
 ```
 
 실제 SDK·로컬 HTTP/SSE·TCP 연결 종료 검증은 모델 의미 정확도를 측정하지 않습니다. 실제 Spring DTO·확인/저장·버전 경쟁·실패 원본 7일 삭제 연동과 독립 문서 품질 평가는 남아 있습니다. [명세](specs/ai-developer/11-fastapi-analysis-service/integrated-confirmation-service/spec.md) · [검증 기록](specs/ai-developer/11-fastapi-analysis-service/integrated-confirmation-service/validation.md)
+
+NVIDIA 단독 연결의 범위와 검증은 [단독 서비스 명세](specs/ai-developer/nvidia-analysis-service/spec.md) · [검증 기록](specs/ai-developer/nvidia-analysis-service/validation.md)을 참고하세요. 전체 요청 기한은 단독 모드에도 적용되며, 독립 품질 평가 runner의 단독 variant는 아직 연결하지 않았습니다.
 
 ### 통합 분석 실패 단계 확인
 

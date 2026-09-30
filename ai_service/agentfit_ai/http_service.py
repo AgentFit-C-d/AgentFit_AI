@@ -27,6 +27,7 @@ MEDIA_TYPES = {"PDF": "application/pdf", "MARKDOWN": "text/markdown",
                "TEXT": "text/plain"}
 _DISCONNECTED = object()
 _CONFIGURATION_ERRORS = frozenset(('MISSING_OR_INVALID_KEY', 'INTEGRATED_RUNTIME_UNAVAILABLE'))
+_INTEGRATED_MODES = ('integrated-candidates', 'integrated-nvidia')
 
 
 def _error(status: int, code: str) -> JSONResponse:
@@ -68,14 +69,18 @@ async def _wait_for_disconnect(request: Request) -> None:
 
 async def _run_default_analysis(request: Request, document: str, document_id: str,
                                 deadline: float, *, recoverable_solar: bool = False,
-                                integrated_candidates: bool = False) -> dict:
-    key = os.environ.get("UPSTAGE_API_KEY", "")
+                                integrated_candidates: bool = False,
+                                nvidia_only: bool = False) -> dict:
+    key = os.environ.get('NVIDIA_API_KEY' if nvidia_only else 'UPSTAGE_API_KEY', '')
     nvidia_key = os.environ.get("NVIDIA_API_KEY", "") if integrated_candidates else None
     if not key.strip() or (integrated_candidates and not nvidia_key.strip()):
         raise AnalysisError("MISSING_OR_INVALID_KEY")
     if await request.is_disconnected():
         return _DISCONNECTED
-    if integrated_candidates:
+    if nvidia_only:
+        worker = asyncio.create_task(run_analysis_process(
+            document, document_id, key, deadline, nvidia_only=True))
+    elif integrated_candidates:
         worker = asyncio.create_task(run_analysis_process(
             document, document_id, key, deadline, integrated_candidates=True, nvidia_key=nvidia_key))
     elif recoverable_solar:
@@ -170,15 +175,15 @@ def create_app(*, internal_token: str | None = None,
     token = os.environ.get("AGENTFIT_INTERNAL_TOKEN", "") if internal_token is None else internal_token
     mode = (os.environ.get("AGENTFIT_ANALYSIS_MODE", "default")
             if analysis_mode is None else analysis_mode)
-    if mode not in ("default", "recoverable-solar", "integrated-candidates"):
+    if mode not in ("default", "recoverable-solar", *_INTEGRATED_MODES):
         raise ValueError("invalid analysis mode")
     limit = _bounded_setting(max_inflight, "AGENTFIT_MAX_INFLIGHT_ANALYSES", 2, 8)
     upload_timeout = _bounded_setting(upload_timeout_seconds,
                                       "AGENTFIT_UPLOAD_TIMEOUT_SECONDS", 10, 30)
     request_timeout = _bounded_setting(request_timeout_seconds,
                                        "AGENTFIT_REQUEST_TIMEOUT_SECONDS",
-                                       1800 if mode == 'integrated-candidates' else 60,
-                                       3600 if mode == 'integrated-candidates' else 120)
+                                       1800 if mode in _INTEGRATED_MODES else 60,
+                                       3600 if mode in _INTEGRATED_MODES else 120)
     slots = BoundedSemaphore(limit)
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 
@@ -196,9 +201,9 @@ def create_app(*, internal_token: str | None = None,
         supplied = authorization.removeprefix("Bearer ")
         if not authorization.startswith("Bearer ") or not hmac.compare_digest(supplied, token):
             return _error(401, "UNAUTHORIZED")
-        if (mode in ("recoverable-solar", "integrated-candidates") and
+        if (mode in ("recoverable-solar", *_INTEGRATED_MODES) and
                 request.headers.getlist("x-agentfit-analysis-contract") !=
-                [CONTRACT if mode == 'integrated-candidates' else "confirmation-v1"]):
+                [CONTRACT if mode in _INTEGRATED_MODES else "confirmation-v1"]):
             return _error(428, "CONFIRMATION_CONTRACT_REQUIRED")
 
         document_id = request.headers.get("x-document-id", "")
@@ -278,7 +283,8 @@ def create_app(*, internal_token: str | None = None,
                 outcome = await _run_default_analysis(
                     request, extracted.text, document_id, deadline,
                     recoverable_solar=(mode == "recoverable-solar"),
-                    integrated_candidates=(mode == 'integrated-candidates'))
+                    integrated_candidates=(mode == 'integrated-candidates'),
+                    nvidia_only=(mode == 'integrated-nvidia'))
                 if outcome is _DISCONNECTED:
                     response = _AbortedResponse(slots.release)
                     release_here = False
@@ -289,7 +295,7 @@ def create_app(*, internal_token: str | None = None,
             if type(outcome) is dict and set(outcome) == {"error"}:
                 code = safe_code(outcome["error"])
                 return fail(503 if code in _CONFIGURATION_ERRORS else 502, code)
-            if mode == 'integrated-candidates':
+            if mode in _INTEGRATED_MODES:
                 if (type(outcome) is dict and set(outcome) == {'contract', 'outcome', 'error'}
                         and outcome['contract'] == CONTRACT and outcome['outcome'] == 'failed'
                         and type(outcome['error']) is str and safe_code(outcome['error']) == outcome['error']):

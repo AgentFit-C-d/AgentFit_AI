@@ -25,6 +25,11 @@ def main():
     from agentfit_ai import solar, nvidia_streaming
     solar.ENDPOINT = endpoint + '/solar'
     nvidia_streaming.ENDPOINT = endpoint + '/nvidia'
+    if sys.argv[2:] == ['nvidia-only']:
+        def forbidden_solar(*args, **kwargs):
+            raise AssertionError('Solar transport forbidden in NVIDIA-only fixture')
+        solar.post_solar_inline = forbidden_solar
+        solar.post_solar = forbidden_solar
     if sys.argv[2:] == ['evaluation']:
         from agentfit_ai.independent_evaluation_worker import main as worker_main
     else:

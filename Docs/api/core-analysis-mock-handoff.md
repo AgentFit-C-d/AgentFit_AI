@@ -121,6 +121,8 @@ python -m unittest discover -s core_flow_tests -v
 
 검증 결과는 [핵심 흐름 runtime 기록](../../specs/ai-developer/core-flow-runtime-checks/validation.md)을 따른다. CI의 `core-flow-runtime` job은 이 suite를 별도로 실행한다. 실제 외부 Provider, PDF/Markdown의 이 전체 연결, 질문별 명시적 확인 UI, Spring/DB 및 운영 환경의 검증은 아래 목록에 남긴다.
 
+`integrated-nvidia` 선택형 서비스도 실제 child·LangExtract·합성 NVIDIA SSE를 거쳐 동일 mock 저장 계약에 연결했다. 단독 경로는 Solar 키 없이 실행하며 429/503에서 자동재시도하지 않는다. 단독 API의 전체 기한/TCP 종료/ASGI 취소 시 프로세스·socket 정리, mock의 초안·확인본 보존·명시적 재요청·중복409·삭제를 별도로 검증한다. 상세 결과는 [NVIDIA 단독 연결 기록](../../specs/ai-developer/nvidia-analysis-service/validation.md)에 있다. 합성 TEXT/메모리 저장 범위이며 실제 Spring·운영 저장·실제 모델 품질 검증을 대신하지 않는다.
+
 - [ ] Spring이 이 요청·응답 OpenAPI와 오류/우선순위를 그대로 구현하는지 소비자 테스트 실행
 - [ ] 실제 인증 쿠키·세션 만료·Origin·소유권·다른 프로젝트 draft 접근 검증
 - [ ] Spring→FastAPI 실제 HTTP 토큰·헤더·ID·timeout·크기·오류 매핑 검증

@@ -20,10 +20,11 @@ class AnalysisProcessError(Exception):
 async def run_analysis_process(document: str, document_id: str, key: str,
                                deadline: float, *, recoverable_solar: bool = False,
                                integrated_candidates: bool = False, nvidia_key=None,
-                               command=None) -> dict:
-    if (type(recoverable_solar) is not bool or type(integrated_candidates) is not bool
-            or (recoverable_solar and integrated_candidates)
+                               nvidia_only: bool = False, command=None) -> dict:
+    flags = (recoverable_solar, integrated_candidates, nvidia_only)
+    if (any(type(flag) is not bool for flag in flags) or sum(flags) > 1
             or (integrated_candidates and (type(nvidia_key) is not str or not nvidia_key.strip()))
+            or (nvidia_only and (type(key) is not str or not key.strip()))
             or (not integrated_candidates and nvidia_key is not None)):
         raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")
     request = {"document": document, "documentId": document_id, "key": key}
@@ -31,6 +32,8 @@ async def run_analysis_process(document: str, document_id: str, key: str,
         request["mode"] = "recoverable-solar"
     if integrated_candidates:
         request.update(mode='integrated-candidates', nvidiaKey=nvidia_key)
+    if nvidia_only:
+        request['mode'] = 'integrated-nvidia'
     payload = json.dumps(request, ensure_ascii=False).encode("utf-8")
     if len(payload) > MAX_INPUT_BYTES:
         raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")
@@ -75,7 +78,7 @@ async def run_analysis_process(document: str, document_id: str, key: str,
             raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")
         if safe_code(result["error"]) == result["error"]:
             return result
-    if integrated_candidates:
+    if integrated_candidates or nvidia_only:
         if (set(result) == {'contract', 'outcome', 'error'} and result['contract'] == CONTRACT
                 and result['outcome'] == 'failed' and type(result['error']) is str
                 and safe_code(result['error']) == result['error']):

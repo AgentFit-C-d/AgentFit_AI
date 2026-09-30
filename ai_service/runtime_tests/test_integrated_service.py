@@ -29,11 +29,13 @@ SHIM = Path(__file__).with_name('integrated_service_fixture.py')
 
 
 class Provider:
-    def __init__(self, *, hold=None, missing=False, many_features=False):
+    def __init__(self, *, hold=None, missing=False, many_features=False, failure_status=None):
         self.hold, self.missing = hold, missing
+        self.failure_status = failure_status
         self.started, self.closed, self.stop = (threading.Event() for _ in range(3))
         self.held = False
         self.names, self.errors = [], []
+        self.kinds = []
         self.facts = (FACTS[:-1] + [(f'기록 저장 동작 (표현 {i:02})', 'features') for i in range(31)]
                       if many_features else FACTS)
         self.document = '\n'.join(value for value, _ in self.facts)
@@ -73,6 +75,16 @@ def provider_server(provider):
                 payload = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
                 assert kind in ('solar', 'nvidia')
                 assert self.headers['Authorization'] == 'Bearer ' + (SOLAR_KEY if kind == 'solar' else NVIDIA_KEY)
+                provider.kinds.append(kind)
+                if provider.failure_status is not None:
+                    encoded = b'{"error":"synthetic-private-provider-error"}'
+                    self.send_response(provider.failure_status)
+                    self.send_header('Content-Type', 'application/json')
+                    self.send_header('Content-Length', str(len(encoded)))
+                    self.end_headers()
+                    self.wfile.write(encoded)
+                    self.wfile.flush()
+                    return
                 if provider.hold == kind and not provider.held:
                     provider.held = True
                     if kind == 'solar':
@@ -126,7 +138,8 @@ def provider_server(provider):
 
 
 @contextmanager
-def service(provider, *, timeout=30, internal_token='synthetic-internal'):
+def service(provider, *, timeout=30, internal_token='synthetic-internal',
+            analysis_mode='integrated-candidates'):
     processes = []
     original_spawn = asyncio.create_subprocess_exec
     async def capture(*args, **kwargs):
@@ -137,12 +150,16 @@ def service(provider, *, timeout=30, internal_token='synthetic-internal'):
         return process
     with provider_server(provider) as endpoint:
         async def worker(*args, **kwargs):
-            return await run_analysis_process(*args, **kwargs, command=[sys.executable, str(SHIM), endpoint])
-        app = create_app(internal_token=internal_token, analysis_mode='integrated-candidates',
+            command = [sys.executable, str(SHIM), endpoint]
+            if analysis_mode == 'integrated-nvidia':
+                command.append('nvidia-only')
+            return await run_analysis_process(*args, **kwargs, command=command)
+        app = create_app(internal_token=internal_token, analysis_mode=analysis_mode,
                          max_inflight=1, request_timeout_seconds=timeout)
         server = uvicorn.Server(uvicorn.Config(app, host='127.0.0.1', port=0, access_log=False, log_level='error'))
         thread = threading.Thread(target=server.run, daemon=True)
-        with patch.dict(os.environ, {'UPSTAGE_API_KEY': SOLAR_KEY, 'NVIDIA_API_KEY': NVIDIA_KEY,
+        with patch.dict(os.environ, {'UPSTAGE_API_KEY': '' if analysis_mode == 'integrated-nvidia' else SOLAR_KEY,
+                                    'NVIDIA_API_KEY': NVIDIA_KEY,
                                     'NO_PROXY': '127.0.0.1', 'no_proxy': '127.0.0.1'}), patch(
                 'agentfit_ai.http_service.run_analysis_process', side_effect=worker), patch(
                 'agentfit_ai.analysis_process.asyncio.create_subprocess_exec', side_effect=capture):
