@@ -16,6 +16,10 @@
 
 전체 회귀: 단위1174건 중1169통과/플랫폼skip5(59.825초), runtime31/31(111.089초), 계약36/36(5.170초), core8/8(27.763초). 총1244통과/5skip이며 모든 suite 종료코드0이다. 코드 커밋은 `a28254a370d7c93df447200b994c295aa01d1415`다. 독립 최종 리뷰 Critical0/Important0/Minor0, 메인이 리뷰 패키지 인코딩 개선 권고를minor deferred로기록했다. push/CI는 후속확인한다.
 
+## 원격 검증
+
+`feature/nvidia-review-model-routing`의 `9b853390a7401df128d85735818a4c27ed7fb010` push 완료. [Linux CI36768519813](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36768519813)는2026-09-30T19:53:48Z에모든4job이success로종료됐다. 단위·실제Linux메모리·통합SDK·계약mock·핵심흐름을포함한다. 이후실제평가는별도[실행계획](live-plan.md)을따르며코드/자료freeze를유지한다.
+
 ## 해석 제한
 
 로컬 검증은 선택 모델의 정확한 전달과 오류 처리 증거다. DeepSeek의 실제 문서 검토 품질 향상이나 제공자 가용성을 입증하지 않는다. gold는 사람이 검토하지 않은 임시 기준이며 `human_reviewed=false`, `release_gate_passed=false`를 유지한다. 실제Spring·DB·운영 환경은 미검증이다. 이전 진단의 첫GLM HTTP5xx 실패1건만으로 모델 일반 성능을 단정하지 않는다.
