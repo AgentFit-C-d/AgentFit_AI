@@ -7,3 +7,7 @@
 - 기준 테스트:996건/990통과6제외,20.870초/exit0. 기본 Python의 LangExtract find_spec은 None, 기존 grounding 실험 환경은1.7.0.
 - 진행: 제한된 설치 기능의 명세·계획 작성. 다음은 Task1 실제 SDK 테스트 작성→기본/깨끗한 환경 실패→선택형 설치→SDK/전체 테스트→독립 리뷰→push/CI.
 - 경계: 실제 API0, private document0, .env 읽기0. 공유 venv 변경 없음. Spring 위치와 개인 문서 발췌 표시 승인은 여전히 대기 중이지만 이번 기능에는 필요 없다.
+- 구현: requirements-integrated에1.7.0,별도 runtime_tests4건,독립 integrated-runtime CI job,설치·오프라인검증 README 작성. 알고리즘 제품 코드 변경0.
+- RED: 기본 venv와 새 기본설치 venv 모두ModuleNotFoundError(langextract)/exit1. GREEN: 새.venv의 pip check0,SDK4/4. 기존 suite는 기본환경990pass6skip/20.325s,선택형991pass5skip/21.139s. SDK 기존 parser 테스트1개가 추가 실행됨.
+- 사용자 공용 환경1.7.0 설치 보고를 반영했다. 그 설치 경로는 미확인이며 변경하지 않는다. 실행환경별 결과를 섞지 않는다.
+- 다음: Task1 최종 게이트→독립 리뷰→feature push→정확한 CI. 이번 재개는 progress이며 실사용 목표는 미완료다.

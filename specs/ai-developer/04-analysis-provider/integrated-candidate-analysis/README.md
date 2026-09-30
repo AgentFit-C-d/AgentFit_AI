@@ -2,6 +2,30 @@
 
 `agentfit_ai.candidate_analysis_pipeline.analyze_integrated_candidates`는 문서 원문부터 최종 후보 Profile까지 실행하는 선택형 내부 함수다.
 
+## 선택형 런타임 설치
+
+기본 HTTP 서비스의 설치 파일과 통합 분석기 설치 파일을 구분한다. Python3.13의 별도 가상환경을 활성화한 뒤 저장소 루트에서 실행한다.
+
+```text
+python -m pip install -r ai_service/requirements-integrated.txt
+python -m pip check
+```
+
+이 파일은 기존 서비스 의존성과 LangExtract1.7.0을 설치한다. 추가 Provider extras는 사용하지 않으며, 일반 후보 생성은 기존 Solar 어댑터가 담당한다. 전이 의존성 전체를 고정한 lock 파일은 아니다.
+
+오프라인 검증은 테스트 의존성을 추가 설치한 뒤 실행한다. 실제 API 키나 `.env`가 필요하지 않다.
+
+```text
+python -m pip install -r ai_service/requirements-dev.txt
+cd ai_service
+python -m unittest discover -s runtime_tests -v
+python -m unittest discover -s tests -q
+```
+
+`runtime_tests`는 실제 LangExtract를 실행하며 외부 전송만 합성 응답으로 대체한다. 설치 누락은 import 오류로 실패한다. 기본 `tests`와 분리돼 있으므로 기본 서비스 환경에서 LangExtract 없이 기존 테스트를 실행할 수 있다. CI의 별도 `integrated-runtime` job은 깨끗한 Ubuntu24.04/Python3.13에서 두 묶음을 모두 검사한다.
+
+검증 범위는 기본 추출 경로→최종 Profile, 반복 인용의 anchor·위치, 잘못된 응답의 안전한 중단, 여러 청크의 공통 호출 예산이다. 실제 모델의 정확도나 제공자 가용성, HTTP 연결·Spring 저장·배포 완료를 입증하는 검사는 아니다. [명세와 설치 검증 기록](../integrated-analysis-runtime/validation.md)을 참고한다.
+
 ## 실행 흐름
 
 1. Solar LangExtract로 일반 후보를 추출하고 정확한 원문 등장 위치를 확장한다.
