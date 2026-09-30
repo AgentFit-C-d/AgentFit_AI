@@ -1,0 +1,7 @@
+# 검토 사유 재현 상태
+
+- 목표 active. 직전 평가 종료/엄격감사/결과8224d14 push 완료. 현재 모델 요청0.
+- feature/candidate-rejection-replay, 기존 worktree 재사용. .superpowers 및 이전 결과 보존.
+- 조사 명세·계획 작성. PUBLIC-01 같은 분류snapshot 두 번, DeepSeek·explicit-v1·reasoned/batch20 고정. 기존 사유 수집기만 연결한다.
+- 최대26호출/2400초/재시도0. 무료 확인 매 호출, 오류 시 중단. 개인 문서 전송·유료·배포0.
+- 다음: disposable replay 구현·외부0검증→고정실행→사유와반복편차판정. 실제품질/새문서/사람/Spring/운영 gate 미완료.
