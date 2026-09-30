@@ -38,8 +38,8 @@
 - Consumes: describe_review_response·공통fence규칙·기존파서/검토/투영/정답helper.
 - Produces: normalize_review_json_fence(raw,expected_keys)→(raw_or_normalized_bytes,bool),normalize_json_fences=False옵션.
 
-- [ ] Step 1: 정상bytes불변·단일fence내용보존·모든거부경계·재인코딩/한도·후속민감정보/모델/ID검증·옵션bool테스트를작성하고RED를확인한다.
-- [ ] Step 2: 최소구현,focused검증. Expected:기존진단/평가회귀및새테스트통과,진단은변환전·raw/비밀유출없음.
-- [ ] Step 3: 전체tests/runtime_tests,첫요청기존hash동일·109대상/최대7 preflight를확인한다. Expected:기존5skip외성공,API0. 제품commit으로고정한다.
-- [ ] Step 4: streaming전체H02를1회실행한다. Expected:terminal성공또는고정실패,코드/hash불변·상한준수·성공시에만16/6채점. 결과에맞춰정답수정없음.
+- [x] Step 1: 정상bytes불변·단일fence내용보존·모든거부경계·재인코딩/한도·후속민감정보/모델/ID검증·옵션bool테스트를작성하고RED를확인한다.
+- [x] Step 2: 최소구현,focused검증. Expected:기존진단/평가회귀및새테스트통과,진단은변환전·raw/비밀유출없음.
+- [x] Step 3: 전체tests/runtime_tests,첫요청기존hash동일·109대상/최대7 preflight를확인한다. Expected:기존5skip외성공,API0. 제품commit으로고정한다.
+- [x] Step 4: streaming전체H02를1회실행한다. Expected:terminal성공또는고정실패,코드/hash불변·상한준수·성공시에만16/6채점. 결과에맞춰정답수정없음.
 - [ ] Step 5: 결과문서·task-done·독립전체리뷰·필요시Critical/Important단일수정·featurepush/CI. Expected:실제근거와미확인범위를분리.
