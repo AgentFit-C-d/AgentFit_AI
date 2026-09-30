@@ -1,6 +1,6 @@
 # NVIDIA 평가 진단 상태
 
-- Goal active. This goal turn progress: optional source-free call diagnostics implemented, one final-review Important fix verified, feature pushed and exact code SHA CI passed. No live evaluation now; session91387 terminal exit1, no retry. Do not mark overall goal complete.
+- Goal active. Previous goal turn progress: source-free diagnostics/final fix/tests/push/CI. Current goal turn: separately budgeted Task3 live measurement started. Original session91387 terminal exit1 remains stopped. Do not mark overall goal complete.
 - Workspace E:/AgentFit/tmp/worktrees/document-input-runtime, branch feature/nvidia-evaluation-diagnostics, base566fde9 (status-only commit after verified bc25100).
 - SDD specs/ai-developer/nvidia-evaluation-diagnostics/{spec,plan}.md. Direct autonomous execution approved; feature push only, no merge/PR/deploy/cleanup.
 - Scope: strict optional call metadata through child→parent→new evaluator variant. Model/score/default public output unchanged.
@@ -15,3 +15,12 @@
 - Preserve prior frozen evaluation in E:/AgentFit/tmp/worktrees/analysis-failure-stages and output/independent-profile-v1/runs-nvidia-only-dfd33a2. Do not restart.
 - Remaining real quality/human gold/real Spring/DB/production unverified.
 - Next: separate explicitly budgeted diagnostic measurement in a fresh output folder using frozen code/model/docs, current valid free-access scope, and stop-on-provider/quota failure. Do not reuse original stopped output or interpret unavailable calls[] as zero calls. This feature's local test pass is not an accuracy gain.
+
+## Task3 actual measurement (separate from implementation's external0)
+
+- Plan84286e8 committed/pushed; task-start base0a787ca8984bf75fd7f037ae4acfd9369578600c and brief read. Source/scorer/freeze unchanged. Preflight10cases/207gold and no existing analysis/evaluation process verified; new output path did not exist.
+- Live exec session93204 started about2026-09-30T19:03:15Z, clock after launch19:03:25Z. Current command is existing nvidia_evaluation_runner --call-diagnostics --live, env safe loader, original human free confirmation (expiry2026-10-01T17:32:45.423911Z), output E:/AgentFit/output/independent-profile-v1/runs-nvidia-diagnostics-5d75535. One process; same handle only, do not restart on observation timeout.
+- Budget30requests/64calls each/1920upper, request1800s, observation16h(until2026-10-01T11:03:15Z), retries0/paid0. Actual current call count is unknown until validated metadata arrives; reservation is not account quota or actual call count.
+- Safe read-only observer .superpowers/sdd/plan-nvidia-evaluation-diagnostics/live-status.py validates freeze/checkpoints and prior evidence hashes, saves local latest-live-status.json without source text. No .env access or new model calls in observer.
+- Latest authoritative observation2026-09-30T19:08:11.617497Z: session93204 still running; PUBLIC-01/run0 pending, terminal0/30, not_started29. Trace is not yet returned, so actual call count unknown (observed terminal-call records0 is not actual0). Freeze and prior evidence hashes unchanged. Continue waiting on same session; no new live invocation.
+- Independent read-only handoff audit: Docs/api/core-analysis-mock-handoff.md contains request/response shapes, internal headers, expectedVersion/draftVersion, error/storage/conflict/cancellation/delete/7day checks and actual Spring/DB/UI/operations checklist. Current public v2 question retrieval/acknowledgment still unimplemented/team-contract pending. No duplicate implementation or new public API added while frozen measurement runs.
