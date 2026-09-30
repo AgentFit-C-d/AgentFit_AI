@@ -1,0 +1,2 @@
+-r ../requirements-dev.txt
+jsonschema[format-nongpl]==4.26.0

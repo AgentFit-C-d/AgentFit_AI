@@ -32,9 +32,9 @@
 - Task2가 사용할 `begin(owner,project_id,document:dict)->dict`(Attempt), `finish(owner,project_id,attempt_id,profile:dict,review:dict)->dict`(AnalysisResponse), `fail(owner,project_id,attempt_id,error_code:str)->None`. begin은같은프로젝트409,같은사용자1/전체2초과429; finish/fail은currentattempt와존재를대조. `fail_next_write:bool`는합성장애1회주입으로외부HTTP옵션없음.
 - 저장 상태는 딥카피로만 반환하며 UTC시각/UUID합성ID를 서버가 만든다. Project0,Profile1부터; confirmed와draft별도버전. finish에서저장하는 review는내부전용, 공개응답에는추가키없음. expectedVersion/draft쌍 검사·update·Audit는동일RLock.
 
-- [ ] Step1: `test_mock_store.py`를먼저작성. create→manualsave→GET일치, 같은known/변경known/null/[]의출처·근거, staleexpected/draft·crossproject404, 누락/추가키422, 두스레드동일버전exactly1success/1conflict, 저장장애시완전불변, DRAFT/CONFIRMED별도, 반환객체변형격리. 모든응답은실제OpenAPI로검증.
-- [ ] Step2: cwdai_service에서 `python -m unittest discover -s contract_tests -p test_mock_store.py -v` 실행. Expected:새contract_mock API미구현으로RED.
-- [ ] Step3: 별도선택의존성파일에 `-r ../requirements-dev.txt` 및 `jsonschema[format-nongpl]==4.26.0`을고정한다. 프로젝트.venv에만설치후check/schema/store를최소구현. 오류에 jsonschema exception문자열포함금지, invalidvalidation은고정코드만.
+- [x] Step1: `test_mock_store.py`를먼저작성. create→manualsave→GET일치, 같은known/변경known/null/[]의출처·근거, staleexpected/draft·crossproject404, 누락/추가키422, 두스레드동일버전exactly1success/1conflict, 저장장애시완전불변, DRAFT/CONFIRMED별도, 반환객체변형격리. 모든응답은실제OpenAPI로검증.
+- [x] Step2: cwdai_service에서 `python -m unittest discover -s contract_tests -p test_mock_store.py -v` 실행. Expected:새contract_mock API미구현으로RED. missingcontract_mock 확인.
+- [x] Step3: 별도선택의존성파일에 `-r ../requirements-dev.txt` 및 `jsonschema[format-nongpl]==4.26.0`을고정한다. 프로젝트.venv에만설치후check/schema/store를최소구현. 오류에 jsonschema exception문자열포함금지, invalidvalidation은고정코드만. GREEN9/9, pipcheck충돌0.
 - [ ] Step4: 같은테스트GREEN과 기존tests전체회귀. Expected: 모든응답schema유효, 버전원자성·출처보존·누출방지검증. 결과/시간기록후commit/task-done.
 
 ### Task 2: 실제 AI HTTP 경계에 연결한 공개 mock
