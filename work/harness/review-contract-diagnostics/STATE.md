@@ -8,9 +8,11 @@
 
 ## 현재
 
-- Task1 명세·계획 작성. 수락 조건을 완화하지 않고 실패 원인 관측만 추가.
+- 명세·계획 commit4f4cfcf. Task1 직접 구현 완료, 검증·commit 후 독립 리뷰 예정. 수락 조건을 완화하지 않고 실패 원인 관측만 추가.
+- 기준989/983pass6skip. 신규7테스트 RED49실패→GREEN7/7. 전체996/990pass6skip,19.552초/exit0. API0.
+- 변경 파일: candidate_split_review.py, test_review_contract_diagnostics.py 및 본 기능spec/plan/validation/STATE.
 - 실제 GLM5번째 검토의 정확한 원인은 아직 미확인. 과거 원문 응답은 보관하지 않아 복원하지 않는다.
-- 새 테스트 RED→최소 구현→GREEN/전체→독립 리뷰→새 H02 평가 순서.
+- 다음: Task1 commit/task-done→독립 리뷰→새 H02 드라이버 freeze/preflight→실제 평가·감사→push/CI.
 
 ## 경계
 

@@ -59,6 +59,58 @@ def _unique_subset(value, allowed) -> bool:
             len(set(value)) == len(value))
 
 
+def _sequence_issue(value, allowed, *, complete) -> str | None:
+    """Describe a rejected list without copying any model-supplied content."""
+    if type(value) is not list:
+        return 'TYPE'
+    if any(type(item) is not str or item not in allowed for item in value):
+        return 'MEMBER'
+    if len(set(value)) != len(value):
+        return 'DUPLICATE'
+    if complete:
+        if len(value) != len(allowed):
+            return 'MISSING'
+        if value != list(allowed):
+            return 'ORDER'
+    return None
+
+
+def _candidate_contract_issue(result, ids, reasoned_review) -> str:
+    # These describe failures only; the existing validators decide acceptance.
+    for name, prefix, complete in (
+            ('checkedCandidateIds', 'CHECKED_CANDIDATE_IDS_', True),
+            ('wrongCandidateIds', 'WRONG_CANDIDATE_IDS_', False)):
+        issue = _sequence_issue(result[name], ids, complete=complete)
+        if issue is not None:
+            return prefix + issue
+    if reasoned_review:
+        rows, wrong = result['rejectionReasons'], result['wrongCandidateIds']
+        if type(rows) is not list:
+            return 'REJECTION_REASONS_TYPE'
+        if len(rows) != len(wrong):
+            return 'REJECTION_REASONS_COUNT'
+        if any(type(row) is not dict or set(row) != {'id', 'reason'} for row in rows):
+            return 'REJECTION_REASONS_ROW_SHAPE'
+        if any(type(row['id']) is not str or row['id'] not in wrong for row in rows):
+            return 'REJECTION_REASONS_ID_MEMBER'
+        if any(type(row['reason']) is not str or row['reason'] not in _REJECTION_REASONS
+               for row in rows):
+            return 'REJECTION_REASONS_REASON_VALUE'
+        if len({row['id'] for row in rows}) != len(wrong):
+            return 'REJECTION_REASONS_DUPLICATE_ID'
+    return 'UNKNOWN_REVIEW_CONTRACT'
+
+
+def _coverage_contract_issue(result) -> str:
+    for name, prefix, complete in (
+            ('checkedFields', 'CHECKED_FIELDS_', True),
+            ('missingFields', 'MISSING_FIELDS_', False)):
+        issue = _sequence_issue(result[name], FIELDS, complete=complete)
+        if issue is not None:
+            return prefix + issue
+    return 'UNKNOWN_REVIEW_CONTRACT'
+
+
 def review_candidates_separately(document: str, frozen: dict,
                                 labels: list[dict], key: str,
                                 *, transport=None, review_calls=None,
@@ -87,18 +139,20 @@ def review_candidates_separately(document: str, frozen: dict,
     sender = (SolarAnalyzer(key, transport=transport or post_solar) if solar_review else
               NvidiaAnalyzer(key, transport=transport or post_nvidia, model=review_model))
 
-    def send(payload, stage, validate, *, batch_index=None, candidate_count=None,
+    def send(payload, stage, validate, diagnose, *, batch_index=None, candidate_count=None,
              sub_batch_index=None):
         required = tuple(payload["response_format"]["json_schema"]["schema"]["required"])
         trace = {}
         row = {"stage": stage, "batch_index": batch_index,
                "candidate_count": candidate_count, "validated": False,
-               "sub_batch_index": sub_batch_index}
+               "sub_batch_index": sub_batch_index, "contract_issue": None}
         try:
             reply, model, _, _ = sender._send_payload(payload, required, timeout=600, _trace=trace)
             if not (model.startswith("solar-pro4") if solar_review else model == review_model):
                 raise AnalysisError("PROVIDER_MODEL")
             if not validate(reply):
+                if review_calls is not None:
+                    row['contract_issue'] = diagnose(reply)
                 raise ValueError("invalid split review contract")
             row["validated"] = True
             return reply
@@ -149,6 +203,7 @@ def review_candidates_separately(document: str, frozen: dict,
             result["checkedCandidateIds"] == ids and
             _unique_subset(result["wrongCandidateIds"], ids) and
             (not reasoned_review or _valid_rejection_reasons(result))),
+            lambda result: _candidate_contract_issue(result, ids, reasoned_review),
             batch_index=batch_index, candidate_count=len(batch), sub_batch_index=sub_batch_index)
         if reasoned_review and review_reasons is not None:
             review_reasons.extend({'batch_index': batch_index,
@@ -194,5 +249,6 @@ def review_candidates_separately(document: str, frozen: dict,
         {"document": document, "confirmedValues": values, "fields": list(FIELDS)},
         {"checkedFields": {**fields, "minItems": len(FIELDS)}, "missingFields": fields})
     reply = send(payload, "source_coverage", lambda result: (
-        result["checkedFields"] == list(FIELDS) and _unique_subset(result["missingFields"], FIELDS)))
+        result["checkedFields"] == list(FIELDS) and _unique_subset(result["missingFields"], FIELDS)),
+        _coverage_contract_issue)
     return {**reply, "wrongCandidateIds": wrong}
