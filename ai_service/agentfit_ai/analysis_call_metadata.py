@@ -45,7 +45,7 @@ def validate_metadata(value):
                 raise ValueError
             if error is not None:
                 if (type(error) is not str or error not in SAFE_CODES or row['transport_completed']
-                        or index != len(calls) or stage is None):
+                        or index != len(calls) or stage != row['stage']):
                     raise ValueError
         return deepcopy(value)
     except (ValueError, TypeError, KeyError, RecursionError):

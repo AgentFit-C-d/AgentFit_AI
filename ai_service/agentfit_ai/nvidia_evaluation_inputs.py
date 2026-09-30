@@ -5,6 +5,7 @@ from pathlib import Path
 
 from .independent_evaluation_corpus import validate_gold, verify_corpus
 from .independent_evaluation_inputs import decode_json, digest_json, read_bytes, read_json
+from .analysis_call_metadata import METADATA_VERSION
 
 ROOT = Path(__file__).resolve().parents[2]
 SPEC_PATH = 'specs/ai-developer/04-analysis-provider/independent-profile-evaluation'
@@ -61,29 +62,40 @@ def _code_hashes():
             for p in sorted(paths)}
 
 
-def build_freeze(corpus_file, gold_file):
+def _experiment(call_diagnostics):
+    if type(call_diagnostics) is not bool:
+        raise ValueError
+    settings = dict(SETTINGS)
+    if call_diagnostics:
+        settings['call_diagnostics'] = METADATA_VERSION
+    return ('nvidia-call-diagnostics' if call_diagnostics else 'nvidia-only'), settings
+
+
+def build_freeze(corpus_file, gold_file, *, call_diagnostics=False):
     """Build an offline snapshot; caller must save it once before live output."""
     try:
+        variant, settings = _experiment(call_diagnostics)
         _, identity = _data(corpus_file, gold_file)
-        return {'version': 'nvidia-only-freeze-v1', 'variant': 'nvidia-only-v1',
-                'settings': dict(SETTINGS), **identity, 'lf_normalized_files': _code_hashes()}
+        return {'version': variant+'-freeze-v1', 'variant': variant+'-v1',
+                'settings': settings, **identity, 'lf_normalized_files': _code_hashes()}
     except (ValueError, TypeError, KeyError, AttributeError, OSError, UnicodeError, RecursionError):
         raise ValueError('INVALID_EVALUATION_PREFLIGHT') from None
 
 
-def prepare_evaluation(corpus_file, gold_file, freeze_file):
+def prepare_evaluation(corpus_file, gold_file, freeze_file, *, call_diagnostics=False):
     try:
+        variant, settings = _experiment(call_diagnostics)
         freeze = read_json(freeze_file)
-        expected = build_freeze(corpus_file, gold_file)
+        expected = build_freeze(corpus_file, gold_file, call_diagnostics=call_diagnostics)
         if (type(freeze) is not dict or freeze != expected
                 or type(freeze['settings']) is not dict
-                or any(type(freeze['settings'][k]) is not type(v) for k,v in SETTINGS.items())):
+                or any(type(freeze['settings'][k]) is not type(v) for k,v in settings.items())):
             raise ValueError
         cases, identity = _data(corpus_file, gold_file)
-        evaluator = {name: expected['lf_normalized_files']['ai_service/agentfit_ai/'+name]
-                     for name in EVALUATOR_MODULES}
-        metadata = {'version': 'nvidia-only-evaluation-run-v1', 'variant': 'nvidia-only-v1',
-            'runs_per_case': 3, 'settings': dict(SETTINGS), **identity, 'freeze_sha256': digest_json(freeze),
+        modules = EVALUATOR_MODULES + (('analysis_call_metadata.py',) if call_diagnostics else ())
+        evaluator = {name: expected['lf_normalized_files']['ai_service/agentfit_ai/'+name] for name in modules}
+        metadata = {'version': variant+'-evaluation-run-v1', 'variant': variant+'-v1',
+            'runs_per_case': 3, 'settings': settings, **identity, 'freeze_sha256': digest_json(freeze),
             'evaluator_sha256': digest_json(evaluator),
             'cases': [{k: c[k] for k in ('case_id', 'source_sha256', 'gold_sha256')} for c in cases],
             'baseline_status': 'incomplete', 'new_holdout': False, 'human_reviewed': False, 'release_gate_passed': False}

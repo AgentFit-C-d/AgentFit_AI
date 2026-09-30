@@ -105,7 +105,8 @@ def _validate_row(case, identity, row):
         raise ValueError('INVALID_CHECKPOINT') from None
 
 
-def _read_existing(output, cases, metadata):
+def _read_existing(output, cases, metadata, *, row_validator=None):
+    check_row = _validate_row if row_validator is None else row_validator
     rows, allowed = {}, {'experiment.json'}
     for case in cases:
         for run in range(3):
@@ -133,7 +134,7 @@ def _read_existing(output, cases, metadata):
                 raise ValueError('INVALID_CHECKPOINT')
             if terminal.exists():
                 try:
-                    rows[(case['case_id'], run)] = _validate_row(case, identity, read_json(terminal))
+                    rows[(case['case_id'], run)] = check_row(case, identity, read_json(terminal))
                 except (ValueError, OSError, RecursionError):
                     raise ValueError('INVALID_CHECKPOINT') from None
     return rows

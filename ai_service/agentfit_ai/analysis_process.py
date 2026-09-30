@@ -99,6 +99,9 @@ async def run_analysis_process(document: str, document_id: str, key: str,
             failed = checked.get('outcome') == 'failed' or set(checked) == {'error'}
             if metadata['status'] == 'available' and failed != (metadata['failureStage'] is not None):
                 raise AnalysisProcessError('ANALYSIS_WORKER_FAILED')
+            provider_error = metadata['calls'][-1]['provider_error'] if metadata['calls'] else None
+            if provider_error is not None and checked.get('error') != provider_error:
+                raise AnalysisProcessError('ANALYSIS_WORKER_FAILED')
             call_diagnostics.update(metadata)
         return checked
     if set(result) == {"error"} and type(result["error"]) is str:

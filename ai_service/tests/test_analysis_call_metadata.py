@@ -42,7 +42,7 @@ class MetadataContractTests(unittest.TestCase):
         report = self.api.build_metadata([call()], 'EXTRACTION_FAILED')
         mutations = [({'raw': 'private-document'}, None), ({'status': 'private-error'}, None),
             ({'failureStage': 'private-error'}, None), ({'unavailableReason': 'NOT_RETURNED'}, None),
-            ({'version': 'bad'}, None)]
+            ({'version': 'bad'}, None), ({'failureStage': 'COVERAGE_REVIEW_FAILED'}, None)]
         mutations += [(None, changes) for changes in (
             {'raw': 'private-document'}, {'requested_model': 'private-key'}, {'provider': 'solar'},
             {'stage': 'private-error'}, {'call_index': True}, {'call_index': 2},
@@ -128,7 +128,8 @@ class ParentMetadataTests(unittest.IsolatedAsyncioTestCase):
         from agentfit_ai.analysis_process import run_analysis_process, AnalysisProcessError
         original = self.envelope()
         invalid = [original['result'], dict(original, extra='private'), dict(original, version='wrong'),
-                   dict(original, result={'secret': 'private'})]
+                   dict(original, result={'secret': 'private'}),
+                   dict(original, result=dict(original['result'], error='PROVIDER_RATE_LIMIT'))]
         for changed in ({'raw': 'private'}, {'failureStage': 'private'}, {'calls': [dict(call(), requested_model='key')]}):
             invalid.append(dict(original, diagnostics=dict(original['diagnostics'], **changed)))
         for body in invalid:

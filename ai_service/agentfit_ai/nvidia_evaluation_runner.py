@@ -13,6 +13,9 @@ from .independent_evaluation_protocol import validate_score
 from .independent_evaluation_runner import _failure, _identity, _read_existing, _summary, _validate_row, _write_new
 from .independent_profile_evaluation import score_confirmation
 from .nvidia_evaluation_inputs import load_nvidia_key, prepare_evaluation, read_json, validate_free_access
+from .analysis_call_metadata import validate_metadata, unavailable_metadata
+
+DIAGNOSTIC_VARIANT = 'nvidia-call-diagnostics-v1'
 
 STOP_CODES = frozenset(code for code in SAFE_CODES if code.startswith('PROVIDER_')) | {
     'MISSING_OR_INVALID_KEY', 'ANALYSIS_DEADLINE', 'ANALYSIS_FAILURE', 'CALL_LIMIT'}
@@ -29,14 +32,17 @@ def _validate_input(document, document_id, gold, key):
         raise ValueError('INVALID_EVALUATION_INPUT') from None
 
 
-async def run_scored_process(document, document_id, gold, nvidia_key, *, timeout_seconds=1800, command=None):
+async def run_scored_process(document, document_id, gold, nvidia_key, *, timeout_seconds=1800,
+                             command=None, call_diagnostics=None):
     _validate_input(document, document_id, gold, nvidia_key)
     if (type(timeout_seconds) not in (int, float) or not math.isfinite(timeout_seconds)
-            or not 0 < timeout_seconds <= 1800):
+            or not 0 < timeout_seconds <= 1800
+            or (call_diagnostics is not None and (type(call_diagnostics) is not dict or call_diagnostics))):
         raise ValueError('INVALID_EVALUATION_INPUT')
     try:
+        options = {'call_diagnostics': call_diagnostics} if call_diagnostics is not None else {}
         outcome = await run_analysis_process(document, document_id, nvidia_key,
-            asyncio.get_running_loop().time() + timeout_seconds, nvidia_only=True, command=command)
+            asyncio.get_running_loop().time() + timeout_seconds, nvidia_only=True, command=command, **options)
         if set(outcome) == {'error'}:
             outcome = {'contract': 'confirmation-v2', 'outcome': 'failed', 'error': safe_code(outcome['error'])}
     except AnalysisProcessError as error:
@@ -49,15 +55,37 @@ def _refresh(prepared):
     if (type(prepared) is not dict or set(prepared) != {'cases', 'metadata', 'paths'}
             or type(prepared['paths']) is not list or len(prepared['paths']) != 3):
         raise ValueError('INVALID_EVALUATION_PREFLIGHT')
-    latest = prepare_evaluation(*prepared['paths'])
+    latest = prepare_evaluation(*prepared['paths'],
+        call_diagnostics=prepared['metadata'].get('variant') == DIAGNOSTIC_VARIANT)
     if latest['metadata'] != prepared['metadata']:
         raise ValueError('EXPERIMENT_CHANGED')
     return latest
 
 
+def _diagnostic_row(case, identity, row):
+    try:
+        if type(row) is not dict or 'diagnostics' not in row:
+            raise ValueError
+        checked = _validate_row(case, identity, {k: v for k, v in row.items() if k != 'diagnostics'})
+        report = validate_metadata(row['diagnostics'])
+        if report['status'] == 'available':
+            if (checked['score']['status'] == 'failed') != (report['failureStage'] is not None):
+                raise ValueError
+        elif checked['score']['status'] != 'failed':
+            raise ValueError
+        provider_error = report['calls'][-1]['provider_error'] if report['calls'] else None
+        if provider_error is not None and checked['score']['error'] != provider_error:
+            raise ValueError
+        return row
+    except (ValueError, TypeError, KeyError):
+        raise ValueError('INVALID_CHECKPOINT') from None
+
+
 async def evaluate(prepared, output, nvidia_key, access_file):
     prepared = _refresh(prepared)
     cases, metadata = prepared['cases'], prepared['metadata']
+    diagnostic_mode = metadata['variant'] == DIAGNOSTIC_VARIANT
+    check_row = _diagnostic_row if diagnostic_mode else _validate_row
     validate_free_access(access_file, reserved_calls=0)
     for case in cases:
         _validate_input(case['document'], case['case_id'], case['gold'], nvidia_key)
@@ -76,7 +104,7 @@ async def evaluate(prepared, output, nvidia_key, access_file):
         if any(output.iterdir()):
             raise ValueError('INVALID_CHECKPOINT')
         _write_new(manifest, metadata)
-    rows = _read_existing(output, cases, metadata)
+    rows = _read_existing(output, cases, metadata, row_validator=check_row)
     if any(row['score']['error'] in STOP_CODES for row in rows.values()):
         raise ValueError('EVALUATION_PROVIDER_STOPPED')
     validate_free_access(access_file, reserved_calls=len(rows)*64)
@@ -90,24 +118,31 @@ async def evaluate(prepared, output, nvidia_key, access_file):
             stem = f'{case["case_id"]}-run-{run}'
             _write_new(output/(stem+'.started.json'), {'version': 'independent-evaluation-start-v1', **identity})
             started = time.monotonic()
+            diagnostics = {} if diagnostic_mode else None
             try:
-                score = await run_scored_process(case['document'], case['case_id'], case['gold'], nvidia_key)
+                options = {'call_diagnostics': diagnostics} if diagnostic_mode else {}
+                score = await run_scored_process(case['document'], case['case_id'], case['gold'], nvidia_key, **options)
                 score = validate_score(case['document'], case['gold'], score)
             except Exception:
                 score = _failure(case['document'], case['case_id'], case['gold'], 'ANALYSIS_FAILURE')
+                if diagnostic_mode:
+                    diagnostics = unavailable_metadata('ANALYSIS_WORKER_FAILED')
             row = {**identity, 'elapsed_seconds': round(time.monotonic()-started, 6), 'score': score}
-            _validate_row(case, identity, row)
+            if diagnostic_mode:
+                row['diagnostics'] = validate_metadata(diagnostics or unavailable_metadata('NOT_RETURNED'))
+            check_row(case, identity, row)
             path = output/(stem+'.json')
             _write_new(path, row)
-            rows[(case['case_id'], run)] = _validate_row(case, identity, read_json(path))
+            rows[(case['case_id'], run)] = check_row(case, identity, read_json(path))
             if score['error'] in STOP_CODES:
                 raise ValueError('EVALUATION_PROVIDER_STOPPED')
     _refresh(prepared)
-    rows = _read_existing(output, cases, metadata)
+    rows = _read_existing(output, cases, metadata, row_validator=check_row)
     if len(rows) != 30:
         raise ValueError('INCOMPLETE_RUN')
     summary = _summary(rows)
-    summary.update(version='nvidia-only-evaluation-summary-v1', variant='nvidia-only-v1',
+    summary.update(version=('nvidia-call-diagnostics' if diagnostic_mode else 'nvidia-only')+'-evaluation-summary-v1',
+        variant=metadata['variant'],
         reserved_model_calls_upper_bound=len(rows)*64, baseline_status='incomplete', new_holdout=False)
     return summary
 
@@ -115,13 +150,14 @@ async def evaluate(prepared, output, nvidia_key, access_file):
 def main(argv=None):
     parser = argparse.ArgumentParser(description='Preflight fixed NVIDIA evaluation; live requires confirmed free scope.')
     parser.add_argument('--live', action='store_true')
+    parser.add_argument('--call-diagnostics', action='store_true')
     for name in ('corpus', 'gold', 'freeze'):
         parser.add_argument('--'+name, type=Path, required=True)
     for name in ('env-file', 'output', 'access-confirmation'):
         parser.add_argument('--'+name, type=Path)
     args = parser.parse_args(argv)
     try:
-        prepared = prepare_evaluation(args.corpus, args.gold, args.freeze)
+        prepared = prepare_evaluation(args.corpus, args.gold, args.freeze, call_diagnostics=args.call_diagnostics)
         if not args.live:
             summary = {'mode': 'preflight', 'cases': len(prepared['cases']), 'expected': 30,
                 'gold_units': sum(len(f['units']) for c in prepared['cases'] for f in c['gold']['fields'].values()),
