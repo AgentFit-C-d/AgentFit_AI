@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import tempfile
 import time
 
 from .candidate_feature_curation import _feature_candidates, _validate_partition
@@ -182,6 +183,18 @@ def code_hashes():
             for path in sorted(root.glob('*.py'))}
 
 
+def _store_report(path, report, key):
+    """Preserve the last checkpoint if any part of the next write fails."""
+    fd, name = tempfile.mkstemp(dir=path.parent, prefix='.' + path.name + '.', suffix='.tmp')
+    os.close(fd)
+    temporary = Path(name)
+    try:
+        write_safe_json(temporary, report, forbidden_strings=(key,))
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     modes = parser.add_mutually_exclusive_group(required=True)
@@ -223,8 +236,8 @@ def main(argv=None):
         parser.error('key unavailable or output creation failed')
 
     def checkpoint(summary):
-        write_safe_json(args.output, {**metadata, 'state': 'in_progress', **summary},
-                        forbidden_strings=(key,))
+        _store_report(args.output, {**metadata, 'state': 'in_progress', **summary,
+                                    'gate_passed': False}, key)
         print(json.dumps({'state': 'in_progress', 'completed': summary['completed'],
             'planned': summary['planned'], 'matched': summary['matched'],
             'failed': summary['failed']}), flush=True)
@@ -237,7 +250,7 @@ def main(argv=None):
         unchanged = before == after
         report = {**metadata, **report, 'state': 'finished', 'code_unchanged': unchanged,
                   'code_hashes_after': after, 'gate_passed': report['gate_passed'] and unchanged}
-        write_safe_json(args.output, report, forbidden_strings=(key,))
+        _store_report(args.output, report, key)
         print(json.dumps({name: report[name] for name in (
             'state', 'planned', 'completed', 'matched', 'false_covered', 'false_uncovered',
             'uncertain', 'failed', 'order_consistency', 'repeat_consistency',

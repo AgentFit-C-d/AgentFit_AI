@@ -248,6 +248,45 @@ class FeatureRelationCliTests(unittest.TestCase):
         self.assertEqual(len(requests), 1)
         self.assertEqual(json.loads(self.output.read_text())['completed'], 0)
 
+    def test_partial_write_preserves_last_checkpoint_and_stops_calls(self):
+        requests, saved = [], []
+        write_text = Path.write_text
+        def partial_write(path, text, *args, **kwargs):
+            report = json.loads(text)
+            if report['completed'] == 2:
+                write_text(path, text[:13], *args, **kwargs)
+                raise OSError('disk full')
+            return write_text(path, text, *args, **kwargs)
+        def transport(payload, key, timeout):
+            requests.append(payload)
+            saved.append(self.output.read_text(encoding='utf-8'))
+            return reply('covered')
+        with (patch.object(evaluation, 'load_key', return_value='fake'),
+              patch.object(Path, 'write_text', partial_write),
+              patch('agentfit_ai.candidate_feature_relations.post_nvidia', side_effect=transport)):
+            self.assertEqual(self.run_cli(['--live', '--output', str(self.output)]), 1)
+        self.assertEqual(len(requests), 2)
+        self.assertEqual(self.output.read_text(encoding='utf-8'), saved[1])
+        self.assertEqual(json.loads(saved[1])['completed'], 1)
+        self.assertEqual(set(Path(self.folder.name).iterdir()), {self.corpus, self.output})
+
+    def test_partial_final_write_keeps_checkpoint_without_passing_gate(self):
+        write_text = Path.write_text
+        def partial_write(path, text, *args, **kwargs):
+            if json.loads(text)['state'] == 'finished':
+                write_text(path, text[:13], *args, **kwargs)
+                raise OSError('disk full')
+            return write_text(path, text, *args, **kwargs)
+        with (patch.object(evaluation, 'load_key', return_value='fake'),
+              patch.object(Path, 'write_text', partial_write),
+              patch('agentfit_ai.candidate_feature_relations.post_nvidia',
+                    side_effect=sender([reply('covered')] * 4, []))):
+            self.assertEqual(self.run_cli(['--live', '--output', str(self.output)]), 1)
+        report = json.loads(self.output.read_text(encoding='utf-8'))
+        self.assertEqual(report['completed'], 4)
+        self.assertEqual(report['state'], 'in_progress')
+        self.assertFalse(report['gate_passed'])
+
     def test_code_change_or_regression_failure_cannot_exit_success(self):
         for hashes, statuses, unchanged in [
                 ([{'module.py': 'a'}, {'module.py': 'b'}], ['covered'] * 4, False),
