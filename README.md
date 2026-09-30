@@ -219,8 +219,8 @@ SectionAnalyzer(key, model="solar-mini4", jev_merge=True)로 Jev가 후보 통�
 python -m agentfit_ai.nvidia_evaluation_runner --corpus ../specs/ai-developer/04-analysis-provider/independent-profile-evaluation/corpus.json --gold E:/AgentFit/output/independent-profile-v1/gold-v1.json --freeze ../specs/ai-developer/nvidia-evaluation-variant/freeze.json
 ```
 
-실행하려면 위 명령에 `--live --env-file <로컬.env> --output <별도 결과 폴더> --access-confirmation <확인 기록.json>`을 추가합니다. NVIDIA_API_KEY 하나만 필요합니다. [무료 확인 파일 양식](specs/ai-developer/nvidia-evaluation-variant/free-access.template.json)은 기본 거부 상태입니다. **현재 계정·두 모델·endpoint가 추가 요금 없이 사용 가능한지 사람이 자료로 확인한 뒤** 만료 시점과 모델 호출 상한을 기록해야 합니다. 이 파일 검증은 계정/과금 자동 조회를 뜻하지 않습니다. 현재 실제 확인 자료는 없으며 실제 평가를 실행하지 않았습니다.
+실행하려면 위 명령에 `--live --env-file <로컬.env> --output <별도 결과 폴더> --access-confirmation <확인 기록.json>`을 추가합니다. NVIDIA_API_KEY 하나만 필요합니다. [무료 확인 파일 양식](specs/ai-developer/nvidia-evaluation-variant/free-access.template.json)은 기본 거부 상태입니다. **현재 계정·두 모델·endpoint가 추가 요금 없이 사용 가능한지 사람이 자료로 확인한 뒤** 만료 시점과 모델 호출 상한을 기록해야 합니다. 이 파일 검증은 계정/과금 자동 조회를 뜻하지 않습니다. 2026-10-01 사용자가 현재 계정의 두 모델 무료 API와 한도 초과 시 자동 결제 없이 거절됨을 확인했습니다. 이 사람 확인을 근거로 최종 CI 이후 별도 고정 평가를 실행하며, 도구가 계정 화면이나 실제 청구를 조회한 것은 아닙니다.
 
-요청마다64회를 보수적으로 예약하며, 누적 예약 초과·확인 만료·429/503 등 제공자 오류에서 전체 평가를 중단합니다. 예약 상한은 실제 사용량이나 청구액이 아닙니다. 제공자 오류 row가 있거나 started-only 기록이 남은 폴더는 다시 실행해도 자동 재호출하지 않습니다. 중단 원인을 확인하고 별도 승인 범위에서 후속 실험을 등록해야 합니다. 기존 결과를 삭제하거나 덮어쓰지 않습니다.
+요청마다64회를 보수적으로 예약하며, 누적 예약 초과·확인 만료·429/503 등 제공자 오류에서 전체 평가를 중단합니다. 예약 상한은 이 결과 폴더에 한정되며 계정 전체 실제 사용량이나 청구액이 아닙니다. 다른 실행기와 계정 할당량을 공유 관리하지 않으므로 이 평가의 동시 실행은 하지 않습니다. 제공자 오류 row가 있거나 started-only 기록이 남은 폴더는 다시 실행해도 자동 재호출하지 않습니다. 중단 원인을 확인하고 별도 승인 범위에서 후속 실험을 등록해야 합니다. 기존 결과를 삭제하거나 덮어쓰지 않습니다.
 
 기존 혼합 baseline은1/30에서 중단돼 완전한 비교가 불가능합니다. 이번 자료는 새로운 holdout이 아니며 정답은 사람 검토 전의 임시 기준입니다. 로컬 테스트와 사전 점검 성공을 모델 정확도 개선이나 출시 승인으로 해석하지 않습니다. [명세](specs/ai-developer/nvidia-evaluation-variant/spec.md) · [검증](specs/ai-developer/nvidia-evaluation-variant/validation.md)

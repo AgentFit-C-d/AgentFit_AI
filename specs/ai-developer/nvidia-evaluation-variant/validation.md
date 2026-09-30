@@ -7,12 +7,15 @@
 - 신규 runtime3/3(16.600초): 실제 LangExtract/서비스 자식/loopback NVIDIA HTTP로10필드 정답, 구조 오류와429 각1호출·10정답 누락 분모 유지, 실제 통신 진입 후 기한/취소의 child/socket 종료 확인. 합성 fixture 인자 오기 hold_kind/entered를 hold/started로 수정했으며 제품 결함으로 보고하지 않는다.
 - 공개 자료 preflight: 문서10개·임시 정답207개·코드/의존성125파일. 기존 baseline 결과4파일의 실행 전후 해시 동일. 키 읽기/실제 모델 호출0.
 - 정답 SHA256 `5fcdc3a15fdbd346e0e351313639c1ebe2cac02cc36f33abf749d2ff22caa283`. freeze SHA256 `0f4d7d640738fa53f26490c1d4b6051780302aed580953c578adab9974ac067d`, evaluator SHA256 `49fdfbff3ba4571841c947c81ead863c5c31e6d0ba1683a33eb62f6aeb23e1bd`.
-- 전체4suite gate·독립 최종 리뷰·정확한 push HEAD CI는 후속 기록을 따른다.
+- 구현dfd33a2의 전체4suite: unit1,151건 중1,146통과/5제외(64.549초), runtime23통과(89.881초), contract36통과(8.348초), core-flow5통과(24.454초). 총1,210통과/5제외. 최종 SDD 완료 게이트·독립 리뷰·정확한 push HEAD CI는 로컬 ledger에 기록한다.
+- 같은 구현 커밋의 task-done 완료 게이트도 exit0: unit1,146통과/5제외(70.237초), runtime23(95.020초), contract36(9.074초), core-flow5(26.522초). 원래 기준선 작업트리의 추적 파일 변경 없음도 확인했다.
 
 ## 해석과 미확인
 
-확인된 것은 평가 도구의 실행/저장/중단 경계다. 실제 제공자 호환성·문서 의미 정확도·무료 계정 한도·실제 Spring/DB/브라우저는 미확인이다. `release_gate_passed=false`이며, 임시 정답도 사람 검토가 필요하다.
+확인된 것은 평가 도구의 실행/저장/중단 경계다. 실제 제공자 호환성·문서 의미 정확도·실제 Spring/DB/브라우저는 미확인이다. `release_gate_passed=false`이며, 임시 정답도 사람 검토가 필요하다. 사용자2026-10-01 확인에 따르면 현재 계정에서 두 모델 API는 무료이고 한도 초과 시 자동 결제 없이 거절된다. 도구가 계정 화면·청구나 숫자로 된 잔여 한도를 조회한 것은 아니다.
 
 기존 혼합 baseline의1완료/1started-only 상태는 보존했다. 새 실험은 모델 구성과 제공자 오류 시 전체 중단 정책이 다르므로 동일 조건의 완성된 모델 비교로 표현하지 않는다. 기한/호출 상한과 원문/gold/scorer는 기존 기준과 같다. 분류30개, 후보 검토20개 묶음이며 manifest의 candidate_batch_size는 검토 묶음이다.
 
-무료확인 파일은 사람이 확인한 계정 자료의 기록이다. 유효한 형식이 실제 과금 보장을 만들어내지 않으므로 현재 실제 자료 없이 실행하지 않는다. 기본 거부 template만 제공하며 CLI 기본은 preflight다. 결과에는 원문·정답 내용·Profile·모델 원본·키·확인 자료 원문을 저장하지 않는다.
+무료확인 파일은 사람이 확인한 계정 자료의 기록이다. 유효한 형식만으로 과금 보장이 생기지는 않는다. 기본 거부 template을 제공하며 CLI 기본은 preflight다. 위 사용자 확인을 로컬 기록에 반영한 뒤 최종 CI 이후 단일 고정 평가를 시작한다. 결과에는 원문·정답 내용·Profile·모델 원본·키·확인 자료 원문을 저장하지 않는다. 단일 결과 폴더 예약을 계정 전체 할당량으로 해석하지 않는다.
+
+독립 최종 리뷰1회 Critical/Important/Minor0. reviewer가 freeze125파일을 직접 대조했다. [리뷰 판단과 한계](review.md)를 따른다.

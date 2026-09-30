@@ -35,3 +35,15 @@
 ## 자기 검토
 
 한 Task가 입력부터 저장/재개까지 같은 계약을 소유한다. 기존 API/채점기 파일은 수정하지 않고 소규모 실행 루프만 별도로 둔다. 실제 실행 권한을 합성 테스트에서 얻었다고 간주하지 않는다.
+
+### Task 2: 사용자 무료 확인 이후 고정 공개 자료 실제 평가
+
+**변경 근거:** 2026-10-01 사용자가 현재 NVIDIA Build 계정의 DeepSeek4.1Flash·GLM5.3 무료 API 및 초과 시 자동 결제 없는 거절을 명시 확인했다. Task1의 실제API0은 구현/로컬 검증 단계이며 이 후속 실제 평가에 자동 적용하지 않는다. 유료0/배포0/자동재시도0은 계속 유지한다.
+**Files:** local-only E:/AgentFit/output/independent-profile-v1/nvidia-free-access-20261001-user-confirmation.json, runs-nvidia-only-dfd33a2/; append validation.md/STATE/ledger only. 코드·모델·원문·gold·freeze 변경 금지.
+**Interfaces:** Task1의 CLI/preflight/freeze/typed checkpoint를 그대로 소비한다. 같은 공개10문서×3회, requests≤30, 모델 호출≤64/request·1920전체, request≤1800초, 전체 관찰 상한16시간. 무료확인 기록은 확인 시점부터24시간만 유효하며 사람 확인을 근거로 한다. 평가 동시 실행1개, providererror/quota/expiry/예산 초과 시 새 호출0. 기존 baseline 결과에 덧붙이지 않는다.
+
+- [ ] Step1: Task1 final push와 exactSHA CI4job 성공 확인, 새 코드 freeze preflight 재확인. 승인된 현재 계정 사실을 로컬 무료확인 파일에 생성 전용으로 기록한다. Expected: 기존 임시 정답207개/125파일 해시 같음, 키 값은 출력하지 않음.
+- [ ] Step2: 기존 preflight 명령에 --live --env-file E:/AgentFit/.env --access-confirmation <위 파일> --output <위 별도 폴더>를 추가해1개 프로세스로 실행한다. 살아있는 session handle을 유지하고 동일 handle을 관찰한다. 관찰 timeout만으로 재시작하지 않는다. Expected: 각 요청의 started/terminal checkpoint 및 안전한 실패 코드만 저장, 금액·사용량을 추측하지 않음.
+- [ ] Step3: 정상 종료이면30행의 성공/누락/오확정/미평가/시간 분포와 임시 정답 한계를 보고한다. 제공자 오류/기한/한도 중단이면 완료된 행과 미완료 행을 분리하고 재시도하지 않는다. Expected: 부분 결과를 전체 성능으로 표현하지 않음, 실제Spring/human gold/제품 목표 완료는 미확인 유지.
+
+**후속 자기 검토:** 원래 자료·채점 기준을 보존하며 사용자 확인으로 비용 조건만 해소됐다. 실제 품질은 결과를 보기 전까지 판단하지 않는다.
