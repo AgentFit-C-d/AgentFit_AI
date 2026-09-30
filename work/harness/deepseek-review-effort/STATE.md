@@ -2,9 +2,13 @@
 
 ## 최신
 
+- H02 session94505 terminal/exit1,5calls902.158s. off1call/INVALID_RESPONSE. on25는3묶음유효 후4번째length8192/INCOMPLETE_RESPONSE.16audit/6부분정답양쪽미평가. terminal감사11항목통과,총실험9호출. 현재실제API프로세스없음. 아래live 표시는 경과 기록이다.
+- 다음: 최종task-done→독립전체브랜치리뷰→필요수정→문서push. 전체목표active이며 품질개선/서비스채택미확인. 이번feature내추가API없음.
+
 - H02 session94505/PID39912 live. 결과 E:/AgentFit/tmp/deepseek-effort-h02-20260930-v1.json. 최대14호출,재시도0. 현재코드ab60f8e 고정, terminal 전 재시작·수정 금지.
 - 첫off arm은1call56.338s,finish stop299tokens지만INVALID_RESPONSE로 종료하여 미평가. on25 첫묶음 호출이 진행 중이다. raw 응답은 기록하지 않아 구체적 잘못된 형식은 미확인. model=null은 공통Solar parser가 실패 전에 NVIDIA 이름을unknown으로 줄이는 경로도 있어 모델 불일치라고 단정할 수 없다.
 - 합성 session95129는 terminal,두조건20/20,gate=true. 전체서비스 품질·일반화는 아직미확인.
+- 브랜치push01ed1a5ea62e9a81c9ff7a97e96cefc8b1e24087 성공. 정확한CI36688293192 completed/success,unit-and-worker-memory/integrated-runtime 모두통과. H02 on25는 첫2묶음유효,세번째진행중. 아직 전체채점/독립리뷰 미완료.
 - 다음: 같은 live handle 확인→terminal 감사→결과 문서→task-done→새 전체브랜치 리뷰→feature push/CI. 아래는 경과 기록.
 
 - 전체 목표 active/미완료: 실사용 가능한 AI. 이 실험의 완료와 구분한다.

@@ -40,5 +40,5 @@
 - [x] Step 1: explicit25 True 전용 전달/메타데이터, 잘못된 값 API0, 1·100·None 호환 테스트를 작성한다. focused unittest에서 새 인자 TypeError를 RED로 확인한다.
 - [x] Step 2: 최소 구현 후 focused unittest를 실행한다. Expected: 기존10+신규3 모두 통과.
 - [x] Step 3: 별도 드라이버를 준비한다. 고정 helper/hash를 확인하고 20개 합성 gate 및 H02 preflight를 실행한다. Expected: 합성20/정답20/4호출, H02183/정답16/부분6/14호출, API0.
-- [ ] Step 4: 코드 고정 후 합성 실험, gate 통과 시만 H02를 실행한다. Expected: 성공 또는 명시적 terminal 실패; 코드 불변, 상한 준수, 실패 미채점. 사전 기대 점수에 맞춰 변경하지 않는다.
+- [x] Step 4: 코드 고정 후 합성 실험, gate 통과 시만 H02를 실행한다. Expected: 성공 또는 명시적 terminal 실패; 코드 불변, 상한 준수, 실패 미채점. 사전 기대 점수에 맞춰 변경하지 않는다. 결과: 합성양쪽20/20,H02off형식오류/on25네번째묶음length,양쪽미평가,총9호출,감사11항목통과.
 - [ ] Step 5: 결과를 기록하고 전체 tests와 runtime_tests를 task-done 검증한다. Expected: 선택 의존성 기존 skip 외 모두 성공. 새 컨텍스트 전체 브랜치 리뷰 후 Important/Critical 단일 수정, feature push/정확한 CI를 확인한다.
