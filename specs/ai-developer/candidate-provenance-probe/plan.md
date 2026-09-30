@@ -65,7 +65,7 @@
 
 **Interfaces:**
 - Consumes: Task1의 CandidateTrace/validate_trace, 기존 `analysis_worker.execute_request(raw)`와 `candidate_service_worker.analyze_nvidia_candidates`.
-- Produces: `execute_probe_request(raw: bytes, trace_path: Path) -> bytes`, `python -m diagnostic_tools.candidate_trace_worker TRACE_PATH`.
+- Produces: `execute_probe_request(raw: bytes, trace_path: Path) -> bytes`, `validate_probe_report(document: str, document_id: str, value: dict) -> dict`, `python -m diagnostic_tools.candidate_trace_worker TRACE_PATH`.
 
 - [ ] **Step 1: 실패 테스트 작성.** 동일한 합성 제공자 응답에서 원래 worker와 진단 worker의 응답/요청 payload/호출 수가 같다. 관측 오류는 sidecar를 invalid로 표시하고 원래 응답을 유지한다. wrapper는 finally에서 복구한다. 출력 경로가 존재하거나 링크이면 모델 호출 전에 거절하고 기존 파일을 보존한다. provider failure 이전까지 관측된 단계만 남기고 이후는 null이다. trace/stdout/argv/env에 문서·키·응답·예외 문자열이 진단으로 유출되지 않는다(기존 stdin/정상 Profile 응답은 기존 계약대로 처리).
 - [ ] **Step 2: RED 실행.** `rtk proxy E:/AgentFit/tmp/worktrees/analysis-runtime/.venv/Scripts/python.exe -m unittest discover -s tests -p test_candidate_trace_worker.py -v`. Expected: 신규 worker 부재로 실패. 런타임 RED는 `-s runtime_tests -p test_candidate_trace_runtime.py -v`로 실행한다.
@@ -81,7 +81,7 @@
 - Documentation: 현재 spec의 `validation.md`, `live-plan.md`, `result.md`.
 
 **Interfaces:**
-- Consumes: Task2의 worker command와 Task1의 validate_trace; 기존 `prepare_evaluation`, `validate_free_access`, `load_nvidia_key`, `run_scored_process`, `_diagnostic_row`, `_write_new`.
+- Consumes: Task2의 worker command와 validate_probe_report(내부적으로 Task1의 validate_trace 호출); 기존 `prepare_evaluation`, `validate_free_access`, `load_nvidia_key`, `run_scored_process`, `_diagnostic_row`, `_write_new`.
 - Produces: `prepare_probe(corpus_file, gold_file, freeze_file) -> dict`; `async run_probe(prepared, output, nvidia_key, access_file) -> dict`; `main(argv=None)`.
 
 - [ ] **Step 1: 실패 테스트 작성.** 기본 CLI는 로컬 준비만 실행하고 키를 읽지 않는다. --live에서만 원래 env loader를 호출한다. 세 case를 고정 순서로 각1회 실행하고 timeout1800/호출64/재시도0을 유지한다. 원래 freeze에 더해 모든 diagnostic_tools 소스 해시를 manifest에 기록하고 요청 전/후 검증한다. 기존 output·started-only·부분 trace·다른 source identity·도구 해시 변경은 재실행/수락하지 않는다. 무료 만료·범위오류·예산초과는 모델 호출 전 중단하고, provider error 후 다음 case가 실행되지 않는다. 모델에 gold가 전달되지 않는다.

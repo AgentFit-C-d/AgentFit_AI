@@ -29,6 +29,8 @@
 
 ## 독립성과 실패 처리
 
+평가 전용 worker는 `integrated-nvidia`·호출 진단·DeepSeek 검토가 모두 명시된 요청만 받는다. 별도 파일은 `candidate-provenance-worker-v1` envelope로 version/documentId/sourceSha256/status/error/trace를 담는다. available은 검증된 trace를 담고, unavailable은 trace=null과 NOT_INVOKED/OBSERVATION_FAILED/TRACE_TOO_LARGE 중 하나만 담는다. 부모는 `validate_probe_report(document, document_id, value)`로 이 경계를 검증한다.
+
 - 관측기는 pipeline이 전달한 복사본만 읽는다. 정상 관측 유무에 따라 동일한 합성 응답의 모델 payload·호출 수·최종 응답이 같아야 한다.
 - 관측기 내부 오류나 파일 기록 오류가 발생하면 진단을 무효로 표시한다. 기존 분석의 정상 결과를 변경하거나 자동으로 재호출하지 않는다.
 - 부모는 요청별 새 출력 경로를 소유하며, 기존 파일·심볼릭 링크·부분 기록을 성공으로 수락하지 않는다. 요청 ID·소스 SHA256·설정·진단 도구 SHA256을 결과에 묶는다. 기존 평가 결과 폴더를 재사용하지 않는다.

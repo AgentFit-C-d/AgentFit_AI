@@ -10,3 +10,6 @@
 - Task1진행:brief기준59d2ff4에서8tests/9fail RED확인. 관측기구현후Profile evidence의documentId→trace start/end경계수정으로동일8/8 GREEN0.076s. 프로덕션모듈수정0/새실제모델호출0. 다음전체unit검증→Task1commit/task-done→Task2연결. 이번작업은아직최종리뷰/push전이며실제누락원인진단미실행.
 - 이전보고head8f7de0a의CI36778469030 completed/success직접확인. 현재활성모델평가없음.
 - Task1전체unit gate: session18224 exit0,1182건중1177통과/플랫폼skip5,59.447초. 신규8/8포함. 코드는ai_service/diagnostic_tools/__init__.py·candidate_trace.py, 테스트test_candidate_trace.py. 기존agentfit_ai소스변경0, 외부모델호출0. commit과task-done 후Task2로이어간다.
+- Task1 complete f684eb7:task-done최종8/8 GREEN0.066초, ledger59d2ff4..f684eb7기록됨. 이번goalturn은30회실제평가완주·최종보고push/CI성공·후속SDD·Task1관측기구현/검증으로progress. 현재모델평가0,새진단API0. 다음은Task2 brief/start→worker/test RED→격리연결→unit/runtime검증이다. Task2/3·최종리뷰·새featurepush·실제3문서진단은아직미완료이며모델품질개선달성주장없음. Goalactive유지.
+- 재개: 직전 사용자 진행률 질문 응답은 상태 보고(no progress)였다. 실제 브랜치/작업 파일 대조 후 Task2 구현으로 전진한다. 기존 30회 평가는 terminal이고 재시작하지 않는다.
+- Task2 RED는 구현 전 worker8fail/runtime4fail(모듈 부재)로 확인했다. 구현 후 worker7pass/1Windows symlink 생성권한 skip(0.066초), 실제 SDK/자식/SSE runtime4pass(15.507초, session70215 exit0). 정상 요청 payload·응답·호출 수 동일, 관측/쓰기 실패 격리, provider 실패 prefix, timeout/cancel 정리 통과. 실제 API0. 독점 sidecar/고정 오류 코드/DeepSeek 명시 요청만 허용하며 프로덕션 모듈은 그대로다. task-done 후 Task3 제한 runner로 이어간다.
