@@ -2,6 +2,13 @@
 
 ## 최신
 
+- feature 구현·한정실험·독립리뷰 종료. 리뷰0Critical0Important0Minor,직접13/13·감사각11/11. 결과는 합성20/20씩,실제H02양쪽미평가. 실서비스채택하지 않음,기본서비스그대로. 현재실제API/테스트/리뷰프로세스없음.
+- task-done1009/1004pass5skip+SDK4. 제품포함01ed1a5 CI36688293192 두jobsuccess. 최종문서push/CI는 task 도구 결과와 .superpowers/sdd/plan-deepseek-review-effort/progress.md에 기록한다.
+- 다음전체목표작업: raw 없이 응답형식 실패를 구분하는 안전한 진단을 먼저 만들고,근거에 따라검토묶음/출력예산을별도비교. 아직다음feature spec/branch/API시작없음. 실패실험을재시작하지않는다. 이checkout은다음feature에재사용가능하되현재feature문서push/CI확인후사용한다.
+- 전체목표active/미완료. 독립품질평가·실서비스HTTP연결·Spring실제연동·후속AI기능등원래남은범위유지. 아래는경과기록.
+
+- 최종task-done1009건/1004통과5skip20.155s,실제SDK4/4(0.044s),exit0. reviewer /root/effort_review_audit가605c6f0까지읽기전용리뷰중. 제품코드수정없음,실제API/테스트프로세스없음.
+
 - H02 session94505 terminal/exit1,5calls902.158s. off1call/INVALID_RESPONSE. on25는3묶음유효 후4번째length8192/INCOMPLETE_RESPONSE.16audit/6부분정답양쪽미평가. terminal감사11항목통과,총실험9호출. 현재실제API프로세스없음. 아래live 표시는 경과 기록이다.
 - 다음: 최종task-done→독립전체브랜치리뷰→필요수정→문서push. 전체목표active이며 품질개선/서비스채택미확인. 이번feature내추가API없음.
 
