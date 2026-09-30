@@ -4,10 +4,12 @@ import json
 import unittest
 
 from agentfit_ai.candidate_feature_regrouping import repair_feature_curation
+from agentfit_ai.candidate_feature_curation import curate_reviewed_features
 from agentfit_ai.candidate_first_profile import finalize_candidate_analysis
 from agentfit_ai.profile import FIELDS
 from agentfit_ai.solar import AnalysisError
-from test_candidate_feature_curation import fixture, partition, coverage, response, sender
+from test_candidate_feature_curation import (
+    fixture, partition, coverage, relation_response, response, sender)
 
 
 def split_partition():
@@ -24,6 +26,53 @@ def split_review(*, first='covered', second='covered'):
 
 
 class CandidateFeatureRegroupingTests(unittest.TestCase):
+    def test_full_flow_repairs_once_and_keeps_final_uncertainty(self):
+        data = fixture(31)
+        proposed = {'groups': [partition(30)['groups'][0],
+                               {'representativeId': 'C030', 'memberIds': ['C030']}],
+                    'unrepresentedIds': []}
+        for remaining in ([], ['C001']):
+            final_review = relation_response(30)
+            if remaining:
+                final_review['assessments'][0]['coverage'] = 'uncertain'
+            requests, traces = [], []
+            result = curate_reviewed_features(*data, 'fake', transport=sender([
+                response(partition()), response(relation_response(uncovered=['C030'])),
+                response(proposed), response(final_review)], requests), call_trace=traces)
+            self.assertEqual(len(requests), 4)
+            self.assertEqual(result, {**proposed, **coverage(uncovered=remaining)})
+            self.assertEqual([row['stage'] for row in traces], [
+                'feature_grouping', 'feature_relations', 'feature_regrouping', 'feature_relations'])
+            verdict = {'checkedFields': list(FIELDS), 'missingFields': [], 'wrongCandidateIds': []}
+            final = finalize_candidate_analysis(data[0], 'case', data[1], data[2], verdict,
+                                                 feature_curation=result)
+            self.assertEqual(final['outcome'], 'needs_confirmation' if remaining else 'candidate_profile')
+            self.assertEqual(final['featureCuration']['uncoveredCount'], len(remaining))
+
+    def test_initial_singleton_partition_can_recover_in_three_calls(self):
+        data = fixture(31)
+        first = {'groups': [{'representativeId': f'C{i:03d}', 'memberIds': [f'C{i:03d}']}
+                            for i in range(30)], 'unrepresentedIds': ['C030']}
+        requests, traces = [], []
+        result = curate_reviewed_features(*data, 'fake', transport=sender([
+            response(first), response(partition()), response(relation_response())], requests),
+            call_trace=traces)
+        self.assertEqual(len(requests), 3)
+        self.assertEqual(result, {**partition(), **coverage()})
+        self.assertEqual([row['stage'] for row in traces],
+                         ['feature_grouping', 'feature_regrouping', 'feature_relations'])
+
+    def test_full_flow_does_not_hide_repair_failure(self):
+        data = fixture(31)
+        for failure in (AnalysisError('PROVIDER_UNAVAILABLE'), response({'groups': []})):
+            requests, traces = [], []
+            with self.subTest(failure=type(failure)), self.assertRaises((AnalysisError, ValueError)):
+                curate_reviewed_features(*data, 'fake', transport=sender([
+                    response(partition()), response(relation_response(uncovered=['C030'])),
+                    failure], requests), call_trace=traces)
+            self.assertEqual(len(requests), 3)
+            self.assertFalse(traces[-1]['validated'])
+
     def test_complete_receipt_returns_independent_copy_without_calls(self):
         data = fixture(4)
         prior = {**partition(4), **coverage(4)}

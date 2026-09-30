@@ -193,9 +193,9 @@ class CandidateFeatureCurationTests(unittest.TestCase):
             for i in range(30)], 'unrepresentedIds': ['C030']}
         requests, traces = [], []
         result = curate_reviewed_features(*data, 'fake',
-            transport=sender([response(proposed)], requests), call_trace=traces)
-        self.assertEqual(len(requests), 1)
-        self.assertEqual(len(traces), 1)
+            transport=sender([response(proposed), response(proposed)], requests), call_trace=traces)
+        self.assertEqual(len(requests), 2)
+        self.assertEqual([row['stage'] for row in traces], ['feature_grouping', 'feature_regrouping'])
         self.assertEqual(result, {**proposed, **coverage(uncovered=['C030'])})
 
     def test_invalid_partitions_fail_before_review(self):
@@ -254,8 +254,9 @@ class CandidateFeatureCurationTests(unittest.TestCase):
             # The second occurrence has a different context; the independent
             # reviewer says the chosen occurrence cannot represent it.
             result = curate_reviewed_features(*data, 'fake', transport=sender([
-                response(proposed), response(relation_response(32, uncovered=['C031']))], requests))
-            self.assertEqual(len(requests), 2)
+                response(proposed), response(relation_response(32, uncovered=['C031'])),
+                response(proposed)], requests))
+            self.assertEqual(len(requests), 3)
             reviewed_partition = json.loads(requests[1]['messages'][1]['content'])
             self.assertEqual(reviewed_partition['relations'], [
                 {'memberId': f'C{i:03d}', 'representativeId': 'C000'} for i in range(1, 32)])
@@ -316,7 +317,9 @@ class CandidateFeatureCurationTests(unittest.TestCase):
         groups['unrepresentedIds'] = ['C030']
         requests = []
         result = curate_reviewed_features(*data, 'fake', transport=sender([
-            response(groups), response(relation_response(30, uncovered=['C012']))], requests))
+            response(groups), response(relation_response(30, uncovered=['C012'])),
+            response(groups)], requests))
+        self.assertEqual(len(requests), 3)
         summary = validate_feature_curation(*data, result)
         self.assertEqual(summary, {'selectedIds': ['C000'],
                                   'uncoveredIds': ['C012', 'C030'], 'candidateCount': 31})

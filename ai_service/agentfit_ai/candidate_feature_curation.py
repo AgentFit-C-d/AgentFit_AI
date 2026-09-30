@@ -171,7 +171,7 @@ def _propose_feature_partition(document, candidates, key, *, model, transport,
 
 def curate_reviewed_features(document, frozen, reviewed_labels, key, *,
                              model=MODEL, transport=None, call_trace=None):
-    """Use at most two calls to select and verify source representatives on overflow."""
+    """Select, review, and optionally repair once using at most four calls."""
     if (type(key) is not str or not key.strip() or
             type(model) is not str or model not in ('solar-pro4', *NVIDIA_REVIEW_MODELS) or
             (transport is not None and not callable(transport)) or
@@ -183,5 +183,8 @@ def curate_reviewed_features(document, frozen, reviewed_labels, key, *,
     partition = _propose_feature_partition(document, candidates, key,
         model=model, transport=transport, call_trace=call_trace)
     from .candidate_feature_relations import review_feature_relations
-    return review_feature_relations(document, frozen, reviewed_labels, partition, key,
+    reviewed = review_feature_relations(document, frozen, reviewed_labels, partition, key,
+        model=model, transport=transport, call_trace=call_trace)
+    from .candidate_feature_regrouping import repair_feature_curation
+    return repair_feature_curation(document, frozen, reviewed_labels, reviewed, key,
         model=model, transport=transport, call_trace=call_trace)
