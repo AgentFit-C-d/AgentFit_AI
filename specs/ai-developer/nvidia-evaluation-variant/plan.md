@@ -11,7 +11,7 @@
 
 - feature/nvidia-evaluation-variant, base f0d57dd83400c2b692b051f21edc88b425623597. 원래 analysis-runtime 기준선/workspace 보존.
 - PUBLIC10문서×3회, 요청1800초/64호출/재시도0. 신규 설정은 DeepSeek 추출·분류·기능/GLM검토. 기존 scorer/기본서비스/평가6모듈 변경 없음.
-- 작업45분 점검/suite180초/합성 요청30초·기한1초/실제API0/유료0/운영배포0. 실제 계정 무료 한도/Spring/사람 검토 미확인.
+- 작업45분 점검/suite180초/합성 요청30초·기한10초/실제API0/유료0/운영배포0. 실제 계정 무료 한도/Spring/사람 검토 미확인.
 
 ## Review Focus
 

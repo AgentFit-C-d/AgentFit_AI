@@ -208,3 +208,19 @@ SectionAnalyzer(key, model="solar-mini4", jev_merge=True)로 Jev가 후보 통�
 마지막 동일사례 비교에서 기존 Jev2축은19/24, 신규4질문은16/24 정답이었습니다. 신규 방식은 오채택0건이지만 정상채택4회도 모두미정으로 남아 통과 기준에 미달했습니다. 계획에 따라 추가 튜닝과 실제 문서 확대를 중단했습니다.
 
 **자동 확정 Profile의 품질은 아직 확보되지 않았습니다.** 전체206코드테스트 통과와 내용 정확도는 별개입니다. [종료 정리 및 확보한 범위](specs/ai-developer/04-analysis-provider/tuning-conclusion.md)
+
+## NVIDIA 단독 공개 문서 평가 — nvidia-only-v1
+
+`agentfit_ai.nvidia_evaluation_runner`는 기존 공개10문서·임시 정답207개·채점 기준으로 단독 서비스 경로를 평가하는 별도 실행기입니다. DeepSeek4.1Flash가 추출/분류/기능, GLM5.3이 검토를 맡습니다. 분류 묶음은30개, manifest의 `candidate_batch_size=20`은 후보 검토 묶음입니다. 문서당3회·전체30회, 요청1800초·최대64모델 호출·자동재시도0이며 기본 분석기는 바뀌지 않습니다.
+
+기본 명령은 **키 읽기·모델 호출·평가 결과 쓰기 없는 사전 점검**입니다. `ai_service`에서 실행합니다.
+
+```text
+python -m agentfit_ai.nvidia_evaluation_runner --corpus ../specs/ai-developer/04-analysis-provider/independent-profile-evaluation/corpus.json --gold E:/AgentFit/output/independent-profile-v1/gold-v1.json --freeze ../specs/ai-developer/nvidia-evaluation-variant/freeze.json
+```
+
+실행하려면 위 명령에 `--live --env-file <로컬.env> --output <별도 결과 폴더> --access-confirmation <확인 기록.json>`을 추가합니다. NVIDIA_API_KEY 하나만 필요합니다. [무료 확인 파일 양식](specs/ai-developer/nvidia-evaluation-variant/free-access.template.json)은 기본 거부 상태입니다. **현재 계정·두 모델·endpoint가 추가 요금 없이 사용 가능한지 사람이 자료로 확인한 뒤** 만료 시점과 모델 호출 상한을 기록해야 합니다. 이 파일 검증은 계정/과금 자동 조회를 뜻하지 않습니다. 현재 실제 확인 자료는 없으며 실제 평가를 실행하지 않았습니다.
+
+요청마다64회를 보수적으로 예약하며, 누적 예약 초과·확인 만료·429/503 등 제공자 오류에서 전체 평가를 중단합니다. 예약 상한은 실제 사용량이나 청구액이 아닙니다. 제공자 오류 row가 있거나 started-only 기록이 남은 폴더는 다시 실행해도 자동 재호출하지 않습니다. 중단 원인을 확인하고 별도 승인 범위에서 후속 실험을 등록해야 합니다. 기존 결과를 삭제하거나 덮어쓰지 않습니다.
+
+기존 혼합 baseline은1/30에서 중단돼 완전한 비교가 불가능합니다. 이번 자료는 새로운 holdout이 아니며 정답은 사람 검토 전의 임시 기준입니다. 로컬 테스트와 사전 점검 성공을 모델 정확도 개선이나 출시 승인으로 해석하지 않습니다. [명세](specs/ai-developer/nvidia-evaluation-variant/spec.md) · [검증](specs/ai-developer/nvidia-evaluation-variant/validation.md)
