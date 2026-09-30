@@ -16,7 +16,7 @@ from .diagnostics import safe_code
 from .document_extraction import (MAX_FILE_BYTES, PDF_TIMEOUT_SECONDS,
                                   DocumentExtractionError,
                                   extract_document)
-from .profile import FIELDS, ProfileValidationError, validate_profile
+from .profile import FIELDS, ProfileValidationError, check_profile_snapshot
 from .recoverable_draft import SUGGESTED_REASONS, UNRESOLVED_REASONS
 from .solar import AnalysisError
 
@@ -104,27 +104,7 @@ def _media_type_valid(value: str | None, kind: str) -> bool:
 
 
 def _checked_profile(document: str, document_id: str, profile: dict) -> dict:
-    if set(profile) != {"data", "sources", "evidence", "unknownFields"}:
-        raise ProfileValidationError("INVALID_PROFILE_SHAPE")
-    evidence = profile["evidence"]
-    if type(evidence) is not dict or set(evidence) != set(FIELDS):
-        raise ProfileValidationError("INVALID_EVIDENCE_SHAPE")
-    spans = {}
-    for field in FIELDS:
-        items = evidence[field]
-        if type(items) is not list:
-            raise ProfileValidationError("INVALID_EVIDENCE_SHAPE", field)
-        for item in items:
-            if (type(item) is not dict or set(item) != {"documentId", "start", "end"}
-                    or item["documentId"] != document_id):
-                raise ProfileValidationError("INVALID_EVIDENCE_SHAPE", field)
-        spans[field] = [{"start": item["start"], "end": item["end"]}
-                        for item in items]
-    checked = validate_profile(document, document_id,
-                               {"data": profile["data"], "evidence": spans})
-    if checked != profile:
-        raise ProfileValidationError("INVALID_PROFILE_SHAPE")
-    return checked
+    return check_profile_snapshot(document, document_id, profile)
 
 
 def _checked_confirmation(outcome: dict, profile: dict, *,

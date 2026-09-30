@@ -35,6 +35,29 @@ def _valid_text(value: Any) -> bool:
     return type(value) is str and bool(value.strip()) and len(value) <= MAX_TEXT_CODE_POINTS
 
 
+def check_profile_snapshot(document: str, document_id: str, profile: dict) -> dict:
+    """Revalidate a serialized Profile, including source identity and derived fields."""
+    if type(profile) is not dict or set(profile) != {"data", "sources", "evidence", "unknownFields"}:
+        raise ProfileValidationError("INVALID_PROFILE_SHAPE")
+    evidence = profile["evidence"]
+    if type(evidence) is not dict or set(evidence) != set(FIELDS):
+        raise ProfileValidationError("INVALID_EVIDENCE_SHAPE")
+    spans = {}
+    for field in FIELDS:
+        items = evidence[field]
+        if type(items) is not list:
+            raise ProfileValidationError("INVALID_EVIDENCE_SHAPE", field)
+        for item in items:
+            if (type(item) is not dict or set(item) != {"documentId", "start", "end"}
+                    or item["documentId"] != document_id):
+                raise ProfileValidationError("INVALID_EVIDENCE_SHAPE", field)
+        spans[field] = [{"start": item["start"], "end": item["end"]} for item in items]
+    checked = validate_profile(document, document_id, {"data": profile["data"], "evidence": spans})
+    if checked != profile:
+        raise ProfileValidationError("INVALID_PROFILE_SHAPE")
+    return checked
+
+
 def _validate_value(field: str, value: Any) -> None:
     if value is None:
         return
