@@ -15,6 +15,7 @@
 5. 서버는 기존 curation의 groups/unrepresentedIds를 보존한다. checkedCandidateIds는 모델의 쌍별 결과와 서버 계산을 합친 전체 검증 후보 목록이다. 모델이 모든 후보를 판단했다는 의미가 아니다. uncoveredIds는 미대표와 not_covered/uncertain 구성원을 합친 입력 순서 목록이다.
 6. 기존 `validate_feature_curation`을 통해 최종 결과를 재검증한다. 대표 자기 자신이 uncoveredIds에 있는 입력은 불가능한 관계이므로 거절한다. 원래 4개 결과 키와 공개Profile은 그대로다. 미포함/판단 불가는 features 확인 필요이며 기존의 다른 확인 필요 사유를 해제하지 않는다.
 7. `curate_reviewed_features`의 두 번째 단계를 새 helper로 대체한다. 이 함수 자체가 실험용 선택 경로이며 HTTP/기본 분석기에는 아직 연결돼 있지 않다. 새 legacy 플래그를 추가하지 않는다. 이전 전체후보 검토 요청을 유지하지 않는다.
+8. 대표로 표시되는 텍스트는 선택한 value다. 문맥은 지시 대상/범위/기존 별칭 정체성을 해석할 수 있지만 value에 없는 다른 절의 동작을 더하지 않는다. 조건절이 후속 처리 전체의 기능을 상속하지 않는다. 다르게 표현된 실제 별칭은 계속 포함 가능하다. 이 일반 규칙은 context-probe.md의 고정 비교로 검증한 뒤 반영한다.
 
 ## 인터페이스와 상한
 

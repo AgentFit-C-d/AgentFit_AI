@@ -10,6 +10,15 @@ from .solar import AnalysisError, SolarAnalyzer, post_solar
 
 
 _COVERAGE = ('covered', 'not_covered', 'uncertain')
+_VALUE_CONTEXT_INSTRUCTION = (
+    'The selected representative.value is the text used as the displayed feature, '
+    'not the whole surrounding paragraph. Context may resolve references, scope or '
+    'an established alias identity; it must not add a separate action or capability '
+    'that is absent from that selected value. In particular, a conditional/action '
+    'fragment does not inherit the actions of the following clause. Evaluate whether '
+    'the selected value represents the member capability, rather than whether both '
+    'belong to the same workflow. Preserve genuinely equivalent names and descriptions; '
+    'do not reject aliases merely because their wording differs.')
 
 
 def _validate_assessments(reply, relations):
@@ -65,7 +74,7 @@ def review_feature_relations(document, frozen, reviewed_labels, partition, key, 
             'supplied pair exactly once with covered, not_covered or uncertain. Never '
             'change IDs, add relationships, quote source text or invent a broader operation. '
             'The server separately handles representatives themselves and unrepresented '
-            'candidates; neither is a relationship to assess here.',
+            'candidates; neither is a relationship to assess here. ' + _VALUE_CONTEXT_INSTRUCTION,
             {'document': document,
              'candidates': [item for item in candidates if item['id'] in participants],
              'relations': relations},
