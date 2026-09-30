@@ -4,12 +4,13 @@ from contextlib import redirect_stdout
 import io
 import json
 from pathlib import Path
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
 
 from agentfit_ai import nvidia_evaluation_inputs as inputs, nvidia_evaluation_runner as runner
-from agentfit_ai.analysis_call_metadata import METADATA_VERSION, build_metadata
+from agentfit_ai.analysis_call_metadata import METADATA_VERSION, build_metadata, unavailable_metadata
 from tests.nvidia_evaluation_fixtures import make_variant, make_access
 from tests.independent_evaluation_fixtures import write_json
 from tests.test_analysis_call_metadata import call
@@ -129,6 +130,41 @@ class DiagnosticCheckpointTests(unittest.IsolatedAsyncioTestCase):
                 with patch.object(runner, 'run_scored_process', side_effect=AssertionError('replayed')):
                     with self.assertRaisesRegex(ValueError, '^INCOMPLETE_RUN$'):
                         await runner.evaluate(prepared, output, 'synthetic-nvidia-secret', access)
+
+    async def test_draft_without_diagnostics_records_terminal_failure_and_blocks_replay(self):
+        from agentfit_ai.candidate_confirmation import project_candidate_confirmation
+        from agentfit_ai.profile import FIELDS, validate_profile
+        run_process = runner.run_scored_process
+        async def missing_diagnostics(document, document_id, gold, key, *, call_diagnostics):
+            data, evidence = dict.fromkeys(FIELDS), {field: [] for field in FIELDS}
+            data['frontend'], evidence['frontend'] = ['React'], [{'start': 0, 'end': 5}]
+            draft = project_candidate_confirmation(document, document_id, {
+                'outcome': 'candidate_profile',
+                'profile': validate_profile(document, document_id, {'data': data, 'evidence': evidence}),
+                'unresolvedFields': [], 'candidateCount': 1, 'rejectedCandidateCount': 0,
+                'rejectedReasons': {}, 'reviewIssueCount': 0})
+            envelope = {'version': METADATA_VERSION, 'result': draft,
+                        'diagnostics': unavailable_metadata('NOT_RETURNED')}
+            command = [sys.executable, '-c', 'import sys; sys.stdin.buffer.read(); print(' +
+                       repr(json.dumps(envelope)) + ')']
+            return await run_process(document, document_id, gold, key, command=command,
+                                     call_diagnostics=call_diagnostics, timeout_seconds=5)
+        with tempfile.TemporaryDirectory() as temp, patch.object(inputs, 'ROOT', Path(temp)):
+            paths, _ = variant(temp)
+            prepared = inputs.prepare_evaluation(*paths, call_diagnostics=True)
+            output, access = Path(temp)/'out', make_access(Path(temp)/'access.json')
+            with patch.object(runner, 'run_scored_process', side_effect=missing_diagnostics) as calls:
+                with self.assertRaisesRegex(ValueError, '^EVALUATION_PROVIDER_STOPPED$'):
+                    await runner.evaluate(prepared, output, 'synthetic-nvidia-secret', access)
+            self.assertEqual(calls.call_count, 1)
+            saved = json.loads((output/'PUBLIC-01-run-0.json').read_text())
+            self.assertEqual(saved['score']['error'], 'ANALYSIS_FAILURE')
+            self.assertEqual(saved['diagnostics'], unavailable_metadata('ANALYSIS_WORKER_FAILED'))
+            snapshots = {p.name: p.read_bytes() for p in output.iterdir()}
+            with patch.object(runner, 'run_scored_process', side_effect=AssertionError('replayed')):
+                with self.assertRaisesRegex(ValueError, '^EVALUATION_PROVIDER_STOPPED$'):
+                    await runner.evaluate(prepared, output, 'synthetic-nvidia-secret', access)
+            self.assertEqual(snapshots, {p.name: p.read_bytes() for p in output.iterdir()})
 
 
 if __name__ == '__main__':

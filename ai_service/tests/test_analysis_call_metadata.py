@@ -124,6 +124,27 @@ class ParentMetadataTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result, body['result'])
         self.assertEqual(report, body['diagnostics'])
 
+    async def test_parent_requires_available_diagnostics_for_a_valid_draft(self):
+        from agentfit_ai.analysis_process import run_analysis_process, AnalysisProcessError
+        from agentfit_ai.analysis_call_metadata import unavailable_metadata
+        from agentfit_ai.candidate_confirmation import project_candidate_confirmation
+        from tests.test_candidate_confirmation import DOCUMENT, DOCUMENT_ID, result
+        draft = project_candidate_confirmation(DOCUMENT, DOCUMENT_ID, result())
+        body = dict(self.envelope(), result=draft, diagnostics=unavailable_metadata('NOT_RETURNED'))
+        report = {}
+        with self.assertRaisesRegex(AnalysisProcessError, '^ANALYSIS_WORKER_FAILED$'):
+            await run_analysis_process(DOCUMENT, DOCUMENT_ID, 'key', asyncio.get_running_loop().time()+5,
+                nvidia_only=True, call_diagnostics=report, command=self.command(body))
+        self.assertEqual(report, unavailable_metadata('ANALYSIS_WORKER_FAILED'))
+
+        # A safe failure may genuinely have no returned call trace.
+        body['result'] = self.envelope()['result']
+        report = {}
+        received = await run_analysis_process(DOCUMENT, DOCUMENT_ID, 'key', asyncio.get_running_loop().time()+5,
+            nvidia_only=True, call_diagnostics=report, command=self.command(body))
+        self.assertEqual(received, body['result'])
+        self.assertEqual(report, body['diagnostics'])
+
     async def test_parent_rejects_invalid_envelope_diagnostics_and_result_without_partial_trace(self):
         from agentfit_ai.analysis_process import run_analysis_process, AnalysisProcessError
         original = self.envelope()

@@ -9,11 +9,14 @@
 - 실제 SDK·자식·loopback4/4, 20.146초: 정상 on/off의 점수·5호출 동일, 네 번째 GLM 검토503, 첫 DeepSeek429, 전송 성공 뒤 의미 파싱 실패, timeout/cancel 후 프로세스/socket 종료.
 - 진단 실패 단계/오류와 실제 결과가 다른 조작3건 RED→신규 단위12/12 GREEN, 6.308초. 허용 enum이어도 상호 모순을 거절한다.
 - 오프라인 기존10문서/임시gold207개/코드126파일 고정. 원래 gold·두 실제 결과 폴더·이전 freeze의 SHA256 전후 동일.
+- 구현 cb818f0168c6a4519ff805869a28159fc67d3665에서 최종 task-done: unit1,158통과/5skip(83.318초), runtime27통과(120.687초), contract36통과(10.801초), core8통과(44.821초). 총 **1,229통과/5skip**, 네 묶음 모두 exit0.
+- 실제 CLI `--call-diagnostics` 기본 preflight도10문서/207gold로 exit0. `.env`와 API는 사용하지 않았다. 기존 Python `<prefix>` 및 느린 asyncio 시험 경고는 남아 있다.
+- 최종 리뷰 수정 후 재검증: unit1,160통과/5skip(76.222초), runtime27통과(107.808초), contract36통과(8.763초), core8통과(36.184초). 총 **1,231통과/5skip**, session25962 exit0. 이전 로그를 덮어쓰지 않고 `task-review-fix-gate-1..4.log`에 별도 보존했다.
 
 ## 식별
 
 - variant: `nvidia-call-diagnostics-v1`
-- freeze SHA256: `496904267cc23fee2f4e3e3dc18c4cdefb3276e09c55d979593620bf501b4ab4`
+- freeze SHA256: `5d54bef56f15e2bb08c9e4da2b953d2b3275df8d7d467c97ce0157955f50e948`
 - evaluator SHA256: `0dce2ebec826a2bbd825d4d6db30978476931dc1dfd76802c69c4b64857bb990`
 - gold SHA256: `5fcdc3a15fdbd346e0e351313639c1ebe2cac02cc36f33abf749d2ff22caa283`
 
@@ -35,4 +38,4 @@ python -m agentfit_ai.nvidia_evaluation_runner --call-diagnostics
 - `available`은 자식에서 정상 수신·검증한 호출 기록이다. `unavailable`과 빈 calls는 실제0호출을 뜻하지 않는다.
 - 실제 HTTP 상태번호/원문/키/예외 본문은 저장하지 않는다. 강제 종료 이전의 부분 trace도 전달하지 않는다.
 - 정확도 향상, 사람 gold 검토, 실제 Spring·DB·운영 환경은 미검증이다. 기존 실제 평가1/30 제공자 실패는 원인이 소급 확정되지 않는다.
-- 최종 전체 gate/독립 리뷰/정확한 구현 SHA CI는 후속 기록에 남긴다.
+- 단일 독립 리뷰의 Important1은 부모/저장기의 성공+unavailable 처리 불일치였다. RED2→관련14/14 통과(8.365초), 안전한 실패 terminal 저장 및 재호출 차단을 확인했다. 상세 판정과 미판정 범위의 담당자 판단은 review.md에 기록했다. 정확한 구현 SHA의 push/CI 결과는 `work/harness/nvidia-evaluation-diagnostics/STATE.md`에서 추적한다.
