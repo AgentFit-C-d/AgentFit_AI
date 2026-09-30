@@ -33,7 +33,7 @@ H02 terminal·코드/실행기/helper 불변·순서·effort·schema·상한·�
 
 ## 브랜치 검증
 
-제품ab60f8e1318d5f263484892ef67aa81eeffb60d0, 중간문서01ed1a5ea62e9a81c9ff7a97e96cefc8b1e24087 push. 정확한CI [36688293192](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36688293192) completed/success,unit-and-worker-memory와integrated-runtime 모두통과. 최종task-done exit0,1009건/1004통과5skip20.155s+실제SDK4/4(0.044s). 새 컨텍스트 독립리뷰0Critical/0Important/0Minor,집중13/13·감사각11/11직접확인. [리뷰·판단 기록](../../../../../work/harness/deepseek-review-effort/review.md). 최종문서push/CI 결과는 task 도구 결과와 ignored SDD ledger에 기록한다.
+제품ab60f8e1318d5f263484892ef67aa81eeffb60d0, 중간문서01ed1a5ea62e9a81c9ff7a97e96cefc8b1e24087 push. 정확한CI [36688293192](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36688293192) completed/success,unit-and-worker-memory와integrated-runtime 모두통과. 최종task-done exit0,1009건/1004통과5skip20.155s+실제SDK4/4(0.044s). 새 컨텍스트 독립리뷰0Critical/0Important/0Minor,집중13/13·감사각11/11직접확인. [리뷰·판단 기록](../../../../work/harness/deepseek-review-effort/review.md). 최종문서push/CI 결과는 task 도구 결과와 ignored SDD ledger에 기록한다.
 
 ## 제한
 
