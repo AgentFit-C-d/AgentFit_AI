@@ -1,0 +1,188 @@
+{
+  "cases": 10,
+  "human_reviewed": false,
+  "model_outputs_seen": false,
+  "gold_sha256": "5fcdc3a15fdbd346e0e351313639c1ebe2cac02cc36f33abf749d2ff22caa283",
+  "rows": [
+    {
+      "id": "PUBLIC-01",
+      "gold_units": 24,
+      "exclusions": 5,
+      "ambiguities": 2,
+      "field_assessments": {
+        "project_name": "enumerated",
+        "project_type": "enumerated",
+        "domain": "enumerated",
+        "frontend": "partial",
+        "backend": "partial",
+        "ai": "unspecified",
+        "database": "enumerated",
+        "deployment": "enumerated",
+        "features": "enumerated",
+        "external_integrations": "partial"
+      }
+    },
+    {
+      "id": "PUBLIC-02",
+      "gold_units": 31,
+      "exclusions": 4,
+      "ambiguities": 2,
+      "field_assessments": {
+        "project_name": "enumerated",
+        "project_type": "enumerated",
+        "domain": "enumerated",
+        "frontend": "partial",
+        "backend": "partial",
+        "ai": "unspecified",
+        "database": "enumerated",
+        "deployment": "partial",
+        "features": "enumerated",
+        "external_integrations": "enumerated"
+      }
+    },
+    {
+      "id": "PUBLIC-03",
+      "gold_units": 14,
+      "exclusions": 1,
+      "ambiguities": 1,
+      "field_assessments": {
+        "project_name": "enumerated",
+        "project_type": "enumerated",
+        "domain": "enumerated",
+        "frontend": "enumerated",
+        "backend": "enumerated",
+        "ai": "partial",
+        "database": "unspecified",
+        "deployment": "enumerated",
+        "features": "enumerated",
+        "external_integrations": "unspecified"
+      }
+    },
+    {
+      "id": "PUBLIC-06",
+      "gold_units": 30,
+      "exclusions": 3,
+      "ambiguities": 1,
+      "field_assessments": {
+        "project_name": "enumerated",
+        "project_type": "enumerated",
+        "domain": "enumerated",
+        "frontend": "unspecified",
+        "backend": "unspecified",
+        "ai": "partial",
+        "database": "unspecified",
+        "deployment": "enumerated",
+        "features": "enumerated",
+        "external_integrations": "enumerated"
+      }
+    },
+    {
+      "id": "PUBLIC-07",
+      "gold_units": 18,
+      "exclusions": 1,
+      "ambiguities": 1,
+      "field_assessments": {
+        "project_name": "enumerated",
+        "project_type": "enumerated",
+        "domain": "enumerated",
+        "frontend": "partial",
+        "backend": "unspecified",
+        "ai": "unspecified",
+        "database": "unspecified",
+        "deployment": "enumerated",
+        "features": "enumerated",
+        "external_integrations": "partial"
+      }
+    },
+    {
+      "id": "PUBLIC-08",
+      "gold_units": 22,
+      "exclusions": 4,
+      "ambiguities": 2,
+      "field_assessments": {
+        "project_name": "enumerated",
+        "project_type": "enumerated",
+        "domain": "enumerated",
+        "frontend": "partial",
+        "backend": "partial",
+        "ai": "unspecified",
+        "database": "partial",
+        "deployment": "enumerated",
+        "features": "enumerated",
+        "external_integrations": "partial"
+      }
+    },
+    {
+      "id": "PUBLIC-09",
+      "gold_units": 7,
+      "exclusions": 2,
+      "ambiguities": 1,
+      "field_assessments": {
+        "project_name": "enumerated",
+        "project_type": "enumerated",
+        "domain": "enumerated",
+        "frontend": "unspecified",
+        "backend": "unspecified",
+        "ai": "unspecified",
+        "database": "unspecified",
+        "deployment": "enumerated",
+        "features": "enumerated",
+        "external_integrations": "partial"
+      }
+    },
+    {
+      "id": "PUBLIC-10",
+      "gold_units": 45,
+      "exclusions": 3,
+      "ambiguities": 0,
+      "field_assessments": {
+        "project_name": "enumerated",
+        "project_type": "enumerated",
+        "domain": "enumerated",
+        "frontend": "unspecified",
+        "backend": "unspecified",
+        "ai": "enumerated",
+        "database": "unspecified",
+        "deployment": "enumerated",
+        "features": "enumerated",
+        "external_integrations": "enumerated"
+      }
+    },
+    {
+      "id": "PUBLIC-11",
+      "gold_units": 10,
+      "exclusions": 3,
+      "ambiguities": 1,
+      "field_assessments": {
+        "project_name": "enumerated",
+        "project_type": "enumerated",
+        "domain": "enumerated",
+        "frontend": "partial",
+        "backend": "partial",
+        "ai": "unspecified",
+        "database": "unspecified",
+        "deployment": "enumerated",
+        "features": "enumerated",
+        "external_integrations": "unspecified"
+      }
+    },
+    {
+      "id": "PUBLIC-12",
+      "gold_units": 6,
+      "exclusions": 3,
+      "ambiguities": 1,
+      "field_assessments": {
+        "project_name": "enumerated",
+        "project_type": "enumerated",
+        "domain": "enumerated",
+        "frontend": "unspecified",
+        "backend": "unspecified",
+        "ai": "unspecified",
+        "database": "unspecified",
+        "deployment": "partial",
+        "features": "enumerated",
+        "external_integrations": "unspecified"
+      }
+    }
+  ]
+}
