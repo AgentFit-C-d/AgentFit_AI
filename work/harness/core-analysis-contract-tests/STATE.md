@@ -16,6 +16,9 @@
 
 ## 다음 작업·검증 한계
 
+- Task1 완료797b113/push/CI36724997363 성공. Task2 HTTP7+경쟁7+store9=23개 통과. 입력전 admission·삭제중 physicalslot·기한정리·근거끝범위를 RED→GREEN으로 보완했다. 전체1117/5skip44.106초,runtime11/11 38.434초,contract23/23 2.876초,exit0. Task2커밋/최종gate를 진행한다.
+- 실제 모델0회, 실제 Spring0회. Task3 합성실패진단7일·로그·localhost TCP·인계·최종리뷰가 남았다.
+
 - Task1전체gate→commit/task-done. Task2 mockHTTP/AI경계/실패·timeout·중복·삭제경쟁. Task3진단7일삭제·로그·TCP테스트·인계·최종리뷰/push/exactCI.
 - v2질문재조회/명시적확인신호는현재공개DTO에없다. 임의로계약을확장하지않고인계공백으로기록한다. 기존전체10필드PATCH시험만으로질문별UI확인완료를주장하지않는다.
 - 실패진단실제AI→Spring전송·권한·7일물리삭제·백업과운영로그는미검증. 합성모의삭제와실제삭제보장을구분한다.

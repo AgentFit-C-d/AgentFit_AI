@@ -71,7 +71,14 @@ class MockStore:
     def detail(self, owner, project_id):
         with self._lock:
             item = self._owned(owner, project_id)
+            self._expire(item)
             return deepcopy({k: item[k] for k in ('project', 'confirmed', 'draft', 'latestAttempt')})
+
+    def _expire(self, item):
+        attempt = item['latestAttempt']
+        if (attempt and attempt['status'] == 'PROCESSING'
+                and self.clock() >= datetime.fromisoformat(attempt['deadlineAt'])):
+            self.fail(item['owner'], item['project']['id'], attempt['id'], 'INTERRUPTED')
 
     def save(self, owner, project_id, payload):
         with self._lock:
@@ -112,9 +119,11 @@ class MockStore:
             self._audit(item, 'PROFILE_CONFIRMED')
             return deepcopy(response)
 
-    def begin(self, owner, project_id, document):
+    def begin(self, owner, project_id, document, *, timeout_seconds=2):
         with self._lock:
             item = self._owned(owner, project_id)
+            for entry in self._entries.values():
+                self._expire(entry)
             active = [i for i in self._entries.values()
                       if i['latestAttempt'] is not None and i['latestAttempt']['status'] == 'PROCESSING']
             if item in active:
@@ -127,7 +136,7 @@ class MockStore:
             summary = dict(deepcopy(document), id=identifier('doc'), createdAt=now)
             attempt = {'id': identifier('attempt'), 'document': summary, 'status': 'PROCESSING',
                        'errorCode': None, 'startedAt': now,
-                       'deadlineAt': (self.clock() + timedelta(seconds=2)).astimezone(timezone.utc).isoformat().replace('+00:00', 'Z'),
+                       'deadlineAt': (self.clock() + timedelta(seconds=timeout_seconds)).astimezone(timezone.utc).isoformat().replace('+00:00', 'Z'),
                        'finishedAt': None}
             check('AnalysisAttempt', attempt)
             self._write_gate()
@@ -139,6 +148,7 @@ class MockStore:
     def finish(self, owner, project_id, attempt_id, profile, review):
         with self._lock:
             item = self._owned(owner, project_id)
+            self._expire(item)
             attempt = item['latestAttempt']
             if attempt is None or attempt['id'] != attempt_id or attempt['status'] != 'PROCESSING':
                 raise ContractError(409, 'VERSION_CONFLICT')
@@ -162,6 +172,9 @@ class MockStore:
                         if (set(span) != {'documentId', 'start', 'end'} or span['documentId'] != attempt['document']['id']
                                 or type(span['start']) is not int or type(span['end']) is not int
                                 or not 0 <= span['start'] < span['end']):
+                            raise ValueError
+                        count = attempt['document']['characterCount']
+                        if count is not None and span['end'] > count:
                             raise ValueError
                 check_review(profile, review)
             except (ValueError, KeyError, TypeError, ContractError):

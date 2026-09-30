@@ -35,7 +35,7 @@
 - [x] Step1: `test_mock_store.py`를먼저작성. create→manualsave→GET일치, 같은known/변경known/null/[]의출처·근거, staleexpected/draft·crossproject404, 누락/추가키422, 두스레드동일버전exactly1success/1conflict, 저장장애시완전불변, DRAFT/CONFIRMED별도, 반환객체변형격리. 모든응답은실제OpenAPI로검증.
 - [x] Step2: cwdai_service에서 `python -m unittest discover -s contract_tests -p test_mock_store.py -v` 실행. Expected:새contract_mock API미구현으로RED. missingcontract_mock 확인.
 - [x] Step3: 별도선택의존성파일에 `-r ../requirements-dev.txt` 및 `jsonschema[format-nongpl]==4.26.0`을고정한다. 프로젝트.venv에만설치후check/schema/store를최소구현. 오류에 jsonschema exception문자열포함금지, invalidvalidation은고정코드만. GREEN9/9, pipcheck충돌0.
-- [ ] Step4: 같은테스트GREEN과 기존tests전체회귀. Expected: 모든응답schema유효, 버전원자성·출처보존·누출방지검증. 결과/시간기록후commit/task-done.
+- [x] Step4: 같은테스트GREEN과 기존tests전체회귀. Expected: 모든응답schema유효, 버전원자성·출처보존·누출방지검증. 797b113 및 task-done 전체게이트 통과.
 
 ### Task 2: 실제 AI HTTP 경계에 연결한 공개 mock
 
@@ -46,10 +46,10 @@
 - 기본 ai_app은 `agentfit_ai.http_service.create_app`에합성분석callback을주입한다. callback은고정MockPlan/React등의합성fixture만인식하고타문서는안전실패를반환한다. 실제production파서·v2validator를그대로거친다. 외부모델코드호출금지.
 - `python -m contract_mock`는uvicorn127.0.0.1:8765,access_log=False,합성세션/고정Origin만사용. 서비스는mock표시를응답header `X-AgentFit-Mock: true`로추가하되JSON스키마는보존한다.
 
-- [ ] Step1: HTTP기반RED: TEXT/Markdown/PDF→DRAFT→editedPATCH→GET, 인증/Origin/소유권우선순위, 불법body/큰body/메타데이터추가키거절, 전체JSONSchema, v2unresolved nonnull·질문누락/변조거절, publicdraftReview미제공을명시검사.
-- [ ] Step2: gateway/server/CLI구현. 입력헤더/상태/정수와유효UTC는실제계약. 성공상태는mock저장후에만반환,일반로그는고정사건ID/코드만. Gateway는키/.env/외부URL읽기없음.
-- [ ] Step3: 경쟁RED: 동일프로젝트진행중409,같은사용자다른프로젝트429,전체2개초과429,AI200failed→502기존초안유지,timeout→504후재시도가능,취소후Attempt정리,delete중지연완료시복원금지,동시PATCH409,응답유실뒤GET/중복PATCH충돌. 주입callback에는 asyncio.Event/모의clock를사용하고실제대기1초이하.
-- [ ] Step4: 원인별최소구현후 `python -m unittest discover -s contract_tests -v`, 기존전체tests/runtime_tests. Expected: 합성HTTP흐름·실패경쟁검증, 외부호출0. commit/task-done.
+- [x] Step1: HTTP기반RED: TEXT/Markdown/PDF→DRAFT→editedPATCH→GET, 인증/Origin/소유권우선순위, 불법body/큰body/메타데이터추가키거절, 전체JSONSchema, v2unresolved nonnull·질문누락/변조거절, publicdraftReview미제공을명시검사.
+- [x] Step2: gateway/server/CLI구현. 입력헤더/상태/정수와유효UTC는실제계약. 성공상태는mock저장후에만반환,일반로그는고정사건ID/코드만. Gateway는키/.env/외부URL읽기없음.
+- [x] Step3: 경쟁RED: 동일프로젝트진행중409,같은사용자다른프로젝트429,전체2개초과429,AI200failed→502기존초안유지,timeout→504후재시도가능,취소후Attempt정리,delete중지연완료시복원금지,동시PATCH409,응답유실뒤GET/중복PATCH충돌. 주입callback에는 asyncio.Event/모의clock를사용하고실제대기1초이하.
+- [x] Step4: 원인별최소구현후 `python -m unittest discover -s contract_tests -v`, 기존전체tests/runtime_tests. precommit1117/5skip44.106초,runtime11/11 38.434초,contract23/23 2.876초 통과. commit/task-done 기록은 ledger에 남긴다.
 
 ### Task 3: 삭제·로그·실제 TCP 검증과 Spring 인계
 
