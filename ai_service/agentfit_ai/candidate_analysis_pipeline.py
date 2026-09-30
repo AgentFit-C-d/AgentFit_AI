@@ -2,7 +2,7 @@
 
 from copy import deepcopy
 from functools import partial
-from time import monotonic
+from time import monotonic, sleep
 
 from .candidate_first_profile import (
     CandidateContractError, CandidatePipelineError, apply_candidate_review,
@@ -45,7 +45,7 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
                                   review_model='z-ai/glm-5.3', feature_model=MODEL,
                                   extractor=None, solar_transport=None, nvidia_transport=None,
                                   observer=None, call_trace=None, review_calls=None,
-                                  max_calls=64):
+                                  max_calls=64, nvidia_retry_limit=1):
     """Run fresh extraction through reviewed projection with one provider-call budget.
 
     Injected extractors are trusted callbacks. Only the default LangExtract adapter's
@@ -62,7 +62,8 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
                 for callback in (extractor, solar_transport, nvidia_transport, observer)) or
             any(collector is not None and type(collector) is not list
                 for collector in (call_trace, review_calls)) or
-            type(max_calls) is not int or not 1 <= max_calls <= 64):
+            type(max_calls) is not int or not 1 <= max_calls <= 64 or
+            type(nvidia_retry_limit) is not int or nvidia_retry_limit not in (0, 1)):
         raise ValueError('invalid integrated analysis options')
 
     current_stage, call_count, budget_exceeded = None, 0, False
@@ -93,26 +94,41 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
     def metered(provider, transport):
         def send(payload, key, timeout):
             nonlocal call_count, budget_exceeded
-            if call_count >= max_calls:
-                budget_exceeded = True
-                raise AnalysisError('PROVIDER_FAILURE')
-            call_count += 1
-            requested = payload.get('model')
+            original = deepcopy(payload) if provider == 'nvidia' else payload
+            requested = original.get('model')
             allowed = ('solar-pro4',) if provider == 'solar' else NVIDIA_REVIEW_MODELS
-            row = {'stage': current_stage, 'provider': provider,
-                   'requested_model': requested if type(requested) is str and requested in allowed else None,
-                   'call_index': call_count, 'elapsed_ms': 0, 'response_bytes': None,
-                   'transport_completed': False}
-            started = monotonic()
-            try:
-                raw = transport(payload, key, timeout)
-                row['transport_completed'] = type(raw) is bytes
-                row['response_bytes'] = len(raw) if type(raw) is bytes else None
-                return raw
-            finally:
-                row['elapsed_ms'] = round((monotonic() - started) * 1000)
-                if call_trace is not None:
-                    call_trace.append(row)
+            attempts = 1 + (nvidia_retry_limit if provider == 'nvidia' else 0)
+            first_index = call_count + 1
+            for attempt in range(1, attempts + 1):
+                if call_count >= max_calls:
+                    budget_exceeded = True
+                    raise AnalysisError('PROVIDER_FAILURE')
+                call_count += 1
+                row = {'stage': current_stage, 'provider': provider,
+                       'requested_model': requested if type(requested) is str and requested in allowed else None,
+                       'call_index': call_count, 'elapsed_ms': 0, 'response_bytes': None,
+                       'transport_completed': False, 'attempt': attempt,
+                       'retry_of_call_index': first_index if attempt > 1 else None,
+                       'provider_error': None}
+                started = monotonic()
+                try:
+                    outgoing = deepcopy(original) if provider == 'nvidia' else original
+                    raw = transport(outgoing, key, timeout)
+                    row['transport_completed'] = type(raw) is bytes
+                    row['response_bytes'] = len(raw) if type(raw) is bytes else None
+                    return raw
+                except AnalysisError as error:
+                    row['provider_error'] = safe_code(error.code)
+                    if error.code != 'PROVIDER_UNAVAILABLE' or attempt >= attempts:
+                        raise
+                    if call_count >= max_calls:
+                        budget_exceeded = True
+                        raise AnalysisError('PROVIDER_FAILURE') from None
+                finally:
+                    row['elapsed_ms'] = round((monotonic() - started) * 1000)
+                    if call_trace is not None:
+                        call_trace.append(row)
+                sleep(2.0)
         return send
 
     solar_send = metered('solar', solar_transport or post_solar)

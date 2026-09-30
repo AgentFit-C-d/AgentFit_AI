@@ -144,7 +144,8 @@ class IntegratedCandidateTests(unittest.TestCase):
         for forbidden in (SOLAR_KEY, NVIDIA_KEY, '기록 작업', 'TestApp'):
             self.assertNotIn(forbidden, serialized)
         self.assertEqual(set(calls[0]), {'stage', 'provider', 'requested_model', 'call_index',
-            'elapsed_ms', 'response_bytes', 'transport_completed'})
+            'elapsed_ms', 'response_bytes', 'transport_completed', 'attempt',
+            'retry_of_call_index', 'provider_error'})
 
     def test_small_feature_set_does_not_trigger_curation_and_models_can_be_selected(self):
         case = ProviderFixture(1)
