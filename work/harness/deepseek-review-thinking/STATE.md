@@ -1,5 +1,12 @@
 # DeepSeek 검토 추론 비교 상태
 
+## 최신 상태
+
+- H02v2 session95687은 terminal/exit1,2calls526.863s. false=row shape, true=length8192. 16/6개 정답은 양쪽 모두 미평가. code3140938 불변감사10항목 통과한 뒤 제품 코드의 schema prompt 보존 수정 진행.
+- 신규10/10 GREEN. 상세 출력 schema를 system prompt에 보존하고 guided decoding만 끄도록 보완. 기본 서비스/기본옵션/서버검증 유지. 이 최종 prompt의 실제API 검증은 아직 미실행이며 이번 feature에서 추가 호출하지 않는다.
+- 현재 실제API/설치/테스트 프로세스 없음. 이전 모든 세션terminal. 다음은 최종전체/SDK task-done→독립전체브랜치리뷰→필요수정→push/정확한CI. 전체목표미완료/active.
+- 아래는 경과 기록이며 현재 상태 판단은 위 내용과 실제 도구 결과를 따른다.
+
 - 전체 목표: 실사용 가능한 AI 서비스. 미완료이며 이번 선택형 비교가 전체 완료를 대체하지 않는다.
 - 이전 목표 턴: progress. 평가용 Python의 LangExtract1.7.0 import와 경로를 검증했고, 공식 모델/서빙 문서에서 thinking 옵션과 공급자별 차이를 확인했다. 공용 설치 경로는 미확인, 공유 환경 변경0.
 - checkout: E:/AgentFit/tmp/worktrees/analysis-runtime, feature/deepseek-review-thinking. 시작 시 clean/tracking 확인 후 기존 checkout에 새 feature branch 생성.
@@ -17,3 +24,6 @@
 - 호환성 구현3140938 고정 후v2probe session10533/PID32492 시작. 결과 E:/AgentFit/tmp/deepseek-thinking-probe-20260930-v2.json. 프로세스 실제 handle이 live인 동안 재시작하지 않는다. H02v2는 아직 미실행. 원본 session5176/32239는 terminal이다.
 - v2probe session10533 종료/exit0.4calls320.782s,false3/3,true3/3,양쪽후보/coverage 유효,thinkingtrue reasoning 길이692/719.감사10항목통과,gate=true. 실제문서 품질은 아직미확인.
 - H02v2 session95687/PID36508 시작, E:/AgentFit/tmp/deepseek-thinking-h02-20260930-v2.json, 최대14호출, code3140938. API 실제 종료 전 코드 변경/재시작 금지. 다음은 같은 handle 확인→terminal 감사→SDD task-done→독립리뷰→필요한수정/push. feature 중간push는 진행상태 보존이며 품질/목표 완료가 아니다.
+- 중간push8a50ca09546d2972f1831ec1fee2505914c18f2c 성공. 정확한 CI36684252850 completed/success,unit-and-worker-memory/integrated-runtime 모두통과. 마지막 write_stdin에서 H02 session95687 live 확인, true조건 첫호출 대기. 최초false조건은61.819초/1호출 후 REJECTION_REASONS_ROW_SHAPE/INVALID_REVIEW_CONTRACT로 실패,의미정답미평가. 호출2는 재시도가 아니라 true조건 첫후보묶음이다(각arm의attempted_calls와review_calls로 확인).
+- 다음 개선 가설: response_format을 제거하면서 rejectionReasons의 정확한 id/reason 키·추가키 금지 같은 상세 schema가 모델 입력에서 사라졌다. 합성3개는 통과했으나 H02 20개에서 row shape가 틀린 근거가 있다. 현재 실행이 terminal이 된 후 원본을 감사/보존하고, schema 내용을 system prompt로 전달하되 guided decoding은 끄는 계약 보존 보완을 검토한다. v2 결과를 지우거나 API를 몰래 반복하지 않는다. 현재 raw 응답은 없어 실제 잘못된 행 키는 미확인.
+- Task1 Step4b 평가와 Step5 task-done/독립리뷰는 미완료다. 독립 리뷰는 아직 dispatch하지 않았다. 현재턴은 구현/CI/실제호환성 원인 증거를 추가한 progress이며 전체 목표는 active다.

@@ -68,7 +68,8 @@ def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
         'settings': {'temperature': 0, 'max_tokens': 8192, 'timeout_seconds': 600,
                      'batch_size': 20, 'reasoned_review': True,
                      'field_semantics': 'explicit-v1', 'retry_limit': 0,
-                     'structured_output': structured_output},
+                     'structured_output': structured_output,
+                     'schema_delivery': 'response_format' if structured_output else 'system_prompt'},
         'thinking_order': [False, True], 'active_thinking': None, 'arms': [], 'failed': 0}
 
     observer_failed = False
@@ -102,7 +103,10 @@ def evaluate_thinking_reviews(case, snapshot, key, *, expected_keep,
             request = deepcopy(payload)
             request['chat_template_kwargs']['thinking'] = thinking
             if not structured_output:
-                request.pop('response_format', None)
+                schema = request.pop('response_format')['json_schema']['schema']
+                request['messages'][0]['content'] += (
+                    '\nReturn exactly one JSON object, without Markdown, matching this JSON Schema:\n'
+                    + json.dumps(schema, ensure_ascii=False))
             row['attempted_calls'] += 1
             attempt = {'index': row['attempted_calls'], 'returned': False}
             row['transport_attempts'].append(attempt)

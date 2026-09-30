@@ -33,6 +33,12 @@ true 조건이 유효하게 완주하고, 16개 판단이 같은 실행의 false
 - 비교의 분모·판정은 위와 동일하다. schema-free false/true 사이의 효과만 비교하고 최초 schema-on 결과와 직접 정확도 차이를 주장하지 않는다. 추론 필드의 JSON을 최종 응답으로 사용하지 않는다.
 - 일회성 progress observer 실패도 이후 API 호출을 중지해야 한다. 제공자 parser가 예외를 바꿔도 원래 observer 오류 상태를 보존한다.
 
+## schema를 프롬프트에 보존하는 보완
+
+H02v2 false의 REJECTION_REASONS_ROW_SHAPE 실패 뒤 코드를 조사했다. 기존 자연어 지침은 제외 이유 코드와 후보 ID를 설명하지만 행의 정확한 `id`/`reason` 키 및 추가 속성 금지는 response_format schema에만 있다. guided decoding을 끄는 처리에서 이 상세 계약도 모델에게 전달되지 않았다. 실제 잘못된 응답은 저장하지 않아 잘못된 키 이름 자체는 미확인이다.
+
+`structured_output=False`인 경우 schema 전체를 기존 system 메시지 끝에 JSON만 반환하라는 문구와 함께 추가하고 response_format을 제거한다. schema는 서버가 만든 기존 객체에서 복사하며 문서·gold로 재생성하지 않는다. 기존 문서/user 메시지는 그대로 유지한다. 양쪽 thinking 조건에 같은 변환을 적용하고, default True와 서버 승인 기준은 유지한다. 현재 실행이 terminal인 것을 확인한 뒤 코드 변경·검증한다. 후속 실제 API 평가의 상한과 입력은 이전 결과 감사 후 별도 계획에 기록한다.
+
 ## 공식 근거와 미확인
 
 - [NVIDIA 모델 설명](https://docs.api.nvidia.com/nim/reference/nvidia-deepseek-v4_1-flash): thinking 및 1~100 reasoning effort를 설명한다.

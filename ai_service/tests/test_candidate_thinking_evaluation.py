@@ -106,6 +106,20 @@ class CandidateThinkingEvaluationTests(unittest.TestCase):
         self.assertTrue(all('audit_matched' not in arm for arm in bad['arms']))
         self.assertNotIn('not-json-private', json.dumps(bad))
 
+    def test_schema_free_pair_retains_exact_schema_in_system_prompt(self):
+        self.run_trial()
+        original = deepcopy(self.sent)
+        self.sent.clear()
+        self.run_trial(structured_output=False)
+        marker = '\nReturn exactly one JSON object, without Markdown, matching this JSON Schema:\n'
+        for before, after in zip(original, self.sent, strict=True):
+            self.assertEqual(before['messages'][1:], after['messages'][1:])
+            prefix, separator, schema = after['messages'][0]['content'].partition(marker)
+            self.assertEqual(prefix, before['messages'][0]['content'])
+            self.assertEqual(separator, marker)
+            self.assertEqual(json.loads(schema), before['response_format']['json_schema']['schema'])
+            self.assertNotIn('response_format', after)
+
     def test_invalid_snapshot_gold_key_and_observer_fail_before_request(self):
         bad_snapshot = {**self.snapshot, 'redacted_sha256': 'b' * 64}
         bad_case = replace(self.case, checks=[{'id': 'C01', 'field': 'bad', 'expect_null': True}])

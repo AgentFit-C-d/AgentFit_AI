@@ -36,3 +36,26 @@
 - 구현3140938 고정. session10533 종료/exit0,4호출/320.782초. false/true 모두3/3 판단 및1/1 부분정답, 후보·전체coverage 계약 유효. true는 reasoning692/719자와 별도의 유효한 최종JSON 응답.
 - code/driver/snapshot hash·호출상한·실패분모 등을 확인하는10개 감사 항목 모두 통과, gate=true. 처리 시간은 속도 최적화 근거로 사용하지 않는다.
 - 이후 H02v2 session95687 시작. 이 항목 작성 시 실제183후보 결과는 아직 대기 중이며 정확도·채택 판정은 미확정이다.
+
+## H02v2 중간 상태 / CI
+
+- false조건은 첫20후보에서 stop/307completion tokens로 응답했으나 REJECTION_REASONS_ROW_SHAPE로 거부됐다.1호출/61.819초, 의미 판단·6부분정답은 미평가. true조건은 같은 실행에서 독립적으로 진행 중이다. 중간 상태를 최종 결과로 해석하지 않는다.
+- response_format 제거는 schema에만 있던 상세 행 구조 설명도 제거한다. schema를 프롬프트에 보존하는 후속 보완 후보가 있지만, 이 실패의 실제 잘못된 행 키는 보관하지 않았으므로 미확인이다. 현재 실행 종료 전 제품 코드는 바꾸지 않는다.
+- feature/deepseek-review-thinking의8a50ca09546d2972f1831ec1fee2505914c18f2c push 확인. [정확한 CI36684252850](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36684252850) completed/success, 두job 모두통과. 실제 품질·최종 독립리뷰·전체 실사용 완료의 근거는 아니다.
+
+## H02v2 최종 결과
+
+- session95687/PID36508 terminal/exit1.2호출/526.863초. 코드3140938로 고정된 실행이었으며 종료 후10항목 감사 통과. 현재 이 프로세스는 재시작하지 않는다.
+
+| 조건 | 실제 호출 | 최종 결과 | 의미 평가 |
+|---|---:|---|---|
+| thinking=false, schema-off | 1 | 후보1묶음 REJECTION_REASONS_ROW_SHAPE, stop/307tokens,61.817초 | 16개 판단·6개 부분정답 미평가 |
+| thinking=true, schema-off | 1 | 후보1묶음 length/8192tokens, INCOMPLETE_RESPONSE,465.029초 | 16개 판단·6개 부분정답 미평가 |
+
+- 비교 실패를0% 정확도로 바꾸지 않는다. thinking의 의미 품질 우열·기본 모델 채택 근거가 없다. 최초3+진단2+v2합성4+H02v2 2=전체 실제11호출로 종료했다.
+
+## 후속 코드 보완 / 이번 기능의 한계
+
+- 자연어에는 없고 schema에만 있던 정확한 행 키·추가 속성 금지·배열 규칙을 제거하던 경로를 회귀 테스트로 재현(RED). 선택형 schema-off에서는 그 schema 전체를 system prompt에 넣고 guided decoding만 제거하도록 수정(GREEN10/10,0.013초). 원문/user 메시지 불변·두 조건 대칭·schema 완전 일치·서버 검증 유지 확인.
+- 실제 API가 terminal이며 frozen 코드 감사가 끝난 뒤에만 이 수정을 했다. 이 최종 프롬프트 보완의 실제 모델 성공률은 아직 미검증이다. 추가 API는 이번 기능에서 실행하지 않음.
+- 생각을 많이 하다 출력 상한에 닿는 문제는 별도다. 정확한 추론 설정 또는 토큰/시간 설계 변경을 사전 고정한 후속 실험이 필요하다. 이번 결과만으로 semantic accuracy나 실사용 완료도를 높이지 않는다.
