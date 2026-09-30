@@ -4,6 +4,9 @@ import re
 from .solar import AnalysisError, MAX_RESPONSE_BYTES, _json
 
 
+_JSON_FENCE = re.compile(r'```(?:json)?[ \t]*\r?\n(.*?)\r?\n```', re.DOTALL | re.IGNORECASE)
+
+
 def _kind(value):
     if value is None:
         return 'null'
@@ -57,8 +60,7 @@ def describe_review_response(raw, expected_keys):
     try:
         value = _json(content)
     except (AnalysisError, RecursionError):
-        fence = re.fullmatch(r'```(?:json)?[ \t]*\r?\n(.*?)\r?\n```',
-                             content.strip(), re.DOTALL | re.IGNORECASE)
+        fence = _JSON_FENCE.fullmatch(content.strip())
         if fence:
             try:
                 inner = _json(fence.group(1))

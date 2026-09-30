@@ -143,6 +143,64 @@ class CandidateThinkingEvaluationTests(unittest.TestCase):
                 self.run_trial(capture_response_shape=value)
         self.assertEqual(self.sent, [])
 
+    def test_opt_in_fence_normalization_preserves_requests_and_prior_diagnostics(self):
+        baseline = self.run_trial()
+        requests = deepcopy(self.sent)
+        self.sent.clear()
+        def fenced(payload, key, timeout):
+            reply = json.loads(self.transport(payload, key, timeout))
+            reply['choices'][0]['message']['content'] = '```json\n' + reply['choices'][0]['message']['content'] + '\n```'
+            return json.dumps(reply).encode()
+        result = self.run_trial(transport=fenced, normalize_json_fences=True, capture_response_shape=True)
+        self.assertEqual(self.sent, requests)
+        self.assertEqual([r['audit_matched'] for r in result['arms']], [r['audit_matched'] for r in baseline['arms']])
+        self.assertTrue(result['settings']['normalize_json_fences'])
+        for arm in result['arms']:
+            for attempt in arm['transport_attempts']:
+                self.assertTrue(attempt['json_fence_normalized'])
+                self.assertEqual(attempt['response_shape']['issue'], 'CONTENT_JSON')
+        self.assertTrue(all('json_fence_normalized' not in a for r in baseline['arms'] for a in r['transport_attempts']))
+
+    def test_normalization_keeps_id_model_sensitive_and_finish_failures(self):
+        for kind, error in (('id', 'INVALID_REVIEW_CONTRACT'), ('model', 'PROVIDER_MODEL'),
+                            ('sensitive', 'SENSITIVE_CONTENT'), ('length', 'INCOMPLETE_RESPONSE')):
+            self.sent.clear()
+            def invalid(payload, key, timeout):
+                reply = json.loads(self.transport(payload, key, timeout))
+                msg = reply['choices'][0]['message']
+                value = json.loads(msg['content'])
+                if kind == 'id':
+                    value['wrongCandidateIds'] = ['C999']
+                if kind == 'model':
+                    reply['model'] = 'untrusted-model'
+                if kind == 'sensitive':
+                    msg['reasoning_content'] = 'nvidia-secret'
+                if kind == 'length':
+                    reply['choices'][0]['finish_reason'] = 'length'
+                msg['content'] = '```json\n' + json.dumps(value) + '\n```'
+                return json.dumps(reply).encode()
+            with self.subTest(kind=kind):
+                result = self.run_trial(transport=invalid, normalize_json_fences=True)
+                self.assertEqual(len(self.sent), 2)
+                self.assertEqual(result['failed'], 2)
+                for arm in result['arms']:
+                    self.assertNotIn('audit_matched', arm)
+                    if kind == 'id':
+                        self.assertEqual(arm['error'], 'COVERAGE_REVIEW_FAILED')
+                        self.assertEqual(arm['review_calls'][0]['error'], error)
+                        self.assertEqual(arm['review_calls'][0]['contract_issue'],
+                                         'WRONG_CANDIDATE_IDS_MEMBER')
+                    else:
+                        self.assertEqual(arm['provider_error'], error)
+                self.assertNotIn('nvidia-secret', json.dumps(result))
+                self.assertNotIn('untrusted-model', json.dumps(result))
+
+    def test_normalization_requires_boolean_before_request(self):
+        for value in (None, 1, 'true', []):
+            with self.assertRaises(ValueError):
+                self.run_trial(normalize_json_fences=value)
+        self.assertEqual(self.sent, [])
+
     def test_effort_boundaries_and_none_preserve_default_requests(self):
         for effort in (1, 100, None):
             with self.subTest(effort=effort):
