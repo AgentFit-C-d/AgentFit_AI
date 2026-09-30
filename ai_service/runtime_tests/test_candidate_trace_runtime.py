@@ -144,7 +144,8 @@ class CandidateTraceRuntimeTests(unittest.TestCase):
                     self.assertEqual(len(children), 1)
                     self.assertIsNotNone(children[0].returncode)
                     self.assertTrue(await asyncio.to_thread(provider.closed.wait, 3))
-                    self.assertEqual(path.read_bytes(), b'')
+                    self.assertFalse(path.exists())
+                    self.assertEqual(path.with_name(path.name + '.staged').read_bytes(), b'')
                     self.assertEqual(calls['status'], 'unavailable')
                     self.assertEqual(provider.kinds, ['nvidia'])
                 with provider_server(provider) as endpoint, patch.dict(os.environ, {

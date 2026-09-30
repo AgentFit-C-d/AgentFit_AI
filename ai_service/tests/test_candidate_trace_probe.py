@@ -233,6 +233,27 @@ class ProbeTests(unittest.IsolatedAsyncioTestCase):
                 await self.run_probe()
         self.assertEqual(self.invocations, [])
 
+    async def test_worker_fsync_failure_preserves_score_but_stops_before_terminal(self):
+        from agentfit_ai import candidate_service_worker as service
+        from diagnostic_tools import candidate_trace_worker as worker
+        from tests.test_candidate_trace_worker import fake_pipeline
+        async def failed_write(document, ident, gold, key, **options):
+            self.invocations.append(ident)
+            packet = json.dumps({'document': document, 'documentId': ident, 'key': key,
+                'mode': 'integrated-nvidia', 'diagnostics': 'analysis-call-metadata-v1', 'reviewModel': MODEL}).encode()
+            with patch.object(service, 'find_spec', return_value=object()), patch.object(
+                    service, 'analyze_nvidia_candidates', fake_pipeline([])), patch.object(
+                    worker.os, 'fsync', side_effect=OSError('private-disk-error')):
+                envelope = json.loads(worker.execute_probe_request(packet, Path(options['command'][-1])))
+            self.assertEqual(envelope['result']['outcome'], 'needs_confirmation')
+            options['call_diagnostics'].update(envelope['diagnostics'])
+            return score_confirmation(document, ident, gold, envelope['result'])
+        with self.assertRaisesRegex(ValueError, '^INVALID_CHECKPOINT$'):
+            await self.run_probe(failed_write)
+        self.assertEqual(self.invocations, ['PUBLIC-01'])
+        self.assertFalse((self.output / 'PUBLIC-01-run-0.json').exists())
+        self.assertFalse((self.output / 'PUBLIC-09-run-0.started.json').exists())
+
     def test_live_cli_reads_synthetic_key_only_after_free_scope_validation(self):
         env = self.root / 'synthetic.env'
         env.write_text('NVIDIA_API_KEY=' + KEY, encoding='utf-8')

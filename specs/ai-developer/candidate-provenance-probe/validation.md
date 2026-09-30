@@ -17,6 +17,8 @@
 
 전체1280건 중1274통과/플랫폼skip6. unit1201건 중1195통과/skip6(65.856초, session44166 exit0), runtime35통과(123.831초, session5019 exit0), contract36통과(6.487초), core8통과(27.779초). 모든 그룹은180초 상한 안에서 끝났다. .superpowers의 이 계획 전용 verification-unit/runtime/contract/core.log에 전체 로그를 보존했다.
 
+최종 리뷰 수정 후 재검증: **1283건 중1277통과/6skip**. unit1204건 중1198통과/6skip(65.557초, session27501exit0), runtime35통과(124.042초, session65926exit0), contract36통과(6.711초), core8통과(27.666초). fsync/close 실패를 각각 재현하고 부모의 다음 호출 중단까지 확인한 회귀3개가 추가됐다. 최종 로그가 위 경로에 저장됐다. `git diff --check` 통과, 실제 API0, 기존 증거73파일 불변.
+
 ## 한계
 
 로컬 Python에 기존 platform-prefix 경고가 있고 일부 asyncio 테스트는 slow-callback 진단을 출력한다. Windows에서 symlink 생성 자체를 못 하는 테스트는 통과로 집계하지 않는다. Linux CI는 push 후 별도 확인한다.

@@ -151,7 +151,8 @@ class TraceWorkerTests(unittest.TestCase):
             with patch.object(Path, 'open', broken_open):
                 actual = api.execute_probe_request(packet(), path)
             self.assertEqual(actual, baseline)
-            self.assertEqual(path.read_bytes(), b'')
+            self.assertFalse(path.exists())
+            self.assertEqual(path.with_name(path.name + '.staged').read_bytes(), b'')
             self.assertIs(service.analyze_nvidia_candidates, original)
 
     def test_sensitive_input_guard_never_produces_source_trace(self):
@@ -178,6 +179,43 @@ class TraceWorkerTests(unittest.TestCase):
                            ('raw', 'private-response'), ('status', 'unavailable')):
             with self.assertRaises(ValueError):
                 api.validate_probe_report(SOURCE, 'PUBLIC-01', {**report, key: value})
+
+    def test_fsync_and_close_failures_never_publish_a_readable_trace(self):
+        api = worker_module()
+        original, path_open = fake_pipeline([]), Path.open
+        class FailedClose:
+            def __init__(self, handle):
+                self.handle = handle
+            def __enter__(self):
+                return self.handle
+            def __exit__(self, *args):
+                self.handle.close()
+                raise OSError('private-close-error')
+        with tempfile.TemporaryDirectory() as folder, patch.object(service, 'find_spec', return_value=object()), patch.object(
+                service, 'analyze_nvidia_candidates', original):
+            expected = execute_request(packet())
+            for kind in ('fsync', 'close'):
+                with self.subTest(kind=kind):
+                    path = Path(folder) / (kind + '.json')
+                    failure = (patch.object(api.os, 'fsync', side_effect=OSError('private-fsync-error')) if kind == 'fsync'
+                               else patch.object(Path, 'open', lambda p, *a, **kw: FailedClose(path_open(p, *a, **kw))))
+                    with failure:
+                        actual = api.execute_probe_request(packet(), path)
+                    self.assertEqual(actual, expected)
+                    self.assertIs(service.analyze_nvidia_candidates, original)
+                    self.assertFalse(path.exists(), 'undurable trace was published as complete')
+
+    def test_existing_staged_file_prevents_analysis_and_is_preserved(self):
+        api, invoked = worker_module(), []
+        with tempfile.TemporaryDirectory() as folder, patch.object(service, 'find_spec', return_value=object()), patch.object(
+                service, 'analyze_nvidia_candidates', fake_pipeline(invoked)):
+            path = Path(folder) / 'trace.json'
+            staged = path.with_name(path.name + '.staged')
+            staged.write_bytes(b'prior-incomplete-evidence')
+            self.assertEqual(api.execute_probe_request(packet(), path), FAILED)
+            self.assertEqual(staged.read_bytes(), b'prior-incomplete-evidence')
+            self.assertFalse(path.exists())
+            self.assertEqual(invoked, [])
 
 
 if __name__ == '__main__':

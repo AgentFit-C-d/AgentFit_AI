@@ -125,11 +125,16 @@ def execute_probe_request(raw: bytes, trace_path: Path) -> bytes:
         if (not trace_path.is_absolute() or trace_path.is_symlink() or trace_path.exists()
                 or not trace_path.parent.is_dir() or trace_path.parent.resolve() != trace_path.parent):
             return output
-        with trace_path.open('xb') as handle:
+        staged = trace_path.with_name(trace_path.name + '.staged')
+        with staged.open('xb') as handle:
             output, encoded = _observe_request(raw, request)
             handle.write(encoded)
             handle.flush()
             os.fsync(handle.fileno())
+        # Publish only after flush, fsync AND close succeed. link() atomically
+        # creates a new name and refuses to overwrite an existing destination.
+        # Keep the staged inode as diagnostic evidence; no cleanup/replay here.
+        os.link(staged, trace_path)
     except Exception:
         # An empty/partial sidecar must fail parent validation. Never print errors
         # containing input, paths, API keys, or provider responses.
