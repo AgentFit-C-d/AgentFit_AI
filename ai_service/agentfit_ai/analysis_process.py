@@ -9,6 +9,7 @@ from .analysis_worker import MAX_INPUT_BYTES, MAX_OUTPUT_BYTES
 from .candidate_confirmation import CONTRACT, validate_candidate_confirmation
 from .diagnostics import safe_code
 from .solar import _provider_worker_environment
+from .analysis_call_metadata import METADATA_VERSION, unavailable_metadata, validate_metadata
 
 
 class AnalysisProcessError(Exception):
@@ -20,13 +21,17 @@ class AnalysisProcessError(Exception):
 async def run_analysis_process(document: str, document_id: str, key: str,
                                deadline: float, *, recoverable_solar: bool = False,
                                integrated_candidates: bool = False, nvidia_key=None,
-                               nvidia_only: bool = False, command=None) -> dict:
+                               nvidia_only: bool = False, command=None, call_diagnostics=None) -> dict:
     flags = (recoverable_solar, integrated_candidates, nvidia_only)
     if (any(type(flag) is not bool for flag in flags) or sum(flags) > 1
             or (integrated_candidates and (type(nvidia_key) is not str or not nvidia_key.strip()))
             or (nvidia_only and (type(key) is not str or not key.strip()))
-            or (not integrated_candidates and nvidia_key is not None)):
+            or (not integrated_candidates and nvidia_key is not None)
+            or (call_diagnostics is not None and
+                (not nvidia_only or type(call_diagnostics) is not dict or call_diagnostics))):
         raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")
+    if call_diagnostics is not None:
+        call_diagnostics.update(unavailable_metadata('ANALYSIS_WORKER_FAILED'))
     request = {"document": document, "documentId": document_id, "key": key}
     if recoverable_solar:
         request["mode"] = "recoverable-solar"
@@ -34,6 +39,8 @@ async def run_analysis_process(document: str, document_id: str, key: str,
         request.update(mode='integrated-candidates', nvidiaKey=nvidia_key)
     if nvidia_only:
         request['mode'] = 'integrated-nvidia'
+    if call_diagnostics is not None:
+        request['diagnostics'] = METADATA_VERSION
     payload = json.dumps(request, ensure_ascii=False).encode("utf-8")
     if len(payload) > MAX_INPUT_BYTES:
         raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")
@@ -60,6 +67,8 @@ async def run_analysis_process(document: str, document_id: str, key: str,
             if process.returncode != 0:
                 raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")
     except TimeoutError:
+        if call_diagnostics is not None:
+            call_diagnostics.update(unavailable_metadata('ANALYSIS_DEADLINE_EXCEEDED'))
         raise AnalysisProcessError("ANALYSIS_DEADLINE_EXCEEDED") from None
     except OSError:
         raise AnalysisProcessError("ANALYSIS_WORKER_FAILED") from None
@@ -73,18 +82,37 @@ async def run_analysis_process(document: str, document_id: str, key: str,
         raise AnalysisProcessError("ANALYSIS_WORKER_FAILED") from None
     if type(result) is not dict:
         raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")
+    metadata = None
+    if call_diagnostics is not None:
+        try:
+            if set(result) != {'version', 'result', 'diagnostics'} or result['version'] != METADATA_VERSION:
+                raise ValueError
+            metadata = validate_metadata(result['diagnostics'])
+            result = result['result']
+            if type(result) is not dict:
+                raise ValueError
+        except (ValueError, TypeError, KeyError):
+            raise AnalysisProcessError('ANALYSIS_WORKER_FAILED') from None
+
+    def accept(checked):
+        if metadata is not None:
+            failed = checked.get('outcome') == 'failed' or set(checked) == {'error'}
+            if metadata['status'] == 'available' and failed != (metadata['failureStage'] is not None):
+                raise AnalysisProcessError('ANALYSIS_WORKER_FAILED')
+            call_diagnostics.update(metadata)
+        return checked
     if set(result) == {"error"} and type(result["error"]) is str:
         if result["error"] == "ANALYSIS_WORKER_FAILED":
             raise AnalysisProcessError("ANALYSIS_WORKER_FAILED")
         if safe_code(result["error"]) == result["error"]:
-            return result
+            return accept(result)
     if integrated_candidates or nvidia_only:
         if (set(result) == {'contract', 'outcome', 'error'} and result['contract'] == CONTRACT
                 and result['outcome'] == 'failed' and type(result['error']) is str
                 and safe_code(result['error']) == result['error']):
-            return result
+            return accept(result)
         try:
-            return validate_candidate_confirmation(document, document_id, result)
+            return accept(validate_candidate_confirmation(document, document_id, result))
         except (TypeError, ValueError, KeyError):
             raise AnalysisProcessError("ANALYSIS_WORKER_FAILED") from None
     if (set(result) == {"outcome", "profile"} and result["outcome"] == "complete"

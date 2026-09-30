@@ -8,6 +8,7 @@ from .candidate_first_profile import CandidatePipelineError
 from .diagnostics import PIPELINE_FAILURE_CODES, safe_code
 from .nvidia_streaming import post_nvidia_streaming_inline
 from .solar import AnalysisError, _reject_sensitive, post_solar_inline
+from .analysis_call_metadata import build_metadata
 
 
 def execute_integrated_analysis(document, document_id, solar_key, nvidia_key):
@@ -16,13 +17,16 @@ def execute_integrated_analysis(document, document_id, solar_key, nvidia_key):
             solar_transport=post_solar_inline, nvidia_transport=post_nvidia_streaming_inline))
 
 
-def execute_nvidia_analysis(document, document_id, nvidia_key):
+def execute_nvidia_analysis(document, document_id, nvidia_key, *, call_diagnostics=None):
+    trace = [] if call_diagnostics is not None else None
+    options = {'call_trace': trace} if trace is not None else {}
     return _execute_analysis(document, document_id, (nvidia_key,), lambda:
         analyze_nvidia_candidates(document, document_id, nvidia_key,
-            nvidia_transport=post_nvidia_streaming_inline))
+            nvidia_transport=post_nvidia_streaming_inline, **options),
+        call_diagnostics=call_diagnostics, call_trace=trace)
 
 
-def _execute_analysis(document, document_id, keys, analyze):
+def _execute_analysis(document, document_id, keys, analyze, *, call_diagnostics=None, call_trace=None):
     for key in keys:
         if type(key) is not str or not key.strip():
             raise AnalysisError('MISSING_OR_INVALID_KEY')
@@ -37,5 +41,10 @@ def _execute_analysis(document, document_id, keys, analyze):
         if (code == 'ANALYSIS_FAILURE' and type(error.stage) is str
                 and error.stage in PIPELINE_FAILURE_CODES):
             code = error.stage
+        if call_diagnostics is not None:
+            call_diagnostics.update(build_metadata(call_trace, error.stage))
         return {'contract': CONTRACT, 'outcome': 'failed', 'error': code}
-    return project_candidate_confirmation(document, document_id, result)
+    output = project_candidate_confirmation(document, document_id, result)
+    if call_diagnostics is not None:
+        call_diagnostics.update(build_metadata(call_trace))
+    return output

@@ -6,6 +6,7 @@ import sys
 from .diagnostics import safe_code
 from .recoverable_solar_analysis import RecoverableSolarAnalyzer
 from .solar import AnalysisError, SolarAnalyzer, post_solar_inline
+from .analysis_call_metadata import METADATA_VERSION, unavailable_metadata, validate_metadata
 
 
 MAX_INPUT_BYTES = 500_000
@@ -14,6 +15,7 @@ FAILED = b'{"error":"ANALYSIS_WORKER_FAILED"}'
 
 
 def execute_request(raw: bytes) -> bytes:
+    metadata = None
     try:
         if len(raw) > MAX_INPUT_BYTES:
             return FAILED
@@ -31,6 +33,11 @@ def execute_request(raw: bytes) -> bytes:
             expected.add('mode')
         elif mode is not None:
             return FAILED
+        if 'diagnostics' in request:
+            if mode != 'integrated-nvidia' or request['diagnostics'] != METADATA_VERSION:
+                return FAILED
+            expected.add('diagnostics')
+            metadata = {}
         if set(request) != expected:
             return FAILED
         if mode == 'integrated-candidates':
@@ -41,7 +48,8 @@ def execute_request(raw: bytes) -> bytes:
                                                   request['key'], request['nvidiaKey'])
         elif mode == 'integrated-nvidia':
             from .candidate_service_worker import execute_nvidia_analysis
-            output = execute_nvidia_analysis(request['document'], request['documentId'], request['key'])
+            options = {'call_diagnostics': metadata} if metadata is not None else {}
+            output = execute_nvidia_analysis(request['document'], request['documentId'], request['key'], **options)
         elif mode == 'recoverable-solar':
             output = RecoverableSolarAnalyzer(
                 request["key"], transport=post_solar_inline,
@@ -57,6 +65,9 @@ def execute_request(raw: bytes) -> bytes:
     except Exception:
         return FAILED
     try:
+        if metadata is not None:
+            output = {'version': METADATA_VERSION, 'result': output,
+                      'diagnostics': validate_metadata(metadata) if metadata else unavailable_metadata('NOT_RETURNED')}
         encoded = json.dumps(output, ensure_ascii=False,
                              separators=(",", ":")).encode("utf-8")
     except (TypeError, ValueError, UnicodeError):
