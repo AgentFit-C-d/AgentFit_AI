@@ -10,6 +10,7 @@ from .candidate_first_profile import (
     freeze_candidate_occurrences,
 )
 from .candidate_feature_curation import curate_reviewed_features
+from .capability_candidates import extract_capability_candidates
 from .candidate_split_review import review_candidates_separately
 from .deepseek_evaluation import MODEL, NVIDIA_REVIEW_MODELS
 from .diagnostics import safe_code
@@ -45,7 +46,8 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
                                   review_model='z-ai/glm-5.3', feature_model=MODEL,
                                   extractor=None, solar_transport=None, nvidia_transport=None,
                                   observer=None, call_trace=None, review_calls=None,
-                                  max_calls=64, nvidia_retry_limit=1, candidate_model=None):
+                                  max_calls=64, nvidia_retry_limit=1, candidate_model=None,
+                                  capability_candidates=False):
     """Run fresh extraction through reviewed projection with one provider-call budget.
 
     Injected extractors are trusted callbacks. Only the default LangExtract adapter's
@@ -68,7 +70,8 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
             any(collector is not None and type(collector) is not list
                 for collector in (call_trace, review_calls)) or
             type(max_calls) is not int or not 1 <= max_calls <= 64 or
-            type(nvidia_retry_limit) is not int or nvidia_retry_limit not in (0, 1)):
+            type(nvidia_retry_limit) is not int or nvidia_retry_limit not in (0, 1) or
+            type(capability_candidates) is not bool):
         raise ValueError('invalid integrated analysis options')
 
     candidate_key = nvidia_key if nvidia_only else solar_key
@@ -169,7 +172,8 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
 
     extractions = run('EXTRACTION_FAILED', extract)
     general = run('GROUNDING_FAILED', lambda: freeze_candidate_occurrences(document, extractions))
-    operations = run('OPERATION_EXTRACTION_FAILED', lambda: extract_operation_candidates(
+    operation_extractor = extract_capability_candidates if capability_candidates else extract_operation_candidates
+    operations = run('OPERATION_EXTRACTION_FAILED', lambda: operation_extractor(
         document, nvidia_key, model=feature_model, transport=nvidia_send))
     frozen = run('MERGE_FAILED', lambda: _merge_occurrences(document, general, operations))
     observe('grounded', frozen)
@@ -192,7 +196,7 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
 def analyze_nvidia_candidates(document, document_id, nvidia_key, *,
                               candidate_model=MODEL, review_model='z-ai/glm-5.3', feature_model=MODEL,
                               nvidia_transport=None, observer=None, call_trace=None,
-                              review_calls=None, max_calls=64):
+                              review_calls=None, max_calls=64, capability_candidates=False):
     """Opt-in NVIDIA-only variant; no retries, fallback, or account/billing guarantee.
 
     Callers own the total process deadline and must establish permission and free
@@ -205,4 +209,4 @@ def analyze_nvidia_candidates(document, document_id, nvidia_key, *,
         review_model=review_model, feature_model=feature_model,
         nvidia_transport=nvidia_transport, observer=observer,
         call_trace=call_trace, review_calls=review_calls, max_calls=max_calls,
-        nvidia_retry_limit=0)
+        nvidia_retry_limit=0, capability_candidates=capability_candidates)

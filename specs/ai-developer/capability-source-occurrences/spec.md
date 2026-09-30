@@ -10,7 +10,7 @@
 - 모델은 문장·목록·표·제목·기술 용도의 기능 표현을 인용한다. 명사형도 허용한다. 부정·미정·다른 제품·과거 문맥도 후보에 포함하며 field/status를 출력하지 않는다.
 - 서버는 기존 `freeze_candidate_occurrences`로 원문과 정확히 일치하는 모든 등장 위치를 찾는다. 모델 offset, normalization, fuzzy matching은 사용하지 않는다. 중복 인용은 한 번만 확장하고 서로 다른 위치는 유지한다. 원문 부재는 rejected로 남긴다. 고유 후보240개 초과는 부분 결과 없이 실패한다.
 - 통합 분석기의 새 `capability_candidates: bool=False`가 true일 때만 기존 동작 추출을 교체한다. bool 이외 값은 호출 전 거절한다. 일반 추출·merge·explicit-v1 독립 분류·검토·대표 기능30개 이하·Profile·HTTP 계약은 그대로다.
-- 기존과 같은 OPERATION_EXTRACTION_FAILED 단계, 동일 provider meter·최대64호출·취소/기한·NVIDIA 재시도0을 사용한다. 숨은 네트워크 호출이나 오류 시 이전 추출기로 fallback하지 않는다.
+- 기존과 같은 OPERATION_EXTRACTION_FAILED 단계, 동일 provider meter·최대64호출·취소/기한·NVIDIA 단독 경로 재시도0을 사용한다. 기존 혼합 경로는 호출자가 지정한 기존 재시도 설정을 유지한다. 숨은 네트워크 호출이나 오류 시 이전 추출기로 fallback하지 않는다.
 - 이 옵션은 Python 내부 분석 API에만 추가한다. 기본 HTTP 서비스에는 자동 적용하지 않는다. 전 구간 평가 후 서비스 적용을 판단한다.
 
 ## 검증과 위험

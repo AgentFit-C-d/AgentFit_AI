@@ -11,7 +11,7 @@
 
 - 최대60인용/인용200 Unicode code points/고유 위치240개, 엄격 shape와 원문 일치.
 - 공개 Profile·기본 HTTP 서비스·이전 freeze는 유지. `capability_candidates=False` 기본값.
-- 요청당64호출 공유 meter, NVIDIA 재시도0, 실패 시 fallback0. 구현·로컬 테스트 외부0.
+- 요청당64호출 공유 meter, NVIDIA 단독 경로 재시도0(기존 혼합 경로의 호출자 설정 유지), 실패 시 fallback0. 구현·로컬 테스트 외부0.
 - Python E:/AgentFit/tmp/worktrees/analysis-runtime/.venv/Scripts/python.exe. 모든 shell은 rtk. 각 로컬 suite180초 상한,90분마다 체크포인트.
 - 사용자 자율 SDD 승인 적용. 기능 브랜치 commit/push, merge/배포/삭제 없음. 기존 scratch 보존.
 
