@@ -59,3 +59,11 @@
 - 자연어에는 없고 schema에만 있던 정확한 행 키·추가 속성 금지·배열 규칙을 제거하던 경로를 회귀 테스트로 재현(RED). 선택형 schema-off에서는 그 schema 전체를 system prompt에 넣고 guided decoding만 제거하도록 수정(GREEN10/10,0.013초). 원문/user 메시지 불변·두 조건 대칭·schema 완전 일치·서버 검증 유지 확인.
 - 실제 API가 terminal이며 frozen 코드 감사가 끝난 뒤에만 이 수정을 했다. 이 최종 프롬프트 보완의 실제 모델 성공률은 아직 미검증이다. 추가 API는 이번 기능에서 실행하지 않음.
 - 생각을 많이 하다 출력 상한에 닿는 문제는 별도다. 정확한 추론 설정 또는 토큰/시간 설계 변경을 사전 고정한 후속 실험이 필요하다. 이번 결과만으로 semantic accuracy나 실사용 완료도를 높이지 않는다.
+
+## 최종 검증·리뷰·원격 상태
+
+- 최종 제품 commit:2dcf721db5316fe60ff4e80f0ed89df85b7067e7. task-done 실제 실행: 전체1006건 중1001통과5제외,21.680초; 설치된SDK4/4,0.046초. exit0, ledger Task1 complete. 기존5제외는 선택 의존성 관련이며 신규 비교 테스트10개는 모두 실행했다.
+- 독립 reviewer thinking_review_audit가 전체branch480c53e..2dcf721을 검토했다. Critical0/Important0/Minor1, 추가로 신규10/10을 직접 실행. 부모의 전체/SDK 결과와 reviewer의 신규 결과를 구분한다.
+- Minor(보류): review_calls.request_bytes는 공유 parser에서 변환 전에 계산한 크기다. reviewer 합성 재현에서 보고6720bytes/transport입력6756bytes였다. 실제 네트워크 전송량 지표로 사용하면 안 된다. 의미 채점/후보 대칭에는 영향이 없으며 최종 리뷰의 Minor 단일 기록 규칙에 따라 이번 수정 범위에서는 보류했다.
+- [제품 commit의 CI36685528160](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36685528160): completed/success. unit-and-worker-memory 및 integrated-runtime 둘 다 성공. feature/deepseek-review-thinking push 확인. PR·merge·deploy는 실행하지 않음.
+- 이 feature의 도구 구현·제한 실험은 종료했다. 최종 prompt 보완의 실제 모델 성공률, 추론량 조절, 독립 품질·실서비스 연동은 여전히 미완료다.

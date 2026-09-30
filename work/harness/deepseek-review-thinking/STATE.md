@@ -2,6 +2,10 @@
 
 ## 최신 상태
 
+- feature 구현·한정실험 종료. 최종코드2dcf721db5316fe60ff4e80f0ed89df85b7067e7 push, 정확한CI36685528160 두jobsuccess. task-done1006건/1001pass5skip21.680s+SDK4/4. 독립review0Critical0Important1Minor,새test10/10. request_bytes는변환전크기라는Minor를보류·문서화했다. reviewer종료,실제API/테스트프로세스없음.
+- 다음 전체목표 작업: 최종prompt계약을 유지한 채 DeepSeek 추론 effort를 명시한 별도한정실험(현재8192length에 대한 검증)이 후보. 아직 spec/branch/API를 시작하지 않았다. 기존v1/v2세션·보고서는terminal이며 재시작/덮어쓰기 금지. 이checkout은 다음feature에 재사용 가능하며 main/user checkout은 건드리지 않았다.
+- 실제서비스준비도/전체완료는 여전히미확인이다. 목표active, 이번턴progress. Spring경로·private발췌승인 대기와 독립 품질/HTTP연동/후속AI기능 등 원래범위를 유지한다.
+
 - H02v2 session95687은 terminal/exit1,2calls526.863s. false=row shape, true=length8192. 16/6개 정답은 양쪽 모두 미평가. code3140938 불변감사10항목 통과한 뒤 제품 코드의 schema prompt 보존 수정 진행.
 - 신규10/10 GREEN. 상세 출력 schema를 system prompt에 보존하고 guided decoding만 끄도록 보완. 기본 서비스/기본옵션/서버검증 유지. 이 최종 prompt의 실제API 검증은 아직 미실행이며 이번 feature에서 추가 호출하지 않는다.
 - 현재 실제API/설치/테스트 프로세스 없음. 이전 모든 세션terminal. 다음은 최종전체/SDK task-done→독립전체브랜치리뷰→필요수정→push/정확한CI. 전체목표미완료/active.
