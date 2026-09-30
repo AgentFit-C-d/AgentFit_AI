@@ -16,6 +16,8 @@
 | 응답 유실 | 실제 route가 저장한 뒤 전송 오류 주입; GET에서 확정값/버전1 복구 |
 | PDF 오류 매핑 | DOCUMENT_TEXT_TOO_LONG/ PDF_TIMEOUT의 잘못된502를 RED로 재현; 각각413/504로 수정 후 통과 |
 | Task3 precommit | 기존1117개/5skip58.396초; runtime11개51.051초; contract34개9.252초, exit0; pipcheck 충돌0 |
+| 3f8ca89 CI | 36729129089의 unit-and-worker-memory, integrated-runtime, contract-mock 모두 성공 |
+| 로컬 최종 gate 재현 | 재시도 테스트의100ms 제한 때문에504를 받은1건 실패. 성공 재시도의100ms 수행을 요구하는 대신 실제 asyncio timeout을 AI 진입 후 직접 만료시키도록 테스트 수정; 기본 서버2초는 유지. lifecycle7/7 통과 후 전체gate 재실행 |
 | 최종리뷰/정확한CI | 진행 중; 완료로 간주하지 않음 |
 
 계약 테스트는 실제 `Docs/api/openapi.phase1.json`을 검증기로 읽고 실제 FastAPI 문서 추출·v2 검증을 사용한다. 생성 모델은 합성 callback이다. TCP 테스트는 loopback만 허용하는 connect/connect_ex 가드 안에서 서버를 실행하고 종료 스레드까지 확인한다. 운영 네트워크 전체 차단·실제 모델 프로세스 취소를 증명하지 않는다.

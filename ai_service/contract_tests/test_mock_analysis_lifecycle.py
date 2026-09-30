@@ -2,6 +2,7 @@
 import asyncio
 from datetime import datetime, timedelta, timezone
 import unittest
+from unittest.mock import patch
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
@@ -106,25 +107,33 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
     async def test_timeout_cancellation_and_explicit_retry_leave_no_processing_attempt(self):
         for cancelled in (False, True):
             ai = ControlledAI()
-            app = create_mock_app(ai_app=ai.app, analysis_timeout_seconds=.1)
-            async with client(app) as http:
-                p = await create_project(http)
-                task = asyncio.create_task(analyze(http, p))
-                await asyncio.wait_for(ai.entered.wait(), 1)
-                if cancelled:
-                    task.cancel()
-                    await asyncio.gather(task, return_exceptions=True)
-                else:
-                    response = await task
-                    self.assertEqual(response.status_code, 504)
-                detail = (await http.get(f'/api/projects/{p}')).json()
-                self.assertEqual(detail['latestAttempt']['status'], 'FAILED')
-                self.assertEqual(detail['latestAttempt']['errorCode'], 'INTERRUPTED' if cancelled else 'ANALYSIS_TIMEOUT')
-                self.assertEqual(ai.calls, 1)  # No automatic retry.
-                self.assertEqual(ai.cancelled, 1)
-                ai.release.set()
-                self.assertEqual((await analyze(http, p)).status_code, 200)
-                self.assertEqual(ai.calls, 2)
+            app = create_mock_app(ai_app=ai.app)
+            contexts, real_timeout = [], asyncio.timeout
+            def tracked_timeout(seconds):
+                context = real_timeout(seconds)
+                contexts.append(context)
+                return context
+            with patch('contract_mock.server.asyncio.timeout', tracked_timeout):
+                async with client(app) as http:
+                    p = await create_project(http)
+                    task = asyncio.create_task(analyze(http, p))
+                    await asyncio.wait_for(ai.entered.wait(), 1)
+                    if cancelled:
+                        task.cancel()
+                        await asyncio.gather(task, return_exceptions=True)
+                    else:
+                        # Expire the real timeout after the request reaches AI; no sleep race.
+                        contexts[-1].reschedule(asyncio.get_running_loop().time())
+                        response = await task
+                        self.assertEqual(response.status_code, 504)
+                    detail = (await http.get(f'/api/projects/{p}')).json()
+                    self.assertEqual(detail['latestAttempt']['status'], 'FAILED')
+                    self.assertEqual(detail['latestAttempt']['errorCode'], 'INTERRUPTED' if cancelled else 'ANALYSIS_TIMEOUT')
+                    self.assertEqual(ai.calls, 1)  # No automatic retry.
+                    self.assertEqual(ai.cancelled, 1)
+                    ai.release.set()
+                    self.assertEqual((await analyze(http, p)).status_code, 200)
+                    self.assertEqual(ai.calls, 2)
 
     async def test_invalid_ai_response_never_becomes_a_draft(self):
         for mode in ('request-id', 'questions', 'evidence'):
