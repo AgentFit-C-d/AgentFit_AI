@@ -20,6 +20,7 @@ AI 파트의 초기 작업 순서는 [FastAPI 구현 계획](fastapi-implementat
 - 이 경로에 일반·동작 후보 병합과 대표 기능 구성을 연결한 [통합 분석 함수](04-analysis-provider/integrated-candidate-analysis/README.md)를 구현했다. 기본 NVIDIA 전송은 [검증된 스트리밍 어댑터](04-analysis-provider/nvidia-streaming-transport/validation.md)를 사용한다. 스트리밍 H02는 마지막 원문 누락 검사에서5xx로 실패했다(17호출·약44분). 이후 [제한적5xx 재시도](04-analysis-provider/nvidia-transient-retry/validation.md)를 구현했으나 새 H02는 전송 오류 없이 GLM5번째 후보 검토의 계약 위반으로 실패했다(15호출·약24분). 재시도 효과는 미관측이며 최종6개 정답 검사는 모두 미평가다.
 - [호출 진단](04-analysis-provider/candidate-review-diagnostics/validation.md)에서 후보20개 검토의 length/8192토큰 종료를 확인했다. 이후 [제한적 분할 검토 실험](04-analysis-provider/candidate-adaptive-review/validation.md)의 H02는 검토를 완주했으나 확인 상태이며 지정6항목 중4개만 맞았다. 분할 복구는 발동하지 않아 그 효과는 미입증이다. 프로젝트명의 최종 변환 탈락과 backend 미정 위반이 남아 있다.
 - 단위 테스트·CI 통과를 실제 문서 의미 정확도나 Spring 저장 성공으로 간주하지 않는다. 독립 문서 품질, Spring 계약·저장·확인 및 실패 응답 7일 삭제의 통합 검증이 남아 있다. 운영 적용 완료를 선언하지 않는다.
+- 통합 진입점에도 [기존 Solar 민감값 검사](04-analysis-provider/integrated-input-guard/validation.md)를 적용했다. 추출 전에 문서·ID를 검사하며 신규5건·전체983건 통과/6건 제외 및 정확한 구현 Linux CI를 확인했다. 다음 품질 조사는 `INVALID_REVIEW_CONTRACT`의 세부 원인을 원문 없는 진단 코드로 구분하는 것이다.
 
 ## 1단계: 문서 분석
 

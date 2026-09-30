@@ -26,17 +26,17 @@
 **Files:** Modify ai_service/agentfit_ai/candidate_analysis_pipeline.py; Create ai_service/tests/test_integrated_input_guard.py; Modify specs/ai-developer/04-analysis-provider/integrated-candidate-analysis/README.md.
 **Interfaces:** 함수 signature 유지. `_reject_sensitive` 재사용. 문서/ID의 민감 패턴은 extractor 전에 `AnalysisError('SENSITIVE_CONTENT')`.
 
-- [ ] **Step1 RED:** 문서 패턴 표본·ID 패턴·기본 및 주입 추출 호출0·collector/observer 보존·정상 전체 결과를 5개 테스트로 작성한다. `python -m unittest discover -s tests -p test_integrated_input_guard.py -v` Expected: 차단 부재 테스트 FAIL, 정상 경로는 기존 결과와 동일.
-- [ ] **Step2 implement:** 기존 옵션 검사 직후 문서와 ID에 기존 `_reject_sensitive`를 호출한다. 직접 key 포함 거절 동작은 유지한다. Expected: 새 정규식/로그/I/O 없음.
-- [ ] **Step3 GREEN:** 새 테스트와 전체 suite를 실행하고 README에 범위·거절 코드를 기록한 뒤 commit. task-done은 전체 suite. Expected: 모든 테스트 PASS(기존 플랫폼 skip 명시).
+- [x] **Step1 RED:** 문서 패턴 표본·ID 패턴·기본 및 주입 추출 호출0·collector/observer 보존·정상 전체 결과를 5개 테스트로 작성한다. `python -m unittest discover -s tests -p test_integrated_input_guard.py -v` Expected: 차단 부재 테스트 FAIL, 정상 경로는 기존 결과와 동일.
+- [x] **Step2 implement:** 기존 옵션 검사 직후 문서와 ID에 기존 `_reject_sensitive`를 호출한다. 직접 key 포함 거절 동작은 유지한다. Expected: 새 정규식/로그/I/O 없음.
+- [x] **Step3 GREEN:** 새 테스트와 전체 suite를 실행하고 README에 범위·거절 코드를 기록한 뒤 commit. task-done은 전체 suite. Expected: 모든 테스트 PASS(기존 플랫폼 skip 명시).
 
 ### Task 2: 독립 리뷰와 게시
 
 **Files:** Create validation.md; Modify work/harness/integrated-input-guard/STATE.md 및 본 plan.
 **Interfaces:** Task1 구현 revision의 전체 diff를 독립 리뷰1회. 기존 H02 실험의 revision과 혼합하지 않는다.
 
-- [ ] **Step1:** base부터 제품 구현까지 전체 리뷰. Critical/Important는 한 번 RED→GREEN 수정 및 전체 suite, Minor는 기록. Expected: 차단 결함 해결, 리뷰 범위/미판정 항목 기록.
-- [ ] **Step2:** feature push, 정확한 구현 revision CI 확인. 검증 문서 commit/push, task-done diffcheck. Expected: upstream 일치·CI success·문서형식 PASS. H02 결과와 실제 서비스 품질 미완료는 구분한다.
+- [x] **Step1:** base부터 제품 구현까지 전체 리뷰. Critical/Important는 한 번 RED→GREEN 수정 및 전체 suite, Minor는 기록. Expected: 차단 결함 해결, 리뷰 범위/미판정 항목 기록.
+- [x] **Step2:** feature push, 정확한 구현 revision CI 확인. 검증 문서 commit/push, task-done diffcheck. Expected: upstream 일치·CI success·문서형식 PASS. H02 결과와 실제 서비스 품질 미완료는 구분한다.
 
 ## 자체 검토
 
