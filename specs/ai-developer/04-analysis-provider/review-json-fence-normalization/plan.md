@@ -42,4 +42,4 @@
 - [x] Step 2: 최소구현,focused검증. Expected:기존진단/평가회귀및새테스트통과,진단은변환전·raw/비밀유출없음.
 - [x] Step 3: 전체tests/runtime_tests,첫요청기존hash동일·109대상/최대7 preflight를확인한다. Expected:기존5skip외성공,API0. 제품commit으로고정한다.
 - [x] Step 4: streaming전체H02를1회실행한다. Expected:terminal성공또는고정실패,코드/hash불변·상한준수·성공시에만16/6채점. 결과에맞춰정답수정없음.
-- [ ] Step 5: 결과문서·task-done·독립전체리뷰·필요시Critical/Important단일수정·featurepush/CI. Expected:실제근거와미확인범위를분리.
+- [x] Step 5: 결과문서·task-done·독립전체리뷰·필요시Critical/Important단일수정·featurepush/CI. Expected:실제근거와미확인범위를분리. c2e28b4 CI36697024368 success; 최종 문서 커밋의 CI도 별도 확인한다.

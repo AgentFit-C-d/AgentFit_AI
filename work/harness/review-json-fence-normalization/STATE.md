@@ -10,3 +10,6 @@
 - 결과 needs_confirmation,16후보판단13일치/6부분정답6일치. C077/C156/C165 유지정답을 not_product_fact로 잘못 제외. 기능57→13후보,중복제거11,nonnull. 의미품질 향상·일반화·실사용은 미확인.
 - 자동승인검토가 전체필드 출력 명령을 발췌 가능성으로 거부. 미실행했고 숫자/불리언/고정코드 whitelist로 범위를 축소해 승인·확인했다. 기존 private 발췌 질문을 반복하지 않았다.
 - 다음: task-done 전체검증→fresh 전체리뷰→feature push/CI. 목표active,형식보완은진전이지만 제품동작 과잉제거와 실제서비스연동 등 전체범위는남아있다.
+- task-done1029pass/5skip21.795초·SDK4/4 0.048초. fresh reviewer Critical0/Important0/Minor0,focused38/38·메타데이터20/20 직접확인. reviewer의 미판단 범위는 review.md에서 모두 판단·기록했다.
+- c2e28b447c96378ebf04b24a8e542deafc532103 push 및CI36697024368 completed/success. 문서마감후exact최종HEAD CI는 ignored SDD ledger에 기록한다. PR/병합/배포없음.
+- 다음목표작업: 제품의 구체 동작을 not_product_fact로 과잉제거하는 일반적 오류를 보완·검증한다. 현재코드블록처리로 의미점수향상이 입증된 것은 아니다. 전체진행 추정45%/분석60% 유지,실사용전체목표active.
