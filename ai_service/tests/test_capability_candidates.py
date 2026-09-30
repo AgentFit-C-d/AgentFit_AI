@@ -1,6 +1,7 @@
 """Quote-only extraction keeps all exact occurrences for later classification."""
 import json
 import unittest
+from unittest.mock import patch
 
 from agentfit_ai.candidate_first_profile import CandidateContractError
 from agentfit_ai.deepseek_evaluation import MODEL
@@ -73,6 +74,27 @@ class CapabilityCandidatesTests(unittest.TestCase):
             with self.subTest(model=model), self.assertRaises(ValueError):
                 extract_capability_candidates(document, key, model=model,
                     transport=lambda *args: self.fail('invalid request reached provider'))
+
+    def test_falsey_callable_transport_is_used_instead_of_default_network(self):
+        from agentfit_ai.capability_candidates import extract_capability_candidates
+        class FalseyTransport:
+            def __bool__(self):
+                return False
+            def __call__(self, *args):
+                return response({'quotes': ['X']}, model=MODEL)
+        with patch('agentfit_ai.operation_candidates.post_nvidia',
+                   return_value=response({'quotes': []}, model=MODEL)):
+            result = extract_capability_candidates('X', 'secret', transport=FalseyTransport())
+        self.assertEqual(result['candidates'], [{'id': 'C000', 'start': 0, 'end': 1}])
+
+    def test_non_callable_transport_is_rejected_without_default_network(self):
+        from agentfit_ai.capability_candidates import extract_capability_candidates
+        with patch('agentfit_ai.operation_candidates.post_nvidia',
+                   return_value=response({'quotes': []}, model=MODEL)) as default:
+            for value in (False, 0, '', [], {}):
+                with self.subTest(value=value), self.assertRaises(ValueError):
+                    extract_capability_candidates('X', 'secret', transport=value)
+            self.assertEqual(default.call_count, 0)
 
 
 if __name__ == '__main__':

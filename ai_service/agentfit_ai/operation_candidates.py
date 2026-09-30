@@ -37,9 +37,10 @@ _INSTRUCTION = (
 def _sender(document, key, model, transport):
     if (type(document) is not str or not document.strip() or len(document) > 100_000 or
             type(key) is not str or not key.strip() or key in document or
-            type(model) is not str or model not in NVIDIA_REVIEW_MODELS):
+            type(model) is not str or model not in NVIDIA_REVIEW_MODELS or
+            (transport is not None and not callable(transport))):
         raise ValueError('invalid operation candidate request')
-    return NvidiaAnalyzer(key, transport=transport or post_nvidia, model=model)
+    return NvidiaAnalyzer(key, transport=post_nvidia if transport is None else transport, model=model)
 
 
 def _validate_frozen(document, frozen):

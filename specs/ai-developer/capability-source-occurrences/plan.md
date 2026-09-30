@@ -28,22 +28,22 @@
 **Files:** Create `ai_service/agentfit_ai/capability_candidates.py`; test `ai_service/tests/test_capability_candidates.py`.
 **Interfaces:** Consumes `_sender`, `_payload`, `freeze_candidate_occurrences`, `_validate_frozen`; produces `extract_capability_candidates(document, key, *, model=MODEL, transport=None) -> {'candidates': list, 'rejected': list}`.
 
-- [ ] Write failing tests: Unicode 반복 위치(2,15 등)와 정확 ID, 원문 없는 quote 거절, 동일 quote 중복 제거,240/241 경계,60/61 quote 및200/201문자 경계, malformed/top-level extras/provider error/empty results, invalid input blocks transport. 출력에 quote/key 없음도 확인한다.
-- [ ] Run `python -m unittest discover -s tests -p test_capability_candidates.py -v` in ai_service. Expected: missing implementation failures.
-- [ ] Implement strict quote-only response validation and existing position expansion. No field/status 판단, normalization, extra calls.
-- [ ] Run same tests. Expected: all pass. Then full unit suite with180초 process bound; output tail 기록.
-- [ ] Commit `feat: ground capability quotes at all source occurrences`; task-done same focused test command.
+- [x] Write failing tests: Unicode 반복 위치(2,15 등)와 정확 ID, 원문 없는 quote 거절, 동일 quote 중복 제거,240/241 경계,60/61 quote 및200/201문자 경계, malformed/top-level extras/provider error/empty results, invalid input blocks transport. 출력에 quote/key 없음도 확인한다.
+- [x] Run `python -m unittest discover -s tests -p test_capability_candidates.py -v` in ai_service. Expected: missing implementation failures.
+- [x] Implement strict quote-only response validation and existing position expansion. No field/status 판단, normalization, extra calls.
+- [x] Run same tests. Expected: all pass. Then full unit suite with180초 process bound; output tail 기록.
+- [x] Commit `feat: ground capability quotes at all source occurrences`; task-done same focused test command.
 
 ### Task 2: 선택형 통합 경로
 
 **Files:** Modify `ai_service/agentfit_ai/candidate_analysis_pipeline.py`; create `ai_service/tests/test_capability_candidate_pipeline.py`.
 **Interfaces:** Consumes Task1 extractor. Adds keyword `capability_candidates=False` to `analyze_integrated_candidates` and `analyze_nvidia_candidates`; strict bool and shared meter.
 
-- [ ] Write failing full-path tests with fake provider only: same quote in current/negated/other contexts preserves evidence for confirmed occurrence; absent quote forces confirmation; invalid bool prevents calls; occurrence limit fails correct stage; provider/call budget stops without fallback; default operation path unchanged and NVIDIA wrapper option reaches real pipeline.
-- [ ] Run `python -m unittest discover -s tests -p test_capability_candidate_pipeline.py -v`. Expected: unsupported option failures.
-- [ ] Add option validation, select extractor at OPERATION_EXTRACTION_FAILED, forward NVIDIA option. Reuse all subsequent stages.
-- [ ] Run focused tests and existing candidate pipeline/NVIDIA tests; then full unit/runtime/contract/core suites, each180초 process bound. Expected: all pass with documented platform skips only.
-- [ ] Commit `feat: opt in to capability occurrence extraction`; task-done focused tests.
+- [x] Write failing full-path tests with fake provider only: same quote in current/negated/other contexts preserves evidence for confirmed occurrence; absent quote forces confirmation; invalid bool prevents calls; occurrence limit fails correct stage; provider/call budget stops without fallback; default operation path unchanged and NVIDIA wrapper option reaches real pipeline.
+- [x] Run `python -m unittest discover -s tests -p test_capability_candidate_pipeline.py -v`. Expected: unsupported option failures.
+- [x] Add option validation, select extractor at OPERATION_EXTRACTION_FAILED, forward NVIDIA option. Reuse all subsequent stages.
+- [x] Run focused tests and existing candidate pipeline/NVIDIA tests; then full unit/runtime/contract/core suites, each180초 process bound. Expected: all pass with documented platform skips only.
+- [x] Commit `feat: opt in to capability occurrence extraction`; task-done focused tests.
 
 ## Finalization
 
