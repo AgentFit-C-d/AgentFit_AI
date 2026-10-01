@@ -51,6 +51,8 @@ python -m uvicorn agentfit_ai.http_service:app --host 127.0.0.1 --port 8000
 
 [서비스 경로 명세](specs/ai-developer/semantic-role-service-path/spec.md) · [검증 계획](specs/ai-developer/semantic-role-service-path/plan.md)
 
+실제 신규 문서 비교에서는 의미 역할 오분류와 정상 제안 누락이 증가했습니다. 연결·후보 보존 시험은 통과했지만 현재 브랜치의 운영 채택은 권하지 않습니다. 고정 응답 시험과 실제 모델 결과는 [서비스 경로 검증 결과](specs/ai-developer/semantic-role-service-path/results.md)에 구분해 기록합니다.
+
 - 성공적인 분석도 `contract=confirmation-v2`, `outcome=needs_confirmation`으로 반환합니다. 실제 의미 품질이 검증되기 전에는 자동 완료하지 않습니다.
 - `profile`은 기존 10필드·원문 근거·대표 기능 최대 30개 계약을 유지합니다. `fieldStates`의 `unresolved`에도 근거가 있는 제안 값을 보존합니다. `unknown`을 제외한 필드마다 고정된 `questionId=confirm_<field>`와 질문 사유가 있습니다.
 - 전체 기한은 통합 모드 기본 1,800초, `AGENTFIT_REQUEST_TIMEOUT_SECONDS`로 1~3,600초를 설정합니다. 기본/복구 모드는 60초·최대 120초를 유지합니다. 동시 실행 기본 2개·최대 8개, 업로드 기본 10초·최대 30초입니다.
