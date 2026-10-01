@@ -12,3 +12,7 @@
 
 - 2026-10-01: a9ab774 push/CI36796417954 네작업성공. 실제session2563 exit0,3건48호출0retry0실패228.156743초. 이전143JSON불변. 기능0/4,Docker0/2,공개07기능14/14,합성16/16이나project_name누락놓침. 품질미달로기본적용보류. 새모델실험전결과감사저장.
 Ruling: GLM 비교는 모델별 기존adapter설정까지 포함해 해석한다 — DeepSeek와GLM의temperature/추론설정이이미다름 — 가중치만의효과로오인할위험을막고입력/지침/스키마동일성을검증한다.
+
+- GLM 사전등록8e2962f push. safety6PASS0.020s, offline48요청 쌍의 원문/후보/지침/스키마동일 확인. 차이는 model/temperature/reasoning_effort/chat_template_kwargs. freeze782f4d3f09d9a8e262749c061f28403cb615431830a6385b9d4f31c1b1e62d59.
+- 실제 GLM session91923, 2026-10-01T00:41:43Z 시작. 00:43 이후 같은handle live 확인, 아직PUBLIC-01 결과없음. 요청1800초/전체5400초/93호출/retry0. 실행중 코드·모델·자료·실행기 변경 금지. observation timeout은 실패가 아니며 같은handle 재조회. 다음 terminal 후 audit_probe_glm.py --save, 실패면 재시작하지 않고 보존·진단.
+- 8e2962f961198aaff7f65253e0b23895ed69f0b1의 CI36797418498 네 작업 success 직접확인. 이후 state만변경, 제품코드/평가기동결유지. session91923 마지막40초poll도live/신규출력0. 이번목표턴 progress: 실제48호출진단·감사·push·CI완료와 GLM비교개시. 목표완료아님, 다음턴같은handle계속조회.
