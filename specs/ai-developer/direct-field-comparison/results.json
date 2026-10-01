@@ -1,0 +1,808 @@
+{
+  "date": "2026-10-01",
+  "scope": "one stored document, one A-then-B pair, classification only",
+  "gold_human_reviewed": true,
+  "calls_started": 18,
+  "retries": 0,
+  "comparable": true,
+  "adoption_gate_passed": false,
+  "evidence_root": "E:\\AgentFit\\output\\direct-field-comparison-v1",
+  "arms": {
+    "A": {
+      "complete": true,
+      "error": null,
+      "metrics": {
+        "raw_false_confirmed": 4,
+        "false_supported": 4,
+        "normal_missing": 4,
+        "held_normal": 2,
+        "raw_correct_but_held": 2,
+        "held_focus": 2,
+        "held_total": 24,
+        "retained": 68,
+        "scored": 10,
+        "positive_gold": 6,
+        "unscored_ids": [
+          "C000",
+          "C002",
+          "C003",
+          "C006",
+          "C007",
+          "C008",
+          "C009",
+          "C011",
+          "C014",
+          "C016",
+          "C017",
+          "C018",
+          "C019",
+          "C020",
+          "C021",
+          "C022",
+          "C023",
+          "C024",
+          "C025",
+          "C026",
+          "C027",
+          "C028",
+          "C029",
+          "C030",
+          "C031",
+          "C033",
+          "C034",
+          "C035",
+          "C036",
+          "C037",
+          "C038",
+          "C039",
+          "C040",
+          "C041",
+          "C042",
+          "C043",
+          "C044",
+          "C045",
+          "C046",
+          "C047",
+          "C049",
+          "C050",
+          "C051",
+          "C052",
+          "C053",
+          "C054",
+          "C055",
+          "C056",
+          "C057",
+          "C058",
+          "C059",
+          "C060",
+          "C061",
+          "C063",
+          "C064",
+          "C065",
+          "C066",
+          "C067"
+        ],
+        "details": [
+          {
+            "id": "C013",
+            "expected_field": null,
+            "raw_field": "external_integrations",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 978,
+              "end": 985
+            },
+            "sourceValue": "Firefox",
+            "support": [
+              {
+                "start": 962,
+                "end": 1182
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C015",
+            "expected_field": null,
+            "raw_field": "external_integrations",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 1054,
+              "end": 1060
+            },
+            "sourceValue": "Chrome",
+            "support": [
+              {
+                "start": 962,
+                "end": 1182
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C001",
+            "expected_field": "project_name",
+            "raw_field": "project_name",
+            "raw_status": "confirmed",
+            "verdict": "needs_confirmation",
+            "candidate": {
+              "start": 180,
+              "end": 188
+            },
+            "sourceValue": "linkding",
+            "support": [
+              {
+                "start": 180,
+                "end": 238
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": true,
+            "missing_reason": "held",
+            "held": true,
+            "held_normal": true,
+            "raw_correct_but_held": true
+          },
+          {
+            "id": "C032",
+            "expected_field": "backend",
+            "raw_field": "backend",
+            "raw_status": "confirmed",
+            "verdict": "needs_confirmation",
+            "candidate": {
+              "start": 2625,
+              "end": 2631
+            },
+            "sourceValue": "Django",
+            "support": [
+              {
+                "start": 2590,
+                "end": 2646
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": true,
+            "missing_reason": "held",
+            "held": true,
+            "held_normal": true,
+            "raw_correct_but_held": true
+          },
+          {
+            "id": "C062",
+            "expected_field": "frontend",
+            "raw_field": "other",
+            "raw_status": "confirmed",
+            "verdict": "excluded",
+            "candidate": {
+              "start": 4363,
+              "end": 4373
+            },
+            "sourceValue": "JavaScript",
+            "support": [
+              {
+                "start": 4306,
+                "end": 4416
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": true,
+            "missing_reason": "excluded",
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C012",
+            "expected_field": "project_type",
+            "raw_field": "features",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 934,
+              "end": 959
+            },
+            "sourceValue": "Progressive Web App (PWA)",
+            "support": [
+              {
+                "start": 917,
+                "end": 959
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "normal_missing": true,
+            "missing_reason": "wrong_field",
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C010",
+            "expected_field": "external_integrations",
+            "raw_field": "external_integrations",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 844,
+              "end": 860
+            },
+            "sourceValue": "Internet Archive",
+            "support": [
+              {
+                "start": 780,
+                "end": 860
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C005",
+            "expected_field": "features",
+            "raw_field": "features",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 565,
+              "end": 593
+            },
+            "sourceValue": "Organize bookmarks with tags",
+            "support": [
+              {
+                "start": 565,
+                "end": 593
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C004",
+            "expected_field": null,
+            "raw_field": "features",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 528,
+              "end": 562
+            },
+            "sourceValue": "Clean UI optimized for readability",
+            "support": [
+              {
+                "start": 528,
+                "end": 562
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C048",
+            "expected_field": null,
+            "raw_field": "other",
+            "raw_status": "irrelevant",
+            "verdict": "excluded",
+            "candidate": {
+              "start": 3555,
+              "end": 3561
+            },
+            "sourceValue": "pytest",
+            "support": [
+              {
+                "start": 3536,
+                "end": 3562
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          }
+        ]
+      },
+      "projection_metrics": {
+        "normal_missing": 4,
+        "details": [
+          {
+            "id": "C001",
+            "present": false,
+            "field_unresolved": false
+          },
+          {
+            "id": "C032",
+            "present": false,
+            "field_unresolved": false
+          },
+          {
+            "id": "C062",
+            "present": false,
+            "field_unresolved": false
+          },
+          {
+            "id": "C012",
+            "present": false,
+            "field_unresolved": false
+          },
+          {
+            "id": "C010",
+            "present": true,
+            "field_unresolved": false
+          },
+          {
+            "id": "C005",
+            "present": true,
+            "field_unresolved": false
+          }
+        ]
+      },
+      "calls": 9,
+      "responses_returned": 9,
+      "provider_failures": 0,
+      "retries": 0,
+      "model_seconds": 962.8954891000003,
+      "wall_seconds": 963.1623590999998,
+      "local_validation_projection_seconds": 0.003471400000307767
+    },
+    "B": {
+      "complete": true,
+      "error": null,
+      "metrics": {
+        "raw_false_confirmed": 4,
+        "false_supported": 3,
+        "normal_missing": 2,
+        "held_normal": 1,
+        "raw_correct_but_held": 1,
+        "held_focus": 3,
+        "held_total": 37,
+        "retained": 68,
+        "scored": 10,
+        "positive_gold": 6,
+        "unscored_ids": [
+          "C000",
+          "C002",
+          "C003",
+          "C006",
+          "C007",
+          "C008",
+          "C009",
+          "C011",
+          "C014",
+          "C016",
+          "C017",
+          "C018",
+          "C019",
+          "C020",
+          "C021",
+          "C022",
+          "C023",
+          "C024",
+          "C025",
+          "C026",
+          "C027",
+          "C028",
+          "C029",
+          "C030",
+          "C031",
+          "C033",
+          "C034",
+          "C035",
+          "C036",
+          "C037",
+          "C038",
+          "C039",
+          "C040",
+          "C041",
+          "C042",
+          "C043",
+          "C044",
+          "C045",
+          "C046",
+          "C047",
+          "C049",
+          "C050",
+          "C051",
+          "C052",
+          "C053",
+          "C054",
+          "C055",
+          "C056",
+          "C057",
+          "C058",
+          "C059",
+          "C060",
+          "C061",
+          "C063",
+          "C064",
+          "C065",
+          "C066",
+          "C067"
+        ],
+        "details": [
+          {
+            "id": "C013",
+            "expected_field": null,
+            "raw_field": "external_integrations",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 978,
+              "end": 985
+            },
+            "sourceValue": "Firefox",
+            "support": [
+              {
+                "start": 962,
+                "end": 1182
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C015",
+            "expected_field": null,
+            "raw_field": "external_integrations",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 1054,
+              "end": 1060
+            },
+            "sourceValue": "Chrome",
+            "support": [
+              {
+                "start": 962,
+                "end": 1182
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C001",
+            "expected_field": "project_name",
+            "raw_field": "project_name",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 180,
+              "end": 188
+            },
+            "sourceValue": "linkding",
+            "support": [
+              {
+                "start": 180,
+                "end": 238
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C032",
+            "expected_field": "backend",
+            "raw_field": "backend",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 2625,
+              "end": 2631
+            },
+            "sourceValue": "Django",
+            "support": [
+              {
+                "start": 2590,
+                "end": 2646
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C062",
+            "expected_field": "frontend",
+            "raw_field": "frontend",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 4363,
+              "end": 4373
+            },
+            "sourceValue": "JavaScript",
+            "support": [
+              {
+                "start": 4306,
+                "end": 4416
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C012",
+            "expected_field": "project_type",
+            "raw_field": "features",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 934,
+              "end": 959
+            },
+            "sourceValue": "Progressive Web App (PWA)",
+            "support": [
+              {
+                "start": 504,
+                "end": 525
+              },
+              {
+                "start": 917,
+                "end": 959
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "normal_missing": true,
+            "missing_reason": "wrong_field",
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C010",
+            "expected_field": "external_integrations",
+            "raw_field": "external_integrations",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 844,
+              "end": 860
+            },
+            "sourceValue": "Internet Archive",
+            "support": [
+              {
+                "start": 780,
+                "end": 860
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C005",
+            "expected_field": "features",
+            "raw_field": "features",
+            "raw_status": "confirmed",
+            "verdict": "needs_confirmation",
+            "candidate": {
+              "start": 565,
+              "end": 593
+            },
+            "sourceValue": "Organize bookmarks with tags",
+            "support": [
+              {
+                "start": 504,
+                "end": 525
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": true,
+            "missing_reason": "held",
+            "held": true,
+            "held_normal": true,
+            "raw_correct_but_held": true
+          },
+          {
+            "id": "C004",
+            "expected_field": null,
+            "raw_field": "features",
+            "raw_status": "confirmed",
+            "verdict": "needs_confirmation",
+            "candidate": {
+              "start": 528,
+              "end": 562
+            },
+            "sourceValue": "Clean UI optimized for readability",
+            "support": [
+              {
+                "start": 504,
+                "end": 525
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": true,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": true,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C048",
+            "expected_field": null,
+            "raw_field": "other",
+            "raw_status": "confirmed",
+            "verdict": "needs_confirmation",
+            "candidate": {
+              "start": 3555,
+              "end": 3561
+            },
+            "sourceValue": "pytest",
+            "support": [
+              {
+                "start": 3525,
+                "end": 3534
+              },
+              {
+                "start": 3536,
+                "end": 3562
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": true,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          }
+        ]
+      },
+      "projection_metrics": {
+        "normal_missing": 2,
+        "details": [
+          {
+            "id": "C001",
+            "present": true,
+            "field_unresolved": false
+          },
+          {
+            "id": "C032",
+            "present": true,
+            "field_unresolved": false
+          },
+          {
+            "id": "C062",
+            "present": true,
+            "field_unresolved": false
+          },
+          {
+            "id": "C012",
+            "present": false,
+            "field_unresolved": false
+          },
+          {
+            "id": "C010",
+            "present": true,
+            "field_unresolved": false
+          },
+          {
+            "id": "C005",
+            "present": false,
+            "field_unresolved": false
+          }
+        ]
+      },
+      "calls": 9,
+      "responses_returned": 9,
+      "provider_failures": 0,
+      "retries": 0,
+      "model_seconds": 546.4596900999991,
+      "wall_seconds": 546.7188929999998,
+      "local_validation_projection_seconds": 0.0010697000002437562
+    }
+  },
+  "local_tests": {
+    "run": 1303,
+    "passed": 1296,
+    "skipped": 7,
+    "comparison_tests": 14
+  },
+  "service_applied": false,
+  "large_goal_status": "paused"
+}

@@ -1,5 +1,5 @@
 {
-  "status": "plan_only_human_gold_review_pending",
+  "status": "approved_one_pair_max_18_calls",
   "code_baseline": "6dea756",
   "production_commit": "075c07e63ac3d89c826a76f2e7dd3d88782b4ece",
   "ci_run": 36841277590,
@@ -32,7 +32,9 @@
     "usage": "historical reference only; do not overwrite"
   },
   "gold_review_file": "gold-review.md",
-  "gold_human_reviewed": false,
+  "gold_human_reviewed": true,
+  "approved_gold_file": "gold.json",
+  "max_new_model_calls": 18,
   "focus_candidate_ids": ["C013", "C015", "C001", "C032", "C062", "C012", "C010", "C005", "C004", "C048"],
   "context_code_points_each_side": 240,
   "include_whole_document": true,
