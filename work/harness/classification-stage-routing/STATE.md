@@ -10,3 +10,6 @@
 - comparison-plan.md 신규작성:전체173/36/16후보,두모델각1회,34호출/20760초/retry0,무료확인·기존결과보존. helper준비와새freeze/안전검증/push/CI후에만실행.
 - 제품547c76a2090dcfece614aba79851742392881026 push/CI36808145503 네작업success 직접확인. feature명세의모든구현task완료;전체목표active.
 - full_comparison.py 준비,무료오류사유보존RED→helper8PASS0.687초/API0. 새freeze59ec853ed90940fc3c98ce4fb7ad6ee9a66ca1fa24efd2180956cbcfcab3d136. 원본173/36/16확인,출력폴더없음. 다음등록push→preflight재확인→단일live실행및같은handle추적. 기존세션 재실행0.
+- 등록7e437127f3c3ea1bff31000bc5f678a80a709ec8 push/CI36808734677 네작업success 직접확인. 실제 full_comparison.py --live session74887을03:04UTC전시작,동일handle마지막poll live/첫결과대기. 이전38073/38637/91923 재조회·재실행금지(종료완료).
+- 모델실행 중 제품코드/실행기/full comparison계획/freeze/모델/원문후보변경0. API0집계도구audit_comparison.py 준비·audit_selftest.py2PASS0.335초. 완료row만읽으며 --save는terminal summary가있을때1회,기존감사파일덮어쓰기금지.
+- 다음session74887을같은handle로조회. terminal이면read-only감사→최종결과보고·push. 관찰timeout은실패/재시작이유가아니다. 이번goalturn은progress(새기능구현·1319PASS6SKIP·독립리뷰·push/CI·전체후보실평가개시). 전체목표active이며새문서/사람/Spring/운영미완료.
