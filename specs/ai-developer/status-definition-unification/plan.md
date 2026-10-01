@@ -27,10 +27,10 @@ Create `work/harness/status-definition-unification/{experiment.py,evaluate.py,ST
 `specs/ai-developer/status-definition-unification/{status-definition.txt,status-edits.json}`,
 `ai_service/tests/test_status_definition_unification.py`.
 
-- [ ] RED: 허용 교체만 발생, UC원본 동일, 입력 누출0, 진단 집계, 부정/보류 보존, 실패 중단 테스트.
-- [ ] GREEN: `unify_status(system)`, `prepare_package()`, `diagnostics(result,gold,document)` 및 freeze/live 구현.
-- [ ] 기존13개와 신규 테스트 및 전체 unittest suite 실행. 의미 정확도는 로컬 테스트로 주장하지 않는다.
-- [ ] 독립 코드 검토 후 필요한 결함만 수정, 커밋.
+- [x] RED: 허용 교체만 발생, UC원본 동일, 입력 누출0, 진단 집계, 부정/보류 보존, 실패 중단 테스트.
+- [x] GREEN: `unify_status(system)`, `prepare_package()`, `diagnostics(result,gold,document)` 및 freeze/live 구현.
+- [x] 기존13개와 신규 테스트 및 전체 unittest suite 실행. 의미 정확도는 로컬 테스트로 주장하지 않는다.
+- [x] 독립 코드 검토 후 필요한 결함만 수정, 커밋. Critical/Important/Minor0.
 
 ## Task2: 한 쌍 실행과 보고
 
