@@ -12,5 +12,5 @@
 - 독립적인 DOCX 구조 추출0.047초: text nodes621, tables13, images9, media9, 본문/헤더/푸터3parts. 순서·표 병합·그림 참조 검증. 원본/개인정보검수전 산출물 로컬 전용. 모델평가허용false/사람검토false. 번들 LibreOffice없어 전체페이지렌더링미실행. DOCX기본입력지원추가아님.
 - .superpowers/experiments/local-ocr-document-preparation/verify_spike.py를 번들Python에서 실행: 결과/코드/원문해시 일치, native기준 image-only0자/mixed31자, 표네이티브누락확인, 품질실패유지. 별도 기존verify_inspection_artifacts.py: 원문10·검토문/대응10·이전JSON174·gold불변확인. 첫analysis-runtime실행은pdfplumber없어미실행, 번들런타임으로검증성공.
 - 이번 goal turn은 progress: 품질실패를 계측했고 기본export누락원인과Docx구조자료를 확보했다. 활성모델/변환세션없음. 전체목표active, 실제Spring/운영/새문서사람정답/10×3품질검증은미완료. 추정진행도60~65%유지.
-- Git: 명세/계획/validation/안전한audit2개/STATE를 명시적으로stage해feature/local-ocr-document-preparation에commit/push예정. 원문/모델/scratch는stage하지않음.
+- Git: 명세/계획/validation/안전한audit2개/STATE를 4e70745로 commit했고 feature/local-ocr-document-preparation 원격 push exit0 및 upstream 설정을 확인했다. 원문/모델/scratch는 stage하지 않았다. 이 상태 기록만 후속 commit한다.
 - 다음: 원문 텍스트 영역이 숨겨지는 오류의 SDD 회귀 보완(전체 content layer 및 native/converted 누락 대조), OCR은 검출 crop과인식/전처리를 분리조사한뒤새조건등록. 실패한설정으로실제문서를계속돌리지않음. 새기획서정답/사람검토를최종통과로간주하지않음.
