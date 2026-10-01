@@ -13,3 +13,5 @@
 - 등록7e437127f3c3ea1bff31000bc5f678a80a709ec8 push/CI36808734677 네작업success 직접확인. 실제 full_comparison.py --live session74887을03:04UTC전시작,동일handle마지막poll live/첫결과대기. 이전38073/38637/91923 재조회·재실행금지(종료완료).
 - 모델실행 중 제품코드/실행기/full comparison계획/freeze/모델/원문후보변경0. API0집계도구audit_comparison.py 준비·audit_selftest.py2PASS0.335초. 완료row만읽으며 --save는terminal summary가있을때1회,기존감사파일덮어쓰기금지.
 - 다음session74887을같은handle로조회. terminal이면read-only감사→최종결과보고·push. 관찰timeout은실패/재시작이유가아니다. 이번goalturn은progress(새기능구현·1319PASS6SKIP·독립리뷰·push/CI·전체후보실평가개시). 전체목표active이며새문서/사람/Spring/운영미완료.
+- 2026-10-01 다음goalturn:직전turn progress.74887 같은handle live재확인,Git56afcc8/추적변경0.03:12UTC전송worker새생성관측.03:15UTC PUBLIC-01 DeepSeek valid12calls/626.634609s/0retry. 지정기능4/6(직전30묶음0/6),비기능제외0/2,Docker2/2. comparison-partial-result.md작성,실사용통과아님. 현재같은문서GLM실행중,다음같은74887조회.
+- 모델대기중일반화자료독립조사:공개저장소11개metadata조회,기존튜닝ORDER101제외,새10문서후보(MD4/PDF5/DOCX1)고정커밋/경로/blob SHA/크기기록. Docs/evaluation/planning-source-candidates-20261001.json·md. 검색발췌만읽음/원문다운로드0/이후모델호출0. 최종평가10문서확보로간주하지않음;원문hash·변환·개인정보·골드·사람검토남음. 기존corpus/gold/freeze변경0.
