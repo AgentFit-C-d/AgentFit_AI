@@ -1,0 +1,1037 @@
+{
+  "version": "b-evidence-selection-results-v1",
+  "evaluation_kind": "actual_model_one_pair",
+  "code_commit": "ef0ac09",
+  "model": "deepseek-ai/deepseek-v4.1-flash",
+  "endpoint": "https://integrate.api.nvidia.com/v1/chat/completions",
+  "temperature": 0,
+  "thinking": false,
+  "max_tokens": 8192,
+  "calls_started": 18,
+  "responses_returned": 18,
+  "retries": 0,
+  "comparable": true,
+  "source_sha256": "ee0d7ad2b5508071b9f36cde500286a90dee41f3251197ff6c81dcfd499c3e8c",
+  "gold": {
+    "human_reviewed": true,
+    "approval": "2026-10-01 user: 제시한 정답 기준으로 진행; one A/B pair <=18 calls",
+    "unit": "candidate occurrence; null field means excluded from current Profile",
+    "cases": [
+      {
+        "id": "C013",
+        "start": 978,
+        "end": 985,
+        "value": "Firefox",
+        "field": null
+      },
+      {
+        "id": "C015",
+        "start": 1054,
+        "end": 1060,
+        "value": "Chrome",
+        "field": null
+      },
+      {
+        "id": "C001",
+        "start": 180,
+        "end": 188,
+        "value": "linkding",
+        "field": "project_name"
+      },
+      {
+        "id": "C032",
+        "start": 2625,
+        "end": 2631,
+        "value": "Django",
+        "field": "backend"
+      },
+      {
+        "id": "C062",
+        "start": 4363,
+        "end": 4373,
+        "value": "JavaScript",
+        "field": "frontend"
+      },
+      {
+        "id": "C012",
+        "start": 934,
+        "end": 959,
+        "value": "Progressive Web App (PWA)",
+        "field": "project_type"
+      },
+      {
+        "id": "C010",
+        "start": 844,
+        "end": 860,
+        "value": "Internet Archive",
+        "field": "external_integrations"
+      },
+      {
+        "id": "C005",
+        "start": 565,
+        "end": 593,
+        "value": "Organize bookmarks with tags",
+        "field": "features"
+      },
+      {
+        "id": "C004",
+        "start": 528,
+        "end": 562,
+        "value": "Clean UI optimized for readability",
+        "field": null
+      },
+      {
+        "id": "C048",
+        "start": 3555,
+        "end": 3561,
+        "value": "pytest",
+        "field": null
+      }
+    ]
+  },
+  "denominators": {
+    "candidates": 68,
+    "scored": 10,
+    "positive_gold": 6,
+    "unscored": 58
+  },
+  "arms": {
+    "Q": {
+      "metrics": {
+        "raw_false_confirmed": 3,
+        "false_supported": 2,
+        "normal_missing": 2,
+        "held_normal": 2,
+        "raw_correct_but_held": 2,
+        "held_focus": 4,
+        "held_total": 40,
+        "retained": 68,
+        "scored": 10,
+        "positive_gold": 6,
+        "unscored_ids": [
+          "C000",
+          "C002",
+          "C003",
+          "C006",
+          "C007",
+          "C008",
+          "C009",
+          "C011",
+          "C014",
+          "C016",
+          "C017",
+          "C018",
+          "C019",
+          "C020",
+          "C021",
+          "C022",
+          "C023",
+          "C024",
+          "C025",
+          "C026",
+          "C027",
+          "C028",
+          "C029",
+          "C030",
+          "C031",
+          "C033",
+          "C034",
+          "C035",
+          "C036",
+          "C037",
+          "C038",
+          "C039",
+          "C040",
+          "C041",
+          "C042",
+          "C043",
+          "C044",
+          "C045",
+          "C046",
+          "C047",
+          "C049",
+          "C050",
+          "C051",
+          "C052",
+          "C053",
+          "C054",
+          "C055",
+          "C056",
+          "C057",
+          "C058",
+          "C059",
+          "C060",
+          "C061",
+          "C063",
+          "C064",
+          "C065",
+          "C066",
+          "C067"
+        ],
+        "details": [
+          {
+            "id": "C013",
+            "expected_field": null,
+            "raw_field": "external_integrations",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 978,
+              "end": 985
+            },
+            "sourceValue": "Firefox",
+            "support": [
+              {
+                "start": 960,
+                "end": 1182
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C015",
+            "expected_field": null,
+            "raw_field": "external_integrations",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 1054,
+              "end": 1060
+            },
+            "sourceValue": "Chrome",
+            "support": [
+              {
+                "start": 960,
+                "end": 1182
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C001",
+            "expected_field": "project_name",
+            "raw_field": "project_name",
+            "raw_status": "confirmed",
+            "verdict": "needs_confirmation",
+            "candidate": {
+              "start": 180,
+              "end": 188
+            },
+            "sourceValue": "linkding",
+            "support": [],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": true,
+            "missing_reason": "held",
+            "held": true,
+            "held_normal": true,
+            "raw_correct_but_held": true
+          },
+          {
+            "id": "C032",
+            "expected_field": "backend",
+            "raw_field": "backend",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 2625,
+              "end": 2631
+            },
+            "sourceValue": "Django",
+            "support": [
+              {
+                "start": 2590,
+                "end": 2646
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C062",
+            "expected_field": "frontend",
+            "raw_field": "frontend",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 4363,
+              "end": 4373
+            },
+            "sourceValue": "JavaScript",
+            "support": [
+              {
+                "start": 4306,
+                "end": 4416
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C012",
+            "expected_field": "project_type",
+            "raw_field": "project_type",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 934,
+              "end": 959
+            },
+            "sourceValue": "Progressive Web App (PWA)",
+            "support": [
+              {
+                "start": 915,
+                "end": 959
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C010",
+            "expected_field": "external_integrations",
+            "raw_field": "external_integrations",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 844,
+              "end": 860
+            },
+            "sourceValue": "Internet Archive",
+            "support": [
+              {
+                "start": 778,
+                "end": 860
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C005",
+            "expected_field": "features",
+            "raw_field": "features",
+            "raw_status": "confirmed",
+            "verdict": "needs_confirmation",
+            "candidate": {
+              "start": 565,
+              "end": 593
+            },
+            "sourceValue": "Organize bookmarks with tags",
+            "support": [],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": true,
+            "missing_reason": "held",
+            "held": true,
+            "held_normal": true,
+            "raw_correct_but_held": true
+          },
+          {
+            "id": "C004",
+            "expected_field": null,
+            "raw_field": "features",
+            "raw_status": "confirmed",
+            "verdict": "needs_confirmation",
+            "candidate": {
+              "start": 528,
+              "end": 562
+            },
+            "sourceValue": "Clean UI optimized for readability",
+            "support": [],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": true,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": true,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C048",
+            "expected_field": null,
+            "raw_field": "other",
+            "raw_status": "confirmed",
+            "verdict": "needs_confirmation",
+            "candidate": {
+              "start": 3555,
+              "end": 3561
+            },
+            "sourceValue": "pytest",
+            "support": [
+              {
+                "start": 3525,
+                "end": 3534
+              },
+              {
+                "start": 3536,
+                "end": 3562
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": true,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          }
+        ],
+        "citation_defects": 21,
+        "citation_kinds": {
+          "incomplete_context": 8,
+          "valid_covering": 47,
+          "exact_elsewhere": 7,
+          "quote_not_found": 6
+        },
+        "citation_defect_ids": [
+          "C000",
+          "C001",
+          "C002",
+          "C003",
+          "C004",
+          "C005",
+          "C006",
+          "C007",
+          "C024",
+          "C035",
+          "C036",
+          "C037",
+          "C038",
+          "C041",
+          "C056",
+          "C058",
+          "C059",
+          "C060",
+          "C064",
+          "C066",
+          "C067"
+        ]
+      },
+      "model_seconds": 151.92346390000057,
+      "wall_seconds": 152.33097869999983,
+      "calls": 9,
+      "prompt_tokens": 154442,
+      "completion_tokens": 5520,
+      "focus_evidence": [
+        {
+          "id": "C004",
+          "citationDefect": true,
+          "kind": "incomplete_context",
+          "issues": [
+            {
+              "code": "candidate_not_covered",
+              "role": "support"
+            },
+            {
+              "code": "empty_support",
+              "role": "support"
+            }
+          ],
+          "originalResponse": {
+            "id": "C004",
+            "field": "features",
+            "support": [],
+            "counterEvidence": [],
+            "status": "confirmed"
+          }
+        },
+        {
+          "id": "C005",
+          "citationDefect": true,
+          "kind": "incomplete_context",
+          "issues": [
+            {
+              "code": "candidate_not_covered",
+              "role": "support"
+            },
+            {
+              "code": "empty_support",
+              "role": "support"
+            }
+          ],
+          "originalResponse": {
+            "id": "C005",
+            "field": "features",
+            "support": [],
+            "counterEvidence": [],
+            "status": "confirmed"
+          }
+        },
+        {
+          "id": "C024",
+          "citationDefect": true,
+          "kind": "exact_elsewhere",
+          "issues": [
+            {
+              "code": "candidate_not_covered",
+              "role": "support"
+            }
+          ],
+          "originalResponse": {
+            "id": "C024",
+            "field": "project_name",
+            "support": [
+              {
+                "quote": "The following links help you to get started with linkding:",
+                "occurrence": 0
+              }
+            ],
+            "counterEvidence": [],
+            "status": "confirmed"
+          }
+        },
+        {
+          "id": "C055",
+          "citationDefect": false,
+          "kind": "valid_covering",
+          "issues": [],
+          "originalResponse": {
+            "id": "C055",
+            "field": "other",
+            "support": [
+              {
+                "quote": "### DevContainers",
+                "occurrence": 0
+              },
+              {
+                "quote": "This repository also supports DevContainers: [![Open in Remote - Containers](https://img.shields.io/static/v1?label=Remote%20-%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/sissbruecker/linkding.git)",
+                "occurrence": 0
+              }
+            ],
+            "counterEvidence": [],
+            "status": "confirmed"
+          }
+        }
+      ]
+    },
+    "U": {
+      "metrics": {
+        "raw_false_confirmed": 3,
+        "false_supported": 3,
+        "normal_missing": 0,
+        "held_normal": 0,
+        "raw_correct_but_held": 0,
+        "held_focus": 1,
+        "held_total": 32,
+        "retained": 68,
+        "scored": 10,
+        "positive_gold": 6,
+        "unscored_ids": [
+          "C000",
+          "C002",
+          "C003",
+          "C006",
+          "C007",
+          "C008",
+          "C009",
+          "C011",
+          "C014",
+          "C016",
+          "C017",
+          "C018",
+          "C019",
+          "C020",
+          "C021",
+          "C022",
+          "C023",
+          "C024",
+          "C025",
+          "C026",
+          "C027",
+          "C028",
+          "C029",
+          "C030",
+          "C031",
+          "C033",
+          "C034",
+          "C035",
+          "C036",
+          "C037",
+          "C038",
+          "C039",
+          "C040",
+          "C041",
+          "C042",
+          "C043",
+          "C044",
+          "C045",
+          "C046",
+          "C047",
+          "C049",
+          "C050",
+          "C051",
+          "C052",
+          "C053",
+          "C054",
+          "C055",
+          "C056",
+          "C057",
+          "C058",
+          "C059",
+          "C060",
+          "C061",
+          "C063",
+          "C064",
+          "C065",
+          "C066",
+          "C067"
+        ],
+        "details": [
+          {
+            "id": "C013",
+            "expected_field": null,
+            "raw_field": "external_integrations",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 978,
+              "end": 985
+            },
+            "sourceValue": "Firefox",
+            "support": [
+              {
+                "start": 960,
+                "end": 1183
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C015",
+            "expected_field": null,
+            "raw_field": "external_integrations",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 1054,
+              "end": 1060
+            },
+            "sourceValue": "Chrome",
+            "support": [
+              {
+                "start": 960,
+                "end": 1183
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C001",
+            "expected_field": "project_name",
+            "raw_field": "project_name",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 180,
+              "end": 188
+            },
+            "sourceValue": "linkding",
+            "support": [
+              {
+                "start": 180,
+                "end": 239
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C032",
+            "expected_field": "backend",
+            "raw_field": "backend",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 2625,
+              "end": 2631
+            },
+            "sourceValue": "Django",
+            "support": [
+              {
+                "start": 2590,
+                "end": 2896
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C062",
+            "expected_field": "frontend",
+            "raw_field": "frontend",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 4363,
+              "end": 4373
+            },
+            "sourceValue": "JavaScript",
+            "support": [
+              {
+                "start": 4306,
+                "end": 4417
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C012",
+            "expected_field": "project_type",
+            "raw_field": "project_type",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 934,
+              "end": 959
+            },
+            "sourceValue": "Progressive Web App (PWA)",
+            "support": [
+              {
+                "start": 915,
+                "end": 960
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C010",
+            "expected_field": "external_integrations",
+            "raw_field": "external_integrations",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 844,
+              "end": 860
+            },
+            "sourceValue": "Internet Archive",
+            "support": [
+              {
+                "start": 778,
+                "end": 861
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C005",
+            "expected_field": "features",
+            "raw_field": "features",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 565,
+              "end": 593
+            },
+            "sourceValue": "Organize bookmarks with tags",
+            "support": [
+              {
+                "start": 563,
+                "end": 594
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C004",
+            "expected_field": null,
+            "raw_field": "features",
+            "raw_status": "confirmed",
+            "verdict": "supported",
+            "candidate": {
+              "start": 528,
+              "end": 562
+            },
+            "sourceValue": "Clean UI optimized for readability",
+            "support": [
+              {
+                "start": 526,
+                "end": 563
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": false,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          },
+          {
+            "id": "C048",
+            "expected_field": null,
+            "raw_field": "other",
+            "raw_status": "confirmed",
+            "verdict": "needs_confirmation",
+            "candidate": {
+              "start": 3555,
+              "end": 3561
+            },
+            "sourceValue": "pytest",
+            "support": [
+              {
+                "start": 3536,
+                "end": 3563
+              },
+              {
+                "start": 3525,
+                "end": 3535
+              }
+            ],
+            "counterEvidence": [],
+            "groundingValid": true,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "normal_missing": false,
+            "missing_reason": null,
+            "held": true,
+            "held_normal": false,
+            "raw_correct_but_held": false
+          }
+        ],
+        "citation_defects": 2,
+        "citation_kinds": {
+          "valid_covering": 66,
+          "invalid_unit_reference": 1,
+          "insufficient_unit_context": 1
+        },
+        "citation_defect_ids": [
+          "C024",
+          "C055"
+        ]
+      },
+      "model_seconds": 456.6056525999975,
+      "wall_seconds": 457.01361460000044,
+      "calls": 9,
+      "prompt_tokens": 154829,
+      "completion_tokens": 7042,
+      "focus_evidence": [
+        {
+          "id": "C004",
+          "citationDefect": false,
+          "kind": "valid_covering",
+          "issues": [],
+          "originalResponse": {
+            "id": "C004",
+            "field": "features",
+            "supportUnitIds": [
+              "ee0d7ad2b5508071b9f36cde500286a90dee41f3251197ff6c81dcfd499c3e8c:526:563"
+            ],
+            "counterUnitIds": [],
+            "status": "confirmed"
+          }
+        },
+        {
+          "id": "C005",
+          "citationDefect": false,
+          "kind": "valid_covering",
+          "issues": [],
+          "originalResponse": {
+            "id": "C005",
+            "field": "features",
+            "supportUnitIds": [
+              "ee0d7ad2b5508071b9f36cde500286a90dee41f3251197ff6c81dcfd499c3e8c:563:594"
+            ],
+            "counterUnitIds": [],
+            "status": "confirmed"
+          }
+        },
+        {
+          "id": "C024",
+          "citationDefect": true,
+          "kind": "invalid_unit_reference",
+          "issues": [
+            "unknown_or_foreign_unit_id"
+          ],
+          "originalResponse": {
+            "id": "C024",
+            "field": "project_name",
+            "supportUnitIds": [
+              "ee0d7ad2b5508071b9f36cde500286a90dee41f3251197ff6c81dcfd499c3e8c:180:239",
+              "ee0d7ad2b5508071b9f36cde500286a90dee41f3251197ff6c81dc499c3e8c:1541:1691"
+            ],
+            "counterUnitIds": [],
+            "status": "confirmed"
+          }
+        },
+        {
+          "id": "C055",
+          "citationDefect": true,
+          "kind": "insufficient_unit_context",
+          "issues": [
+            "no_candidate_line_context"
+          ],
+          "originalResponse": {
+            "id": "C055",
+            "field": "other",
+            "supportUnitIds": [
+              "ee0d7ad2b5508071b9f36cde500286a90dee41f3251197ff6c81dcfd499c3e8c:3770:3788",
+              "ee0d7ad2b5508071b9f36cde500286a90dee41f3251197ff6c81dcfd499c3e8c:3789:4117"
+            ],
+            "counterUnitIds": [],
+            "status": "confirmed"
+          }
+        }
+      ]
+    }
+  },
+  "verification": {
+    "frozen_files_unchanged": true,
+    "calls_started": 18,
+    "retries": 0,
+    "service_applied": false,
+    "large_goal_resumed": false
+  },
+  "identical_user_message_pairs": 9,
+  "historical_data_files_unchanged": 22,
+  "raw_response_sha256": {
+    "01-A-response.json": "b46bce0f93595cec4f76b26f895c607e3c5a0b4f51142b1246fc9a0669915025",
+    "02-A-response.json": "c32237f473ff043531fdcf5d4ea0593342af138b57c6aea7141b59737b396ddc",
+    "03-A-response.json": "da511a21772a1d72666b281c06577a6d178b63ba24fb8b0dcaf29a7f30437f4a",
+    "04-A-response.json": "d6771da258b7223cabee1538b3ba38c8d272f53a6c4a9f96579e951566ebcdf4",
+    "05-A-response.json": "98f4ff13037052a8392a0bb7993ef8e96b3e1263f8a67ca00e63a93f7b29fcf2",
+    "06-A-response.json": "f6e9dfab1c323588a33b59df37eae4ccb24f8f12d17a3ddf6682bc1b783b2b40",
+    "07-A-response.json": "4fefe611015e2b2bf7d438b07c55bbb6e2f4c4d8fa4df15434aafeda7dd7383b",
+    "08-A-response.json": "a1ab8ed362412ea541083d71f73bb999dbff571d841d4b7e651f9e1a2835f988",
+    "09-A-response.json": "5ef238997fbb121142a7325cfa149f4cb0fa62425b46e4362ce46d38c7022df2",
+    "10-B-response.json": "ff120f73ebb334e54a72b969d7c609381754198d060e00b42fff56a293ca6043",
+    "11-B-response.json": "48ef3d8a8fa8f7b701b2b2018afa6fae37b4a31f7ebb0728ffb40e2adfba6252",
+    "12-B-response.json": "a93eb0aae42631de853661416b1faf51ce2316f6d1f22119b5914bea25e63e79",
+    "13-B-response.json": "9552b59b188a34bcb21546ecb3d29e64be6442a27706273582cb9313e965dcf4",
+    "14-B-response.json": "7902b8887e4180948c3cff0640be406dc20d9460c49fbc7f421b28f386119353",
+    "15-B-response.json": "4218c200fc4c70cc417f54db842348e395bb99af52262483140c124fae30064f",
+    "16-B-response.json": "16e39a84f142e115057e6ddae6bd43265e9e1d1869d83f35d5873f83e46e2b7a",
+    "17-B-response.json": "02441769ee0d868ab0436fc644cd56a2ac7acc1d1799548c7e97ddabe786914d",
+    "18-B-response.json": "09dd57ad62cdd9b1a1b4482033c23ac81b86252d8120fb8e6e7a0ea5dc4ede16"
+  },
+  "scope": {
+    "service_applied": false,
+    "relationships_added": false,
+    "large_goal_resumed": false
+  },
+  "local_tests": {
+    "new_passed": 12,
+    "total_run": 1341,
+    "passed": 1334,
+    "skipped": 7,
+    "failed": 0,
+    "seconds": 90.664
+  },
+  "result_root": "E:\\AgentFit\\output\\b-evidence-selection-v1"
+}

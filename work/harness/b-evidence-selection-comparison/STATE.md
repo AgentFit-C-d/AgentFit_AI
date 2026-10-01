@@ -1,5 +1,21 @@
 # B 인용문·단위 선택 한 쌍 실험
 
+## 최종 결과 — 완료 후 중단
+
+- 실제 한 쌍18회 완료(Q9+U9), 응답18/오류0/재시도0. 각68개 후보 보존.
+- Q→U: 인용 결함21→2, 모델 오확정3→3, gate 통과 오확정2→3,
+  정상 누락2/6→0/6, 전체 보류40/68→32/68, 주 평가 보류4/10→1/10.
+- 태그 정리·프로젝트명 복구. Clean UI가 정확한 근거를 얻어 잘못 supported로 통과.
+  Firefox·Chrome 오확정 잔존. 주 평가10개 raw field/status는 양쪽 모두 같다.
+- U 결함: C024 ID hash 복사 오류1, C055 제목-only 구조적 불충분1. 전체68개에 그대로 포함.
+  C055는 실제 양쪽 모두 other/confirmed로 보류되므로 추가 보류 차이 원인으로 세지 않음.
+- 시간Q152.331초/U457.014초. 단일 문서/한 쌍 결과로 일반화하지 않는다.
+- 고정140파일 변경0, 실제 user message9쌍 동일, 과거 원본22파일 변경0.
+- 결과 specs/ai-developer/b-evidence-selection-comparison/results.md·results.json.
+- 큰 goal paused 재확인. 서비스/관계/Spring/배포/추가 호출0. 최종 기록 commit/push 후 종료.
+
+## 실행 기록 (보존)
+
 - 시작2026-10-01 12:39:31 UTC. 로컬 작업 상한14:39:31 UTC. 실제 한 쌍은 최대3600초.
 - 사용자 승인: B의 근거 방식만 비교, 무료 NVIDIA 최대18회/재시도0/결과 보고 후 종료.
 - 브랜치 feature/b-evidence-selection-comparison, 기준487b83a. 기존 dirty 파일 그대로 보존.
@@ -32,3 +48,17 @@
 - 판단 제외에 대한 결정: 실제 계정 청구 화면의 독립 확인·관계 검증·서비스·goal·다중 반복은
   사용자 범위 밖으로 유지한다. 표현별 근거 상한 차이와 한 쌍의 통계적 한계를 결과에 명시한다.
 - 수정 pass는 위 순서 문제 한 건에 한정. 신규12개와 전체 회귀 재검증 후에만 freeze/live.
+
+## 실제 한 쌍 시작 준비
+
+- 순서 회귀 RED→GREEN, 신규12개 통과. 최종 전체1341개 실행/1334통과/7skip/실패0,90.664초.
+- 최종 코드 ef0ac09. Q/U 실제 user message9쌍 완전 일치, 최대 요청 약52.5KB.
+- 입력 원본·gold·기존 B·registry·서비스 diff0. 기존 다른 작업의 dirty 보존.
+- 이 코드로 freeze 후 live를 한 번만 시작한다. 이후 코드/입력/gold/모델을 수정하지 않는다.
+- 출력 예정: E:/AgentFit/output/b-evidence-selection-v1. Q=gate A, U=gate B, 최대18회/재시도0.
+
+## 실행 중
+
+- freeze 완료, live 명령1회 시작. tool exec session13490. 같은 output으로 재실행 금지.
+- 첫 확인: Q2배치/16후보 완료, Q3배치 진행. 코드·입력 동결 유지, 오류/재시도 없음.
+- 이어받을 때 calls/*-started/finished/response.json 및 summary.json부터 읽어 중복 호출을 피한다.
