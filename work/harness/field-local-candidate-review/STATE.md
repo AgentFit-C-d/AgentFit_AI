@@ -16,3 +16,5 @@ Ruling: GLM 비교는 모델별 기존adapter설정까지 포함해 해석한다
 - GLM 사전등록8e2962f push. safety6PASS0.020s, offline48요청 쌍의 원문/후보/지침/스키마동일 확인. 차이는 model/temperature/reasoning_effort/chat_template_kwargs. freeze782f4d3f09d9a8e262749c061f28403cb615431830a6385b9d4f31c1b1e62d59.
 - 실제 GLM session91923, 2026-10-01T00:41:43Z 시작. 00:43 이후 같은handle live 확인, 아직PUBLIC-01 결과없음. 요청1800초/전체5400초/93호출/retry0. 실행중 코드·모델·자료·실행기 변경 금지. observation timeout은 실패가 아니며 같은handle 재조회. 다음 terminal 후 audit_probe_glm.py --save, 실패면 재시작하지 않고 보존·진단.
 - 8e2962f961198aaff7f65253e0b23895ed69f0b1의 CI36797418498 네 작업 success 직접확인. 이후 state만변경, 제품코드/평가기동결유지. session91923 마지막40초poll도live/신규출력0. 이번목표턴 progress: 실제48호출진단·감사·push·CI완료와 GLM비교개시. 목표완료아님, 다음턴같은handle계속조회.
+- 다음 재개: 직전 목표턴은progress. session91923을 재조회해live확인, 아직PUBLIC-01 결과없음. Win32_Process로 부모/자식46360과 제공자worker31196(00:52:08Z생성)을 확인했다. stream transport는별도worker를호출하므로 모델요청프로세스가새로생성된관측이며, 완료호출수/품질은아직미확인. 처음TCP검사는review부모에대한조회여서연결없음만으로호출중단을추정하지않는다. stdinpoll/파일/프로세스관측은호출재시작0이다.
+- Docs/ai-profile-field-interpretation-review.md 작성, 사용자에게 기술목록의명시기능/지원Docker배포/ORMbackend범위를 질문했다. 답변대기; 전체gold사람검토와구분,기존gold/현재실험수정0. 질문은평가의모호한기준을분리하려는것이며독립작업은계속한다.
