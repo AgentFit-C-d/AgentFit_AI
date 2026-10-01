@@ -11,4 +11,11 @@
 - Optional session30647 terminal: 실제 테스트 자식exit0,39tests OK30.732초. 부모출력은cp949 진행률문자표시실패exit1; 저장된testlog/result.json으로테스트성공확인. 모델API재실행없음.
 - Cache replay: 고정 mixed JSON hash eed102dd... 유지, 머리말1회복구·페이지offset통과·213자. 기존FastAP!오인식/부정누락은남음, 과거품질0/2변경없음. E:/AgentFit/output/docling-text-layer-preservation-v1/replay.json.
 - 원문10·검토문/대응10·이전JSON174·gold불변재검증통과. 전체 unittest session61740 terminal exit0:1252실행/1245통과/7skip,75.688초(부모77.266초). 현재활성변환/API세션없음.
-- Task1 구현검증완료, 최종독립리뷰대기. 리뷰범위base62be915부터 현재기능커밋까지. 알려진제약은OCR품질/Docling이이미버린native텍스트미검출/실제Spring미검증. 이번수정으로최종품질gate통과를주장하지않음.
+- Task1 기능커밋977292d1c7601c75f0a4ef3e68da7db66e4d699a, feature/docling-text-layer-preservation 원격push완료. CI36815270810 completed success,4/4job통과를gh run view로확인했다.
+- Final review: fresh reviewer docling_text_layer_final_review, 범위62be915..977292d. Critical0/Important0/Minor0. 실제SDK의5layer/머리말전용Unicode/미연결/구형furniture루트/잘못된notes페이지검증. 경량12pass3skip+실제SDK1pass직접실행, 전체suite는로그확인. 변경없음.
+- Final Ruling: OCR정확도와Docling이이미버린원문누락/신규문서일반화는이번수정의완료근거가아님. 후속품질gate로남기며이변경만으로실사용완료처리하지않음(오판시누락·오확정위험).
+- Final Ruling: 실제Spring·운영배포는접근권한/환경부재로미검증유지, mock결과를대체근거로올리지않음(오판시저장·운영실패위험).
+- Final Ruling: 숨김/주석원문을보존하지만의미적채택정책은이번어댑터밖의검토/사용자확인요구사항으로유지(오판시비제품문장확정위험). 기존자동완료금지유지.
+- Final Ruling: 고정캐시재생/해시보존은주에이전트가직접검증했고리뷰어는기록검토만수행. 중복실행하지않고검증주체를명시함(독립재현보장아님).
+- Task1 complete: 구현/로컬1252tests(7skip)/실제SDK39tests/캐시재생/독립리뷰/기능코드CI4jobs통과. 후속문서만commit/push한다. 소스·테스트코드는검증후변경없음.
+- 이번goal turn은progress. 목표active. 다음: OCR검출영역·전처리·인식오류분리진단, 새기획서사람정답/10×3평가/실제Springgate계속. 남은품질을쉬운자료나에이전트정답만으로완료처리하지않음.

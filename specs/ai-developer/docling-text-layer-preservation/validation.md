@@ -37,4 +37,10 @@ SDK 테스트 자체는 exit0이었다. 부모 실행기의 콘솔 출력만 cp9
 
 `FastAP!` 오인식과 `도입하지 않음` 누락은 남아 있고, 이전 OCR 품질 판정0/2는 유지된다. 사람 검토 및 모델 평가 허용도 false다. 숨김/주석까지 포함된 원문 텍스트를 제품 기능의 확정 근거로 자동 취급하면 안 된다.
 
-독립 리뷰 및 Git 전달 상태는 STATE.md에 기록한다. 실제 Spring 저장·운영 배포·새 문서 일반화 검증은 미완료다.
+## 독립 리뷰
+
+62be915→977292d 범위의 독립 리뷰에서 Critical/Important/Minor 지적은 없었다. 리뷰어는 실제 SDK 메모리 검증으로 Unicode 머리말 전용 페이지·5개 영역 보존, 연결 끊김·구형 furniture 루트·잘못된 주석 페이지의 거절을 확인했다. SDK 미설치12통과/3skip 및 실제 SDK 반복/머리말 회귀1통과를 직접 실행했고, 전체/관련39건 로그를 검토했다.
+
+리뷰의 판단 제외 항목은 OCR 정확도·Docling 이전 원문 누락, 새 문서 일반화, 실제 Spring·운영 배포, 숨김/주석의 의미적 채택 정책이다. 이 항목들은 후속 목표의 미검증 상태로 유지한다. 고정 JSON 재생과 해시 보존은 주 에이전트가 실행했고 리뷰어는 기록만 확인했다.
+
+기능 커밋977292d의 [Linux CI36815270810](https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36815270810)은 contract-mock, unit-and-worker-memory, integrated-runtime, core-flow-runtime 모두 success였다. 실제 Spring 저장·운영 배포·새 문서 일반화 검증은 미완료다.
