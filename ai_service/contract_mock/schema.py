@@ -6,6 +6,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator, FormatChecker
 from agentfit_ai.profile import FIELDS
+from agentfit_ai.semantic_confirmation_metadata import check_decision_profile, check_unassigned_questions
 
 
 class ContractError(Exception):
@@ -79,7 +80,7 @@ def check(name: str, value: object) -> None:
 def check_review(profile, review):
     """Structural v2 metadata validation; no claim of semantic correctness."""
     try:
-        if type(review) is not dict or set(review) != {'contract', 'fieldStates', 'questions'}:
+        if type(review) is not dict or set(review) - {'modelDecisions', 'unassignedQuestions'} != {'contract', 'fieldStates', 'questions'}:
             raise ValueError
         states, questions = review['fieldStates'], review['questions']
         if (review['contract'] != 'confirmation-v2' or type(states) is not dict or set(states) != set(FIELDS)
@@ -102,6 +103,11 @@ def check_review(profile, review):
                 raise ValueError
             seen.add(field)
         if seen != {f for f in FIELDS if states[f] != 'unknown'}:
+            raise ValueError
+        if 'modelDecisions' in review:
+            check_decision_profile(profile, review['modelDecisions'], states=states)
+            check_unassigned_questions(review['modelDecisions'], review.get('unassignedQuestions', []))
+        elif 'unassignedQuestions' in review:
             raise ValueError
     except (KeyError, TypeError, ValueError):
         raise ContractError(502, 'AI_INVALID_OUTPUT') from None

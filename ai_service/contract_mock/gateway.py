@@ -64,9 +64,13 @@ class LocalAnalysisGateway:
             raise ContractError(502, 'AI_INVALID_OUTPUT')
         if set(result) == {'contract', 'outcome', 'error', 'requestId'} and result['outcome'] == 'failed':
             raise ContractError(502, 'AI_UNAVAILABLE')
-        if (set(result) != {'contract', 'outcome', 'error', 'requestId', 'profile', 'fieldStates', 'questions'}
+        if (set(result) - {'modelDecisions', 'unassignedQuestions'} != {'contract', 'outcome', 'error', 'requestId', 'profile', 'fieldStates', 'questions'}
                 or result['outcome'] != 'needs_confirmation' or result['error'] != 'REVIEW_CONFIRMATION_REQUIRED'):
             raise ContractError(502, 'AI_INVALID_OUTPUT')
         review = {k: result[k] for k in ('contract', 'fieldStates', 'questions')}
+        if 'modelDecisions' in result:
+            review['modelDecisions'] = result['modelDecisions']
+        if 'unassignedQuestions' in result:
+            review['unassignedQuestions'] = result['unassignedQuestions']
         check_review(result['profile'], review)
         return {'profile': result['profile'], 'review': review}

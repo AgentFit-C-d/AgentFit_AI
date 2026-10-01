@@ -13,6 +13,8 @@ from .candidate_feature_curation import curate_reviewed_features
 from .candidate_field_review import review_candidates_by_field
 from .capability_candidates import extract_capability_candidates
 from .candidate_split_review import review_candidates_separately
+from .candidate_semantic_assessment import classify_grounded_candidates
+from .semantic_confirmation_metadata import unresolved_decision_fields
 from .deepseek_evaluation import MODEL, NVIDIA_REVIEW_MODELS
 from .diagnostics import safe_code
 from .nvidia_streaming import post_nvidia_streaming
@@ -49,7 +51,8 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
                                   observer=None, call_trace=None, review_calls=None,
                                   max_calls=64, nvidia_retry_limit=1, candidate_model=None,
                                   capability_candidates=False, field_local_review=False,
-                                  classification_model=None, classification_batch_size=30):
+                                  classification_model=None, classification_batch_size=30,
+                                  semantic_assessment=False):
     """Run fresh extraction through reviewed projection with one provider-call budget.
 
     Injected extractors are trusted callbacks. Only the default LangExtract adapter's
@@ -74,6 +77,7 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
             type(max_calls) is not int or not 1 <= max_calls <= 64 or
             type(nvidia_retry_limit) is not int or nvidia_retry_limit not in (0, 1) or
             type(capability_candidates) is not bool or type(field_local_review) is not bool or
+            type(semantic_assessment) is not bool or (semantic_assessment and not nvidia_only) or
             (classification_model is not None and
              (type(classification_model) is not str or classification_model not in NVIDIA_REVIEW_MODELS)) or
             type(classification_batch_size) is not int or classification_batch_size not in (15, 30)):
@@ -187,10 +191,17 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
         document, nvidia_key, model=feature_model, transport=nvidia_send))
     frozen = run('MERGE_FAILED', lambda: _merge_occurrences(document, general, operations))
     observe('grounded', frozen)
-    labels = run('CLASSIFICATION_FAILED', lambda: classify_profile_candidates(
-        document, frozen, classification_key, transport=classification_send,
-        field_semantics='explicit-v1', batch_size=classification_batch_size,
-        **classification_options))
+    decisions = None
+    if semantic_assessment:
+        assessed = run('CLASSIFICATION_FAILED', lambda: classify_grounded_candidates(
+            document, frozen, classification_key, transport=classification_send,
+            model=classification_model or candidate_model))
+        labels, decisions = assessed['labels'], assessed['modelDecisions']
+    else:
+        labels = run('CLASSIFICATION_FAILED', lambda: classify_profile_candidates(
+            document, frozen, classification_key, transport=classification_send,
+            field_semantics='explicit-v1', batch_size=classification_batch_size,
+            **classification_options))
     observe('classified', {'frozen': frozen, 'labels': labels})
     reviewer = review_candidates_by_field if field_local_review else review_candidates_separately
     review_options = {} if field_local_review else {
@@ -201,9 +212,17 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
     safe_labels = run('COVERAGE_REVIEW_FAILED', lambda: apply_candidate_review(frozen, labels, review))
     curation = run('FEATURE_CURATION_FAILED', lambda: curate_reviewed_features(
         document, frozen, safe_labels, nvidia_key, model=feature_model, transport=nvidia_send))
-    return run('PROJECTION_FAILED', lambda: finalize_candidate_analysis(
+    result = run('PROJECTION_FAILED', lambda: finalize_candidate_analysis(
         document, document_id, frozen, labels, review,
         observer=observe if observer is not None else None, feature_curation=curation))
+    if decisions is not None:
+        result['modelDecisions'] = decisions
+        unresolved = set(result['unresolvedFields']) | unresolved_decision_fields(decisions)
+        result['unresolvedFields'] = [f for f in review['checkedFields'] if f in unresolved]
+        result['reviewIssueCount'] += sum(r['decision'] == 'needs_confirmation' for r in decisions)
+        if unresolved or result['reviewIssueCount']:
+            result['outcome'] = 'needs_confirmation'
+    return result
 
 
 def analyze_nvidia_candidates(document, document_id, nvidia_key, *,
@@ -211,7 +230,7 @@ def analyze_nvidia_candidates(document, document_id, nvidia_key, *,
                               nvidia_transport=None, observer=None, call_trace=None,
                               review_calls=None, max_calls=64, capability_candidates=False,
                               field_local_review=False, classification_model=None,
-                              classification_batch_size=30):
+                              classification_batch_size=30, semantic_assessment=False):
     """Opt-in NVIDIA-only variant; no retries, fallback, or account/billing guarantee.
 
     Callers own the total process deadline and must establish permission and free
@@ -226,4 +245,4 @@ def analyze_nvidia_candidates(document, document_id, nvidia_key, *,
         call_trace=call_trace, review_calls=review_calls, max_calls=max_calls,
         nvidia_retry_limit=0, capability_candidates=capability_candidates,
         field_local_review=field_local_review, classification_model=classification_model,
-        classification_batch_size=classification_batch_size)
+        classification_batch_size=classification_batch_size, semantic_assessment=semantic_assessment)

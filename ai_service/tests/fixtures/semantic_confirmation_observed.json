@@ -1,0 +1,1157 @@
+[
+  {
+    "case": "actual-readme",
+    "repetition": 0,
+    "records": [
+      {
+        "candidate": {
+          "end": 2516,
+          "start": 2416
+        },
+        "commitment": "unclear",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "excluded",
+        "field": "other",
+        "groundingValid": true,
+        "id": "C019",
+        "modelStatus": "irrelevant",
+        "polarity": "positive",
+        "role": "non_product",
+        "scope": "target",
+        "support": [
+          {
+            "end": 2516,
+            "start": 2416
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 3592,
+          "start": 3503
+        },
+        "commitment": "unclear",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "excluded",
+        "field": "other",
+        "groundingValid": true,
+        "id": "C026",
+        "modelStatus": "irrelevant",
+        "polarity": "positive",
+        "role": "non_product",
+        "scope": "target",
+        "support": [
+          {
+            "end": 3592,
+            "start": 3503
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 5892,
+          "start": 5877
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C059",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 5892,
+            "start": 5837
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 5947,
+          "start": 5927
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C061",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 5947,
+            "start": 5893
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 6058,
+          "start": 6044
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C066",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 6058,
+            "start": 5981
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 6119,
+          "start": 6107
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C069",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 6119,
+            "start": 6059
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 6200,
+          "start": 6184
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C071",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 6200,
+            "start": 6120
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 6243,
+          "start": 6235
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C073",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 6243,
+            "start": 6201
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 8860,
+          "start": 8854
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "needs_confirmation",
+        "field": "deployment",
+        "groundingValid": false,
+        "id": "C113",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 8888,
+          "start": 8882
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "deployment",
+        "groundingValid": true,
+        "id": "C115",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 9026,
+            "start": 8862
+          }
+        ],
+        "time": "current"
+      }
+    ],
+    "metrics": {
+      "false_confirmations": 0,
+      "false_ids": [],
+      "positive_count": 8,
+      "positive_misses": 1,
+      "missing_ids": [
+        "C113"
+      ],
+      "held_candidates": 1,
+      "held_ids": [
+        "C113"
+      ],
+      "field_questions_projection_only": 2,
+      "unassigned_question_groups": 0,
+      "question_groups_total": 2,
+      "supported_candidates": 7
+    },
+    "source_sha256": "8c54a239869869e073746d0e57367b9cd3d3a4bca2beb9ac46162fccf7ed0569"
+  },
+  {
+    "case": "actual-readme",
+    "repetition": 1,
+    "records": [
+      {
+        "candidate": {
+          "end": 2516,
+          "start": 2416
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "deployment",
+        "groundingValid": true,
+        "id": "C019",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 2516,
+            "start": 2416
+          },
+          {
+            "end": 9383,
+            "start": 9263
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 3592,
+          "start": 3503
+        },
+        "commitment": "unclear",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "excluded",
+        "field": "other",
+        "groundingValid": true,
+        "id": "C026",
+        "modelStatus": "irrelevant",
+        "polarity": "positive",
+        "role": "non_product",
+        "scope": "target",
+        "support": [
+          {
+            "end": 3592,
+            "start": 3503
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 5892,
+          "start": 5877
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C059",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 5892,
+            "start": 5839
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 5947,
+          "start": 5927
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C061",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 5947,
+            "start": 5895
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 6058,
+          "start": 6044
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C066",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 6058,
+            "start": 5983
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 6119,
+          "start": 6107
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C069",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 6119,
+            "start": 6061
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 6200,
+          "start": 6184
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C071",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 6200,
+            "start": 6122
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 6243,
+          "start": 6235
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C073",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 6243,
+            "start": 6203
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 8860,
+          "start": 8854
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "needs_confirmation",
+        "field": "deployment",
+        "groundingValid": false,
+        "id": "C113",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 8888,
+          "start": 8882
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "deployment",
+        "groundingValid": true,
+        "id": "C115",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 9026,
+            "start": 8862
+          }
+        ],
+        "time": "current"
+      }
+    ],
+    "metrics": {
+      "false_confirmations": 1,
+      "false_ids": [
+        "C019"
+      ],
+      "positive_count": 8,
+      "positive_misses": 1,
+      "missing_ids": [
+        "C113"
+      ],
+      "held_candidates": 1,
+      "held_ids": [
+        "C113"
+      ],
+      "field_questions_projection_only": 2,
+      "unassigned_question_groups": 0,
+      "question_groups_total": 2,
+      "supported_candidates": 8
+    },
+    "source_sha256": "b05703331f770628b06c433f83241e28b5e0631c0fe950310211f81741a2b84b"
+  },
+  {
+    "case": "scope-regression",
+    "repetition": 0,
+    "records": [
+      {
+        "candidate": {
+          "end": 42,
+          "start": 37
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "frontend",
+        "groundingValid": true,
+        "id": "C000",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 49,
+            "start": 13
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 68,
+          "start": 61
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "backend",
+        "groundingValid": true,
+        "id": "C001",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 90,
+            "start": 50
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 109,
+          "start": 99
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "database",
+        "groundingValid": true,
+        "id": "C002",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 125,
+            "start": 91
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 150,
+          "start": 140
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C003",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 162,
+            "start": 126
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 176,
+          "start": 171
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C004",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 183,
+            "start": 163
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 200,
+          "start": 197
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [
+          {
+            "end": 49,
+            "start": 13
+          }
+        ],
+        "decision": "needs_confirmation",
+        "field": "other",
+        "groundingValid": true,
+        "id": "C005",
+        "modelStatus": "irrelevant",
+        "polarity": "positive",
+        "role": "non_product",
+        "scope": "other",
+        "support": [
+          {
+            "end": 227,
+            "start": 184
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 254,
+          "start": 247
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [
+          {
+            "end": 125,
+            "start": 91
+          }
+        ],
+        "decision": "needs_confirmation",
+        "field": "other",
+        "groundingValid": true,
+        "id": "C006",
+        "modelStatus": "irrelevant",
+        "polarity": "positive",
+        "role": "non_product",
+        "scope": "other",
+        "support": [
+          {
+            "end": 259,
+            "start": 228
+          }
+        ],
+        "time": "historical"
+      },
+      {
+        "candidate": {
+          "end": 273,
+          "start": 268
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "excluded",
+        "field": "other",
+        "groundingValid": true,
+        "id": "C007",
+        "modelStatus": "irrelevant",
+        "polarity": "negative",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 289,
+            "start": 260
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 295,
+          "start": 290
+        },
+        "commitment": "unclear",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "needs_confirmation",
+        "field": "backend",
+        "groundingValid": true,
+        "id": "C008",
+        "modelStatus": "confirmed",
+        "polarity": "unclear",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 319,
+            "start": 290
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 325,
+          "start": 320
+        },
+        "commitment": "proposed",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "excluded",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C009",
+        "modelStatus": "confirmed",
+        "polarity": "negative",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 358,
+            "start": 320
+          }
+        ],
+        "time": "future"
+      },
+      {
+        "candidate": {
+          "end": 366,
+          "start": 364
+        },
+        "commitment": "unclear",
+        "conflictsChecked": true,
+        "counterEvidence": [
+          {
+            "end": 434,
+            "start": 385
+          }
+        ],
+        "decision": "needs_confirmation",
+        "field": "database",
+        "groundingValid": true,
+        "id": "C010",
+        "modelStatus": "confirmed",
+        "polarity": "unclear",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 384,
+            "start": 359
+          },
+          {
+            "end": 434,
+            "start": 385
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 454,
+          "start": 449
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [
+          {
+            "end": 49,
+            "start": 13
+          }
+        ],
+        "decision": "needs_confirmation",
+        "field": "frontend",
+        "groundingValid": true,
+        "id": "C011",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "non_product",
+        "scope": "other",
+        "support": [
+          {
+            "end": 482,
+            "start": 435
+          }
+        ],
+        "time": "historical"
+      }
+    ],
+    "metrics": {
+      "false_confirmations": 0,
+      "false_ids": [],
+      "positive_count": 5,
+      "positive_misses": 0,
+      "missing_ids": [],
+      "held_candidates": 5,
+      "held_ids": [
+        "C005",
+        "C006",
+        "C008",
+        "C010",
+        "C011"
+      ],
+      "field_questions_projection_only": 4,
+      "unassigned_question_groups": 1,
+      "question_groups_total": 5,
+      "supported_candidates": 5
+    },
+    "source_sha256": "8a0a39956a6f518e8d1a0104b88bc7c06d08dd0ac4270e1e2473351ba75e24a5"
+  },
+  {
+    "case": "scope-regression",
+    "repetition": 1,
+    "records": [
+      {
+        "candidate": {
+          "end": 42,
+          "start": 37
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "frontend",
+        "groundingValid": true,
+        "id": "C000",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 49,
+            "start": 13
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 68,
+          "start": 61
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "backend",
+        "groundingValid": true,
+        "id": "C001",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 90,
+            "start": 50
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 109,
+          "start": 99
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "database",
+        "groundingValid": true,
+        "id": "C002",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 125,
+            "start": 91
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 150,
+          "start": 140
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C003",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 162,
+            "start": 126
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 176,
+          "start": 171
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "supported",
+        "field": "features",
+        "groundingValid": true,
+        "id": "C004",
+        "modelStatus": "confirmed",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 183,
+            "start": 163
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 200,
+          "start": 197
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "excluded",
+        "field": "other",
+        "groundingValid": true,
+        "id": "C005",
+        "modelStatus": "irrelevant",
+        "polarity": "positive",
+        "role": "non_product",
+        "scope": "other",
+        "support": [
+          {
+            "end": 227,
+            "start": 184
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 254,
+          "start": 247
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "excluded",
+        "field": "other",
+        "groundingValid": true,
+        "id": "C006",
+        "modelStatus": "irrelevant",
+        "polarity": "positive",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 259,
+            "start": 228
+          }
+        ],
+        "time": "historical"
+      },
+      {
+        "candidate": {
+          "end": 273,
+          "start": 268
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "excluded",
+        "field": "other",
+        "groundingValid": true,
+        "id": "C007",
+        "modelStatus": "irrelevant",
+        "polarity": "negative",
+        "role": "product_fact",
+        "scope": "target",
+        "support": [
+          {
+            "end": 289,
+            "start": 260
+          }
+        ],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 295,
+          "start": 290
+        },
+        "commitment": "proposed",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "needs_confirmation",
+        "field": "other",
+        "groundingValid": true,
+        "id": "C008",
+        "modelStatus": "irrelevant",
+        "polarity": "unclear",
+        "role": "non_product",
+        "scope": "target",
+        "support": [],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 325,
+          "start": 320
+        },
+        "commitment": "proposed",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "needs_confirmation",
+        "field": "other",
+        "groundingValid": true,
+        "id": "C009",
+        "modelStatus": "irrelevant",
+        "polarity": "negative",
+        "role": "non_product",
+        "scope": "target",
+        "support": [],
+        "time": "future"
+      },
+      {
+        "candidate": {
+          "end": 366,
+          "start": 364
+        },
+        "commitment": "proposed",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "needs_confirmation",
+        "field": "database",
+        "groundingValid": true,
+        "id": "C010",
+        "modelStatus": "irrelevant",
+        "polarity": "unclear",
+        "role": "non_product",
+        "scope": "target",
+        "support": [],
+        "time": "current"
+      },
+      {
+        "candidate": {
+          "end": 454,
+          "start": 449
+        },
+        "commitment": "adopted",
+        "conflictsChecked": true,
+        "counterEvidence": [],
+        "decision": "needs_confirmation",
+        "field": "other",
+        "groundingValid": true,
+        "id": "C011",
+        "modelStatus": "irrelevant",
+        "polarity": "positive",
+        "role": "non_product",
+        "scope": "other",
+        "support": [],
+        "time": "historical"
+      }
+    ],
+    "metrics": {
+      "false_confirmations": 0,
+      "false_ids": [],
+      "positive_count": 5,
+      "positive_misses": 0,
+      "missing_ids": [],
+      "held_candidates": 4,
+      "held_ids": [
+        "C008",
+        "C009",
+        "C010",
+        "C011"
+      ],
+      "field_questions_projection_only": 4,
+      "unassigned_question_groups": 1,
+      "question_groups_total": 5,
+      "supported_candidates": 5
+    },
+    "source_sha256": "f2bcff08a962d11058c88ca3ee73251ea142c9d8a1da55b65ccff867c7e8caa5"
+  }
+]

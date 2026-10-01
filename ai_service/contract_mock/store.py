@@ -1,6 +1,8 @@
 """In-memory Spring contract simulation. No real database or source persistence."""
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
+import hashlib
+import json
 from threading import RLock
 from uuid import uuid4
 
@@ -60,7 +62,8 @@ class MockStore:
             check('CreateProjectResponse', response)
             self._write_gate()
             item = {'owner': owner, 'project': project, 'draft': None, 'confirmed': None,
-                    'latestAttempt': None, 'attempts': {}, 'review': None, 'audit': []}
+                    'latestAttempt': None, 'attempts': {}, 'review': None, 'audit': [],
+                    'confirmations': [], 'draftSource': None}
             self._entries[project['id']] = item
             self._audit(item, 'PROJECT_CREATED')
             return deepcopy(response)
@@ -82,6 +85,12 @@ class MockStore:
         if (attempt and attempt['status'] == 'PROCESSING'
                 and self.clock() >= datetime.fromisoformat(attempt['deadlineAt'])):
             self.fail(item['owner'], item['project']['id'], attempt['id'], 'INTERRUPTED')
+
+    def confirmation_provenance(self, owner, project_id):
+        """Internal handoff/test view; deliberately not an unagreed public API."""
+        with self._lock:
+            item = self._owned(owner, project_id)
+            return deepcopy({'draftReview': item['review'], 'confirmations': item['confirmations']})
 
     def save(self, owner, project_id, payload):
         with self._lock:
@@ -117,8 +126,29 @@ class MockStore:
             project = dict(item['project'], version=item['project']['version'] + 1, updatedAt=now)
             response = {'project': project, 'confirmed': confirmed}
             check('SaveProfileResponse', response)
+            # Source provenance is independent of who approved the saved value.
+            # Authentication and explicit PATCH handling occur at the HTTP boundary.
+            review = item['review'] if 'draftId' in payload else None
+            fields = {}
+            for field, value in values.items():
+                action = ('cleared' if value is None else 'manual' if reference is None else
+                          'accepted' if value == reference['data'][field] else 'edited')
+                fields[field] = {'action': action, 'source': sources[field],
+                                 'userDecision': 'unknown' if value is None else 'confirmed',
+                                 'modelState': review['fieldStates'][field] if review else None}
+            approval = {'action': 'USER_SAVE_PROFILE', 'actor': owner, 'at': now,
+                'projectVersion': project['version'], 'profileVersion': confirmed['version'],
+                'draft': {'id': reference['id'], 'version': reference['version']} if 'draftId' in payload else None,
+                'previousProfileVersion': previous['version'] if previous else None,
+                'source': deepcopy(item['draftSource']) if 'draftId' in payload else None,
+                'dataSha256': hashlib.sha256(json.dumps(values, ensure_ascii=False,
+                    sort_keys=True, separators=(',', ':')).encode('utf-8')).hexdigest(),
+                'modelDecisions': deepcopy(review.get('modelDecisions')) if review else None,
+                'pendingModelQuestions': deepcopy(review.get('unassignedQuestions', [])) if review else [],
+                'fields': fields}
             self._write_gate()
             item['project'], item['confirmed'] = project, confirmed
+            item['confirmations'].append(approval)
             self._audit(item, 'PROFILE_CONFIRMED')
             return deepcopy(response)
 
@@ -180,6 +210,14 @@ class MockStore:
                         if count is not None and span['end'] > count:
                             raise ValueError
                 check_review(profile, review)
+                if any(row['documentId'] != attempt['document']['id'] for row in review.get('modelDecisions', [])):
+                    raise ValueError
+                count = attempt['document']['characterCount']
+                if count is not None:
+                    for row in review.get('modelDecisions', []):
+                        if any(span['end'] > count for span in
+                               [row['candidate'], *row['support'], *row['counterEvidence']]):
+                            raise ValueError
             except (ValueError, KeyError, TypeError, ContractError):
                 raise ContractError(502, 'AI_INVALID_OUTPUT') from None
             finished = dict(attempt, status='SUCCEEDED', finishedAt=now)
@@ -187,6 +225,7 @@ class MockStore:
             check('AnalysisResponse', response)
             self._write_gate()
             item['draft'], item['latestAttempt'], item['review'] = draft, finished, deepcopy(review)
+            item['draftSource'] = {'documentId': attempt['document']['id'], 'attemptId': attempt_id}
             item['attempts'][attempt_id] = finished
             self._audit(item, 'DRAFT_STORED')
             return deepcopy(response)

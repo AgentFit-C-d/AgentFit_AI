@@ -17,7 +17,10 @@ def execute_integrated_analysis(document, document_id, solar_key, nvidia_key):
             solar_transport=post_solar_inline, nvidia_transport=post_nvidia_streaming_inline))
 
 
-def execute_nvidia_analysis(document, document_id, nvidia_key, *, call_diagnostics=None, review_model=None):
+def execute_nvidia_analysis(document, document_id, nvidia_key, *, call_diagnostics=None, review_model=None,
+                            semantic_assessment=False):
+    if type(semantic_assessment) is not bool:
+        raise ValueError('invalid semantic assessment option')
     if review_model is not None and (call_diagnostics is None or type(review_model) is not str
                                      or review_model not in MODELS):
         raise ValueError('invalid diagnostic review model')
@@ -25,6 +28,8 @@ def execute_nvidia_analysis(document, document_id, nvidia_key, *, call_diagnosti
     options = {'call_trace': trace} if trace is not None else {}
     if review_model is not None:
         options['review_model'] = review_model
+    if semantic_assessment:
+        options['semantic_assessment'] = True
     return _execute_analysis(document, document_id, (nvidia_key,), lambda:
         analyze_nvidia_candidates(document, document_id, nvidia_key,
             nvidia_transport=post_nvidia_streaming_inline, **options),

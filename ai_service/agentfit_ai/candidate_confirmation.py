@@ -2,6 +2,9 @@
 from copy import deepcopy
 
 from .profile import FIELDS, MAX_ARRAY_ITEMS, check_profile_snapshot
+from .semantic_confirmation_metadata import (
+    check_decision_profile, unassigned_decision_questions, check_unassigned_questions,
+)
 
 
 CONTRACT = 'confirmation-v2'
@@ -17,7 +20,7 @@ def _count(value):
 
 
 def _checked_result(document, document_id, result):
-    if (type(result) is not dict or set(result) not in (_RESULT_KEYS, _RESULT_KEYS | {'featureCuration'})
+    if (type(result) is not dict or set(result) - {'featureCuration', 'modelDecisions'} != _RESULT_KEYS
             or type(result['outcome']) is not str
             or result['outcome'] not in ('candidate_profile', 'needs_confirmation')):
         raise ValueError('invalid candidate result')
@@ -50,6 +53,10 @@ def _checked_result(document, document_id, result):
              result['candidateCount'] == 0)):
         raise ValueError('contradictory candidate result')
     profile = check_profile_snapshot(document, document_id, result['profile'])
+    if 'modelDecisions' in result:
+        records = check_decision_profile(profile, result['modelDecisions'], document=document, document_id=document_id)
+        if len(records) != result['candidateCount']:
+            raise ValueError('invalid semantic candidate count')
     if result['candidateCount'] == 0 and any(value is not None for value in profile['data'].values()):
         raise ValueError('empty candidates contradict profile')
     return profile
@@ -59,8 +66,12 @@ def project_candidate_confirmation(document, document_id, result) -> dict:
     """Map a completed pipeline result to suggestions; never approve or persist it."""
     profile = _checked_result(document, document_id, result)
     unresolved = set(result['unresolvedFields'])
+    records = result.get('modelDecisions', [])
+    unassigned = unassigned_decision_questions(records)
+    only_unassigned = (bool(unassigned) and result['reviewIssueCount'] ==
+                       sum(r['decision'] == 'needs_confirmation' for r in records))
     if (result['rejectedCandidateCount'] or not result['candidateCount'] or
-            (result['outcome'] == 'needs_confirmation' and not unresolved)):
+            (result['outcome'] == 'needs_confirmation' and not unresolved and not only_unassigned)):
         unresolved = set(FIELDS)
     states, questions = {}, []
     for field in FIELDS:
@@ -71,14 +82,18 @@ def project_candidate_confirmation(document, document_id, result) -> dict:
             reason = ('CONFIRM_SUGGESTION' if state == 'suggested' else
                       'CANDIDATE_MISSING' if not result['candidateCount'] else 'REVIEW_ISSUE')
             questions.append({'field': field, 'reason': reason, 'questionId': 'confirm_' + field})
+    metadata = ({'modelDecisions': check_decision_profile(profile, result['modelDecisions'],
+                 document=document, document_id=document_id, states=states)} if 'modelDecisions' in result else {})
+    if unassigned:
+        metadata['unassignedQuestions'] = unassigned
     return validate_candidate_confirmation(document, document_id, {
         'contract': CONTRACT, 'outcome': 'needs_confirmation', 'profile': profile,
-        'fieldStates': states, 'questions': questions, 'error': 'REVIEW_CONFIRMATION_REQUIRED'})
+        'fieldStates': states, 'questions': questions, 'error': 'REVIEW_CONFIRMATION_REQUIRED', **metadata})
 
 
 def validate_candidate_confirmation(document, document_id, outcome) -> dict:
     """Validate the v2 boundary independently of the pipeline that produced it."""
-    if (type(outcome) is not dict or set(outcome) != _DRAFT_KEYS or
+    if (type(outcome) is not dict or set(outcome) - {'modelDecisions', 'unassignedQuestions'} != _DRAFT_KEYS or
             outcome['contract'] != CONTRACT or outcome['outcome'] != 'needs_confirmation' or
             outcome['error'] != 'REVIEW_CONFIRMATION_REQUIRED'):
         raise ValueError('invalid candidate confirmation contract')
@@ -106,4 +121,11 @@ def validate_candidate_confirmation(document, document_id, outcome) -> dict:
         seen.add(field)
     if seen != {field for field in FIELDS if states[field] != 'unknown'}:
         raise ValueError('missing candidate confirmation question')
-    return deepcopy({**outcome, 'profile': profile})
+    metadata = {}
+    if 'modelDecisions' in outcome:
+        metadata['modelDecisions'] = check_decision_profile(profile, outcome['modelDecisions'], document=document,
+                                                           document_id=document_id, states=states)
+        check_unassigned_questions(metadata['modelDecisions'], outcome.get('unassignedQuestions', []))
+    elif 'unassignedQuestions' in outcome:
+        raise ValueError('unassigned questions require model decisions')
+    return deepcopy({**outcome, 'profile': profile, **metadata})
