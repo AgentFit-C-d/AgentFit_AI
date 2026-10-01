@@ -10,9 +10,9 @@
   최종 database=null. 최초 충돌은 project_candidate_profile의 문자열 중복 제거 단계.
 - 설계 결정: 별칭 식별은 내부 비교에만 사용. 가장 이른 원문 후보를 대표로 삼아
   의미 검증 메타데이터의 정확한 값/근거 계약을 유지한다.
-- 진행: 최종 코드/회귀/독립 재검토 완료. 신규10메서드 및 고정 변형26개 통과.
+- 진행: 최종 코드/회귀/독립 재검토 및 원격 push 완료. 이번 제한된 작업 종료.
 - 예산: 새 모델/API 호출 0, 로컬 검증만. 과거 응답 원본은 읽기 전용.
-- 남은 일: 이번 변경 파일만 commit/push → 종료 보고. 후속 기능 작업 없음.
+- 남은 일: 이번 코드 수정에는 없음. 실행 중 CI는 로컬 검증과 별도이며 운영/실제 모델은 미검증.
 
 ## 실행 기록
 
@@ -50,3 +50,13 @@ Pre-flight: 단일 작업, 공유 인터페이스 변경 없음. 사용자 승�
 - 모든 최종 생산 코드 변경 후 재검증 완료. 원본 파일 해시 동일, 새 모델 호출0.
 - get_goal로 paused 재확인. API키·.env 읽거나 전달하지 않았고 유료 실험/Luna 미재개.
 - 회귀 fixture는 실제 저장 DB 후보2개이며 전체 모델 판단의 정답을 새로 만들지 않았다.
+
+### Git 반영 및 중단 상태
+
+- 코드/명세/회귀/결과 커밋:075c07e, origin/feature/database-name-aliases push 성공.
+- CI: https://github.com/AgentFit-C-d/AgentFit_AI/actions/runs/36841277590
+  종료 기록 시 in_progress. 통과로 간주하지 않는다. 최종 로컬 검증 결과는 위와 같다.
+- 원격 반영 후 dirty 목록은 기존 semantic-confirmation-guard STATE/STOP,
+  .superpowers, Docs/analysis만 남음. 해당 파일을 수정·커밋하지 않았다.
+- 이 종료 기록만 추가 커밋하며 생산 코드는 검증한 075c07e와 같다.
+- 큰 goal paused 유지. 진행 중 모델 호출 없음. 후속 작업/유료 실험/Luna를 재개하지 않고 종료한다.
