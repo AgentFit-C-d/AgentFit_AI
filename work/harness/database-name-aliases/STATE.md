@@ -60,3 +60,10 @@ Pre-flight: 단일 작업, 공유 인터페이스 변경 없음. 사용자 승�
   .superpowers, Docs/analysis만 남음. 해당 파일을 수정·커밋하지 않았다.
 - 이 종료 기록만 추가 커밋하며 생산 코드는 검증한 075c07e와 같다.
 - 큰 goal paused 유지. 진행 중 모델 호출 없음. 후속 작업/유료 실험/Luna를 재개하지 않고 종료한다.
+
+### 후속 읽기 전용 CI 확인 — 2026-10-01
+
+- 사용자 요청으로 run36841277590 재조회: completed/success.
+- head075c07e의 unit-and-worker-memory, contract-mock, core-flow-runtime,
+  integrated-runtime 네 job 모두 success. 이후6dea756은 STATE 문서만 변경했다.
+- 이번 변경으로 인한 CI 실패 없음. 생산 코드 추가 수정 없음.

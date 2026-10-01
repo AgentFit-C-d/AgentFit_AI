@@ -1,0 +1,40 @@
+{
+  "status": "plan_only_human_gold_review_pending",
+  "code_baseline": "6dea756",
+  "production_commit": "075c07e63ac3d89c826a76f2e7dd3d88782b4ece",
+  "ci_run": 36841277590,
+  "ci_conclusion": "success",
+  "input_root": "E:/AgentFit/output/semantic-role-service-path-v1",
+  "document": {
+    "file": "linkding.md",
+    "sha256": "ee0d7ad2b5508071b9f36cde500286a90dee41f3251197ff6c81dcfd499c3e8c",
+    "code_points": 4558
+  },
+  "candidate_source": {
+    "file": "live-linkding-after/trace.json",
+    "sha256": "ba6ecd3ae6ba28b1ae0fd7211a195c73750a72f98f8a11bcbf68801f74a8ce29",
+    "selector": "stages.grounded",
+    "candidates": 68,
+    "rejected": 24
+  },
+  "equal_grounded_reference": {
+    "file": "live-linkding-before/trace.json",
+    "sha256": "5af72650aa841fedbe84ff8a7cd787715665ddd89297ed549100aa76b1153536"
+  },
+  "saved_response": {
+    "file": "live-linkding-after/response.json",
+    "sha256": "8adc640f30bbca66d7ecf5dacdb324f7412c9e7af9a6af0010f840fde760ea4b"
+  },
+  "historical_gold": {
+    "file": "gold.json",
+    "sha256": "5ac3fa0772833cd8010e294814efafd327ee84f3549cfebc453f4c73323cd7e5",
+    "human_reviewed": false,
+    "usage": "historical reference only; do not overwrite"
+  },
+  "gold_review_file": "gold-review.md",
+  "gold_human_reviewed": false,
+  "focus_candidate_ids": ["C013", "C015", "C001", "C032", "C062", "C012", "C010", "C005", "C004", "C048"],
+  "context_code_points_each_side": 240,
+  "include_whole_document": true,
+  "new_model_calls_this_step": 0
+}
