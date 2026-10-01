@@ -46,7 +46,7 @@
 - [x] Step2: `python -m unittest discover -s ai_service/tests -p test_classification_stage_routing.py -v` (PYTHONPATH=ai_service). Expected: 새 옵션 미지원 RED.
 - [x] Step3: 검증·분류 경로 선택·wrapper 전달만 구현.
 - [x] Step4: 같은 명령 PASS; unit/runtime/contract/core 전체 suite별180초. Expected: 기존 gate와 신규 검사 PASS, Windows skip 별도 기록.
-- [ ] Step5: task commit/task-done→fresh 최종 reviewer1회→중요 문제만 RED/GREEN 수정→최종 commit/push→exactHEAD Linux CI 확인.
+- [x] Step5: task commit/task-done→fresh 최종 reviewer1회→중요 문제만 RED/GREEN 수정→최종 commit/push→exactHEAD Linux CI 확인.
 
 ## Self-review
 
