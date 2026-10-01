@@ -10,7 +10,8 @@
 
 - [x] E1: 실패 회귀 → 원문 registry/참조 해석 → 통과 확인
 - [x] E2: 저장 원자료 해시 확인 → 실패 회귀 → 감사 → A68/B68, 결함12/22 재현
-- [ ] 전체 로컬 회귀 및 최종 독립 검토, 결과 문서, 커밋·push
+- [x] 전체 로컬 회귀 및 최종 독립 검토, 결과 문서
+- [x] 구현 커밋·push (ed6c98b, 종료 문서 후속 기록)
 
 ## 구현 결정
 
@@ -41,4 +42,17 @@
   freeze/payloads는 fixture만 제외하고 실제 replay에서는 함께 검증·보존한다.
 - 완전한 문맥이 없는 상한 초과는 incomplete_context가 우선한다. 그 안의 인용 결함은
   issues에 함께 남긴다. 완전한 입력에서는 quote_not_found→exact_elsewhere 순으로 집계한다.
-- 전체 단위 회귀 실행 중. 최종 검토·커밋·push 남음.
+- Task E2 complete: 3533cfd..ed6c98b, 위 16개 테스트 및 실데이터 CLI 집계 통과 후 커밋.
+- 전체 단위 회귀: 1329개 실행, 1322 통과/7 skip, 실패0, 91.600초.
+  명령: ai_service에서 `rtk proxy <venv-python> -m unittest discover -s tests -q`.
+  원본 로그: E:/AgentFit/output/evidence-source-audit-v1/unit-tests.log.
+- 최종 독립 검토: 6cf018e..ed6c98b에 Critical/Important/Minor 지적0.
+  검토자가 원본22개/복사본 및 portable fixture20개를 해시·바이트 대조하고
+  감사 결과를 메모리에서 재계산해 A68/B68, 결함12/22 및 공통 출력 전체 일치를 확인했다.
+- 판단 제외 항목에 대한 결정: S1–S3 의미 판단, 실제 모델 일반화/정확도, 서비스 통합/배포는
+  사용자 보류 범위이므로 그대로 미검증으로 남긴다. 이 작업을 그 영역의 개선/완료로 해석하면 안 된다.
+- 최종 차이 확인: 서비스 모듈·기존 A/B 비교 코드·고정 audit.json·관계 계획 diff0.
+- 구현 ed6c98b까지 origin/feature/candidate-evidence-audit push 성공 확인.
+- 로컬 구현·검증 종료 확인: 2026-10-01 12:05:25 UTC, 시작부터 약25분(2시간 이내).
+- 큰 goal paused, 새 모델 호출0, S1–S3/B 반복/서비스/배포 미실행을 유지한다.
+- 이번 요청의 남은 구현 없음. 종료 문서도 같은 브랜치에 기록하며 기존 dirty와 결과 파일을 보존한다.

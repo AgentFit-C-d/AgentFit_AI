@@ -1,5 +1,10 @@
 # 근거 위치·문맥 연결 구현 계획안
 
+2026-10-01 후속 승인: E1·E2만 오프라인 구현·검증.
+현재 실행 근거는 [결과 보고](e1-e2-results.md)와
+`work/harness/evidence-relation-repair/EXECUTION.md`를 참조한다.
+아래는 승인 당시의 계획을 보존한 것이다. 모델 호출·서비스 적용·S1–S3는 계속 보류한다.
+
 > 이후 구현을 승인받으면 superpowers:executing-plans로 직접 순서대로 실행한다.
 > 이번 턴은 계획 작성까지다. 아래 체크박스는 실행하지 않았다.
 

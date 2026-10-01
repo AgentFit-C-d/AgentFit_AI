@@ -1,4 +1,21 @@
-# 근거·관계 오류 분리 — 계획 단계
+# 근거·관계 오류 분리 — 현재 E1·E2 오프라인 구현
+
+## 현재 상태 (2026-10-01)
+
+- 사용자 승인: E1·E2만 2시간 안에 오프라인 구현·검증. S1–S3 및 B 추가 반복 보류.
+- 현재 브랜치 feature/candidate-evidence-audit, 계획 기준6cf018e.
+- E1 3533cfd, E2 ed6c98b 구현 커밋. 위치 연결과 저장 응답 감사만 추가했다.
+- A68/B68 보존, 인용 결함 A12(불일치2+다른 위치10)/B22(4+18) 재현.
+- 원문4558자·132줄·후보68·rejected24·18개 원응답 보존. 원본22파일 해시 및 복사본 일치.
+- field/status/verdict 변경0, 새 모델/API 호출0, 서비스 적용0. 큰 goal paused 확인.
+- 신규 회귀26개 통과, 전체1329개 실행/1322 통과/7 skip/실패0.
+- 최종 독립 검토 지적0. 원자료·복사본 대조 및 감사 재계산 일치. 결과 문서 완료.
+- 이 요청의 구현·검증 완료(약25분). 구현 ed6c98b를 feature 브랜치에 push 성공 확인.
+  종료 문서도 같은 브랜치에 기록한다. 다음 목표를 자동 시작하지 않는다.
+- 자세한 기록: EXECUTION.md 및 specs/ai-developer/evidence-relation-repair/e1-e2-results.md.
+- 결과 파일: E:/AgentFit/output/evidence-source-audit-v1/audit.json. 기존 원본은 변경하지 않았다.
+
+## 이전 계획 단계 기록 (보존)
 
 - 사용자 요청: B 추가 반복/서비스 적용 보류. 저장 응답만 분석하고 각각 수정안·회귀 계획 후 종료.
 - 큰 goal: get_goal로 paused 확인, 상태 변경 없음. 새 모델/API 호출0, .env/key 미열람.
