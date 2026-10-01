@@ -18,7 +18,7 @@ class SemanticHttpTests(unittest.IsolatedAsyncioTestCase):
             start = text.index('React')
             frozen = {'candidates': [{'id': 'C018', 'start': start, 'end': start + 5}], 'rejected': []}
             records = validate_assessments(text, frozen, [{'id': 'C018', 'field': 'other',
-                'modelStatus': 'confirmed', 'scope': 'unclear', 'time': 'current', 'polarity': 'positive',
+                'modelStatus': 'confirmed', 'mentionKind': 'unclear', 'scope': 'unclear', 'time': 'current', 'polarity': 'positive',
                 'commitment': 'unclear', 'role': 'unclear', 'conflictsChecked': True,
                 'support': [{'quote': text, 'occurrence': 0}], 'counterEvidence': []}])
             result = finalize_candidate_analysis(text, document_id, frozen, semantic_labels(records),
@@ -42,6 +42,8 @@ class SemanticHttpTests(unittest.IsolatedAsyncioTestCase):
             approval = store.confirmation_provenance('owner-a', project)['confirmations'][0]
             self.assertEqual(approval['pendingModelQuestions'], review['unassignedQuestions'])
             self.assertEqual(approval['modelDecisions'][0]['decision'], 'needs_confirmation')
+            self.assertEqual(approval['modelDecisions'][0]['mentionKind'], 'unclear')
+            self.assertEqual(approval['modelDecisions'][0]['modelStatus'], 'confirmed')
             self.assertEqual({r['userDecision'] for r in approval['fields'].values()}, {'unknown'})
 
     async def test_model_decisions_survive_both_http_boundaries_without_approving(self):
@@ -50,7 +52,7 @@ class SemanticHttpTests(unittest.IsolatedAsyncioTestCase):
         def analyze(text, document_id):
             frozen = {'candidates': [{'id': 'C018', 'start': 13, 'end': 18}], 'rejected': []}
             records = validate_assessments(text, frozen, [{'id': 'C018', 'field': 'frontend',
-                'modelStatus': 'confirmed', 'scope': 'target', 'time': 'current', 'polarity': 'positive',
+                'modelStatus': 'confirmed', 'mentionKind': 'other', 'scope': 'target', 'time': 'current', 'polarity': 'positive',
                 'commitment': 'adopted', 'role': 'product_fact', 'conflictsChecked': True,
                 'support': [{'quote': text, 'occurrence': 0}], 'counterEvidence': []}])
             result = finalize_candidate_analysis(text, document_id, frozen, semantic_labels(records),
@@ -75,6 +77,7 @@ class SemanticHttpTests(unittest.IsolatedAsyncioTestCase):
             proof = store.confirmation_provenance('owner-a', project)['confirmations'][0]
             self.assertEqual(proof['actor'], 'owner-a')
             self.assertEqual(proof['modelDecisions'][0]['modelStatus'], 'confirmed')
+            self.assertEqual(proof['modelDecisions'][0]['mentionKind'], 'other')
             self.assertEqual(proof['fields']['frontend']['userDecision'], 'confirmed')
 
 

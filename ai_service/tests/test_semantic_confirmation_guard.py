@@ -14,7 +14,7 @@ FROZEN = {'candidates': [{'id': 'C000', 'start': 11, 'end': 16}], 'rejected': []
 
 
 def assessment(**changes):
-    row = {'id': 'C000', 'field': 'frontend', 'modelStatus': 'confirmed',
+    row = {'id': 'C000', 'field': 'frontend', 'modelStatus': 'confirmed', 'mentionKind': 'other',
            'scope': 'target', 'time': 'current', 'polarity': 'positive',
            'commitment': 'adopted', 'role': 'product_fact', 'conflictsChecked': True,
            'support': [{'quote': 'Cedar uses React for its web client.', 'occurrence': 0}],

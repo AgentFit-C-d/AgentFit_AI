@@ -1,0 +1,276 @@
+{
+  "scope": "user-confirmed role distinction; explicit counterfactual facts; no self-hosting or edition gates",
+  "human_reviewed": false,
+  "cases": [
+    {
+      "id": "original-relation",
+      "document": "<img src=\"https://github.com/documenso/documenso/assets/13398220/a643571f-0239-46a6-a73e-6bef38d1228b\" alt=\"Documenso Logo\">\n\n<p align=\"center\" style=\"margin-top: 20px\">\n  <p align=\"center\">\n  The Open Source DocuSign Alternative.\n  <br>\n    <a href=\"https://documenso.com\"><strong>Learn more »</strong></a>\n    <br />\n    <br />\n    <a href=\"https://documen.so/discord\">Discord</a>\n    ·\n    <a href=\"https://documenso.com\">Website</a>\n    ·\n    <a href=\"https://docs.documenso.com\">Documentation</a>\n    ·\n    <a href=\"https://github.com/documenso/documenso/issues\">Issues</a>\n    ·\n    <a href=\"https://documen.so/live\">Upcoming Releases</a>\n    ·\n    <a href=\"https://documen.so/roadmap\">Roadmap</a>\n  </p>\n</p>\n\n<p align=\"center\">\n   <a href=\"https://documen.so/discord\"><img src=\"https://img.shields.io/badge/Discord-documen.so/discord-%235865F2\" alt=\"Join Documenso on Discord\"></a>\n   <a href=\"https://github.com/documenso/documenso/stargazers\"><img src=\"https://img.shields.io/github/stars/documenso/documenso\" alt=\"Github Stars\"></a>\n   <a href=\"https://github.com/documenso/documenso/blob/main/LICENSE\"><img src=\"https://img.shields.io/badge/license-AGPLv3-purple\" alt=\"License\"></a>\n   <a href=\"https://github.com/documenso/documenso/pulse\"><img src=\"https://img.shields.io/github/commit-activity/m/documenso/documenso\" alt=\"Commits-per-month\"></a>\n   <a href=\"https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/documenso/documenso\">\n   <img alt=\"open in devcontainer\" src=\"https://img.shields.io/static/v1?label=Dev%20Containers&message=Enabled&color=blue&logo=visualstudiocode\" />\n   </a>\n   <a href=\"CODE_OF_CONDUCT.md\"><img src=\"https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg\" alt=\"Contributor Covenant\"></a>\n</p>\n\n<div align=\"center\">\n  <img src=\"https://github.com/documenso/documenso/assets/13398220/d96ed533-6f34-4a97-be9b-442bdb189c69\" style=\"width: 80%;\" />\n</div>\n\n## About Documenso\n\nSigning documents digitally should be fast and easy and should be the best practice for every document signed worldwide. This is technically quite easy today, but it also introduces a new party to every signature: The signing tool providers. While this is not a problem in itself, it should make us think about how we want these providers of trust to work. Documenso aims to be the world's most trusted document-signing tool. This trust is built by empowering you to self-host Documenso and review how it works under the hood.\n\nJoin us in creating the next generation of open trust infrastructure.\n\n## Recognition\n\n<p align=\"center\">\n  <a href=\"https://www.producthunt.com/posts/documenso?utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-documenso\" target=\"_blank\"><img src=\"https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=395047&theme=light&period=daily\" alt=\"Documenso - The&#0032;open&#0032;source&#0032;DocuSign&#0032;alternative | Product Hunt\" style=\"width: 250px; height: 54px;\" width=\"250\" height=\"54\" /></a>\n  <a href=\"https://www.producthunt.com/posts/documenso?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-documenso\" target=\"_blank\"><img src=\"https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=395047&theme=light\" alt=\"Documenso - The&#0032;Open&#0032;Source&#0032;DocuSign&#0032;Alternative&#0046; | Product Hunt\" style=\"width: 250px; height: 54px;\" width=\"250\" height=\"54\" /></a>\n</p>\n\n## Community and Next Steps 🎯\n\n- Try Documenso by self-hosting it or signing up at [documenso.com](https://documenso.com).\n- Tell us what you think in the [Discussions](https://github.com/documenso/documenso/discussions).\n- Join the [Discord server](https://documen.so/discord) for any questions and getting to know other community members.\n- ⭐ the repository to help us raise awareness.\n- Open detailed [issues](https://github.com/documenso/documenso/issues) to report bugs or propose features.\n\n## Contributing\n\n> **Note**: We no longer accept external pull requests, aside from a small group of trusted contributors we reach out to directly. The best way to contribute is through detailed issues. Read [Why We're Pausing External Pull Requests](https://documenso.com/blog/why-we-re-pausing-external-pull-requests) for the reasoning.\n\n- Documenso stays open source. You can read, audit, run, and fork the code.\n- To report issues or propose changes, see our [contribution guide](https://github.com/documenso/documenso/blob/main/CONTRIBUTING.md).\n\n## Contact us\n\nContact us if you are interested in our Enterprise plan for large organizations that need extra flexibility and control.\n\n<a href=\"https://cal.com/timurercan/enterprise-customers?utm_source=banner&utm_campaign=oss\"><img alt=\"Book us with Cal.com\" src=\"https://cal.com/book-with-cal-dark.svg\" /></a>\n\n## Tech Stack\n\n<p align=\"left\">\n  <a href=\"https://www.typescriptlang.org\"><img src=\"https://shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=FFF&style=flat-square\" alt=\"TypeScript\"></a>\n  <a href=\"https://prisma.io\"><img width=\"122\" height=\"20\" src=\"http://made-with.prisma.io/indigo.svg\" alt=\"Made with Prisma\" /></a>\n  <a href=\"https://tailwindcss.com/\"><img src=\"https://img.shields.io/badge/tailwindcss-0F172A?&logo=tailwindcss\" alt=\"Tailwind CSS\"></a>\n  <a href=\"\"><img src=\"\" alt=\"\"></a>\n  <a href=\"\"><img src=\"\" alt=\"\"></a>\n  <a href=\"\"><img src=\"\" alt=\"\"></a>\n  <a href=\"\"><img src=\"\" alt=\"\"></a>\n  <a href=\"\"><img src=\"\" alt=\"\"></a>\n</p>\n\n- [TypeScript](https://www.typescriptlang.org/) - Language\n- [React Router v7](https://reactrouter.com/) - Framework\n- [Hono](https://hono.dev/) - Server\n- [Prisma](https://www.prisma.io/) - ORM\n- [Tailwind CSS](https://tailwindcss.com/) - CSS\n- [shadcn/ui](https://ui.shadcn.com/) + [Radix UI](https://www.radix-ui.com/) - Component Library\n- [react-email](https://react.email/) - Email Templates\n- [Lingui](https://lingui.dev/) - Internationalization\n- [tRPC](https://trpc.io/) - API\n- [@libpdf/core](https://www.npmjs.com/package/@libpdf/core) - PDF Signatures\n- [pdf.js](https://mozilla.github.io/pdf.js/) - Viewing PDFs\n- [@cantoo/pdf-lib](https://github.com/cantoo-scribe/pdf-lib) - PDF manipulation\n- [Stripe](https://stripe.com/) - Payments\n- [Biome](https://biomejs.dev/) - Linting & Formatting\n- [Playwright](https://playwright.dev/) - E2E Testing\n\n<!-- - Support for [opensignpdf (requires Java on server)](https://github.com/open-pdf-sign) is currently planned. -->\n\n## Local Development\n\n### Requirements\n\nTo run Documenso locally, you will need\n\n- Node.js (v24 or above)\n- Postgres SQL Database\n- Docker (optional)\n\n### Developer Quickstart\n\n> **Note**: This is a quickstart for developers. It assumes that you have both [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/) installed on your machine.\n\nWant to get up and running quickly? Follow these steps:\n\n1. [Fork this repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/about-forks) to your GitHub account.\n\nAfter forking the repository, clone it to your local device by using the following command:\n\n```sh\ngit clone https://github.com/<your-username>/documenso\n```\n\n2. Set up your `.env` file using the recommendations in the `.env.example` file. Alternatively, just run `cp .env.example .env` to get started with our handpicked defaults.\n\n3. Run `npm run dx` in the root directory\n\n   - This will spin up a postgres database and inbucket mailserver in a docker container.\n\n4. Run `npm run dev` in the root directory\n\n5. Want it even faster? Just use\n\n```sh\nnpm run d\n```\n\n#### Access Points for Your Application\n\n1. **App** - http://localhost:3000\n2. **Incoming Mail Access** - http://localhost:9000\n3. **Database Connection Details**\n\n   - **Port**: 54320\n   - **Connection**: Use your favorite database client to connect using the provided port.\n\n4. **S3 Storage Dashboard** - http://localhost:9001\n\n## Developer Setup\n\n### Manual Setup\n\nFollow the [manual setup guide](https://docs.documenso.com/docs/developers/local-development/manual) to configure Documenso on your local machine.\n\n### Run in Gitpod\n\n- Click below to launch a ready-to-use Gitpod workspace in your browser.\n\n[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/documenso/documenso)\n\n### Run in DevContainer\n\nWe support DevContainers for VSCode. [Click here to get started.](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/documenso/documenso)\n\n### Video walkthrough\n\nIf you're a visual learner and prefer to watch a video walkthrough of setting up Documenso locally, check out this video:\n\n[![Watch the video](https://img.youtube.com/vi/Y0ppIQrEnZs/hqdefault.jpg)](https://youtu.be/Y0ppIQrEnZs)\n\n## Docker\n\nWe provide official Docker images on [DockerHub](https://hub.docker.com/r/documenso/documenso) and [GitHub Container Registry](https://ghcr.io/documenso/documenso).\n\nFor setup instructions, see the [Docker Deployment](https://docs.documenso.com/docs/self-hosting/deployment/docker) and [Docker Compose](https://docs.documenso.com/docs/self-hosting/deployment/docker-compose) guides.\n\n## Self Hosting\n\nWe support a variety of deployment methods including Docker, Docker Compose, Railway, Kubernetes, and manual deployment.\n\nFor full instructions, requirements, and configuration details, see the [Self Hosting documentation](https://docs.documenso.com/docs/self-hosting).\n\n### One-Click Deploys\n\n> [!NOTE]\n> Want to see another provider listed here? Please [open a provider request](https://github.com/documenso/documenso/issues/new?template=deploy-provider-request.yml) instead of a PR so the community can signal interest. PRs adding deploy badges without a prior issue will be closed.\n\n<table>\n  <tr>\n    <td align=\"center\" width=\"200\">\n      <a href=\"https://railway.com/deploy/DjrRRX?referralCode=EZR3s0&utm_medium=integration&utm_source=template&utm_campaign=generic\">\n        <img src=\"https://railway.com/button.svg\" alt=\"Deploy on Railway\" height=\"40\" />\n      </a>\n    </td>\n    <td align=\"center\" width=\"200\">\n      <a href=\"https://render.com/deploy?repo=https://github.com/documenso/documenso\">\n        <img src=\"https://render.com/images/deploy-to-render-button.svg\" alt=\"Deploy to Render\" height=\"40\" />\n      </a>\n    </td>\n    <td align=\"center\" width=\"200\">\n      <a href=\"https://app.koyeb.com/deploy?type=git&repository=github.com/documenso/documenso&branch=main&name=documenso-app&builder=dockerfile&dockerfile=/docker/Dockerfile\">\n        <img src=\"https://www.koyeb.com/static/images/deploy/button.svg\" alt=\"Deploy to Koyeb\" height=\"40\" />\n      </a>\n    </td>\n  </tr>\n  <tr>\n    <td align=\"center\" width=\"200\">\n      <a href=\"https://elest.io/open-source/documenso\">\n        <img src=\"https://elest.io/images/logos/deploy-to-elestio-btn.png\" alt=\"Deploy on Elestio\" height=\"40\" />\n      </a>\n    </td>\n    <td align=\"center\" width=\"200\"></td>\n    <td align=\"center\" width=\"200\"></td>\n  </tr>\n</table>\n\n## Security\n\nIf you believe you have found a security vulnerability in Documenso, please report it through our [Security Policy](https://github.com/documenso/documenso/security/policy). We prioritize private reports via [GitHub Security Advisories](https://github.com/documenso/documenso/security/advisories/new). See [SECURITY.md](./SECURITY.md) for scope and details.\n\n## Troubleshooting\n\nFor troubleshooting self-hosted deployments, see the [Troubleshooting guide](https://docs.documenso.com/docs/self-hosting/maintenance/troubleshooting) and [Tips & Common Pitfalls](https://docs.documenso.com/docs/self-hosting/getting-started/tips).\n\n### I'm not receiving any emails when using the developer quickstart.\n\nWhen using the developer quickstart, an [Inbucket](https://inbucket.org/) server will be spun up in a docker container that will store all outgoing emails locally for you to view.\n\nThe Web UI can be found at http://localhost:9000, while the SMTP port will be on localhost:2500.\n\n### I can't see environment variables in my package scripts.\n\nWrap your package script with the `with:env` script like such:\n\n```\nnpm run with:env -- npm run myscript\n```\n\nThe same can be done when using `npx` for one of the bin scripts:\n\n```\nnpm run with:env -- npx myscript\n```\n\nThis will load environment variables from your `.env` and `.env.local` files.\n\n## Repo Activity\n\n![Repository Activity](https://repobeats.axiom.co/api/embed/622a2e9aa709696f7226304b5b7178a5741b3868.svg)\n",
+      "sourceSha256": "5d26fe9a49507c3937d1a7950e0c4e620b1db08c741f8a36b98a83c90529e87b",
+      "frozen": {
+        "candidates": [
+          {
+            "id": "C000",
+            "start": 6204,
+            "end": 6210
+          },
+          {
+            "id": "C001",
+            "start": 6235,
+            "end": 6243
+          }
+        ],
+        "rejected": []
+      },
+      "gold": [
+        {
+          "id": "C000",
+          "kind": "external_service",
+          "constraint": "positive",
+          "field": "external_integrations"
+        },
+        {
+          "id": "C001",
+          "kind": "role_description",
+          "constraint": "not_external",
+          "field": "features"
+        }
+      ]
+    },
+    {
+      "id": "renamed-dash",
+      "document": "Atlas adopts this external service: Aurapay — Payment processing. Customers can pay for orders.",
+      "sourceSha256": "4e41ccd831a9edb554e6b2eb443241587691422e31d3ec8f892f2b11f6b10208",
+      "frozen": {
+        "candidates": [
+          {
+            "id": "C000",
+            "start": 36,
+            "end": 43
+          },
+          {
+            "id": "C001",
+            "start": 46,
+            "end": 64
+          },
+          {
+            "id": "C002",
+            "start": 80,
+            "end": 94
+          }
+        ],
+        "rejected": []
+      },
+      "gold": [
+        {
+          "id": "C000",
+          "kind": "external_service",
+          "constraint": "positive",
+          "field": "external_integrations"
+        },
+        {
+          "id": "C001",
+          "kind": "role_description",
+          "constraint": "not_external",
+          "field": "features"
+        },
+        {
+          "id": "C002",
+          "kind": "product_operation",
+          "constraint": "positive",
+          "field": "features"
+        }
+      ]
+    },
+    {
+      "id": "reversed-relation",
+      "document": "Payment processing: provided by our adopted external service Meridia. Customers can complete checkout.",
+      "sourceSha256": "bd2c03f446d5a9c13fd5d5f0afaca5599df3e1533744646e9454fa150a8b65b8",
+      "frozen": {
+        "candidates": [
+          {
+            "id": "C000",
+            "start": 0,
+            "end": 18
+          },
+          {
+            "id": "C001",
+            "start": 61,
+            "end": 68
+          },
+          {
+            "id": "C002",
+            "start": 84,
+            "end": 101
+          }
+        ],
+        "rejected": []
+      },
+      "gold": [
+        {
+          "id": "C000",
+          "kind": "role_description",
+          "constraint": "not_external",
+          "field": "features"
+        },
+        {
+          "id": "C001",
+          "kind": "external_service",
+          "constraint": "positive",
+          "field": "external_integrations"
+        },
+        {
+          "id": "C002",
+          "kind": "product_operation",
+          "constraint": "positive",
+          "field": "features"
+        }
+      ]
+    },
+    {
+      "id": "korean-order",
+      "document": "사용자는 주문 대금을 결제한다. 채택하여 연동한 외부 서비스는 토스페이먼츠다. 서비스 용도: 결제 처리.",
+      "sourceSha256": "613467b63014f521acadeb5db0bada4574e603b605e794373ba45339f4389987",
+      "frozen": {
+        "candidates": [
+          {
+            "id": "C000",
+            "start": 5,
+            "end": 16
+          },
+          {
+            "id": "C001",
+            "start": 35,
+            "end": 41
+          },
+          {
+            "id": "C002",
+            "start": 52,
+            "end": 57
+          }
+        ],
+        "rejected": []
+      },
+      "gold": [
+        {
+          "id": "C000",
+          "kind": "product_operation",
+          "constraint": "positive",
+          "field": "features"
+        },
+        {
+          "id": "C001",
+          "kind": "external_service",
+          "constraint": "positive",
+          "field": "external_integrations"
+        },
+        {
+          "id": "C002",
+          "kind": "role_description",
+          "constraint": "not_external",
+          "field": "features"
+        }
+      ]
+    },
+    {
+      "id": "common-word-service",
+      "document": "Our adopted external service is named Payments. Its role is billing. Users can download invoices.",
+      "sourceSha256": "46d29eb9422b6c8ef82747a7b8958f804cdc1f6628c9fdbb215db7202a9e3961",
+      "frozen": {
+        "candidates": [
+          {
+            "id": "C000",
+            "start": 38,
+            "end": 46
+          },
+          {
+            "id": "C001",
+            "start": 60,
+            "end": 67
+          },
+          {
+            "id": "C002",
+            "start": 79,
+            "end": 96
+          }
+        ],
+        "rejected": []
+      },
+      "gold": [
+        {
+          "id": "C000",
+          "kind": "external_service",
+          "constraint": "positive",
+          "field": "external_integrations"
+        },
+        {
+          "id": "C001",
+          "kind": "role_description",
+          "constraint": "not_external",
+          "field": "features"
+        },
+        {
+          "id": "C002",
+          "kind": "product_operation",
+          "constraint": "positive",
+          "field": "features"
+        }
+      ]
+    },
+    {
+      "id": "normal-and-unclear",
+      "document": "Selected external provider: Stripe. The checkout feature lets users pay for orders. Our notes mention Relay with no stated role. Simple and seamless is a tagline, not a service name or operation.",
+      "sourceSha256": "e80ad727e5707c269903a271a450ade8f6eb511a43d9ccb829cc11fc99443979",
+      "frozen": {
+        "candidates": [
+          {
+            "id": "C000",
+            "start": 28,
+            "end": 34
+          },
+          {
+            "id": "C001",
+            "start": 68,
+            "end": 82
+          },
+          {
+            "id": "C002",
+            "start": 102,
+            "end": 107
+          },
+          {
+            "id": "C003",
+            "start": 129,
+            "end": 148
+          }
+        ],
+        "rejected": []
+      },
+      "gold": [
+        {
+          "id": "C000",
+          "kind": "external_service",
+          "constraint": "positive",
+          "field": "external_integrations"
+        },
+        {
+          "id": "C001",
+          "kind": "product_operation",
+          "constraint": "positive",
+          "field": "features"
+        },
+        {
+          "id": "C002",
+          "kind": "unclear",
+          "constraint": "hold",
+          "field": "other"
+        },
+        {
+          "id": "C003",
+          "kind": "description",
+          "constraint": "not_confirmed",
+          "field": "other"
+        }
+      ]
+    }
+  ]
+}
