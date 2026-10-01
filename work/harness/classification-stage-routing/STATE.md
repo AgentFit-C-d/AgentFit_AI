@@ -21,3 +21,6 @@
 - 실제 extract_document 로컬probe 8수락/2거절(05 PDF_PARTIAL_TEXT,08 INVALID_DOCUMENT_KIND). 06은수락해도DB도식/UI이미지내용누락. PDF빈페이지검사만으로혼합이미지완전성을보장하지못함을확인. DOCX377문단13표9그림;LibreOffice runtime/PATH없어페이지렌더미실행. 07은합본중완결초기기획서 원본10-18쪽 선택,성능결과로선별아님.
 - 새기획서임시gold준비가능6개(01-04/09/10),05-08변환검수추가필요. 56afcc8 specs/Docs/work의repo명·SHA검색일치0;의미중복/사전학습노출부재는미확인. 보고서 Docs/evaluation/planning-source-inspection-20261001.json·md. 원문/PII/렌더링은Git제외. 이번turn progress(종료평가확정·입력누락재현·새자료개인정보제거),전체목표active.
 - 다음: 변경자료검증·commit/push후 새문서변환·정답/사람검토자료준비. 입력이미지누락의일반해결과GLM전송관측은별도SDD설계로진행. 모델호출전새freeze·무료확인만료검사필수. 기존골드/조건/서비스기본변경0,Spring/운영미검증유지.
+- 검수/비교 결과203ed11b6e8113391e3ccc7951ef4e6672ef7322 push완료. verify_inspection_artifacts.py:원문10/검토문매핑10/이전JSON174/gold원본hash일치,새API0. CI36811826870 확인중(직접조회3success/통합runtime1running). 추적작업트리변경0,기존.superpowers/보존.
+- 후속변환조사: docling_structured_trial._standard_converter는do_ocr=False. 실제기존E:/AgentFit/tmp/grounding-venv에docling/rapidocr/torch있고onnxruntime/easyocr없음. 설치된pipeline_options.py 및rapidocr/default_models.yaml에한국어옵션/모델정보있으나모델가중치다운로드·실제OCR실행0. 새코드/설정변경0;별도SDD로한국어OCR의원문/표대응부터검증할수있음.
+- CI36811826870는gh run watch --exit-status로completed/success 및exit0확인. 남은실행모델세션0,CI관측세션0. 후속문서변경은조사환경/CI상태기록뿐이며제품코드없음. 목표active,다음새작업에서현재Git상태확인후로컬OCR변환·독립정답준비를이어간다.

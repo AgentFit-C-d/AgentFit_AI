@@ -43,4 +43,6 @@
 2. PDF 추출 성공과 내용 완전성을 구분하는 일반 규칙을 별도 SDD 작업으로 검토한다. 이미지를 모두 오류로 처리하는 방식은 로고·장식 이미지까지 막으므로 근거 없이 도입하지 않는다.
 3. GLM 시간 초과는 별도 전송 단계 관측으로 원인을 구분한다. 새 문서 평가를 시간 초과 재현 실험에 사용하지 않는다.
 
+기존 선택형 `docling_structured_trial._standard_converter()`도 `do_ocr=False`로 구성되어 있다. 현재 Docling 경로가 이미지 속 글자까지 복구한다고 볼 수 없다. 기존 실험 환경 `E:/AgentFit/tmp/grounding-venv`에는 Docling·RapidOCR·Torch가 있으며, 분석 서비스 venv에는 Docling이 없다. 설치된 옵션/모델 목록에서 한국어용 RapidOCR 구성을 확인했지만 실제 한국어 OCR 실행·모델 파일 준비는 아직 하지 않았다. 서비스 환경 변경 없이 별도 로컬 변환 실험부터 검증할 수 있다.
+
 실행 근거: `planning-source-inspection-20261001.json`. 로컬 상세 결과는 `E:/AgentFit/output/planning-corpus-candidates-v1/inspection-v1/`에 보존했다.
