@@ -10,6 +10,7 @@ from .profile import ARRAY_FIELDS, FIELDS, MAX_ARRAY_ITEMS, MAX_TEXT_CODE_POINTS
 from .profile import validate_profile
 from .solar import AnalysisError, SolarAnalyzer, post_solar
 from .source_name_expressions import source_name_expression
+from .database_names import database_identity, complete_database_mention
 from .candidate_field_semantics import field_semantics_instructions
 
 
@@ -330,6 +331,13 @@ def project_candidate_profile(document: str, document_id: str,
                 break
             unique.setdefault(value, []).append(span)
         else:
+            if (field == 'database' and len(unique) > 1 and
+                    len({database_identity(value) for value in unique}) == 1 and
+                    all(complete_database_mention(document, span) for _, span in entries)):
+                # Keep a source-exact value/evidence pair; all candidate records survive.
+                representative = min(unique, key=lambda value: min(
+                    (span['start'], -span['end']) for span in unique[value]))
+                unique = {representative: unique[representative]}
             if field == 'project_name' and len(unique) > 1:
                 expression = source_name_expression(document, entries)
                 # Preserve the written expression for confirmation, not automatic resolution.

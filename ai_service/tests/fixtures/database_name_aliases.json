@@ -1,0 +1,80 @@
+{
+  "origin": {
+    "document": {
+      "path": "E:\\AgentFit\\output\\semantic-role-service-path-v1\\documenso.md",
+      "sha256": "5d26fe9a49507c3937d1a7950e0c4e620b1db08c741f8a36b98a83c90529e87b"
+    },
+    "trace": {
+      "path": "E:\\AgentFit\\output\\semantic-role-service-path-v1\\live-documenso-before\\trace.json",
+      "sha256": "16a4f4d4edb5a22060fe650e7fa6501f9d665833946dcbe9c7cbba6c177b6ea6"
+    },
+    "response": {
+      "path": "E:\\AgentFit\\output\\semantic-role-service-path-v1\\live-documenso-before\\response.json",
+      "sha256": "a50af5ce396d22fea5d5ab202b4e5b2aabf194f4f4e1dc7c2cc7c7a8d589cdfe"
+    },
+    "baseline": {
+      "path": "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\ai_service\\agentfit_ai\\candidate_first_profile.py",
+      "sha256": "3a63f2a3b7db005184981851914b1b2ba5ece45af6f19cbfaa067f934ca1af58"
+    }
+  },
+  "originalCandidates": [
+    {
+      "candidate": {
+        "id": "C064",
+        "start": 6582,
+        "end": 6603
+      },
+      "label": {
+        "id": "C064",
+        "field": "database",
+        "status": "confirmed"
+      },
+      "lineStart": 6580,
+      "lineEnd": 6603
+    },
+    {
+      "candidate": {
+        "id": "C083",
+        "start": 7474,
+        "end": 7491
+      },
+      "label": {
+        "id": "C083",
+        "field": "database",
+        "status": "confirmed"
+      },
+      "lineStart": 7449,
+      "lineEnd": 7538
+    }
+  ],
+  "document": "- Postgres SQL Database\n   - This will spin up a postgres database and inbucket mailserver in a docker container.\n",
+  "documentId": "saved-documenso-database",
+  "frozen": {
+    "candidates": [
+      {
+        "id": "C064",
+        "start": 2,
+        "end": 23
+      },
+      {
+        "id": "C083",
+        "start": 49,
+        "end": 66
+      }
+    ],
+    "rejected": []
+  },
+  "labels": [
+    {
+      "id": "C064",
+      "field": "database",
+      "status": "confirmed"
+    },
+    {
+      "id": "C083",
+      "field": "database",
+      "status": "confirmed"
+    }
+  ],
+  "expectedValue": "Postgres SQL Database"
+}
