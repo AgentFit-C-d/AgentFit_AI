@@ -1,0 +1,144 @@
+{
+  "version": "local-ocr-synthetic-audit-v1",
+  "cases": [
+    {
+      "id": "image-only",
+      "conversion_status": "success",
+      "seconds": 13.048,
+      "api_calls": 0,
+      "blocked_network_attempts": 0,
+      "strict_adapter_status": "accepted",
+      "expected_rows": [
+        [
+          "로그인",
+          "확정",
+          "FastAPI"
+        ],
+        [
+          "결제",
+          "도입하지 않음",
+          "Stripe"
+        ],
+        [
+          "검색",
+          "검토 중",
+          "PostgreSQL"
+        ]
+      ],
+      "actual_rows": [
+        [
+          "기능",
+          "내유",
+          "기술"
+        ],
+        [
+          "로그인",
+          "외후",
+          "FastAP!"
+        ],
+        [
+          "곁제",
+          "",
+          "Stripe"
+        ],
+        [
+          "",
+          "검토중",
+          "PostgresQL"
+        ]
+      ],
+      "rows_matched_ignoring_whitespace": 0,
+      "rows_expected": 3,
+      "repeat_exact_count": 0,
+      "repeat_whitespace_normalized_count": 0,
+      "repeat_punctuation_normalized_diagnostic_count": 2,
+      "repeat_expected": 2,
+      "native_default_export_found": [],
+      "native_all_layers_export_found": [],
+      "native_source_items": [],
+      "provenance_page_bbox_valid": true,
+      "negation_present": false,
+      "worker_result_sha256": "2d2dc607bfa9a719c0f4fc72c37cccf33b78f2fed36b6be71ebf9aaa6ac6d534",
+      "document_sha256": "544b9dbfae2c4a9ff793df2795a65e32076fc759b6ea027c37d2c35db35af57f",
+      "quality_passed": false
+    },
+    {
+      "id": "mixed",
+      "conversion_status": "success",
+      "seconds": 13.111,
+      "api_calls": 0,
+      "blocked_network_attempts": 0,
+      "strict_adapter_status": "accepted",
+      "expected_rows": [
+        [
+          "로그인",
+          "확정",
+          "FastAPI"
+        ],
+        [
+          "결제",
+          "도입하지 않음",
+          "Stripe"
+        ],
+        [
+          "검색",
+          "검토 중",
+          "PostgreSQL"
+        ]
+      ],
+      "actual_rows": [
+        [
+          "기능",
+          "내유",
+          "기술"
+        ],
+        [
+          "로그인",
+          "외후",
+          "FastAP!"
+        ],
+        [
+          "곁제",
+          "",
+          "Stripe"
+        ],
+        [
+          "",
+          "검토중",
+          "PostgresQL"
+        ]
+      ],
+      "rows_matched_ignoring_whitespace": 0,
+      "rows_expected": 3,
+      "repeat_exact_count": 0,
+      "repeat_whitespace_normalized_count": 0,
+      "repeat_punctuation_normalized_diagnostic_count": 2,
+      "repeat_expected": 2,
+      "native_default_export_found": [
+        false
+      ],
+      "native_all_layers_export_found": [
+        true
+      ],
+      "native_source_items": [
+        {
+          "label": "page_header",
+          "layer": "furniture"
+        }
+      ],
+      "provenance_page_bbox_valid": true,
+      "negation_present": false,
+      "worker_result_sha256": "20e0808875a8cf597f7b048ff03d34241e72f65f98f1a5692b42d44099cc06a1",
+      "document_sha256": "eed102dd7d0f85d80a78184d77abcf99d950f403ded8d605b3105460a1ef4437",
+      "quality_passed": false
+    }
+  ],
+  "passed": 0,
+  "total": 2,
+  "real_document_ocr_allowed": false,
+  "model_evaluation_allowed": false,
+  "human_reviewed": false,
+  "auditor_sha256": "c0763c1dc405e9e8472d750142f02119c82a6269f1a90f40e5efdd035f2cacfa",
+  "expected_sha256": "2065a3de66153ce99766b6017a314d55dcf1caa9add44e7049c31033532a3cf4",
+  "note": "All-layers export is a cached diagnostic; original output and acceptance criteria unchanged."
+}

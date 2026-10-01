@@ -1,0 +1,23 @@
+{
+  "source_id": "PLAN-CANDIDATE-08",
+  "source_sha256": "f67fec24c6672dc819f75dbee00406d999da735d6f20c480186f2366824c56cf",
+  "text_nodes": 621,
+  "tables": 13,
+  "images": 9,
+  "media": 9,
+  "parts": [
+    "word/document.xml",
+    "word/footer1.xml",
+    "word/header1.xml"
+  ],
+  "all_text_nodes_in_order": true,
+  "all_image_relationships_resolved": true,
+  "all_tables_preserved": true,
+  "seconds": 0.047,
+  "api_calls": 0,
+  "model_evaluation_allowed": false,
+  "human_reviewed": false,
+  "image_ocr_run": false,
+  "page_layout_rendered": false,
+  "script_sha256": "11205ab852b81684b705359033b8ce6e96c202ef48c527b8f0eb63553399346b"
+}
