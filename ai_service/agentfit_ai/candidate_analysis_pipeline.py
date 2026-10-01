@@ -10,6 +10,7 @@ from .candidate_first_profile import (
     freeze_candidate_occurrences,
 )
 from .candidate_feature_curation import curate_reviewed_features
+from .candidate_field_review import review_candidates_by_field
 from .capability_candidates import extract_capability_candidates
 from .candidate_split_review import review_candidates_separately
 from .deepseek_evaluation import MODEL, NVIDIA_REVIEW_MODELS
@@ -47,7 +48,7 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
                                   extractor=None, solar_transport=None, nvidia_transport=None,
                                   observer=None, call_trace=None, review_calls=None,
                                   max_calls=64, nvidia_retry_limit=1, candidate_model=None,
-                                  capability_candidates=False):
+                                  capability_candidates=False, field_local_review=False):
     """Run fresh extraction through reviewed projection with one provider-call budget.
 
     Injected extractors are trusted callbacks. Only the default LangExtract adapter's
@@ -71,7 +72,7 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
                 for collector in (call_trace, review_calls)) or
             type(max_calls) is not int or not 1 <= max_calls <= 64 or
             type(nvidia_retry_limit) is not int or nvidia_retry_limit not in (0, 1) or
-            type(capability_candidates) is not bool):
+            type(capability_candidates) is not bool or type(field_local_review) is not bool):
         raise ValueError('invalid integrated analysis options')
 
     candidate_key = nvidia_key if nvidia_only else solar_key
@@ -181,10 +182,12 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
         document, frozen, candidate_key, transport=candidate_send, field_semantics='explicit-v1',
         **candidate_options))
     observe('classified', {'frozen': frozen, 'labels': labels})
-    review = run('COVERAGE_REVIEW_FAILED', lambda: review_candidates_separately(
+    reviewer = review_candidates_by_field if field_local_review else review_candidates_separately
+    review_options = {} if field_local_review else {
+        'reasoned_review': True, 'adaptive_review': False, 'field_semantics': 'explicit-v1'}
+    review = run('COVERAGE_REVIEW_FAILED', lambda: reviewer(
         document, frozen, labels, nvidia_key, transport=nvidia_send,
-        review_model=review_model, reasoned_review=True, adaptive_review=False,
-        field_semantics='explicit-v1', review_calls=review_calls))
+        review_model=review_model, review_calls=review_calls, **review_options))
     safe_labels = run('COVERAGE_REVIEW_FAILED', lambda: apply_candidate_review(frozen, labels, review))
     curation = run('FEATURE_CURATION_FAILED', lambda: curate_reviewed_features(
         document, frozen, safe_labels, nvidia_key, model=feature_model, transport=nvidia_send))
@@ -196,7 +199,8 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
 def analyze_nvidia_candidates(document, document_id, nvidia_key, *,
                               candidate_model=MODEL, review_model='z-ai/glm-5.3', feature_model=MODEL,
                               nvidia_transport=None, observer=None, call_trace=None,
-                              review_calls=None, max_calls=64, capability_candidates=False):
+                              review_calls=None, max_calls=64, capability_candidates=False,
+                              field_local_review=False):
     """Opt-in NVIDIA-only variant; no retries, fallback, or account/billing guarantee.
 
     Callers own the total process deadline and must establish permission and free
@@ -209,4 +213,5 @@ def analyze_nvidia_candidates(document, document_id, nvidia_key, *,
         review_model=review_model, feature_model=feature_model,
         nvidia_transport=nvidia_transport, observer=observer,
         call_trace=call_trace, review_calls=review_calls, max_calls=max_calls,
-        nvidia_retry_limit=0, capability_candidates=capability_candidates)
+        nvidia_retry_limit=0, capability_candidates=capability_candidates,
+        field_local_review=field_local_review)
