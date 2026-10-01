@@ -18,3 +18,6 @@ Ruling: GLM 비교는 모델별 기존adapter설정까지 포함해 해석한다
 - 8e2962f961198aaff7f65253e0b23895ed69f0b1의 CI36797418498 네 작업 success 직접확인. 이후 state만변경, 제품코드/평가기동결유지. session91923 마지막40초poll도live/신규출력0. 이번목표턴 progress: 실제48호출진단·감사·push·CI완료와 GLM비교개시. 목표완료아님, 다음턴같은handle계속조회.
 - 다음 재개: 직전 목표턴은progress. session91923을 재조회해live확인, 아직PUBLIC-01 결과없음. Win32_Process로 부모/자식46360과 제공자worker31196(00:52:08Z생성)을 확인했다. stream transport는별도worker를호출하므로 모델요청프로세스가새로생성된관측이며, 완료호출수/품질은아직미확인. 처음TCP검사는review부모에대한조회여서연결없음만으로호출중단을추정하지않는다. stdinpoll/파일/프로세스관측은호출재시작0이다.
 - Docs/ai-profile-field-interpretation-review.md 작성, 사용자에게 기술목록의명시기능/지원Docker배포/ORMbackend범위를 질문했다. 답변대기; 전체gold사람검토와구분,기존gold/현재실험수정0. 질문은평가의모호한기준을분리하려는것이며독립작업은계속한다.
+- 직전 goal turn verified wait(session91923 live), 이번턴 progress: GLM PUBLIC-01 완료19calls/1561.002627s. 기능4/4·Docker2/2유지,비기능2/2제외. 실제다른필드정확도/전체완료는아님. 나머지PUBLIC-07/SYNTHETIC실행중이며동일session91923마지막poll live. source/code/model/helper변경0.
+- 기존finalizer사후외부0변환에서DeepSeekfeatures0→GLM4를확인,둘다needs_confirmation. deployment/database는null,여러배포방식에대한단일값계약이있는점기록. projection-public01.json과glm-partial-result.md저장. URL내부표현·중복과필드기준은사람확인/추가검토남음.
+- 독립로컬timeout_probe.py:3초자식/1초timeout,부모1.023초timeout/4초시점marker없음. 외부0,현재평가에신호0,문제재현안됨. 현재child정리기능변경불필요. GLM에600초단위worker가생성되는것을확인했고중복실행0.
