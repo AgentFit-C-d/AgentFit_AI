@@ -1,0 +1,60 @@
+{
+  "version": "classification-instructions-draft-v1",
+  "acquired_at_utc": "2026-10-01T13:29:59.162602+00:00",
+  "documents": [
+    {
+      "id": "FR",
+      "repo": "yang991178/fluent-reader",
+      "commit": "58139987094f05a6f5a662070606d17635ff188e",
+      "source_url": "https://github.com/yang991178/fluent-reader/blob/58139987094f05a6f5a662070606d17635ff188e/README.md",
+      "files": {
+        "README.md": {
+          "file": "sources/FR-README.md",
+          "sha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+          "bytes": 3612,
+          "characters": 3612,
+          "lines": 84,
+          "url": "https://raw.githubusercontent.com/yang991178/fluent-reader/58139987094f05a6f5a662070606d17635ff188e/README.md"
+        },
+        "LICENSE": {
+          "file": "sources/FR-LICENSE",
+          "sha256": "f3fc28705671a44a2a8293d101a51107f9ca2884da1e29fb92e0f8899490fa6c",
+          "bytes": 1519,
+          "characters": 1519,
+          "lines": 29,
+          "url": "https://raw.githubusercontent.com/yang991178/fluent-reader/58139987094f05a6f5a662070606d17635ff188e/LICENSE"
+        }
+      },
+      "new_model_calls": 0,
+      "human_gold_reviewed": false,
+      "prior_use_search": "No matches for repo/product names in tracked worktree specs and work/harness; no claim about private history or pretraining."
+    },
+    {
+      "id": "LS",
+      "repo": "localsend/localsend",
+      "commit": "c5bbe3630bb50e0de8253502b41523c4a58825bb",
+      "source_url": "https://github.com/localsend/localsend/blob/c5bbe3630bb50e0de8253502b41523c4a58825bb/README.md",
+      "files": {
+        "README.md": {
+          "file": "sources/LS-README.md",
+          "sha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+          "bytes": 14291,
+          "characters": 14279,
+          "lines": 305,
+          "url": "https://raw.githubusercontent.com/localsend/localsend/c5bbe3630bb50e0de8253502b41523c4a58825bb/README.md"
+        },
+        "LICENSE": {
+          "file": "sources/LS-LICENSE",
+          "sha256": "38514afa30358fc21ef37551f3119b27d820427ece3c6f0ae014c7e47338c087",
+          "bytes": 11346,
+          "characters": 11346,
+          "lines": 201,
+          "url": "https://raw.githubusercontent.com/localsend/localsend/c5bbe3630bb50e0de8253502b41523c4a58825bb/LICENSE"
+        }
+      },
+      "new_model_calls": 0,
+      "human_gold_reviewed": false,
+      "prior_use_search": "No matches for repo/product names in tracked worktree specs and work/harness; no claim about private history or pretraining."
+    }
+  ]
+}

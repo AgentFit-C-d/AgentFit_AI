@@ -1,0 +1,812 @@
+{
+  "version": "classification-instructions-gold-draft-v1",
+  "status": "awaiting_human_review",
+  "new_model_calls": 0,
+  "authoring": "Manually selected diagnostic occurrences; no extraction model used; not an exhaustive document gold.",
+  "cases": [
+    {
+      "caseId": "FR01",
+      "docId": "FR",
+      "line": 15,
+      "quote": "Windows 10",
+      "category": "platform",
+      "expectedField": "other",
+      "expectedStatus": "irrelevant",
+      "expectedVerdict": "excluded",
+      "scored": true,
+      "reason": "설치 가능한 클라이언트 OS. 제품의 외부 서비스나 구현 기술을 뜻하지 않는다.",
+      "span": {
+        "start": 550,
+        "end": 560
+      },
+      "lineEnd": 15,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        15
+      ],
+      "candidateId": "C001",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:546:697"
+      ]
+    },
+    {
+      "caseId": "FR02",
+      "docId": "FR",
+      "line": 19,
+      "quote": "Linux",
+      "category": "platform",
+      "expectedField": "other",
+      "expectedStatus": "irrelevant",
+      "expectedVerdict": "excluded",
+      "scored": true,
+      "reason": "사용자 실행 OS. 지원 플랫폼을 배포 선택으로 바꾸지 않는다.",
+      "span": {
+        "start": 879,
+        "end": 884
+      },
+      "lineEnd": 19,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        19
+      ],
+      "candidateId": "C002",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:862:1021"
+      ]
+    },
+    {
+      "caseId": "FR03",
+      "docId": "FR",
+      "line": 31,
+      "quote": "A modern UI inspired by Fluent Design System",
+      "category": "quality",
+      "expectedField": "other",
+      "expectedStatus": "irrelevant",
+      "expectedVerdict": "excluded",
+      "scored": true,
+      "reason": "선택 범위는 외관·디자인 설명이며 뒤의 다크 모드 기능을 포함하지 않는다.",
+      "span": {
+        "start": 1287,
+        "end": 1331
+      },
+      "lineEnd": 31,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        31
+      ],
+      "candidateId": "C003",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1285:1361"
+      ]
+    },
+    {
+      "caseId": "FR04",
+      "docId": "FR",
+      "line": 31,
+      "quote": "full dark mode support",
+      "category": "feature",
+      "expectedField": "features",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "단순 미관 평가와 달리 구체적으로 제공되는 화면 모드. 같은 문장의 정상 기능 대조군.",
+      "span": {
+        "start": 1337,
+        "end": 1359
+      },
+      "lineEnd": 31,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        31
+      ],
+      "candidateId": "C004",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1285:1361"
+      ]
+    },
+    {
+      "caseId": "FR05",
+      "docId": "FR",
+      "line": 33,
+      "quote": "Inoreader",
+      "category": "integration",
+      "expectedField": "external_integrations",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "대상 리더가 실제 동기화를 지원하는 명명된 외부 서비스.",
+      "span": {
+        "start": 1489,
+        "end": 1498
+      },
+      "lineEnd": 33,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        33
+      ],
+      "candidateId": "C006",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1454:1550"
+      ]
+    },
+    {
+      "caseId": "FR06",
+      "docId": "FR",
+      "line": 33,
+      "quote": "Feedbin",
+      "category": "integration",
+      "expectedField": "external_integrations",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "이미 제공되는 선택형 서비스 연동. 모든 이용자의 필수 설정일 필요는 없다.",
+      "span": {
+        "start": 1500,
+        "end": 1507
+      },
+      "lineEnd": 33,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        33
+      ],
+      "candidateId": "C007",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1454:1550"
+      ]
+    },
+    {
+      "caseId": "FR07",
+      "docId": "FR",
+      "line": 32,
+      "quote": "Google Reader API",
+      "category": "protocol",
+      "expectedField": "other",
+      "expectedStatus": "irrelevant",
+      "expectedVerdict": "excluded",
+      "scored": true,
+      "reason": "여기서는 호환 API 규약이다. 특정 원격 서비스 제공자 이용을 뜻하지 않는다.",
+      "span": {
+        "start": 1435,
+        "end": 1452
+      },
+      "lineEnd": 32,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        32
+      ],
+      "candidateId": "C005",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1361:1454"
+      ]
+    },
+    {
+      "caseId": "FR08",
+      "docId": "FR",
+      "line": 34,
+      "quote": "Importing or exporting OPML files",
+      "category": "feature",
+      "expectedField": "features",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "문서에 명시된 파일 가져오기·내보내기 동작. 형식명과 전체 동작을 구별한다.",
+      "span": {
+        "start": 1552,
+        "end": 1585
+      },
+      "lineEnd": 34,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        34
+      ],
+      "candidateId": "C008",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1550:1631"
+      ]
+    },
+    {
+      "caseId": "FR09",
+      "docId": "FR",
+      "line": 36,
+      "quote": "Search for articles with regular expressions or filter by read status",
+      "category": "feature",
+      "expectedField": "features",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "검색·필터링이라는 사용자 동작이 구체적으로 명시됐다.",
+      "span": {
+        "start": 1717,
+        "end": 1786
+      },
+      "lineEnd": 36,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        36
+      ],
+      "candidateId": "C009",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1715:1788"
+      ]
+    },
+    {
+      "caseId": "FR10",
+      "docId": "FR",
+      "line": 37,
+      "quote": "Organize your subscriptions with folder-like groupings",
+      "category": "feature",
+      "expectedField": "features",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "폴더 형태의 구독 정리 기능. linkding의 태그 정리와 별도 표현인 정상 대조군.",
+      "span": {
+        "start": 1790,
+        "end": 1844
+      },
+      "lineEnd": 37,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        37
+      ],
+      "candidateId": "C010",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1788:1846"
+      ]
+    },
+    {
+      "caseId": "FR11",
+      "docId": "FR",
+      "line": 39,
+      "quote": "Hide, mark as read, or star articles automatically as they arrive with regular expression rules",
+      "category": "feature",
+      "expectedField": "features",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "규칙에 따른 자동 상태 변경. 사용자 클릭이 없어도 제품 기능이다.",
+      "span": {
+        "start": 1960,
+        "end": 2055
+      },
+      "lineEnd": 39,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        39
+      ],
+      "candidateId": "C011",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1958:2057"
+      ]
+    },
+    {
+      "caseId": "FR12",
+      "docId": "FR",
+      "line": 40,
+      "quote": "Fetch articles in the background and send push notifications",
+      "category": "feature",
+      "expectedField": "features",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "백그라운드 수집·알림 동작. 원문에 없는 알림 제공자 이름은 추론하지 않는다.",
+      "span": {
+        "start": 2059,
+        "end": 2119
+      },
+      "lineEnd": 40,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        40
+      ],
+      "candidateId": "C012",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:2057:2121"
+      ]
+    },
+    {
+      "caseId": "FR13",
+      "docId": "FR",
+      "line": 53,
+      "quote": "Paypal",
+      "category": "non_runtime_service",
+      "expectedField": "other",
+      "expectedStatus": "irrelevant",
+      "expectedVerdict": "excluded",
+      "scored": true,
+      "reason": "개발 후원을 위한 기부 링크이며 대상 제품의 런타임 결제 연동이 아니다.",
+      "span": {
+        "start": 2876,
+        "end": 2882
+      },
+      "lineEnd": 53,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        53
+      ],
+      "candidateId": "C014",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:2731:2980"
+      ]
+    },
+    {
+      "caseId": "FR14",
+      "docId": "FR",
+      "line": 76,
+      "quote": "React",
+      "category": "stack",
+      "expectedField": "frontend",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "Developed with 문맥의 채택된 UI 구현 프레임워크.",
+      "span": {
+        "start": 3340,
+        "end": 3345
+      },
+      "lineEnd": 76,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        76
+      ],
+      "candidateId": "C015",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:3337:3382"
+      ]
+    },
+    {
+      "caseId": "FR15",
+      "docId": "FR",
+      "line": 5,
+      "quote": "desktop RSS reader",
+      "category": "product_form",
+      "expectedField": "project_type",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "현재 대상 제품의 명시적인 데스크톱 제공 형태. 인접한 modern 수식어 때문에 누락하면 안 된다.",
+      "span": {
+        "start": 198,
+        "end": 216
+      },
+      "lineEnd": 5,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        5
+      ],
+      "candidateId": "C000",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:171:221"
+      ]
+    },
+    {
+      "caseId": "FR16",
+      "docId": "FR",
+      "line": 42,
+      "quote": "Support for other RSS services",
+      "category": "human_review",
+      "expectedField": null,
+      "expectedStatus": "tentative",
+      "expectedVerdict": "needs_confirmation",
+      "scored": false,
+      "reason": "모금 중인 추가 지원이다. 구체적인 서비스가 없어서 features로 보존할지 other로 둘지는 사람 검토 필요. confirmed는 허용하지 않는 초안.",
+      "span": {
+        "start": 2122,
+        "end": 2152
+      },
+      "lineEnd": 42,
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "reviewContextLines": [
+        32,
+        33,
+        42
+      ],
+      "candidateId": "C013",
+      "localUnitIds": [
+        "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:2122:2234"
+      ]
+    },
+    {
+      "caseId": "LS01",
+      "docId": "LS",
+      "line": 104,
+      "quote": "Android",
+      "category": "platform",
+      "expectedField": "other",
+      "expectedStatus": "irrelevant",
+      "expectedVerdict": "excluded",
+      "scored": true,
+      "reason": "Compatibility 표의 현재 지원 OS. 같은 행의 과거 버전 지원 사실과도 구별한다.",
+      "span": {
+        "start": 5643,
+        "end": 5650
+      },
+      "lineEnd": 104,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        104
+      ],
+      "candidateId": "C007",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:5641:5798"
+      ]
+    },
+    {
+      "caseId": "LS02",
+      "docId": "LS",
+      "line": 107,
+      "quote": "Windows",
+      "category": "platform",
+      "expectedField": "other",
+      "expectedStatus": "irrelevant",
+      "expectedVerdict": "excluded",
+      "scored": true,
+      "reason": "호환 플랫폼의 현재 행 이름. 외부 서비스·배포 환경으로 확정하지 않는다.",
+      "span": {
+        "start": 6114,
+        "end": 6121
+      },
+      "lineEnd": 107,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        107
+      ],
+      "candidateId": "C008",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:6112:6197"
+      ]
+    },
+    {
+      "caseId": "LS03",
+      "docId": "LS",
+      "line": 46,
+      "quote": "fast and reliable",
+      "category": "quality",
+      "expectedField": "other",
+      "expectedStatus": "irrelevant",
+      "expectedVerdict": "excluded",
+      "scored": true,
+      "reason": "선택 범위는 속도·신뢰성 수식어만이다. 동작을 명시한 별도 후보와 구별한다.",
+      "span": {
+        "start": 1948,
+        "end": 1965
+      },
+      "lineEnd": 46,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        46
+      ],
+      "candidateId": "C004",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+      ]
+    },
+    {
+      "caseId": "LS04",
+      "docId": "LS",
+      "line": 23,
+      "quote": "securely share files and messages with nearby devices over your local network without needing an internet connection",
+      "category": "feature",
+      "expectedField": "features",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "보안 수식어가 있어도 파일·메시지 공유 동작은 명확하다. 인터넷 서비스 연동을 새로 만들지 않는다.",
+      "span": {
+        "start": 993,
+        "end": 1109
+      },
+      "lineEnd": 23,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        23
+      ],
+      "candidateId": "C001",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+      ]
+    },
+    {
+      "caseId": "LS05",
+      "docId": "LS",
+      "line": 46,
+      "quote": "REST API",
+      "category": "protocol",
+      "expectedField": "other",
+      "expectedStatus": "irrelevant",
+      "expectedVerdict": "excluded",
+      "scored": true,
+      "reason": "장치 간 통신 방식. 구체적인 외부 제공자가 아니다.",
+      "span": {
+        "start": 1773,
+        "end": 1781
+      },
+      "lineEnd": 46,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        46
+      ],
+      "candidateId": "C002",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+      ]
+    },
+    {
+      "caseId": "LS06",
+      "docId": "LS",
+      "line": 46,
+      "quote": "HTTPS",
+      "category": "protocol",
+      "expectedField": "other",
+      "expectedStatus": "irrelevant",
+      "expectedVerdict": "excluded",
+      "scored": true,
+      "reason": "선택 범위는 통신 프로토콜명 자체다. 서비스나 백엔드 프레임워크로 올리지 않는다.",
+      "span": {
+        "start": 1786,
+        "end": 1791
+      },
+      "lineEnd": 46,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        46
+      ],
+      "candidateId": "C003",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+      ]
+    },
+    {
+      "caseId": "LS07",
+      "docId": "LS",
+      "line": 64,
+      "quote": "auto-update",
+      "category": "negated_feature",
+      "expectedField": "features",
+      "expectedStatus": "negated",
+      "expectedVerdict": "excluded",
+      "scored": true,
+      "reason": "앱이 자동 업데이트를 제공하지 않는다고 명시한다. 다른 제품 문서의 업데이트를 옮겨오면 안 된다.",
+      "span": {
+        "start": 2720,
+        "end": 2731
+      },
+      "lineEnd": 64,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        64
+      ],
+      "candidateId": "C005",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2598:2733"
+      ]
+    },
+    {
+      "caseId": "LS08",
+      "docId": "LS",
+      "line": 130,
+      "quote": "The app will use this file to store settings instead of the default location",
+      "category": "feature",
+      "expectedField": "features",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "Portable Mode의 이미 제공되는 설정 저장 동작. will이 있어도 미정 계획으로 간주하지 않는다.",
+      "span": {
+        "start": 7360,
+        "end": 7436
+      },
+      "lineEnd": 130,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        130
+      ],
+      "candidateId": "C009",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7360:7438"
+      ]
+    },
+    {
+      "caseId": "LS09",
+      "docId": "LS",
+      "line": 136,
+      "quote": "start the app hidden (only in tray)",
+      "category": "feature",
+      "expectedField": "features",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "현재 제공되는 트레이 시작 모드. v1.14 이전 설정 설명과 현재 플래그를 구별한다.",
+      "span": {
+        "start": 7482,
+        "end": 7517
+      },
+      "lineEnd": 136,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        136
+      ],
+      "candidateId": "C010",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7479:7584"
+      ]
+    },
+    {
+      "caseId": "LS10",
+      "docId": "LS",
+      "line": 202,
+      "quote": "Weblate",
+      "category": "non_runtime_service",
+      "expectedField": "other",
+      "expectedStatus": "irrelevant",
+      "expectedVerdict": "excluded",
+      "scored": true,
+      "reason": "기여자의 번역 관리 도구이며 사용자 파일 공유 기능이 이용하는 외부 연동이 아니다.",
+      "span": {
+        "start": 10253,
+        "end": 10260
+      },
+      "lineEnd": 202,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        202
+      ],
+      "candidateId": "C015",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:10186:10346"
+      ]
+    },
+    {
+      "caseId": "LS11",
+      "docId": "LS",
+      "line": 68,
+      "quote": "Play Store",
+      "category": "distribution",
+      "expectedField": "other",
+      "expectedStatus": "irrelevant",
+      "expectedVerdict": "excluded",
+      "scored": true,
+      "reason": "Download 표의 배포처. 제품 런타임에서 그 서비스에 데이터를 보내는 근거가 아니다.",
+      "span": {
+        "start": 3052,
+        "end": 3062
+      },
+      "lineEnd": 68,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        68
+      ],
+      "candidateId": "C006",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2976:3097"
+      ]
+    },
+    {
+      "caseId": "LS12",
+      "docId": "LS",
+      "line": 181,
+      "quote": "To select the destination without an interactive device list, pass its exact alias\nor IP address",
+      "category": "feature",
+      "expectedField": "features",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "같은 README가 설명하는 공식 CLI의 수신자 지정 동작. GUI 버튼이 없어도 기능이다.",
+      "span": {
+        "start": 9441,
+        "end": 9537
+      },
+      "lineEnd": 182,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        181
+      ],
+      "candidateId": "C014",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9441:9524",
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9524:9539"
+      ]
+    },
+    {
+      "caseId": "LS13",
+      "docId": "LS",
+      "line": 154,
+      "quote": "Flutter",
+      "category": "stack",
+      "expectedField": "frontend",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "앱 빌드·실행 명령과 요구 버전으로 채택을 확인하는 UI 프레임워크. 설치라는 동작 자체를 기능으로 만들지는 않는다.",
+      "span": {
+        "start": 8259,
+        "end": 8266
+      },
+      "lineEnd": 154,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        154
+      ],
+      "candidateId": "C013",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8248:8364"
+      ]
+    },
+    {
+      "caseId": "LS14",
+      "docId": "LS",
+      "line": 142,
+      "quote": "maximum security",
+      "category": "quality",
+      "expectedField": "other",
+      "expectedStatus": "irrelevant",
+      "expectedVerdict": "excluded",
+      "scored": true,
+      "reason": "주변의 암호화 구현과 구별되는 품질 평가 표현 자체다.",
+      "span": {
+        "start": 7943,
+        "end": 7959
+      },
+      "lineEnd": 142,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        142
+      ],
+      "candidateId": "C012",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+      ]
+    },
+    {
+      "caseId": "LS15",
+      "docId": "LS",
+      "line": 142,
+      "quote": "All data is sent securely over HTTPS",
+      "category": "human_review",
+      "expectedField": "features",
+      "expectedStatus": "tentative",
+      "expectedVerdict": "needs_confirmation",
+      "scored": false,
+      "reason": "전체 데이터 암호화라는 절대 표현과 230행의 양쪽 장치 암호화 해제 안내가 공존한다. 기본 모드·옵션 관계인지 상충인지 사람 검토 필요. 주 정확도 점수 제외.",
+      "span": {
+        "start": 7828,
+        "end": 7864
+      },
+      "lineEnd": 142,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        142,
+        230
+      ],
+      "candidateId": "C011",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+      ]
+    },
+    {
+      "caseId": "LS16",
+      "docId": "LS",
+      "line": 23,
+      "quote": "LocalSend",
+      "category": "product_name",
+      "expectedField": "project_name",
+      "expectedStatus": "confirmed",
+      "expectedVerdict": "supported",
+      "scored": true,
+      "reason": "설명 본문이 명명하는 현재 대상 제품. 제목-only 근거 제약과 무관한 정상 이름 대조군.",
+      "span": {
+        "start": 937,
+        "end": 946
+      },
+      "lineEnd": 23,
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "reviewContextLines": [
+        23
+      ],
+      "candidateId": "C000",
+      "localUnitIds": [
+        "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+      ]
+    }
+  ]
+}

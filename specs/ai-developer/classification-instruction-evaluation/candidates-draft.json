@@ -1,0 +1,186 @@
+{
+  "version": "classification-instructions-candidates-draft-v1",
+  "status": "awaiting_human_review",
+  "documents": [
+    {
+      "docId": "FR",
+      "sourceFile": "sources/FR-README.md",
+      "sourceSha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "frozen": {
+        "candidates": [
+          {
+            "id": "C000",
+            "start": 198,
+            "end": 216
+          },
+          {
+            "id": "C001",
+            "start": 550,
+            "end": 560
+          },
+          {
+            "id": "C002",
+            "start": 879,
+            "end": 884
+          },
+          {
+            "id": "C003",
+            "start": 1287,
+            "end": 1331
+          },
+          {
+            "id": "C004",
+            "start": 1337,
+            "end": 1359
+          },
+          {
+            "id": "C005",
+            "start": 1435,
+            "end": 1452
+          },
+          {
+            "id": "C006",
+            "start": 1489,
+            "end": 1498
+          },
+          {
+            "id": "C007",
+            "start": 1500,
+            "end": 1507
+          },
+          {
+            "id": "C008",
+            "start": 1552,
+            "end": 1585
+          },
+          {
+            "id": "C009",
+            "start": 1717,
+            "end": 1786
+          },
+          {
+            "id": "C010",
+            "start": 1790,
+            "end": 1844
+          },
+          {
+            "id": "C011",
+            "start": 1960,
+            "end": 2055
+          },
+          {
+            "id": "C012",
+            "start": 2059,
+            "end": 2119
+          },
+          {
+            "id": "C013",
+            "start": 2122,
+            "end": 2152
+          },
+          {
+            "id": "C014",
+            "start": 2876,
+            "end": 2882
+          },
+          {
+            "id": "C015",
+            "start": 3340,
+            "end": 3345
+          }
+        ],
+        "rejected": []
+      }
+    },
+    {
+      "docId": "LS",
+      "sourceFile": "sources/LS-README.md",
+      "sourceSha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "frozen": {
+        "candidates": [
+          {
+            "id": "C000",
+            "start": 937,
+            "end": 946
+          },
+          {
+            "id": "C001",
+            "start": 993,
+            "end": 1109
+          },
+          {
+            "id": "C002",
+            "start": 1773,
+            "end": 1781
+          },
+          {
+            "id": "C003",
+            "start": 1786,
+            "end": 1791
+          },
+          {
+            "id": "C004",
+            "start": 1948,
+            "end": 1965
+          },
+          {
+            "id": "C005",
+            "start": 2720,
+            "end": 2731
+          },
+          {
+            "id": "C006",
+            "start": 3052,
+            "end": 3062
+          },
+          {
+            "id": "C007",
+            "start": 5643,
+            "end": 5650
+          },
+          {
+            "id": "C008",
+            "start": 6114,
+            "end": 6121
+          },
+          {
+            "id": "C009",
+            "start": 7360,
+            "end": 7436
+          },
+          {
+            "id": "C010",
+            "start": 7482,
+            "end": 7517
+          },
+          {
+            "id": "C011",
+            "start": 7828,
+            "end": 7864
+          },
+          {
+            "id": "C012",
+            "start": 7943,
+            "end": 7959
+          },
+          {
+            "id": "C013",
+            "start": 8259,
+            "end": 8266
+          },
+          {
+            "id": "C014",
+            "start": 9441,
+            "end": 9537
+          },
+          {
+            "id": "C015",
+            "start": 10253,
+            "end": 10260
+          }
+        ],
+        "rejected": []
+      }
+    }
+  ]
+}

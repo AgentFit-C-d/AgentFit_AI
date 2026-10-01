@@ -1,0 +1,44 @@
+{
+  "kind": "offline_artifact_integrity_only",
+  "new_model_calls": 0,
+  "actual_model_evaluation": "not_run",
+  "gold_human_reviewed": false,
+  "documents": [
+    {
+      "docId": "FR",
+      "characters": 3612,
+      "units": 84,
+      "candidates": 16,
+      "scored": 15,
+      "all_spans_and_local_unit_ids_valid": true
+    },
+    {
+      "docId": "LS",
+      "characters": 14279,
+      "units": 305,
+      "candidates": 16,
+      "scored": 15,
+      "all_spans_and_local_unit_ids_valid": true
+    }
+  ],
+  "total_candidates": 32,
+  "scored_draft": 30,
+  "positive_draft": 16,
+  "positive_categories": {
+    "feature": 10,
+    "integration": 2,
+    "stack": 2,
+    "product_form": 1,
+    "product_name": 1
+  },
+  "out_of_profile_draft": 13,
+  "negated_draft": 1,
+  "human_review_required": 2,
+  "future_suggested_pair_calls": 8,
+  "execution_authorized": false,
+  "baseline_frozen_files_rechecked": 140,
+  "baseline_hash_mismatches": 0,
+  "candidate_artifacts_reloaded_and_matched": 32,
+  "classification_guidance_contains_test_names": false,
+  "classification_guidance_sha256": "505dfeba729b40f735fd0b2986a9d1450b5fb4271abb332950d04e54eff6d883"
+}
