@@ -1,0 +1,116 @@
+{
+  "version": "planning-source-acquisition-summary-v1",
+  "date": "2026-10-01",
+  "root": "E:\\AgentFit\\output\\planning-corpus-candidates-v1",
+  "verified_files": 10,
+  "model_calls": 0,
+  "content_reviewed": false,
+  "privacy_checked": false,
+  "text_conversion_verified": false,
+  "human_reviewed": false,
+  "final_holdout_ready": false,
+  "files": [
+    {
+      "id": "PLAN-CANDIDATE-01",
+      "repo": "gmkim716/Ttocket",
+      "commit": "49e9a9c3fa91a69c180f56e7d674177964515b93",
+      "path": "docs/md/서비스기획서.md",
+      "status": "downloaded_verified",
+      "local_file": "raw/PLAN-CANDIDATE-01.md",
+      "bytes": 3308,
+      "sha256": "1fa73f2e23a6eed16fe34cbfbde37bb60a225291e522590d2f417f862e1b1bfb"
+    },
+    {
+      "id": "PLAN-CANDIDATE-02",
+      "repo": "ityesmean/customDoctor",
+      "commit": "2f084a80d5077ae78de742c05caef85174dd6d94",
+      "path": "DOCS/맞닥_기획서.md",
+      "status": "downloaded_verified",
+      "local_file": "raw/PLAN-CANDIDATE-02.md",
+      "bytes": 3489,
+      "sha256": "f2116c6d5d59f24d8668feec17c2d9fc141c71588bd7948a12a4a66ba5992ff7"
+    },
+    {
+      "id": "PLAN-CANDIDATE-03",
+      "repo": "Hgyeol/Quantum_Electronics",
+      "commit": "9bfa2adcb3724d0951cb78dd8b1698878c88489c",
+      "path": "기획서.md",
+      "status": "downloaded_verified",
+      "local_file": "raw/PLAN-CANDIDATE-03.md",
+      "bytes": 3989,
+      "sha256": "8158dc2be3c03012ecd5950eaa2155a92b78d1c5f0f1d34263ff4e4b7a7d7c9c"
+    },
+    {
+      "id": "PLAN-CANDIDATE-04",
+      "repo": "sungjiduk/seongjiduk",
+      "commit": "83cfc188d3aad85feaff20515c26586f51a34dc6",
+      "path": "기획/02_최종_기획서.md",
+      "status": "downloaded_verified",
+      "local_file": "raw/PLAN-CANDIDATE-04.md",
+      "bytes": 6416,
+      "sha256": "4795f4f989935d63b8bd610d1aef353775ad1fb0c273d352ff7083b03afbff0e"
+    },
+    {
+      "id": "PLAN-CANDIDATE-05",
+      "repo": "SCBBB-Hackathon/proposal",
+      "commit": "9aa3a8558f40161d28ddd19600d91140e5f95868",
+      "path": "2025년 새싹 해커톤 AI 서비스 기획서 산채비빔밥.pdf",
+      "status": "downloaded_verified",
+      "local_file": "raw/PLAN-CANDIDATE-05.pdf",
+      "bytes": 2716160,
+      "sha256": "9d6c1d9ac00db12ded524001f31b258818ab3f8e5e934c5d27128ab3a3e9a404"
+    },
+    {
+      "id": "PLAN-CANDIDATE-06",
+      "repo": "CSU-security-opensource/Opensource-project-25-2",
+      "commit": "9731630f6510f21f797f9187fe8558273f7af44c",
+      "path": "2025년 새싹 해커톤 AI 서비스 기획서_꼬깔콘팀.pdf",
+      "status": "downloaded_verified",
+      "local_file": "raw/PLAN-CANDIDATE-06.pdf",
+      "bytes": 779523,
+      "sha256": "c8182c08759094d7996980c0cafb5854e59a64e4d9c63ee502c5bb8999867f95"
+    },
+    {
+      "id": "PLAN-CANDIDATE-07",
+      "repo": "MoriochoRadio/LungCT3DNoduleAI",
+      "commit": "c7b269a17ff7375e2dc85ef9a6f082fec46aa6a4",
+      "path": "docs/deliverables_authored_by_kim_taekyoung.pdf",
+      "status": "downloaded_verified_lfs",
+      "local_file": "raw/PLAN-CANDIDATE-07.pdf",
+      "bytes": 1356830,
+      "sha256": "6578088bf3bf30593ce0521e7c91745f8c94dfe8273f3e936db8a78581620665"
+    },
+    {
+      "id": "PLAN-CANDIDATE-08",
+      "repo": "userofthefreedom/FirstHome_Navigator_AI",
+      "commit": "9bddb184acc020f95c609bb1f06328a9384fb6db",
+      "path": "docs/submit/docs_submit/청약네비_기획서_최종.docx",
+      "status": "downloaded_verified",
+      "local_file": "raw/PLAN-CANDIDATE-08.docx",
+      "bytes": 12094287,
+      "sha256": "f67fec24c6672dc819f75dbee00406d999da735d6f20c480186f2366824c56cf"
+    },
+    {
+      "id": "PLAN-CANDIDATE-09",
+      "repo": "2TEAM-Ideality/be14-final-Ideality-CoreFlow",
+      "commit": "3b74b908d2db473ca5d7c0286e9045031b686c21",
+      "path": "산출물/프로젝트 기획서.pdf",
+      "status": "downloaded_verified",
+      "local_file": "raw/PLAN-CANDIDATE-09.pdf",
+      "bytes": 266660,
+      "sha256": "db2de901718df9b0ea616d67566251b1008fbfadcd2173687cd4337206369f8b"
+    },
+    {
+      "id": "PLAN-CANDIDATE-10",
+      "repo": "LYSS-LGU/wh07-3rd-Fetpal",
+      "commit": "1d787e8bb1551137131f7ec9cf47305c64cd2825",
+      "path": "PDF_preview/01_프로젝트_기획서.pdf",
+      "status": "downloaded_verified",
+      "local_file": "raw/PLAN-CANDIDATE-10.pdf",
+      "bytes": 791713,
+      "sha256": "66b6186e2c674a7ba2417b97f88c9d796a51af1c09469d6b152802652654ae9b"
+    }
+  ],
+  "initial_acquisition_report": "E:\\AgentFit\\output\\planning-corpus-candidates-v1\\acquisition.json",
+  "lfs_resolution_report": "E:\\AgentFit\\output\\planning-corpus-candidates-v1\\PLAN-CANDIDATE-07-lfs-resolution.json"
+}
