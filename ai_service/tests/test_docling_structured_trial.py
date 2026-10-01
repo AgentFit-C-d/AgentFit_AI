@@ -12,9 +12,9 @@ except ImportError:
     convert_structured_pdf_bytes = None
 
 
-def text_item(text, page, label="paragraph"):
+def text_item(text, page, label="paragraph", layer="body"):
     return SimpleNamespace(text=text, prov=[SimpleNamespace(page_no=page)],
-                           label=SimpleNamespace(value=label))
+                           label=SimpleNamespace(value=label), content_layer=layer)
 
 
 def table_item(cells, page, markdown=None):
@@ -31,17 +31,34 @@ class FakeDocument:
         self.pages = {number: object() for number in page_texts}
         self.page_texts = page_texts
         self.items = items
+        self.texts = [item for item in items if hasattr(item, "text")]
         self.tables = [item for item in items if hasattr(item, "data")]
 
-    def export_to_text(self, *, page_no, traverse_pictures):
+    def export_to_text(self, *, page_no, traverse_pictures,
+                       included_content_layers=None):
         if not traverse_pictures:
             raise AssertionError("picture text must be traversed")
         return self.page_texts[page_no]
 
-    def iterate_items(self, *, traverse_pictures):
+    def iterate_items(self, *, traverse_pictures, included_content_layers=None):
         if not traverse_pictures:
             raise AssertionError("picture text must be traversed")
         return iter((item, 0) for item in self.items)
+
+
+class LayeredDocument(FakeDocument):
+    """Model the SDK's default body-only view, including its omitted objects."""
+
+    def export_to_text(self, *, page_no, traverse_pictures,
+                       included_content_layers=None):
+        layers = included_content_layers or {"body"}
+        return "\n".join(item.text for item in self.items
+                         if item.content_layer in layers
+                         and item.prov[0].page_no == page_no)
+
+    def iterate_items(self, *, traverse_pictures, included_content_layers=None):
+        layers = included_content_layers or {"body"}
+        return iter((item, 0) for item in self.items if item.content_layer in layers)
 
 
 class FakeConverter:
@@ -55,6 +72,76 @@ class FakeConverter:
 
 
 class DoclingStructuredTrialTests(unittest.TestCase):
+    def test_all_text_layers_are_preserved(self):
+        items = [text_item("본문", 1), text_item("서비스명", 1, layer="furniture"),
+                 text_item("검토안", 1, layer="background"),
+                 text_item("숨김 원문", 1, layer="invisible"),
+                 text_item("채택하지 않음", 1, layer="notes")]
+        result = convert_structured_pdf_bytes(
+            b"%PDF-synthetic", converter=FakeConverter(LayeredDocument({1: ""}, items)))
+        self.assertEqual(result.extracted.text, "\n".join(item.text for item in items))
+
+    def test_header_only_page_preserves_unicode_page_offsets(self):
+        document = LayeredDocument({1: "", 2: ""}, [
+            text_item("가😀", 1, layer="furniture"),
+            text_item("제외 조건", 2, layer="furniture")])
+        try:
+            result = convert_structured_pdf_bytes(
+                b"%PDF-synthetic", converter=FakeConverter(document))
+        except DocumentExtractionError as error:
+            self.fail(f"a page with source text must be preserved: {error.code}")
+        self.assertEqual(result.extracted.text, "가😀\n제외 조건")
+        self.assertEqual(result.extracted.page_spans, [
+            {"page": 1, "start": 0, "end": 2}, {"page": 2, "start": 3, "end": 8}])
+
+    def test_text_missing_from_document_tree_is_rejected(self):
+        document = FakeDocument({1: "본문"}, [text_item("본문", 1)])
+        document.texts.append(text_item("도입하지 않음", 1, layer="furniture"))
+        with self.assertRaises(DocumentExtractionError) as caught:
+            convert_structured_pdf_bytes(b"%PDF-synthetic", converter=FakeConverter(document))
+        self.assertEqual(caught.exception.code, "PDF_PARTIAL_TEXT")
+
+    def test_text_with_unknown_layer_is_rejected_if_not_exported(self):
+        document = LayeredDocument({1: ""}, [text_item("본문", 1),
+            text_item("조건", 1, layer="new-unhandled-layer")])
+        with self.assertRaises(DocumentExtractionError) as caught:
+            convert_structured_pdf_bytes(b"%PDF-synthetic", converter=FakeConverter(document))
+        self.assertEqual(caught.exception.code, "PDF_PARTIAL_TEXT")
+
+    def test_nonbody_text_cannot_bypass_missing_output_or_page_validation(self):
+        for items, page_text in (
+                ([text_item("본문", 1), text_item("도입하지 않음", 1, layer="furniture")], "본문"),
+                ([text_item("본문", 1), text_item("조건", 0, layer="notes")], "본문"),
+                ([text_item("반복", 1), text_item("반복", 1, layer="furniture")], "반복")):
+            with self.subTest(items=items):
+                document = LayeredDocument({1: ""}, items)
+                document.export_to_text = lambda **kwargs: page_text
+                with self.assertRaises(DocumentExtractionError) as caught:
+                    convert_structured_pdf_bytes(b"%PDF-synthetic", converter=FakeConverter(document))
+                self.assertEqual(caught.exception.code, "PDF_PARTIAL_TEXT")
+
+    @unittest.skipUnless(importlib.util.find_spec("docling_core"),
+                         "optional Docling core dependency unavailable")
+    def test_real_docling_model_preserves_header_footer_and_repeated_text(self):
+        from docling_core.types.doc import DoclingDocument, DocItemLabel, ProvenanceItem
+        from docling_core.types.doc.base import BoundingBox, CoordOrigin, Size
+        from docling_core.types.doc.common.content_layer import ContentLayer
+
+        document = DoclingDocument(name="layer-regression")
+        document.add_page(page_no=1, size=Size(width=595, height=842))
+        for text, label, layer, top in (
+                ("Project Birch", DocItemLabel.PAGE_HEADER, ContentLayer.FURNITURE, 800),
+                ("Search is confirmed.", DocItemLabel.TEXT, ContentLayer.BODY, 600),
+                ("Search is confirmed.", DocItemLabel.PAGE_FOOTER, ContentLayer.FURNITURE, 40)):
+            document.add_text(text=text, label=label, content_layer=layer,
+                prov=ProvenanceItem(page_no=1, charspan=(0, len(text)),
+                    bbox=BoundingBox(l=40, t=top, r=400, b=top-20,
+                                     coord_origin=CoordOrigin.BOTTOMLEFT)))
+        result = convert_structured_pdf_bytes(b"%PDF-synthetic", converter=FakeConverter(document))
+        self.assertIn("Project Birch", result.extracted.text)
+        self.assertEqual(result.extracted.text.count("Search is confirmed."), 2)
+        self.assertEqual(result.extracted.page_spans[0]["end"], len(result.extracted.text))
+
     def test_heading_table_and_unicode_offsets_are_preserved(self):
         self.assertIsNotNone(convert_structured_pdf_bytes)
         document = FakeDocument(

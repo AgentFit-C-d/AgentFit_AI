@@ -9,6 +9,10 @@ from .document_extraction import (DocumentExtractionError, ExtractedDocument,
                                   MAX_FILE_BYTES, MAX_TEXT_POINTS)
 
 
+# Docling ContentLayer is a string Enum. Keep optional SDK imports lazy.
+_TEXT_LAYERS = frozenset({"body", "furniture", "background", "invisible", "notes"})
+
+
 @dataclass(frozen=True)
 class StructuredDocument:
     extracted: ExtractedDocument
@@ -57,17 +61,23 @@ def convert_structured_pdf_bytes(raw: bytes, *, converter=None) -> StructuredDoc
     document = getattr(result, "document", None)
     pages = getattr(document, "pages", None)
     tables = getattr(document, "tables", None)
+    texts = getattr(document, "texts", None)
     if (type(pages) is not dict or not 1 <= len(pages) <= 100 or
             set(pages) != set(range(1, len(pages) + 1)) or
-            type(tables) is not list):
+            type(tables) is not list or type(texts) is not list):
         raise DocumentExtractionError("PDF_WORKER_FAILED")
     try:
         page_texts = [document.export_to_text(page_no=number,
-                                              traverse_pictures=True)
+                                              traverse_pictures=True,
+                                              included_content_layers=set(_TEXT_LAYERS))
                       for number in range(1, len(pages) + 1)]
-        items = list(document.iterate_items(traverse_pictures=True))
+        items = list(document.iterate_items(
+            traverse_pictures=True, included_content_layers=set(_TEXT_LAYERS)))
     except Exception:
         raise DocumentExtractionError("PDF_WORKER_FAILED") from None
+    visited = {id(item) for item, _level in items}
+    if any(id(item) not in visited for item in texts):
+        raise DocumentExtractionError("PDF_PARTIAL_TEXT")
     if any(type(page) is not str or not page.strip() for page in page_texts):
         raise DocumentExtractionError("PDF_PARTIAL_TEXT")
     normal_pages = [_normal(page) for page in page_texts]

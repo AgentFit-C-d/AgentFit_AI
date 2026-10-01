@@ -1,0 +1,17 @@
+{
+  "source_json_sha256": "eed102dd7d0f85d80a78184d77abcf99d950f403ded8d605b3105460a1ef4437",
+  "source_pdf_sha256": "82e0e5c6716e02e81599d8faf6919b1b56a143d8c204ad7ca7f625765611b742",
+  "header_present": true,
+  "header_occurrences": 1,
+  "page_offsets_verified": true,
+  "characters": 213,
+  "table_count": 1,
+  "ocr_error_still_present": true,
+  "negation_still_missing": true,
+  "previous_quality_passes_unchanged": 0,
+  "new_ocr_calls": 0,
+  "model_api_calls": 0,
+  "human_reviewed": false,
+  "model_evaluation_allowed": false,
+  "adapter_sha256": "1952d78fd0a838938e2181ec797f021bdf277e003181c12ba0fb599cb653e969"
+}
