@@ -64,10 +64,11 @@ def build_pair(document, frozen):
         schema = unit['response_format']['json_schema']
         schema['name'] = 'agentfit_direct_field_units'
         item = schema['schema']['properties']['decisions']['items']
-        properties = item['properties']
-        del properties['support'], properties['counterEvidence']
-        for name in ('supportUnitIds', 'counterUnitIds'):
-            properties[name] = {'type': 'array', 'maxItems': 8, 'items': {'type': 'string'}}
+        rename = {'support': 'supportUnitIds', 'counterEvidence': 'counterUnitIds'}
+        properties = {rename.get(name, name):
+                      {'type': 'array', 'maxItems': 8, 'items': {'type': 'string'}} if name in rename else value
+                      for name, value in item['properties'].items()}
+        item['properties'] = properties
         item['required'] = list(properties)
         payloads['Q'].append(quote)
         payloads['U'].append(unit)

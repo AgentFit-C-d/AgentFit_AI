@@ -70,6 +70,14 @@ class BEvidenceSelectionTests(unittest.TestCase):
         self.assertEqual((score['raw_false_confirmed'], score['false_supported'], score['normal_missing'], score['held_total']),
                          (4, 3, 2, 37))
 
+    def test_schema_keeps_status_after_evidence_in_both_arms(self):
+        pair = module.build_pair(self.document, self.frozen)
+        q, u = (pair['payloads'][a][0]['response_format']['json_schema']['schema']
+                ['properties']['decisions']['items'] for a in ('Q', 'U'))
+        original_names = {'supportUnitIds': 'support', 'counterUnitIds': 'counterEvidence'}
+        self.assertEqual([original_names.get(k, k) for k in u['properties']], list(q['properties']))
+        self.assertEqual([original_names.get(k, k) for k in u['required']], q['required'])
+
     def test_fixed_responses_recover_tag_but_also_expose_clean_ui_false_admission(self):
         batch = self.frozen['candidates'][4:6]
         q, qd = module.normalize('Q', self.document, self.registry, batch, self.b_rows[4:6])
