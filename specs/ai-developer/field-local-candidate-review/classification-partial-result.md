@@ -1,5 +1,7 @@
 # 분류 비교 부분 결과
 
+> 이후 GLM 제공자 실패로 실행이 종료됐다. 전체 중단 결과는 [classification-result.md](classification-result.md)에 보존했다. 아래는 첫 완료 행의 관측 기록이다.
+
 2026-10-01 실제 session38073이 진행 중이다. 원문·후보·모델 설정·실행기·계획·freeze는 변경하지 않는다. 현재 완료된 행은 PUBLIC-01/DeepSeek 한 건이며, 전체 비교 결론은 아직 내리지 않는다.
 
 ## 첫 DeepSeek 재현
