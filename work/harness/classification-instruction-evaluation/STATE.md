@@ -1,4 +1,26 @@
-# 분류 지침 비교 평가안 상태
+# 분류 지침 비교 평가 상태
+
+## 최신 상태 — 2026-10-01 실제 비교 완료
+
+- 브랜치 `feature/classification-instruction-comparison`, 실행 코드 `ac7b9ca`.
+- 사용자 후속 승인으로 기존 지침·명확한30개 정답을 고정해 U/U+C 한 쌍을 실행했다.
+  총8회·재시도0·실패0. 무료 계정 확인 기록의 모델·엔드포인트·유효기간 안에서 실행했다.
+- 모델/gate 통과 오확정 각각6→2, 정상 누락0→0, 정상16/16 유지.
+  주 점수 보류8→11, 전체 보류10→12, 인용 결함0→0.
+  오확정4개가 other/confirmed 보류로 이동했고 필드·상태 불일치는14→13이다.
+- FR16은 양쪽 tentative/확인 필요. LS15는 U 보류→U+C supported로 바뀌었으며,
+  두 방식 모두 암호화 해제 안내를 counter로 선택하지 않았다. 둘 다 주 점수 제외 유지.
+- 신규 고정 응답 테스트13개 통과. 최종 전체1354개 실행/1347통과/7skip/실패0.
+- 고정156개 및 이전 기준선140개 해시 일치. 독립 사후 집계와 요청 동등성 검증 통과.
+- 결과: `specs/ai-developer/classification-instruction-evaluation/results.md`, `results.json`.
+  원시 기록: `E:/AgentFit/output/classification-instruction-v1/`.
+- 지침·정답 사후 수정0, 추가 호출0, 관계 검증기0, 서비스 적용0, 큰 goal paused 유지.
+- 남은 미검증: 사람 검토2건, 반복 안정성·새 문서 일반화·후보 추출 누락·서비스/Spring 저장.
+  이번 승인 범위에서 추가 작업하지 않고 결과 보고 후 종료한다.
+
+아래는 이전 계획 작성 단계의 기록이다. 당시 호출0·승인 대기 상태는 위 후속 실행으로 갱신됐다.
+
+## 이전 평가안 작성 기록
 
 2026-10-01 · `feature/classification-instruction-evaluation-plan`
 

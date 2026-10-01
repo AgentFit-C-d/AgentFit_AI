@@ -55,7 +55,31 @@ FR16·LS15는 주 점수에서 제외하되 판정·근거는 별도 보고한�
 - 코드 검토의 Important를 한 번의 수정으로 해결했다. 남은 Critical/Important 및 deferred minor 없음.
 - 호출0 상태에서 커밋 후 입력·지침·정답·코드를 freeze하고 실제8회 실행 단계로 진행한다.
 
+## 실제 실행 시작
+
+- 코드 `ac7b9ca`, freeze155개 파일. `E:/AgentFit/output/classification-instruction-v1/`.
+- live-started.json 생성 후 최초 FR/U 배치1 요청 시작. 실행 세션84230.
+- 실행 중 지침·정답·코드를 수정하지 않는다. 중단되더라도 live 명령을 재실행하지 않는다.
+  호출별 started/finished 및 summary.json을 확인해 남은 요청은 미실행으로 보고한다.
+
 ## 보존
 
 기존 dirty 상태인 semantic-confirmation-guard/STATE.md, STOP-20261001.md, .superpowers/, Docs/analysis/를 건드리지 않는다.
 새 결과는 `E:/AgentFit/output/classification-instruction-v1/`에만 작성한다.
+
+## 실제 실행 완료 및 종료
+
+- 세션84230 exit0. 총8회 시작·반환·검증 완료, 재시도0, 실패0, 미실행0, comparable=true.
+- Task3 완료. 명확30개에서 모델/gate 오확정 각각6→2, 정상 누락0→0, 정상16/16 유지.
+  주 점수 보류8→11, 전체 보류10→12, 인용 결함0→0. 필드·상태 불일치14→13.
+- FR: 오확정4→1, 정상 누락0→0, 주 보류1→3, 인용0→0,102.16→132.14초.
+  LS: 오확정2→1, 정상 누락0→0, 주 보류7→8, 인용0→0,193.91→118.91초.
+- FR16 양쪽 tentative/보류. LS15 U other/보류→U+C features/confirmed/supported.
+  LS15의 암호화 해제 안내를 counter로 선택한 모델은 없었다. 사전 주 점수 제외를 유지한다.
+- 별도 오프라인 사후 감사: 고정156개·이전140개 해시 일치,8개 요청/응답 원본 보존,
+  승인 지침 추가만 payload 차이, 파싱 응답과 원시 응답 일치, 지표 독립 재집계 일치.
+  이 사후 감사의 새 호출은0이며 실행 코드·지침·정답·기존 결과를 수정하지 않았다.
+- 원시 결과 경로는 그대로 보존하고, Git 보존용 results.md/results.json을 specs에 새로 추가했다.
+  이 결과 사본과 현재 STATE만 갱신했다. 고정된 기존 specs 파일은 변경하지 않았다.
+- Task4 결과 보고 작성 완료. 계정 청구 화면·quota 독립 확인, 반복·일반화·서비스·Spring은 미검증.
+- 서비스 적용0, 큰 goal paused 유지. 이 한 쌍 이후 추가 반복 없이 종료한다.

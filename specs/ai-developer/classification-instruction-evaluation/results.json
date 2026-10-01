@@ -1,0 +1,4002 @@
+{
+  "report_version": "classification-instruction-result-v1",
+  "source_summary": "E:\\AgentFit\\output\\classification-instruction-v1\\summary.json",
+  "source_summary_sha256": "ea07aab8ddfa89176c93ed1f3b3aa86dcb747fb62f34ce81bd803808cf596164",
+  "freeze_sha256": "26a10f4e1b64b3184189bf7e1f0c8c0cf2388c03a95abe3a07644efd7b6bcb47",
+  "model": "deepseek-ai/deepseek-v4.1-flash",
+  "endpoint": "https://integrate.api.nvidia.com/v1/chat/completions",
+  "free_basis": "unexpired human account confirmation; no independent billing/quota inspection",
+  "calls": [
+    {
+      "docId": "FR",
+      "arm": "U",
+      "batch": 1,
+      "sequence": 1,
+      "utc": "2026-10-01T14:20:43.779655+00:00",
+      "timeout_seconds": 600.0,
+      "seconds": 55.80487189999985,
+      "returned": true
+    },
+    {
+      "docId": "FR",
+      "arm": "U",
+      "batch": 2,
+      "sequence": 2,
+      "utc": "2026-10-01T14:21:39.613044+00:00",
+      "timeout_seconds": 600.0,
+      "seconds": 46.30229600000166,
+      "returned": true
+    },
+    {
+      "docId": "FR",
+      "arm": "U+C",
+      "batch": 1,
+      "sequence": 3,
+      "utc": "2026-10-01T14:22:25.945119+00:00",
+      "timeout_seconds": 600.0,
+      "seconds": 55.659471400002076,
+      "returned": true
+    },
+    {
+      "docId": "FR",
+      "arm": "U+C",
+      "batch": 2,
+      "sequence": 4,
+      "utc": "2026-10-01T14:23:21.631906+00:00",
+      "timeout_seconds": 600.0,
+      "seconds": 76.42343290000281,
+      "returned": true
+    },
+    {
+      "docId": "LS",
+      "arm": "U+C",
+      "batch": 1,
+      "sequence": 5,
+      "utc": "2026-10-01T14:24:38.078272+00:00",
+      "timeout_seconds": 600.0,
+      "seconds": 53.26849679999941,
+      "returned": true
+    },
+    {
+      "docId": "LS",
+      "arm": "U+C",
+      "batch": 2,
+      "sequence": 6,
+      "utc": "2026-10-01T14:25:31.373506+00:00",
+      "timeout_seconds": 600.0,
+      "seconds": 65.58745049999925,
+      "returned": true
+    },
+    {
+      "docId": "LS",
+      "arm": "U",
+      "batch": 1,
+      "sequence": 7,
+      "utc": "2026-10-01T14:26:36.991264+00:00",
+      "timeout_seconds": 600.0,
+      "seconds": 75.03094290000081,
+      "returned": true
+    },
+    {
+      "docId": "LS",
+      "arm": "U",
+      "batch": 2,
+      "sequence": 8,
+      "utc": "2026-10-01T14:27:52.049474+00:00",
+      "timeout_seconds": 600.0,
+      "seconds": 118.82424619999802,
+      "returned": true
+    }
+  ],
+  "verification": {
+    "new_model_calls": 0,
+    "frozen_files_verified": 156,
+    "previous_baseline_files_verified": 140,
+    "hash_mismatches": 0,
+    "requests_started_returned_finished": 8,
+    "retries": 0,
+    "failures": 0,
+    "only_payload_difference": "approved guidance appended to system message",
+    "parsed_responses_match_saved_raw": true,
+    "scored_cases_per_arm": 30,
+    "separate_cases": [
+      "FR16",
+      "LS15"
+    ],
+    "independent_metric_recount_matches": true
+  },
+  "totals": {
+    "U": {
+      "raw_false_confirmed": 6,
+      "false_supported": 6,
+      "raw_normal_missing": 0,
+      "normal_missing": 0,
+      "positive_supported": 16,
+      "held_total": 10,
+      "held_scored": 8,
+      "held_ambiguous": 2,
+      "held_normal": 0,
+      "correct_excluded": 0,
+      "raw_mismatch": 14,
+      "citation_defects": 0,
+      "positive_gold": 16,
+      "scored": 30,
+      "total": 32,
+      "retained": 32,
+      "wall_seconds": 296.07091829999626,
+      "calls": 4
+    },
+    "U+C": {
+      "raw_false_confirmed": 2,
+      "false_supported": 2,
+      "raw_normal_missing": 0,
+      "normal_missing": 0,
+      "positive_supported": 16,
+      "held_total": 12,
+      "held_scored": 11,
+      "held_ambiguous": 1,
+      "held_normal": 0,
+      "correct_excluded": 1,
+      "raw_mismatch": 13,
+      "citation_defects": 0,
+      "positive_gold": 16,
+      "scored": 30,
+      "total": 32,
+      "retained": 32,
+      "wall_seconds": 251.04926310000155,
+      "calls": 4
+    }
+  },
+  "documents": {
+    "FR": {
+      "U": {
+        "metrics": {
+          "raw_false_confirmed": 4,
+          "false_supported": 4,
+          "raw_normal_missing": 0,
+          "normal_missing": 0,
+          "positive_supported": 10,
+          "held_normal": 0,
+          "correct_excluded": 0,
+          "raw_mismatch": 5,
+          "unassessable": 0,
+          "total": 16,
+          "scored": 15,
+          "positive_gold": 10,
+          "retained": 16,
+          "complete": true,
+          "core_positive_gold": 8,
+          "core_positive_supported": 8,
+          "held_total": 2,
+          "held_scored": 1,
+          "held_ambiguous": 1,
+          "citation_defects": 0,
+          "citation_unassessable": 0,
+          "citation_kinds": {
+            "valid_covering": 16
+          }
+        },
+        "wall_seconds": 102.15869409999868,
+        "model_seconds": 102.10716790000151,
+        "calls": 2,
+        "prompt_tokens": 25798,
+        "completion_tokens": 1364,
+        "cases": [
+          {
+            "caseId": "FR01",
+            "candidateId": "C001",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C001",
+              "raw_field": "deployment",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 550,
+                "end": 560
+              },
+              "sourceValue": "Windows 10",
+              "support": [
+                {
+                  "start": 546,
+                  "end": 697
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C001",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C001",
+                "field": "deployment",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:546:697"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR02",
+            "candidateId": "C002",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C002",
+              "raw_field": "deployment",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 879,
+                "end": 884
+              },
+              "sourceValue": "Linux",
+              "support": [
+                {
+                  "start": 862,
+                  "end": 1021
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C002",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C002",
+                "field": "deployment",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:862:1021"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR03",
+            "candidateId": "C003",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C003",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1287,
+                "end": 1331
+              },
+              "sourceValue": "A modern UI inspired by Fluent Design System",
+              "support": [
+                {
+                  "start": 1285,
+                  "end": 1361
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C003",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C003",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1285:1361"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR04",
+            "candidateId": "C004",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C004",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1337,
+                "end": 1359
+              },
+              "sourceValue": "full dark mode support",
+              "support": [
+                {
+                  "start": 1285,
+                  "end": 1361
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C004",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C004",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1285:1361"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR05",
+            "candidateId": "C006",
+            "scored": true,
+            "expected": {
+              "expectedField": "external_integrations",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C006",
+              "raw_field": "external_integrations",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1489,
+                "end": 1498
+              },
+              "sourceValue": "Inoreader",
+              "support": [
+                {
+                  "start": 1454,
+                  "end": 1550
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C006",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C006",
+                "field": "external_integrations",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1454:1550"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR06",
+            "candidateId": "C007",
+            "scored": true,
+            "expected": {
+              "expectedField": "external_integrations",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C007",
+              "raw_field": "external_integrations",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1500,
+                "end": 1507
+              },
+              "sourceValue": "Feedbin",
+              "support": [
+                {
+                  "start": 1454,
+                  "end": 1550
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C007",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C007",
+                "field": "external_integrations",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1454:1550"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR07",
+            "candidateId": "C005",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C005",
+              "raw_field": "external_integrations",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1435,
+                "end": 1452
+              },
+              "sourceValue": "Google Reader API",
+              "support": [
+                {
+                  "start": 1361,
+                  "end": 1454
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C005",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C005",
+                "field": "external_integrations",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1361:1454"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR08",
+            "candidateId": "C008",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C008",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1552,
+                "end": 1585
+              },
+              "sourceValue": "Importing or exporting OPML files",
+              "support": [
+                {
+                  "start": 1550,
+                  "end": 1631
+                },
+                {
+                  "start": 1153,
+                  "end": 1165
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C008",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C008",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1550:1631",
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1153:1165"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR09",
+            "candidateId": "C009",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C009",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1717,
+                "end": 1786
+              },
+              "sourceValue": "Search for articles with regular expressions or filter by read status",
+              "support": [
+                {
+                  "start": 1715,
+                  "end": 1788
+                },
+                {
+                  "start": 1153,
+                  "end": 1165
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C009",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C009",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1715:1788",
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1153:1165"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR10",
+            "candidateId": "C010",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C010",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1790,
+                "end": 1844
+              },
+              "sourceValue": "Organize your subscriptions with folder-like groupings",
+              "support": [
+                {
+                  "start": 1788,
+                  "end": 1846
+                },
+                {
+                  "start": 1153,
+                  "end": 1165
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C010",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C010",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1788:1846",
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1153:1165"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR11",
+            "candidateId": "C011",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C011",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1960,
+                "end": 2055
+              },
+              "sourceValue": "Hide, mark as read, or star articles automatically as they arrive with regular expression rules",
+              "support": [
+                {
+                  "start": 1958,
+                  "end": 2057
+                },
+                {
+                  "start": 1153,
+                  "end": 1165
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C011",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C011",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1958:2057",
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1153:1165"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR12",
+            "candidateId": "C012",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C012",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 2059,
+                "end": 2119
+              },
+              "sourceValue": "Fetch articles in the background and send push notifications",
+              "support": [
+                {
+                  "start": 2057,
+                  "end": 2121
+                },
+                {
+                  "start": 1153,
+                  "end": 1165
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C012",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C012",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:2057:2121",
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1153:1165"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR13",
+            "candidateId": "C014",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C014",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 2876,
+                "end": 2882
+              },
+              "sourceValue": "Paypal",
+              "support": [
+                {
+                  "start": 2731,
+                  "end": 2980
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C014",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C014",
+                "field": "other",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:2731:2980"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR14",
+            "candidateId": "C015",
+            "scored": true,
+            "expected": {
+              "expectedField": "frontend",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": false,
+            "actual": {
+              "id": "C015",
+              "raw_field": "frontend",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 3340,
+                "end": 3345
+              },
+              "sourceValue": "React",
+              "support": [
+                {
+                  "start": 3337,
+                  "end": 3382
+                },
+                {
+                  "start": 3266,
+                  "end": 3285
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C015",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C015",
+                "field": "frontend",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:3337:3382",
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:3266:3285"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR15",
+            "candidateId": "C000",
+            "scored": true,
+            "expected": {
+              "expectedField": "project_type",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": false,
+            "actual": {
+              "id": "C000",
+              "raw_field": "project_type",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 198,
+                "end": 216
+              },
+              "sourceValue": "desktop RSS reader",
+              "support": [
+                {
+                  "start": 171,
+                  "end": 221
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C000",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C000",
+                "field": "project_type",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:171:221"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR16",
+            "candidateId": "C013",
+            "scored": false,
+            "expected": {
+              "expectedField": null,
+              "expectedStatus": "tentative",
+              "expectedVerdict": "needs_confirmation"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C013",
+              "raw_field": "features",
+              "raw_status": "tentative",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 2122,
+                "end": 2152
+              },
+              "sourceValue": "Support for other RSS services",
+              "support": [
+                {
+                  "start": 2122,
+                  "end": 2234
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C013",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C013",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:2122:2234"
+                ],
+                "counterUnitIds": [],
+                "status": "tentative"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          }
+        ]
+      },
+      "U+C": {
+        "metrics": {
+          "raw_false_confirmed": 1,
+          "false_supported": 1,
+          "raw_normal_missing": 0,
+          "normal_missing": 0,
+          "positive_supported": 10,
+          "held_normal": 0,
+          "correct_excluded": 1,
+          "raw_mismatch": 4,
+          "unassessable": 0,
+          "total": 16,
+          "scored": 15,
+          "positive_gold": 10,
+          "retained": 16,
+          "complete": true,
+          "core_positive_gold": 8,
+          "core_positive_supported": 8,
+          "held_total": 4,
+          "held_scored": 3,
+          "held_ambiguous": 1,
+          "citation_defects": 0,
+          "citation_unassessable": 0,
+          "citation_kinds": {
+            "valid_covering": 16
+          }
+        },
+        "wall_seconds": 132.13915189999898,
+        "model_seconds": 132.08290430000488,
+        "calls": 2,
+        "prompt_tokens": 26674,
+        "completion_tokens": 1364,
+        "cases": [
+          {
+            "caseId": "FR01",
+            "candidateId": "C001",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C001",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 550,
+                "end": 560
+              },
+              "sourceValue": "Windows 10",
+              "support": [
+                {
+                  "start": 546,
+                  "end": 697
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C001",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C001",
+                "field": "other",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:546:697"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR02",
+            "candidateId": "C002",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C002",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 879,
+                "end": 884
+              },
+              "sourceValue": "Linux",
+              "support": [
+                {
+                  "start": 862,
+                  "end": 1021
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C002",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C002",
+                "field": "other",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:862:1021"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR03",
+            "candidateId": "C003",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C003",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 1287,
+                "end": 1331
+              },
+              "sourceValue": "A modern UI inspired by Fluent Design System",
+              "support": [
+                {
+                  "start": 1285,
+                  "end": 1361
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C003",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C003",
+                "field": "other",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1285:1361"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR04",
+            "candidateId": "C004",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C004",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1337,
+                "end": 1359
+              },
+              "sourceValue": "full dark mode support",
+              "support": [
+                {
+                  "start": 1285,
+                  "end": 1361
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C004",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C004",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1285:1361"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR05",
+            "candidateId": "C006",
+            "scored": true,
+            "expected": {
+              "expectedField": "external_integrations",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C006",
+              "raw_field": "external_integrations",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1489,
+                "end": 1498
+              },
+              "sourceValue": "Inoreader",
+              "support": [
+                {
+                  "start": 1454,
+                  "end": 1550
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C006",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C006",
+                "field": "external_integrations",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1454:1550"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR06",
+            "candidateId": "C007",
+            "scored": true,
+            "expected": {
+              "expectedField": "external_integrations",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C007",
+              "raw_field": "external_integrations",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1500,
+                "end": 1507
+              },
+              "sourceValue": "Feedbin",
+              "support": [
+                {
+                  "start": 1454,
+                  "end": 1550
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C007",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C007",
+                "field": "external_integrations",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1454:1550"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR07",
+            "candidateId": "C005",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C005",
+              "raw_field": "external_integrations",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1435,
+                "end": 1452
+              },
+              "sourceValue": "Google Reader API",
+              "support": [
+                {
+                  "start": 1361,
+                  "end": 1454
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C005",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C005",
+                "field": "external_integrations",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1361:1454"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR08",
+            "candidateId": "C008",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C008",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1552,
+                "end": 1585
+              },
+              "sourceValue": "Importing or exporting OPML files",
+              "support": [
+                {
+                  "start": 1550,
+                  "end": 1631
+                },
+                {
+                  "start": 1153,
+                  "end": 1165
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C008",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C008",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1550:1631",
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1153:1165"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR09",
+            "candidateId": "C009",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C009",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1717,
+                "end": 1786
+              },
+              "sourceValue": "Search for articles with regular expressions or filter by read status",
+              "support": [
+                {
+                  "start": 1715,
+                  "end": 1788
+                },
+                {
+                  "start": 1153,
+                  "end": 1165
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C009",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C009",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1715:1788",
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1153:1165"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR10",
+            "candidateId": "C010",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C010",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1790,
+                "end": 1844
+              },
+              "sourceValue": "Organize your subscriptions with folder-like groupings",
+              "support": [
+                {
+                  "start": 1788,
+                  "end": 1846
+                },
+                {
+                  "start": 1153,
+                  "end": 1165
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C010",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C010",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1788:1846",
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1153:1165"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR11",
+            "candidateId": "C011",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C011",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1960,
+                "end": 2055
+              },
+              "sourceValue": "Hide, mark as read, or star articles automatically as they arrive with regular expression rules",
+              "support": [
+                {
+                  "start": 1958,
+                  "end": 2057
+                },
+                {
+                  "start": 1153,
+                  "end": 1165
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C011",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C011",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1958:2057",
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1153:1165"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR12",
+            "candidateId": "C012",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C012",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 2059,
+                "end": 2119
+              },
+              "sourceValue": "Fetch articles in the background and send push notifications",
+              "support": [
+                {
+                  "start": 2057,
+                  "end": 2121
+                },
+                {
+                  "start": 1153,
+                  "end": 1165
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C012",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C012",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:2057:2121",
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:1153:1165"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR13",
+            "candidateId": "C014",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C014",
+              "raw_field": "other",
+              "raw_status": "irrelevant",
+              "verdict": "excluded",
+              "candidate": {
+                "start": 2876,
+                "end": 2882
+              },
+              "sourceValue": "Paypal",
+              "support": [
+                {
+                  "start": 2731,
+                  "end": 2980
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C014",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C014",
+                "field": "other",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:2731:2980"
+                ],
+                "counterUnitIds": [],
+                "status": "irrelevant"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": true
+          },
+          {
+            "caseId": "FR14",
+            "candidateId": "C015",
+            "scored": true,
+            "expected": {
+              "expectedField": "frontend",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": false,
+            "actual": {
+              "id": "C015",
+              "raw_field": "frontend",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 3340,
+                "end": 3345
+              },
+              "sourceValue": "React",
+              "support": [
+                {
+                  "start": 3337,
+                  "end": 3382
+                },
+                {
+                  "start": 3266,
+                  "end": 3285
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C015",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C015",
+                "field": "frontend",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:3337:3382",
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:3266:3285"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR15",
+            "candidateId": "C000",
+            "scored": true,
+            "expected": {
+              "expectedField": "project_type",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": false,
+            "actual": {
+              "id": "C000",
+              "raw_field": "project_type",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 198,
+                "end": 216
+              },
+              "sourceValue": "desktop RSS reader",
+              "support": [
+                {
+                  "start": 171,
+                  "end": 221
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C000",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C000",
+                "field": "project_type",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:171:221"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "FR16",
+            "candidateId": "C013",
+            "scored": false,
+            "expected": {
+              "expectedField": null,
+              "expectedStatus": "tentative",
+              "expectedVerdict": "needs_confirmation"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C013",
+              "raw_field": "features",
+              "raw_status": "tentative",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 2122,
+                "end": 2152
+              },
+              "sourceValue": "Support for other RSS services",
+              "support": [
+                {
+                  "start": 2122,
+                  "end": 2234
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C013",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C013",
+                "field": "features",
+                "supportUnitIds": [
+                  "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0:2122:2234"
+                ],
+                "counterUnitIds": [],
+                "status": "tentative"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          }
+        ]
+      }
+    },
+    "LS": {
+      "U": {
+        "metrics": {
+          "raw_false_confirmed": 2,
+          "false_supported": 2,
+          "raw_normal_missing": 0,
+          "normal_missing": 0,
+          "positive_supported": 6,
+          "held_normal": 0,
+          "correct_excluded": 0,
+          "raw_mismatch": 9,
+          "unassessable": 0,
+          "total": 16,
+          "scored": 15,
+          "positive_gold": 6,
+          "retained": 16,
+          "complete": true,
+          "core_positive_gold": 4,
+          "core_positive_supported": 4,
+          "held_total": 8,
+          "held_scored": 7,
+          "held_ambiguous": 1,
+          "citation_defects": 0,
+          "citation_unassessable": 0,
+          "citation_kinds": {
+            "valid_covering": 16
+          }
+        },
+        "wall_seconds": 193.91222419999758,
+        "model_seconds": 193.85518909999882,
+        "calls": 2,
+        "prompt_tokens": 70418,
+        "completion_tokens": 1492,
+        "cases": [
+          {
+            "caseId": "LS01",
+            "candidateId": "C007",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C007",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 5643,
+                "end": 5650
+              },
+              "sourceValue": "Android",
+              "support": [
+                {
+                  "start": 5641,
+                  "end": 5798
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C007",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C007",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:5641:5798"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS02",
+            "candidateId": "C008",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C008",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 6114,
+                "end": 6121
+              },
+              "sourceValue": "Windows",
+              "support": [
+                {
+                  "start": 6112,
+                  "end": 6197
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C008",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C008",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:6112:6197"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS03",
+            "candidateId": "C004",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C004",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 1948,
+                "end": 1965
+              },
+              "sourceValue": "fast and reliable",
+              "support": [
+                {
+                  "start": 1681,
+                  "end": 2000
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C004",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C004",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS04",
+            "candidateId": "C001",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C001",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 993,
+                "end": 1109
+              },
+              "sourceValue": "securely share files and messages with nearby devices over your local network without needing an internet connection",
+              "support": [
+                {
+                  "start": 937,
+                  "end": 1111
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C001",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C001",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS05",
+            "candidateId": "C002",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C002",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 1773,
+                "end": 1781
+              },
+              "sourceValue": "REST API",
+              "support": [
+                {
+                  "start": 1681,
+                  "end": 2000
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C002",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C002",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS06",
+            "candidateId": "C003",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C003",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 1786,
+                "end": 1791
+              },
+              "sourceValue": "HTTPS",
+              "support": [
+                {
+                  "start": 1681,
+                  "end": 2000
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C003",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C003",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS07",
+            "candidateId": "C005",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "negated",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C005",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 2720,
+                "end": 2731
+              },
+              "sourceValue": "auto-update",
+              "support": [
+                {
+                  "start": 2598,
+                  "end": 2733
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C005",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C005",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2598:2733"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS08",
+            "candidateId": "C009",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C009",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 7360,
+                "end": 7436
+              },
+              "sourceValue": "The app will use this file to store settings instead of the default location",
+              "support": [
+                {
+                  "start": 7360,
+                  "end": 7438
+                },
+                {
+                  "start": 7207,
+                  "end": 7225
+                },
+                {
+                  "start": 7251,
+                  "end": 7336
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C009",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C009",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7360:7438",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7207:7225",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7251:7336"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS09",
+            "candidateId": "C010",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C010",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 7482,
+                "end": 7517
+              },
+              "sourceValue": "start the app hidden (only in tray)",
+              "support": [
+                {
+                  "start": 7479,
+                  "end": 7584
+                },
+                {
+                  "start": 7439,
+                  "end": 7456
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C010",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C010",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7479:7584",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7439:7456"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS10",
+            "candidateId": "C015",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C015",
+              "raw_field": "external_integrations",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 10253,
+                "end": 10260
+              },
+              "sourceValue": "Weblate",
+              "support": [
+                {
+                  "start": 10186,
+                  "end": 10346
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C015",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C015",
+                "field": "external_integrations",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:10186:10346"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS11",
+            "candidateId": "C006",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C006",
+              "raw_field": "external_integrations",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 3052,
+                "end": 3062
+              },
+              "sourceValue": "Play Store",
+              "support": [
+                {
+                  "start": 2976,
+                  "end": 3097
+                },
+                {
+                  "start": 4304,
+                  "end": 4392
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C006",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C006",
+                "field": "external_integrations",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2976:3097",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:4304:4392"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS12",
+            "candidateId": "C014",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C014",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 9441,
+                "end": 9537
+              },
+              "sourceValue": "To select the destination without an interactive device list, pass its exact alias\nor IP address",
+              "support": [
+                {
+                  "start": 9441,
+                  "end": 9524
+                },
+                {
+                  "start": 9524,
+                  "end": 9539
+                },
+                {
+                  "start": 9652,
+                  "end": 9738
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C014",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C014",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9441:9524",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9524:9539",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9652:9738"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS13",
+            "candidateId": "C013",
+            "scored": true,
+            "expected": {
+              "expectedField": "frontend",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": false,
+            "actual": {
+              "id": "C013",
+              "raw_field": "frontend",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 8259,
+                "end": 8266
+              },
+              "sourceValue": "Flutter",
+              "support": [
+                {
+                  "start": 8248,
+                  "end": 8364
+                },
+                {
+                  "start": 8601,
+                  "end": 8689
+                },
+                {
+                  "start": 8813,
+                  "end": 8929
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C013",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C013",
+                "field": "frontend",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8248:8364",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8601:8689",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8813:8929"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS14",
+            "candidateId": "C012",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C012",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 7943,
+                "end": 7959
+              },
+              "sourceValue": "maximum security",
+              "support": [
+                {
+                  "start": 7712,
+                  "end": 7961
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C012",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C012",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS15",
+            "candidateId": "C011",
+            "scored": false,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "tentative",
+              "expectedVerdict": "needs_confirmation"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C011",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 7828,
+                "end": 7864
+              },
+              "sourceValue": "All data is sent securely over HTTPS",
+              "support": [
+                {
+                  "start": 7712,
+                  "end": 7961
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C011",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C011",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS16",
+            "candidateId": "C000",
+            "scored": true,
+            "expected": {
+              "expectedField": "project_name",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": false,
+            "actual": {
+              "id": "C000",
+              "raw_field": "project_name",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 937,
+                "end": 946
+              },
+              "sourceValue": "LocalSend",
+              "support": [
+                {
+                  "start": 937,
+                  "end": 1111
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C000",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C000",
+                "field": "project_name",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          }
+        ]
+      },
+      "U+C": {
+        "metrics": {
+          "raw_false_confirmed": 1,
+          "false_supported": 1,
+          "raw_normal_missing": 0,
+          "normal_missing": 0,
+          "positive_supported": 6,
+          "held_normal": 0,
+          "correct_excluded": 0,
+          "raw_mismatch": 9,
+          "unassessable": 0,
+          "total": 16,
+          "scored": 15,
+          "positive_gold": 6,
+          "retained": 16,
+          "complete": true,
+          "core_positive_gold": 4,
+          "core_positive_supported": 4,
+          "held_total": 8,
+          "held_scored": 8,
+          "held_ambiguous": 0,
+          "citation_defects": 0,
+          "citation_unassessable": 0,
+          "citation_kinds": {
+            "valid_covering": 16
+          }
+        },
+        "wall_seconds": 118.91011120000258,
+        "model_seconds": 118.85594729999866,
+        "calls": 2,
+        "prompt_tokens": 71294,
+        "completion_tokens": 1313,
+        "cases": [
+          {
+            "caseId": "LS01",
+            "candidateId": "C007",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C007",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 5643,
+                "end": 5650
+              },
+              "sourceValue": "Android",
+              "support": [
+                {
+                  "start": 5641,
+                  "end": 5798
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C007",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C007",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:5641:5798"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS02",
+            "candidateId": "C008",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C008",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 6114,
+                "end": 6121
+              },
+              "sourceValue": "Windows",
+              "support": [
+                {
+                  "start": 6112,
+                  "end": 6197
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C008",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C008",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:6112:6197"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS03",
+            "candidateId": "C004",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C004",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 1948,
+                "end": 1965
+              },
+              "sourceValue": "fast and reliable",
+              "support": [
+                {
+                  "start": 1681,
+                  "end": 2000
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C004",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C004",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS04",
+            "candidateId": "C001",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C001",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 993,
+                "end": 1109
+              },
+              "sourceValue": "securely share files and messages with nearby devices over your local network without needing an internet connection",
+              "support": [
+                {
+                  "start": 937,
+                  "end": 1111
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C001",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C001",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS05",
+            "candidateId": "C002",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C002",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 1773,
+                "end": 1781
+              },
+              "sourceValue": "REST API",
+              "support": [
+                {
+                  "start": 1681,
+                  "end": 2000
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C002",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C002",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS06",
+            "candidateId": "C003",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C003",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 1786,
+                "end": 1791
+              },
+              "sourceValue": "HTTPS",
+              "support": [
+                {
+                  "start": 1681,
+                  "end": 2000
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C003",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C003",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS07",
+            "candidateId": "C005",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "negated",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C005",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 2720,
+                "end": 2731
+              },
+              "sourceValue": "auto-update",
+              "support": [
+                {
+                  "start": 2598,
+                  "end": 2733
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C005",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C005",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2598:2733"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS08",
+            "candidateId": "C009",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C009",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 7360,
+                "end": 7436
+              },
+              "sourceValue": "The app will use this file to store settings instead of the default location",
+              "support": [
+                {
+                  "start": 7360,
+                  "end": 7438
+                },
+                {
+                  "start": 7251,
+                  "end": 7336
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C009",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C009",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7360:7438",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7251:7336"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS09",
+            "candidateId": "C010",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C010",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 7482,
+                "end": 7517
+              },
+              "sourceValue": "start the app hidden (only in tray)",
+              "support": [
+                {
+                  "start": 7479,
+                  "end": 7584
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C010",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C010",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7479:7584"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS10",
+            "candidateId": "C015",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C015",
+              "raw_field": "external_integrations",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 10253,
+                "end": 10260
+              },
+              "sourceValue": "Weblate",
+              "support": [
+                {
+                  "start": 10186,
+                  "end": 10346
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C015",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C015",
+                "field": "external_integrations",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:10186:10346"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": true,
+            "false_supported": true,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS11",
+            "candidateId": "C006",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C006",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 3052,
+                "end": 3062
+              },
+              "sourceValue": "Play Store",
+              "support": [
+                {
+                  "start": 2976,
+                  "end": 3097
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C006",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C006",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2976:3097"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS12",
+            "candidateId": "C014",
+            "scored": true,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": true,
+            "actual": {
+              "id": "C014",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 9441,
+                "end": 9537
+              },
+              "sourceValue": "To select the destination without an interactive device list, pass its exact alias\nor IP address",
+              "support": [
+                {
+                  "start": 9441,
+                  "end": 9524
+                },
+                {
+                  "start": 9524,
+                  "end": 9539
+                },
+                {
+                  "start": 9652,
+                  "end": 9738
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C014",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C014",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9441:9524",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9524:9539",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9652:9738"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS13",
+            "candidateId": "C013",
+            "scored": true,
+            "expected": {
+              "expectedField": "frontend",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": false,
+            "actual": {
+              "id": "C013",
+              "raw_field": "frontend",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 8259,
+                "end": 8266
+              },
+              "sourceValue": "Flutter",
+              "support": [
+                {
+                  "start": 8248,
+                  "end": 8364
+                },
+                {
+                  "start": 8601,
+                  "end": 8689
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C013",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C013",
+                "field": "frontend",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8248:8364",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8601:8689"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS14",
+            "candidateId": "C012",
+            "scored": true,
+            "expected": {
+              "expectedField": "other",
+              "expectedStatus": "irrelevant",
+              "expectedVerdict": "excluded"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C012",
+              "raw_field": "other",
+              "raw_status": "confirmed",
+              "verdict": "needs_confirmation",
+              "candidate": {
+                "start": 7943,
+                "end": 7959
+              },
+              "sourceValue": "maximum security",
+              "support": [
+                {
+                  "start": 7712,
+                  "end": 7961
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C012",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C012",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": true,
+            "held_normal": false,
+            "raw_mismatch": true,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS15",
+            "candidateId": "C011",
+            "scored": false,
+            "expected": {
+              "expectedField": "features",
+              "expectedStatus": "tentative",
+              "expectedVerdict": "needs_confirmation"
+            },
+            "positive": false,
+            "core_positive": false,
+            "actual": {
+              "id": "C011",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 7828,
+                "end": 7864
+              },
+              "sourceValue": "All data is sent securely over HTTPS",
+              "support": [
+                {
+                  "start": 7712,
+                  "end": 7961
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C011",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C011",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": false,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          },
+          {
+            "caseId": "LS16",
+            "candidateId": "C000",
+            "scored": true,
+            "expected": {
+              "expectedField": "project_name",
+              "expectedStatus": "confirmed",
+              "expectedVerdict": "supported"
+            },
+            "positive": true,
+            "core_positive": false,
+            "actual": {
+              "id": "C000",
+              "raw_field": "project_name",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 937,
+                "end": 946
+              },
+              "sourceValue": "LocalSend",
+              "support": [
+                {
+                  "start": 937,
+                  "end": 1111
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            "citation": {
+              "id": "C000",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C000",
+                "field": "project_name",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            "unassessable": false,
+            "raw_false_confirmed": false,
+            "false_supported": false,
+            "raw_normal_missing": false,
+            "normal_missing": false,
+            "positive_supported": true,
+            "held": false,
+            "held_normal": false,
+            "raw_mismatch": false,
+            "correct_excluded": false
+          }
+        ]
+      }
+    }
+  },
+  "service_applied": false,
+  "large_goal_resumed": false
+}
