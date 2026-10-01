@@ -48,7 +48,8 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
                                   extractor=None, solar_transport=None, nvidia_transport=None,
                                   observer=None, call_trace=None, review_calls=None,
                                   max_calls=64, nvidia_retry_limit=1, candidate_model=None,
-                                  capability_candidates=False, field_local_review=False):
+                                  capability_candidates=False, field_local_review=False,
+                                  classification_model=None, classification_batch_size=30):
     """Run fresh extraction through reviewed projection with one provider-call budget.
 
     Injected extractors are trusted callbacks. Only the default LangExtract adapter's
@@ -72,7 +73,10 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
                 for collector in (call_trace, review_calls)) or
             type(max_calls) is not int or not 1 <= max_calls <= 64 or
             type(nvidia_retry_limit) is not int or nvidia_retry_limit not in (0, 1) or
-            type(capability_candidates) is not bool or type(field_local_review) is not bool):
+            type(capability_candidates) is not bool or type(field_local_review) is not bool or
+            (classification_model is not None and
+             (type(classification_model) is not str or classification_model not in NVIDIA_REVIEW_MODELS)) or
+            type(classification_batch_size) is not int or classification_batch_size not in (15, 30)):
         raise ValueError('invalid integrated analysis options')
 
     candidate_key = nvidia_key if nvidia_only else solar_key
@@ -163,6 +167,11 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
     nvidia_send = metered('nvidia', post_nvidia_streaming if nvidia_transport is None else nvidia_transport)
     candidate_send = nvidia_send if nvidia_only else solar_send
     candidate_options = {'nvidia_model': candidate_model} if nvidia_only else {}
+    classification_key, classification_send = candidate_key, candidate_send
+    classification_options = candidate_options
+    if classification_model is not None:
+        classification_key, classification_send = nvidia_key, nvidia_send
+        classification_options = {'nvidia_model': classification_model}
 
     def extract():
         selected = extractor
@@ -179,8 +188,9 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
     frozen = run('MERGE_FAILED', lambda: _merge_occurrences(document, general, operations))
     observe('grounded', frozen)
     labels = run('CLASSIFICATION_FAILED', lambda: classify_profile_candidates(
-        document, frozen, candidate_key, transport=candidate_send, field_semantics='explicit-v1',
-        **candidate_options))
+        document, frozen, classification_key, transport=classification_send,
+        field_semantics='explicit-v1', batch_size=classification_batch_size,
+        **classification_options))
     observe('classified', {'frozen': frozen, 'labels': labels})
     reviewer = review_candidates_by_field if field_local_review else review_candidates_separately
     review_options = {} if field_local_review else {
@@ -200,7 +210,8 @@ def analyze_nvidia_candidates(document, document_id, nvidia_key, *,
                               candidate_model=MODEL, review_model='z-ai/glm-5.3', feature_model=MODEL,
                               nvidia_transport=None, observer=None, call_trace=None,
                               review_calls=None, max_calls=64, capability_candidates=False,
-                              field_local_review=False):
+                              field_local_review=False, classification_model=None,
+                              classification_batch_size=30):
     """Opt-in NVIDIA-only variant; no retries, fallback, or account/billing guarantee.
 
     Callers own the total process deadline and must establish permission and free
@@ -214,4 +225,5 @@ def analyze_nvidia_candidates(document, document_id, nvidia_key, *,
         nvidia_transport=nvidia_transport, observer=observer,
         call_trace=call_trace, review_calls=review_calls, max_calls=max_calls,
         nvidia_retry_limit=0, capability_candidates=capability_candidates,
-        field_local_review=field_local_review)
+        field_local_review=field_local_review, classification_model=classification_model,
+        classification_batch_size=classification_batch_size)

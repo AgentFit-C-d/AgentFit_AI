@@ -34,7 +34,7 @@
 - [x] Step2: `python -m unittest discover -s ai_service/tests -p test_candidate_classification_batches.py -v` (PYTHONPATH=ai_service). Expected: batch_size 미지원 RED.
 - [x] Step3: 엄격한15/30 검증과 기존 반복문의 묶음 크기만 변경.
 - [x] Step4: 같은 명령 Expected: PASS. API0.
-- [ ] Step5: task commit 후 task-done 같은 검증으로 완료 기록.
+- [x] Step5: task commit 후 task-done 같은 검증으로 완료 기록.
 
 ### Task 2: 분류 전용 모델 경로
 
@@ -42,10 +42,10 @@
 
 **Interfaces:** Consumes T1 batch_size; produces `analyze_integrated_candidates(..., classification_model=None, classification_batch_size=30)` and `analyze_nvidia_candidates(..., classification_model=None, classification_batch_size=30)`. None inherits candidate route; explicit NVIDIA uses nvidia_key/nvidia_send. Result and failure contracts unchanged.
 
-- [ ] Step1: 실제 파이프라인+가짜 외부 전송으로 혼합/NVIDIA-only 분류 모델 분리·15묶음·기본 경로·동일 Profile/근거, bad config 호출0, falsey 전송, 마지막 분류 실패·공유 예산 차단·안전진단 테스트 작성.
-- [ ] Step2: `python -m unittest discover -s ai_service/tests -p test_classification_stage_routing.py -v` (PYTHONPATH=ai_service). Expected: 새 옵션 미지원 RED.
-- [ ] Step3: 검증·분류 경로 선택·wrapper 전달만 구현.
-- [ ] Step4: 같은 명령 PASS; unit/runtime/contract/core 전체 suite별180초. Expected: 기존 gate와 신규 검사 PASS, Windows skip 별도 기록.
+- [x] Step1: 실제 파이프라인+가짜 외부 전송으로 혼합/NVIDIA-only 분류 모델 분리·15묶음·기본 경로·동일 Profile/근거, bad config 호출0, falsey 전송, 마지막 분류 실패·공유 예산 차단·안전진단 테스트 작성.
+- [x] Step2: `python -m unittest discover -s ai_service/tests -p test_classification_stage_routing.py -v` (PYTHONPATH=ai_service). Expected: 새 옵션 미지원 RED.
+- [x] Step3: 검증·분류 경로 선택·wrapper 전달만 구현.
+- [x] Step4: 같은 명령 PASS; unit/runtime/contract/core 전체 suite별180초. Expected: 기존 gate와 신규 검사 PASS, Windows skip 별도 기록.
 - [ ] Step5: task commit/task-done→fresh 최종 reviewer1회→중요 문제만 RED/GREEN 수정→최종 commit/push→exactHEAD Linux CI 확인.
 
 ## Self-review
