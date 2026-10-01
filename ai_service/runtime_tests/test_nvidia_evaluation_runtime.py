@@ -26,7 +26,7 @@ class NvidiaEvaluationRuntimeTests(unittest.TestCase):
         self.assertEqual(result['questions'], 10)
         self.assertEqual(sum(f['matched'] for f in result['fields'].values()), 10)
         self.assertEqual(sum(f['missing'] for f in result['fields'].values()), 0)
-        self.assertEqual(provider.kinds, ['nvidia']*5)
+        self.assertEqual(provider.kinds, ['nvidia']*6)
         self.assertEqual(provider.errors, [])
         self.assertFalse(result['release_gate_passed'])
         for value in (DOCUMENT, NVIDIA_KEY, SOLAR_KEY, 'TestApp', 'React'):

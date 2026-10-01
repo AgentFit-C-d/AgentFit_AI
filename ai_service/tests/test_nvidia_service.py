@@ -38,7 +38,7 @@ class NvidiaWorkerTests(unittest.TestCase):
         self.assertEqual(output['outcome'], 'needs_confirmation')
         self.assertEqual(output['profile'], result()['profile'])
         selected.assert_called_once_with(DOCUMENT, DOCUMENT_ID, KEY,
-                                         nvidia_transport=post_nvidia_streaming_inline)
+                                         nvidia_transport=post_nvidia_streaming_inline, semantic_assessment=True)
         self.assertNotIn(KEY, json.dumps(output))
 
     def test_sdk_and_sensitive_input_fail_before_pipeline(self):

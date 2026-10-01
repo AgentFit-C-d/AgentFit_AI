@@ -52,7 +52,9 @@ def execute_request(raw: bytes) -> bytes:
                                                   request['key'], request['nvidiaKey'])
         elif mode == 'integrated-nvidia':
             from .candidate_service_worker import execute_nvidia_analysis
-            options = {'call_diagnostics': metadata} if metadata is not None else {}
+            options = {'semantic_assessment': True}
+            if metadata is not None:
+                options['call_diagnostics'] = metadata
             if 'reviewModel' in request:
                 options['review_model'] = request['reviewModel']
             output = execute_nvidia_analysis(request['document'], request['documentId'], request['key'], **options)

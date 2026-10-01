@@ -22,7 +22,8 @@ class ReviewFailure(Provider):
 
     def reply(self, payload):
         body = super().reply(payload)
-        if payload['response_format']['json_schema']['name'] == 'agentfit_candidate_labels':
+        if (payload['response_format']['json_schema']['name'] == 'agentfit_semantic_assessment' and
+                json.loads(payload['messages'][1]['content'])['candidates'][-1]['end'] == len(self.document)):
             self.failure_status = self.next_status
         return body
 
@@ -56,11 +57,11 @@ class NvidiaReviewRoutingRuntimeTests(unittest.TestCase):
         self.assertEqual(result, original)
         self.assertEqual(result['status'], 'valid')
         self.assertEqual(selected.names, baseline.names)
-        self.assertEqual(selected.kinds, ['nvidia'] * 5)
-        self.assertEqual([r['requested_model'] for r in original_trace['calls']], [DEEPSEEK]*3+[GLM]*2)
-        self.assertEqual([r['requested_model'] for r in trace['calls']], [DEEPSEEK]*5)
+        self.assertEqual(selected.kinds, ['nvidia'] * 6)
+        self.assertEqual([r['requested_model'] for r in original_trace['calls']], [DEEPSEEK]*4+[GLM]*2)
+        self.assertEqual([r['requested_model'] for r in trace['calls']], [DEEPSEEK]*6)
         self.assertEqual([r['stage'] for r in trace['calls']], ['EXTRACTION_FAILED',
-            'OPERATION_EXTRACTION_FAILED', 'CLASSIFICATION_FAILED', 'COVERAGE_REVIEW_FAILED', 'COVERAGE_REVIEW_FAILED'])
+            'OPERATION_EXTRACTION_FAILED', 'CLASSIFICATION_FAILED', 'CLASSIFICATION_FAILED', 'COVERAGE_REVIEW_FAILED', 'COVERAGE_REVIEW_FAILED'])
         self.assertTrue(all(r['transport_completed'] and r['attempt'] == 1 for r in trace['calls']))
 
     def test_selected_review_503_and_429_stop_after_one_failed_attempt(self):
@@ -70,8 +71,8 @@ class NvidiaReviewRoutingRuntimeTests(unittest.TestCase):
                 score, report = self.run_provider(provider)
                 self.assertEqual(score['error'], error)
                 self.assertEqual(report['failureStage'], 'COVERAGE_REVIEW_FAILED')
-                self.assertEqual(len(provider.kinds), 4)
-                self.assertEqual(len(report['calls']), 4)
+                self.assertEqual(len(provider.kinds), 5)
+                self.assertEqual(len(report['calls']), 5)
                 last = report['calls'][-1]
                 self.assertEqual((last['requested_model'], last['provider_error'], last['attempt']),
                                  (DEEPSEEK, error, 1))
@@ -82,7 +83,7 @@ class NvidiaReviewRoutingRuntimeTests(unittest.TestCase):
         score, report = self.run_provider(provider)
         self.assertEqual(score['error'], 'PROVIDER_MODEL')
         self.assertEqual(report['failureStage'], 'COVERAGE_REVIEW_FAILED')
-        self.assertEqual(len(provider.kinds), 4)
+        self.assertEqual(len(provider.kinds), 5)
         self.assertEqual(report['calls'][-1]['requested_model'], DEEPSEEK)
 
     def test_selected_request_timeout_and_cancellation_reap_child_and_socket(self):

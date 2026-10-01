@@ -30,10 +30,10 @@ python -m pip install -r requirements-integrated.txt -r requirements-dev.txt
 
 | AGENTFIT_ANALYSIS_MODE | 필요한 모델 키 | 분석 구성 |
 | --- | --- | --- |
-| integrated-nvidia | NVIDIA_API_KEY | DeepSeek V4.1 Flash 추출·분류·기능 정리, GLM5.3 검토 |
+| integrated-nvidia | NVIDIA_API_KEY | DeepSeek V4.1 Flash 추출·의미 역할 분류·기능 정리, GLM5.3 검토 |
 | integrated-candidates | UPSTAGE_API_KEY, NVIDIA_API_KEY | 기존 Solar 추출·분류와 NVIDIA 검토·기능 정리 |
 
-NVIDIA 단독 모드는 전체 최대64호출·자동재시도0이며, 429·503 등 첫 통신 실패 후 추가 전송을 중단합니다. 계정의 무료 대상·한도는 코드가 확인하지 않습니다. 현재 실제 호출은 보류 중이며 무료 범위 확인 전에는 아래 서버로 실제 문서를 분석하지 않습니다. 단독 모드를 기존 혼합 기준선 평가 결과에 이어 기록하지 않습니다.
+NVIDIA 단독 모드는 전체 최대64호출·자동재시도0이며, 429·503 등 첫 통신 실패 후 추가 전송을 중단합니다. 서비스는 계정의 무료 여부·잔여량을 자동 조회하지 않습니다. 실제 호출 전 현재 계정의 무료 모델·endpoint·한도 초과 시 거절 조건을 확인해야 합니다. 이번 문서 평가는 유효한 사용자 무료 확인 기록을 매 호출 검사하는 별도 실행기로 제한하며, 기존 혼합 기준선 결과에 이어 기록하지 않습니다.
 
 키는 채팅·명령 인자·Git에 넣지 않습니다. 서버는 `.env`를 자동으로 읽지 않으므로 개발 도구의 환경 변수 로딩 기능 등을 통해 주입해야 합니다. 해당 서버 인터프리터에 LangExtract 1.7.0이 설치되어 있어야 합니다.
 
@@ -42,6 +42,14 @@ python -m uvicorn agentfit_ai.http_service:app --host 127.0.0.1 --port 8000
 ```
 
 `POST /internal/v1/analyze`는 Bearer 내부 토큰과 `X-Document-Id`, `X-Request-Id`, `X-Document-Kind`(TEXT/MARKDOWN/PDF), 해당 Content-Type, 원문 body를 받습니다. 통합 모드에서는 `X-AgentFit-Analysis-Contract: confirmation-v2` 헤더를 정확히 한 번 보내야 합니다. 헤더로 서버 모드를 바꿀 수는 없습니다.
+
+### 의미 역할 검증 적용 경로
+
+이 브랜치의 `integrated-nvidia` 서비스 요청은 HTTP → 분석 프로세스 → `analysis_worker` → NVIDIA 분석 → 의미 역할 검증 → 검토/기능 정리 → 확인 초안 → HTTP 검증 순서로 실행됩니다. worker에서 `semantic_assessment=True`를 지정하므로 별도 실험 옵션 없이 적용됩니다. 응답은 기존 `confirmation-v2`이며 `modelDecisions`에 후보 원문·근거·역할·모델 판단을 보존하고, 필드 미정 후보는 `unassignedQuestions`로 확인을 요청합니다. 모델의 confirmed는 사용자 승인이나 저장 완료가 아닙니다.
+
+이 연결을 사용하려면 **해당 코드가 있는 체크아웃에서** `AGENTFIT_ANALYSIS_MODE=integrated-nvidia`, `AGENTFIT_INTERNAL_TOKEN`, `NVIDIA_API_KEY`를 실행 프로세스에 주입해야 합니다. `.env`에 키만 적거나 모드를 생략하면 이 경로가 선택되지 않습니다. 기본 Solar/v1와 혼합 모드는 그대로입니다. 이 문서와 테스트는 운영 배포 설정을 증명하지 않습니다.
+
+[서비스 경로 명세](specs/ai-developer/semantic-role-service-path/spec.md) · [검증 계획](specs/ai-developer/semantic-role-service-path/plan.md)
 
 - 성공적인 분석도 `contract=confirmation-v2`, `outcome=needs_confirmation`으로 반환합니다. 실제 의미 품질이 검증되기 전에는 자동 완료하지 않습니다.
 - `profile`은 기존 10필드·원문 근거·대표 기능 최대 30개 계약을 유지합니다. `fieldStates`의 `unresolved`에도 근거가 있는 제안 값을 보존합니다. `unknown`을 제외한 필드마다 고정된 `questionId=confirm_<field>`와 질문 사유가 있습니다.

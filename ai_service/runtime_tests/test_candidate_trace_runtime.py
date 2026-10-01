@@ -42,7 +42,9 @@ class StageFailure(Provider):
         self.after = after
     def reply(self, payload):
         body = super().reply(payload)
-        if payload['response_format']['json_schema']['name'] == self.after:
+        if (payload['response_format']['json_schema']['name'] == self.after and
+                (self.after != 'agentfit_semantic_assessment' or
+                 json.loads(payload['messages'][1]['content'])['candidates'][-1]['end'] == len(self.document))):
             self.failure_status = 503
         return body
 
@@ -78,7 +80,7 @@ class CandidateTraceRuntimeTests(unittest.TestCase):
             self.assertEqual(actual, baseline)
             self.assertEqual(actual['profile']['data']['features'], ['기록 저장'])
             self.assertEqual(observed.payloads, normal.payloads)
-            self.assertEqual(observed.kinds, ['nvidia'] * 5)
+            self.assertEqual(observed.kinds, ['nvidia'] * 6)
             self.assertEqual([row['stage'] for row in calls['calls']], [row['stage'] for row in baseline_calls['calls']])
             self.assertTrue(all(row['requested_model'] == MODEL and row['attempt'] == 1 for row in calls['calls']))
             report = self.read_trace(DOCUMENT, path)
@@ -88,13 +90,13 @@ class CandidateTraceRuntimeTests(unittest.TestCase):
 
     def test_review_failure_keeps_classified_observation_without_retry(self):
         worker_module()
-        provider = StageFailure('agentfit_candidate_labels')
+        provider = StageFailure('agentfit_semantic_assessment')
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / 'trace.json'
             result, calls = self.execute(provider, path)
             self.assertEqual(result['error'], 'PROVIDER_UNAVAILABLE')
             self.assertEqual(calls['failureStage'], 'COVERAGE_REVIEW_FAILED')
-            self.assertEqual(provider.kinds, ['nvidia'] * 4)
+            self.assertEqual(provider.kinds, ['nvidia'] * 5)
             trace = self.read_trace(DOCUMENT, path)['trace']
             self.assertEqual(trace['status'], 'partial')
             self.assertIsNotNone(trace['stages']['classified'])

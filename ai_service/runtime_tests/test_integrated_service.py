@@ -53,6 +53,17 @@ class Provider:
         if name == 'agentfit_candidate_labels':
             return {'labels': [{'id': row['id'], 'field': dict(self.facts)[row['value']], 'status': 'confirmed'}
                                for row in data['candidates']]}
+        if name == 'agentfit_semantic_assessment':
+            rows = []
+            for row in data['candidates']:
+                field = dict(self.facts)[row['value']]
+                rows.append({'id': row['id'], 'field': field, 'modelStatus': 'confirmed',
+                    'mentionKind': {'external_integrations': 'external_service', 'features': 'product_operation'}.get(field, 'other'),
+                    'scope': 'target', 'time': 'current', 'polarity': 'positive', 'commitment': 'adopted',
+                    'role': 'product_fact', 'conflictsChecked': True, 'counterEvidence': [],
+                    'support': [{'quote': row['value'], 'occurrence':
+                        sum(self.document.startswith(row['value'], p) for p in range(row['start']))}]})
+            return {'assessments': rows}
         if name == 'agentfit_candidate_label_review':
             return {'checkedCandidateIds': [row['id'] for row in data['selections']],
                     'wrongCandidateIds': [], 'rejectionReasons': []}

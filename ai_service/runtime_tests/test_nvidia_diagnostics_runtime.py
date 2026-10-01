@@ -19,7 +19,8 @@ GLM = 'z-ai/glm-5.3'
 class ReviewFailure(Provider):
     def reply(self, payload):
         body = super().reply(payload)
-        if payload['response_format']['json_schema']['name'] == 'agentfit_candidate_labels':
+        if (payload['response_format']['json_schema']['name'] == 'agentfit_semantic_assessment' and
+                json.loads(payload['messages'][1]['content'])['candidates'][-1]['end'] == len(self.document)):
             self.failure_status = 503
         return body
 
@@ -43,29 +44,29 @@ class NvidiaDiagnosticsRuntimeTests(unittest.TestCase):
             self.assertNotIn(json.dumps(private)[1:-1], json.dumps([result, report]))
         return result, report
 
-    def test_real_diagnostic_mode_preserves_score_and_five_calls(self):
+    def test_real_diagnostic_mode_preserves_score_and_six_calls(self):
         plain_provider, diagnostic_provider = Provider(), Provider()
         plain, _ = self.run_provider(plain_provider, False)
         measured, report = self.run_provider(diagnostic_provider)
         self.assertEqual(plain, measured)
         self.assertEqual(measured['status'], 'valid')
         self.assertEqual(plain_provider.names, diagnostic_provider.names)
-        self.assertEqual(diagnostic_provider.kinds, ['nvidia'] * 5)
+        self.assertEqual(diagnostic_provider.kinds, ['nvidia'] * 6)
         self.assertEqual(report['status'], 'available')
         self.assertIsNone(report['failureStage'])
-        self.assertEqual([r['call_index'] for r in report['calls']], [1, 2, 3, 4, 5])
-        self.assertEqual([r['requested_model'] for r in report['calls']], [DEEPSEEK] * 3 + [GLM] * 2)
+        self.assertEqual([r['call_index'] for r in report['calls']], [1, 2, 3, 4, 5, 6])
+        self.assertEqual([r['requested_model'] for r in report['calls']], [DEEPSEEK] * 4 + [GLM] * 2)
         self.assertEqual([r['stage'] for r in report['calls']], ['EXTRACTION_FAILED',
-            'OPERATION_EXTRACTION_FAILED', 'CLASSIFICATION_FAILED', 'COVERAGE_REVIEW_FAILED', 'COVERAGE_REVIEW_FAILED'])
+            'OPERATION_EXTRACTION_FAILED', 'CLASSIFICATION_FAILED', 'CLASSIFICATION_FAILED', 'COVERAGE_REVIEW_FAILED', 'COVERAGE_REVIEW_FAILED'])
         self.assertTrue(all(r['transport_completed'] and r['provider_error'] is None for r in report['calls']))
 
-    def test_review_503_reports_requested_glm_and_stops_at_fourth_call(self):
+    def test_review_503_reports_requested_glm_and_stops_at_fifth_call(self):
         provider = ReviewFailure()
         score, report = self.run_provider(provider)
         self.assertEqual(score['error'], 'PROVIDER_UNAVAILABLE')
         self.assertEqual(report['failureStage'], 'COVERAGE_REVIEW_FAILED')
-        self.assertEqual(len(provider.kinds), 4)
-        self.assertEqual(len(report['calls']), 4)
+        self.assertEqual(len(provider.kinds), 5)
+        self.assertEqual(len(report['calls']), 5)
         last = report['calls'][-1]
         self.assertEqual((last['requested_model'], last['provider_error'], last['attempt']),
                          (GLM, 'PROVIDER_UNAVAILABLE', 1))

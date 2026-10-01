@@ -37,7 +37,7 @@ class NvidiaServiceRuntimeTests(unittest.TestCase):
                 'deployment': 'CloudZ', 'features': ['기록 저장'], 'external_integrations': ['MailSvc']})
             self.assertEqual(body['fieldStates']['frontend'], 'unresolved')
             self.assertEqual(len(body['questions']), 10)
-            self.assertEqual(provider.kinds, ['nvidia'] * 5)
+            self.assertEqual(provider.kinds, ['nvidia'] * 6)
             self.assertEqual(len(processes), 1)
             self.assertEqual(processes[0].returncode, 0)
             self.assertEqual(provider.errors, [])
@@ -57,7 +57,7 @@ class NvidiaServiceRuntimeTests(unittest.TestCase):
                     recovered = send(url, provider.document)
                     self.assertEqual(recovered.status_code, 200)
                     self.assertEqual(recovered.json()['outcome'], 'needs_confirmation')
-                    self.assertEqual(provider.kinds, ['nvidia'] * 6)
+                    self.assertEqual(provider.kinds, ['nvidia'] * 7)
                     self.assertEqual(len(processes), 2)
                     self.assertEqual(provider.errors, [])
 

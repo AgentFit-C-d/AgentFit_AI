@@ -43,7 +43,7 @@ class NvidiaCoreFlowTests(unittest.TestCase):
             self.assertEqual(detail['confirmed'], confirmed)
             self.assertEqual(detail['draft'], draft)
             self.assertEqual(len(processes), 2)
-            self.assertEqual(len(provider.kinds), 6)  # Five successful stages plus one failed call.
+            self.assertEqual(len(provider.kinds), 7)  # Six successful calls plus one failed call.
             for secret in (NVIDIA_KEY, SOLAR_KEY, 'synthetic-private-provider-error'):
                 self.assertNotIn(secret, failed.text + json.dumps(detail) + repr(store.__dict__))
 
@@ -63,7 +63,7 @@ class NvidiaCoreFlowTests(unittest.TestCase):
                 self.assertEqual(reopened.get(f'/api/projects/{p}').status_code, 404)
             self.assertEqual(len(processes), 3)
             self.assertTrue(all(p.returncode is not None for p in processes))
-            self.assertEqual(provider.kinds, ['nvidia'] * 11)
+            self.assertEqual(provider.kinds, ['nvidia'] * 13)
             self.assertEqual(provider.errors, [])
 
 
