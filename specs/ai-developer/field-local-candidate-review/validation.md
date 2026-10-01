@@ -21,3 +21,5 @@
 ## 남은 gate
 
 독립 최종 리뷰1회는 Critical/Important/Minor 각0이며 focused15개 독립 통과. 코드 변경 없이 리뷰를 종료했다([review.md](review.md)). a9ab774 push 및 동일HEAD Linux CI 네 작업이 성공했다. DeepSeek 실제 비교3건48호출은 완료했으나 의미 품질 기준에 미달했다([result.md](result.md)). 실제 의미 정확도·새 문서 일반화·사람 검토/수정 부담·실제 Spring/운영은 미검증이며 기본 적용을 승인하는 결과가 아니다.
+
+후속 GLM 경로 비교는 session91923 exit0,3건48호출/재시도0/3730.348711초였다. 사전 지정 비교 항목은 모두 통과했고 이전151JSON을 보존했다([glm-result.md](glm-result.md)). 새 문서 정확도·모든 필드 품질·사람 검토·전체 실제 분석을 검증한 것은 아니다. 제품코드 변경 없이 분류-only 후속 비교를 등록했으며 안전7개·집계2개 검사를 추가로 수행했다([classification-preflight.md](classification-preflight.md)).
