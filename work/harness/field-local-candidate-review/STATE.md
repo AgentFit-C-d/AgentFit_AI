@@ -1,0 +1,6 @@
+# 필드별 검토 상태
+
+- 목표 active. 직전 목표 턴은 progress: 고정사유 재현과 두규칙 비교56호출을 완료, source/gold/이전결과 보존·c0338d8 push.20703/41153/5657 종료,현재 모델 요청0.
+- feature/field-local-candidate-review, 기존 linkedworktree 재사용, main아님. 명세·계획 작성, 사용자 자율 승인과 직접 구현방식 유지.
+- Task1 필드별 검토→Task2 bool opt-in 연결. 공개 API/default 변경0. 로컬180초/suite, 실제평가는review/CI이후별도등록93호출5400초/retry0/무료확인.
+- 다음: 계획전용ledger/brief→Task1 RED→구현→검증→Task2→독립최종review1회→push/CI. 실제품질·새문서·사람·Spring·운영 gate 미완료.
