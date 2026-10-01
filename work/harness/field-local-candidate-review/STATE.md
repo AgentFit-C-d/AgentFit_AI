@@ -6,3 +6,6 @@
 - 다음: 계획전용ledger/brief→Task1 RED→구현→검증→Task2→독립최종review1회→push/CI. 실제품질·새문서·사람·Spring·운영 gate 미완료.
 - Task1 모듈 부재 RED→8/8 GREEN. 240개 fixture 계산 오류(221+9)를231+9로 수정, production 원인 아님. unit1229건 중1223pass/6skip64.241초, session63284 exit0. 실제API0. 다음Task1 commit/task-done→Task2.
 - Task1 baddd566f477535f1bb81b9f6b717d45e0fe5951 complete, task-done8/8. Task2 옵션미지원 RED7tests/12errors→GREEN7/7. 최종 unit1230pass6skip65.922초(session3774), runtime35pass124.848초(session79271), contract36pass6.938초, core8pass28.107초(session11777), 모두exit0. 합계1309pass/6skip. 실제모델0. 다음Task2commit/task-done→독립최종review1회.
+
+- 2026-10-01 재개: 직전 상태 답변 턴은 no progress. 실제 HEAD20587d9/기능브랜치/추적파일 변경0 확인. 기존 완료 평가 재실행0. 독립최종review Critical0/Important0/Minor0, focused15PASS; 전체로컬로그1309pass6skip 확인. review.md에6개 판단유보영역과 실행결정 기록.
+- 검토-only3건 평가 사전등록, helper6PASS0.020s, freeze 신규생성. 다음 docscommit/push→exactHEAD Linux CI→free/preflight재검사→실제평가 동일handle추적. 실제모델 호출 아직0.
