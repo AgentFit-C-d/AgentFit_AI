@@ -39,3 +39,27 @@ Ruling: 실행 기록은 기존 프로젝트 관례인 이 STATE에 유지한다
   전체 suite는 부모가 확인한1362실행/1355통과/7skip를 근거로 한다.
   기존 점수 정의의 적절성은 이번 범위 밖이므로 유지하고 other/confirmed와 올바른 제외를 추가 관측한다.
 - 이전 인용 기준선140개 해시도 일치. 실제 호출 전 새 freeze를 생성하고 live는1회만 실행한다.
+
+## Task2 실행 중
+
+- 코드/명세 commit6d106d2, 출력 E:/AgentFit/output/status-definition-v1/.
+- freeze199파일, live 마커 생성. 실행 세션55814. FR/UC 배치1 시작.
+- 중단되면 live를 재실행하지 않는다. calls/*-started/finished.json과 summary.json으로 상태만 확인한다.
+- 실행 중 frozen 지침·정답·입력·코드를 수정하지 않는다. 이 STATE는 freeze 대상이 아니다.
+
+## Task2 완료 — 종료
+
+- 세션55814 exit0. 2026-10-02 01:21:52~01:26:56 KST 실제8회·재시도0·실패0,comparable=true.
+- 명확30개: 모델/gate 오확정 각각2→3, 정상 누락0→0, 정상16/16 유지, 올바른 제외2→11.
+  other/confirmed10→0, 주 보류10→0, 전체 보류11→1, 인용 결함0→0.
+- FR 오확정1→1 / 제외1→4 / other-confirmed3→0.
+  LS 오확정1→2 / 제외1→7 / other-confirmed7→0.
+- 10개 other/confirmed 중8개 정답 제외,2개 신규오확정(LS05 REST API/backend,LS11 Play Store/외부연동).
+  기존 Weblate 오확정은 해결,Google Reader API는 잔존.
+- LS07은 이번 새 UC와US 모두 features/negated/excluded. 정의 통일의 개선이라고 단정하지 않는다.
+- LS15는UC features/confirmed/supported→US other/irrelevant/excluded.
+  양쪽 counter빈배열,230행 암호화 해제 안내 미선택. 확인 필요 보존에 성공하지 못함. 주 점수 제외 유지.
+- 사후 감사200개 freeze hash·이전140개 hash 일치,8개 원본 요청/응답·raw판정 보존 및 독립 재집계 일치.
+- 결과 specs/ai-developer/status-definition-unification/results.md 및results.json 추가.
+  freeze된 plan은 수정하지 않고 Task2 완료를 이 기록으로 남긴다.
+- 지침/정답 사후변경0,추가호출0,서비스적용0,큰goal paused. 결과 기록을push한 뒤 종료한다.
