@@ -46,7 +46,7 @@
 - [x] Step2: `python -m unittest tests.test_field_local_candidate_pipeline -v`. Expected: field_local_review 미지원 RED.
 - [x] Step3: bool 옵션·분기·전달 추가. 기존 default reviewer 함수는 수정하지 않는다.
 - [x] Step4: 같은 테스트 PASS 및 unit/runtime/contract/core suite별180초 검증. Expected: 기존 gate와 신규검증 모두PASS, Windows skip은별도보고.
-- [ ] Step5: commit/task-done→fresh 최종review1회(가장적합한 모델 명시, 하위위임0)→중요문제1pass RED/GREEN→최종commit/push와 exactHEAD CI. 실평가는 최종code freeze를 새로 생성한 뒤 시작한다.
+- [x] Step5: commit/task-done→fresh 최종review1회(가장적합한 모델 명시, 하위위임0)→중요문제1pass RED/GREEN→최종commit/push와 exactHEAD CI. 실평가는 최종code freeze를 새로 생성한 뒤 시작한다.
 
 ## Self-review
 

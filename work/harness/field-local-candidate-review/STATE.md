@@ -9,3 +9,6 @@
 
 - 2026-10-01 재개: 직전 상태 답변 턴은 no progress. 실제 HEAD20587d9/기능브랜치/추적파일 변경0 확인. 기존 완료 평가 재실행0. 독립최종review Critical0/Important0/Minor0, focused15PASS; 전체로컬로그1309pass6skip 확인. review.md에6개 판단유보영역과 실행결정 기록.
 - 검토-only3건 평가 사전등록, helper6PASS0.020s, freeze 신규생성. 다음 docscommit/push→exactHEAD Linux CI→free/preflight재검사→실제평가 동일handle추적. 실제모델 호출 아직0.
+
+- 2026-10-01: a9ab774 push/CI36796417954 네작업성공. 실제session2563 exit0,3건48호출0retry0실패228.156743초. 이전143JSON불변. 기능0/4,Docker0/2,공개07기능14/14,합성16/16이나project_name누락놓침. 품질미달로기본적용보류. 새모델실험전결과감사저장.
+Ruling: GLM 비교는 모델별 기존adapter설정까지 포함해 해석한다 — DeepSeek와GLM의temperature/추론설정이이미다름 — 가중치만의효과로오인할위험을막고입력/지침/스키마동일성을검증한다.
