@@ -28,4 +28,7 @@
 - tests: test_mention_role_classification.py, mention_role_cases.json, 기존 semantic guard/helper·HTTP 계약 tests.
 - specs: mention-role-classification/{spec,plan,results}.md.
 - harness: 이 STATE, prepare.py/evaluate.py/summarize.py.
-- 다음: 최종 diff 확인, 이번 파일만 commit/push, CI 확인 후 종료. 큰 goal paused 유지. 새로운 구현/모델 호출을 이어가지 않음.
+- 코드/명세/결과 커밋 `e431f1fddff0b1f1a7fd06362a843789b4c5a1fe`를 origin/feature/mention-role-classification에 push 확인.
+- 해당 코드 커밋 Linux CI `36824869523`: core-flow-runtime, integrated-runtime, unit-and-worker-memory, contract-mock **4/4 success**. 이 기록의 후속 문서 커밋은 운영 코드나 테스트를 변경하지 않음.
+- 최종 diff 확인 완료. 기존 semantic-confirmation-guard 중단 기록, 미커밋 Docs 분석, test_nvidia_service.py와 일반 분류 파일의 내용차이 없는 M, .superpowers 보존.
+- 이번 한정 수정·검증 종료. 큰 goal paused 유지. 다음 구현/모델 호출 없음. 기본 경로 유실·새 문서 전체 일반화·실제 Spring은 완료로 처리하지 않음.
