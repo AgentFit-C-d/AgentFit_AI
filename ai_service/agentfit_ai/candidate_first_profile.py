@@ -192,9 +192,11 @@ def candidate_label_payload(document: str, candidates: list[dict], *,
 
 def classify_profile_candidates(document: str, frozen: dict, key: str,
                                 *, transport=None, field_semantics='legacy',
-                                nvidia_model=None) -> list[dict]:
+                                nvidia_model=None, batch_size=30) -> list[dict]:
     """Classify source-anchored candidates in bounded ID batches."""
     field_semantics_instructions(field_semantics)
+    if type(batch_size) is not int or batch_size not in (15, 30):
+        raise ValueError('unsupported classification batch size')
     if nvidia_model is not None:
         from .deepseek_evaluation import NvidiaAnalyzer, NVIDIA_REVIEW_MODELS
         from .nvidia_streaming import post_nvidia_streaming
@@ -212,8 +214,8 @@ def classify_profile_candidates(document: str, frozen: dict, key: str,
         sender = NvidiaAnalyzer(key, model=nvidia_model,
             transport=post_nvidia_streaming if transport is None else transport)
     labels = []
-    for offset in range(0, len(candidates), 30):
-        batch = candidates[offset:offset + 30]
+    for offset in range(0, len(candidates), batch_size):
+        batch = candidates[offset:offset + batch_size]
         payload = candidate_label_payload(document, batch, field_semantics=field_semantics)
         reply, model, _, _ = sender._send_payload(payload, ("labels",),
                                                    timeout=600)

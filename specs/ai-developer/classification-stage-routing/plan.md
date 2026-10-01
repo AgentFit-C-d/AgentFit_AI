@@ -30,10 +30,10 @@
 
 **Interfaces:** Produces `classify_profile_candidates(document, frozen, key, *, transport=None, field_semantics='legacy', nvidia_model=None, batch_size=30) -> list[dict]`. Existing labels contract unchanged; ValueError for invalid batch.
 
-- [ ] Step1: 기본30과 선택15의 전체 ID/원문/반복 위치/불변 입력, 31·240 경계, 빈 입력 bad config, 마지막 batch 누락/중복/외부 ID/제공자 오류 테스트 작성.
-- [ ] Step2: `python -m unittest discover -s ai_service/tests -p test_candidate_classification_batches.py -v` (PYTHONPATH=ai_service). Expected: batch_size 미지원 RED.
-- [ ] Step3: 엄격한15/30 검증과 기존 반복문의 묶음 크기만 변경.
-- [ ] Step4: 같은 명령 Expected: PASS. API0.
+- [x] Step1: 기본30과 선택15의 전체 ID/원문/반복 위치/불변 입력, 31·240 경계, 빈 입력 bad config, 마지막 batch 누락/중복/외부 ID/제공자 오류 테스트 작성.
+- [x] Step2: `python -m unittest discover -s ai_service/tests -p test_candidate_classification_batches.py -v` (PYTHONPATH=ai_service). Expected: batch_size 미지원 RED.
+- [x] Step3: 엄격한15/30 검증과 기존 반복문의 묶음 크기만 변경.
+- [x] Step4: 같은 명령 Expected: PASS. API0.
 - [ ] Step5: task commit 후 task-done 같은 검증으로 완료 기록.
 
 ### Task 2: 분류 전용 모델 경로
