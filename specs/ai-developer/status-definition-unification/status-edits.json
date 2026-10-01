@@ -1,0 +1,32 @@
+[
+  {
+    "old": "confirmed means an explicitly required, adopted or provided CURRENT TARGET-PROJECT fact in that field; a word existing in the source is not enough. A committed requirement can be confirmed before implementation. A proposal, undecided choice or later optional roadmap must be tentative. An explicitly rejected fact is negated. Examples, other products, historical facts, developer tasks and facts outside the ten fields are irrelevant in the current target scope. Use field other for out-of-domain occurrences; ",
+    "anchor": "never infer product operations",
+    "action": "replace_with_status_definition"
+  },
+  {
+    "old": "When field or certainty is ambiguous, preserve the occurrence as tentative, including field other if no field can be established. ",
+    "anchor": "A provider name and a description of its purpose",
+    "action": "remove_duplicate"
+  },
+  {
+    "old": "Never confirm unresolved contradictions. ",
+    "anchor": "Do not transfer current facts to historical or other-product occurrences.",
+    "action": "remove_duplicate"
+  },
+  {
+    "old": "Certainty and scope: confirmed means explicitly required, adopted or provided in the document's target product scope. This is a planning document: confirmed requirements may be unimplemented. Do not demand an existing deployment or implementation evidence. Optional choices, undecided proposals, rejected choices and explicitly later expansion outside the target scope are not current confirmed facts. Distinguish such roadmap expansion from a required feature whose implementation is merely pending.\n",
+    "anchor": "Judge the exact occurrence in its surrounding section and whole-document context.",
+    "action": "remove_duplicate"
+  },
+  {
+    "old": "A technology-purpose association does not override scope or certainty: optional, rejected, explicitly later or other-product operations remain unconfirmed. ",
+    "anchor": "Apply the same distinction when checking coverage.",
+    "action": "remove_duplicate"
+  },
+  {
+    "old": "When the source clearly establishes only an out-of-domain relationship or a descriptive quality, use other/irrelevant. When the relationship, field or current commitment is genuinely unresolved, preserve the occurrence as tentative in the established field, or other if no field can be established. ",
+    "anchor": "Retain every occurrence.",
+    "action": "remove_duplicate"
+  }
+]
