@@ -30,6 +30,20 @@
   E:/AgentFit/output/status-model-comparison-tests-final.log. 신규14개 GREEN.
   두 Important 수정은 RED→GREEN 및전체suite로 검증,추가 리뷰 반복없음.
 - get_goal로 큰goal paused 확인. 다음은 freeze 후 live1회,실패시 재실행금지.
+- Task2 시작: 실행 commit59fc184,freeze220파일,출력 E:/AgentFit/output/status-model-comparison-v1/.
+  실제 live 세션10585.첫 GLM FR/1 요청 전송 중.중단 시 live를 다시 실행하지 않는다.
+- Task2 종료: 세션10585 exit1.5번째 DeepSeek LS/1에서 기존 SSE transport INVALID_RESPONSE.
+  실제5시도(D3/G2),완료4,실패1,미실행3,재시도0.412.52초.재시작·옵션변경·대체호출0.
+- 완료FR: D→G 모델/서버오확정2→0,정상누락0→0(10개보존),올바른제외3→1,
+  주보류0→4,전체보류1→5,인용결함0→0.시간66.01→324.12초.
+- FR16 양쪽 external_integrations/tentative/needs_confirmation,42행 모금근거선택.
+  LS15 배치미실행으로230행 암호화해제 counter 선택여부 미평가.미선택으로 집계하지 않는다.
+- 실패5번째는 조립응답이 반환되지 않아 response.json없음.정확한 HTTP/SSE 원인 미확인;
+  모델의 의미 오류·옵션 거절로 단정하지 않는다.추가 재현 호출 없이 종료한다.
+- Task3 완료: results.md/results.json 추가.사후221개 hash일치,model외요청차이0,
+  완료문서지표독립재집계일치.원문/후보32/정답과완료4응답보존.불완전LS는점수비교에서제외.
+- 최종제약: 무료근거는이번사용자확인,잔량독립조회없음.옵션의서버내부적용미확인.
+  지침·정답사후변경0,서비스적용0,큰goal paused.브랜치 push후보고종료.
 
 2026-10-02 KST. 브랜치 feature/status-model-comparison-plan, 기준224a0d7.
 기존 document-input-runtime worktree 사용. 사용자 요청은 계획까지만이며 실제 호출 권한이 아니다.
