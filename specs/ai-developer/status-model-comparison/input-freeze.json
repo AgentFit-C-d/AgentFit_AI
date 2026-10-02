@@ -1,0 +1,126 @@
+{
+  "version": "status-model-comparison-plan-v1",
+  "created_utc": "2026-10-02T06:32:19.339761+00:00",
+  "base_commit": "224a0d7",
+  "plan_only": true,
+  "execution_authorized": false,
+  "account_free_access_currently_confirmed": false,
+  "historical_free_record_usable": false,
+  "models": {
+    "D": "deepseek-ai/deepseek-v4.1-flash",
+    "G": "z-ai/glm-5.3"
+  },
+  "allowed_payload_differences": [
+    "model"
+  ],
+  "prior_freeze_verified_files": 199,
+  "sha256": {
+    "E:\\AgentFit\\output\\status-definition-v1\\freeze.json": "8297e61d06902a5f0df374bfd5c3d479dade39a64cc722953b41b268ffbee489",
+    "E:\\AgentFit\\output\\status-definition-v1\\package.json": "169e512c443d883a434c30fcb3f342fef0bca4469c89e67ae4fa03c0bd5e98bc",
+    "E:\\AgentFit\\output\\status-definition-v1\\summary.json": "2597a8919e8a4b9e8095761ea9459a44e25d3851c9016115bd522f05a74ccaa3",
+    "E:\\AgentFit\\output\\status-definition-v1\\verification.json": "cbd4f6101552e3e5f2e69b8e4828d228eea7b46c4f33562b100da8cb114ffafe",
+    "E:\\AgentFit\\output\\status-definition-v1\\postcheck.json": "1c51119ee7ee7aa41bc74b986b6339097b5d2fba51b66ca7e8ed1268fcfd0d0a",
+    "E:\\AgentFit\\output\\status-definition-v1\\calls\\03-request.json": "021a04b3af7fc541a3eeaddcb39ca562f139ae31133d14045123e82773b6a8f4",
+    "E:\\AgentFit\\output\\status-definition-v1\\calls\\04-request.json": "d30213fb6757d09cf80994fce158e95788cc8470c8d86d433ebeabe5c8f00e34",
+    "E:\\AgentFit\\output\\status-definition-v1\\calls\\05-request.json": "62bb16ebf0c19c65cd2cbf92b1a10b3dddfb855b7c2851dfcb323f954b7c8eac",
+    "E:\\AgentFit\\output\\status-definition-v1\\calls\\06-request.json": "9b83836cc89c4b08dc5cea3a9e91cf563fc09bdbea8c088fa7d53b5062c02dee",
+    "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\specs\\ai-developer\\status-model-comparison\\frozen-system.txt": "cff2b7f45a7dc698cd5fe844da1d92adb827cf3b7aa64b0a36af38cb3e27aa7c",
+    "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\specs\\ai-developer\\classification-instruction-evaluation\\sources.json": "8db512ad303da7b4cf2980be7cc6b610731e0a6275f7017294a0d5fbbe764aba",
+    "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\specs\\ai-developer\\classification-instruction-evaluation\\candidates-draft.json": "22cdb506de38fe7c16dabf5f0c625b484dbc7916d504b180343b93d567e18a63",
+    "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\specs\\ai-developer\\classification-instruction-evaluation\\gold-draft.json": "83d92009929aedf128378d2b603ed5bbf1593fa37ec6c06e10c1d0f08bf295c0",
+    "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\specs\\ai-developer\\classification-instruction-evaluation\\classification-guidance-draft.txt": "505dfeba729b40f735fd0b2986a9d1450b5fb4271abb332950d04e54eff6d883",
+    "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\specs\\ai-developer\\classification-instruction-evaluation\\sources\\FR-README.md": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+    "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\specs\\ai-developer\\classification-instruction-evaluation\\sources\\LS-README.md": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+    "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\specs\\ai-developer\\status-definition-unification\\status-definition.txt": "c2ada5b27f6574f08633c83e8076bedbd0122781b19b39d1aee75a1f8b47e61d",
+    "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\specs\\ai-developer\\status-definition-unification\\status-edits.json": "136bd7a8d072cfc8b9f8edc089d58002d22a65df9bd54167892df12147f3625d",
+    "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\specs\\ai-developer\\status-definition-unification\\results.json": "59203eb255f4f4461eb425f59f715adc47934c6701f4076ed51b473aa9fa4d1b",
+    "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\work\\harness\\status-definition-unification\\experiment.py": "f5160846322ebf8dd727a6b9247c921eaccbd572512c0bb6807ec140fb814b03",
+    "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\work\\harness\\classification-instruction-evaluation\\compare.py": "ee8c3985e93c16a3cfccf8fbe39416af6a3fc7006e0a217daefe25e8eb78c939",
+    "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\work\\harness\\b-evidence-selection-comparison\\experiment.py": "6451e2ee1aad87db7713903bdc2513f024c8988c478a90d0b9eb9da4770f7231",
+    "E:\\AgentFit\\tmp\\worktrees\\document-input-runtime\\ai_service\\agentfit_ai\\nvidia_streaming.py": "27a4b043c35982013661b2c8a45ffdc864133c92e6f250afc5b7be8bf771feb1"
+  },
+  "object_hash_serialization": "UTF-8 json.dumps ensure_ascii=False separators=(comma,colon) sort_keys=False, no trailing newline",
+  "documents": {
+    "FR": {
+      "document_sha256": "bdd3bb5703525a98ff380a03519ec68987463818d89f2feb5e865feab69e57c0",
+      "candidates_sha256": "911930af9043c390f711b2436f181a60e38df63edd610dc9e1be13fdc01adb45",
+      "gold_sha256": "f087173be7212a7b60b5c545b3476264aee95643a8e67bcacffacf5300a70486",
+      "registry_sha256": "1f7d73a850405741098ec4462c22c1a8264c0bb861d7937dac145107efe809f6",
+      "candidate_count": 16,
+      "scored_count": 15,
+      "positive_count": 10,
+      "exclusion_count": 5,
+      "unscored_cases": [
+        "FR16"
+      ]
+    },
+    "LS": {
+      "document_sha256": "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b",
+      "candidates_sha256": "fb16652a3212e1ad1717d6c577dfcf9af764871977ef0d1cdd42225423b8e26e",
+      "gold_sha256": "179ac391dc50ca07740bdc6d557680eb27115038317057809b2ecdcd1d3d795f",
+      "registry_sha256": "7b35d67e7bb6de980b9a1bc710861a88f23448423b5e54c3cfa241eb63035f95",
+      "candidate_count": 16,
+      "scored_count": 15,
+      "positive_count": 6,
+      "exclusion_count": 9,
+      "unscored_cases": [
+        "LS15"
+      ]
+    }
+  },
+  "batches": [
+    {
+      "document": "FR",
+      "batch": 1,
+      "saved_request": "E:\\AgentFit\\output\\status-definition-v1\\calls\\03-request.json",
+      "payload_sha256": "67d1894ea37b80a2226730bd137b787f8015b0fe4f5d4fc630c75cad556da4e7",
+      "system_sha256": "cff2b7f45a7dc698cd5fe844da1d92adb827cf3b7aa64b0a36af38cb3e27aa7c",
+      "user_sha256": "4cf3fee30b11d022c71486a15df93e384ce12b5514384c84210e5c05a728cf33",
+      "response_format_sha256": "15afe21d8db1afc4e65640612fbc7bee1c519705709d54aa637ce71c0cf6960c",
+      "user_chars": 31319,
+      "user_utf8_bytes": 31319,
+      "prior_prompt_tokens": 13418
+    },
+    {
+      "document": "FR",
+      "batch": 2,
+      "saved_request": "E:\\AgentFit\\output\\status-definition-v1\\calls\\04-request.json",
+      "payload_sha256": "1452f6073cd5e4a5816120cd38e0794516846bfeeaf03cc34690718b0d978565",
+      "system_sha256": "cff2b7f45a7dc698cd5fe844da1d92adb827cf3b7aa64b0a36af38cb3e27aa7c",
+      "user_sha256": "a2d80b6c91ced11995585f327342086590ddebbcc56f130f10965ed26117f254",
+      "response_format_sha256": "aef3a1fa8b18114f1ae70fcf49813064fa36a2530b1d6811482675e755e9e25f",
+      "user_chars": 32271,
+      "user_utf8_bytes": 32271,
+      "prior_prompt_tokens": 13458
+    },
+    {
+      "document": "LS",
+      "batch": 1,
+      "saved_request": "E:\\AgentFit\\output\\status-definition-v1\\calls\\05-request.json",
+      "payload_sha256": "b8318c057e1a5c4092e75d0f2d80944bb200a9686da829c61ada81bcb88d4f39",
+      "system_sha256": "cff2b7f45a7dc698cd5fe844da1d92adb827cf3b7aa64b0a36af38cb3e27aa7c",
+      "user_sha256": "1fd1be4f9c5fa2398760663ce08d9d0d27e95a12c0b5b58dde41b10473231de9",
+      "response_format_sha256": "15afe21d8db1afc4e65640612fbc7bee1c519705709d54aa637ce71c0cf6960c",
+      "user_chars": 86725,
+      "user_utf8_bytes": 86761,
+      "prior_prompt_tokens": 35532
+    },
+    {
+      "document": "LS",
+      "batch": 2,
+      "saved_request": "E:\\AgentFit\\output\\status-definition-v1\\calls\\06-request.json",
+      "payload_sha256": "cdeec7220dd373323fb98353ad9d67700097d6b8a596b003d3e80b121258c17e",
+      "system_sha256": "cff2b7f45a7dc698cd5fe844da1d92adb827cf3b7aa64b0a36af38cb3e27aa7c",
+      "user_sha256": "ff01f1445da0c14af2eb66e9bc9b1baa47d1341c80070d779e708bbbd8528d68",
+      "response_format_sha256": "aef3a1fa8b18114f1ae70fcf49813064fa36a2530b1d6811482675e755e9e25f",
+      "user_chars": 87397,
+      "user_utf8_bytes": 87421,
+      "prior_prompt_tokens": 35964
+    }
+  ],
+  "max_attempts": 8,
+  "retries": 0,
+  "request_timeout_seconds": 600,
+  "overall_timeout_seconds": 5400,
+  "new_model_calls": 0
+}
