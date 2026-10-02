@@ -52,8 +52,14 @@ def offline(*, block_providers=True):
 
 @contextmanager
 def replay_providers():
+    """Freeze upstream grounding for v3 regression, never label newly added spans.
+
+    Operation grounding now recovers additional candidates. Its current output
+    cannot be paired with old classification responses. This regression starts
+    downstream of the saved general/operation candidate boundaries instead.
+    """
     trace = load('trace.json')
-    calls = trace['calls'][2:]
+    calls = trace['calls'][3:]
     seen = []
 
     def transport(payload, key, timeout):
@@ -66,12 +72,17 @@ def replay_providers():
         assert document == load('document.txt')
         return [SimpleNamespace(**row) for row in trace['stages']['general_extracted']]
 
+    def operations(document, key, **kwargs):
+        assert document == load('document.txt')
+        return deepcopy(trace['stages']['operations_grounded'])
+
     # The optional SDK is not executed: its already-saved output is the boundary.
     with offline(), patch('agentfit_ai.candidate_service_worker.find_spec', return_value=object()), \
             patch('agentfit_ai.langextract_solar_trial.extract_candidates', side_effect=extract), \
+            patch('agentfit_ai.candidate_analysis_pipeline.extract_operation_candidates', side_effect=operations), \
             patch('agentfit_ai.candidate_service_worker.post_nvidia_streaming_inline', side_effect=transport):
         yield transport, seen
-        assert seen == list(range(3, 26)), seen
+        assert seen == list(range(4, 26)), seen
 
 
 def replay(contract='confirmation-v2'):

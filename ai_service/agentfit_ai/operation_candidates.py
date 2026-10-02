@@ -89,7 +89,7 @@ def extract_operation_candidates(document, key, *, model=MODEL, transport=None):
         extractions.append(SimpleNamespace(extraction_class='candidate',
             extraction_text=mention['quote'], attributes={'anchor': mention['anchor']}))
     frozen = {'candidates': [], 'rejected': []}
-    for index, row in enumerate(ground_anchored_extractions(document, extractions)):
+    for index, row in enumerate(ground_anchored_extractions(document, extractions, allow_quote_variants=True)):
         if row['status'] == 'exact':
             frozen['candidates'].append({'id': f'C{index:03}', 'start': row['start'], 'end': row['end']})
         else:

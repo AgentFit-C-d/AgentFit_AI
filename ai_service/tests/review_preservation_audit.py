@@ -53,7 +53,9 @@ def audit():
         newReviewPending=len(rejected), rawModelDecisions=len(records), newModelCalls=0, retries=0,
         transport='in-memory replay / ASGI / child stdin-stdout; application sockets blocked',
         generalExtractionReplay='saved general_extracted objects; no LangExtract provider invocation',
-        providerRequestReplay='saved requests 3..25 exactly matched; responses replayed locally',
+        operationGroundingReplay='saved operations_grounded; excludes newly recovered spans from semantic replay',
+        providerRequestReplay='saved requests 4..25 exactly matched; responses replayed locally',
+        evaluationScope='v3 regression on frozen candidates, not quality of current upstream extraction',
         modelAccuracyGainClaimed=False, realSpringVerified=False, deployed=False)
     return {'summary.json': summary, 'v2-result.json': before, 'v3-result.json': after,
             'meaning-comparison.json': meanings, 'retained-review-evidence.json': bindings}

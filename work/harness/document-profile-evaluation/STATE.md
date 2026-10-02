@@ -1,4 +1,16 @@
-# Document Profile Evaluation — confirmation-v3 오프라인 후보 보존 완료·종료
+# Document Profile Evaluation — anchor 큰따옴표 위치 연결 오프라인 수정 완료·종료
+
+## 2026-10-02 텍스트 입력 후보 위치 연결 수정
+
+- 사용자 승인 범위는 위치 연결 한 원인. 큰 Goal paused 유지, 새 모델·재시도·외부 네트워크·배포·Spring 변경0. 기존 feature worktree에서 feature/anchor-quote-grounding 생성, BASE e5ec802. 다른 dirty 파일 보존.
+- 저장 call3/mentions[18]의 quote는 원문에 있으나 anchor의 U+201C/U+201D와 원문 U+0022 차이로 ambiguous_anchor 재현. 기본 정확 연결 결과가 저장 operations_grounded와 동일함 확인.
+- operation caller만 exact-first 보조 비교를 opt-in. 1:1 큰따옴표 비교, 전체 anchor 유일성·후보의 정확한 포함·원문 slice equality 필수. 문맥/공백/조합 정규화나 유사도는 없음. 모델·프롬프트·골드·의미 정책·v3 계약 불변.
+- 목표 sourceValue='PDF · Markdown · 텍스트 입력', documentId=PUBLIC-01, Unicode [1890,1913). 전체 operation 57중42→57위치 연결, 기존42개 불변, 동일 결함15개 복구. 합친 위치145→160이므로 후속 모델 입력 변화 가능.
+- 새 후보를 저장 분류 응답에 추가하지 않음. v3 회귀는 저장된 operations_grounded 이후 경계에서 시작하며 requests4–25 payload 일치 검증. 새 후보 분류/검토/Profile 및 기존40의미 새점수는 미측정.
+- RED→GREEN 새12회귀 및 기존v3 18회귀 통과. 최종전체1404통과/7skip/실패0(43.692초), TCP29제외·응용소켓차단. 독립리뷰52통과/추가 수정사항 없음.
+- 결과 E:/AgentFit/output/anchor-quote-grounding-20261002. 기존7파일 해시 확인. 보고 anchor-quote-grounding-report-20261002.md, 계획 anchor-quote-grounding-plan-20261002.md.
+- 현재 v3는 유효span/modelDecisions가 없는 개별 미연결 후보 전달 불가. Codex/프로젝트명/의미검토/모델처리시간 미해결. 이번 작업은 위치 복구만 확인함.
+- 안전한 종료: 로컬 커밋만 남기고 보고 후 종료. 이번 외부전송 금지에 따라 push하지 않음. 큰 Goal 재개하지 않음.
 
 ## 2026-10-02 A안·응답 계약 확장 승인
 
