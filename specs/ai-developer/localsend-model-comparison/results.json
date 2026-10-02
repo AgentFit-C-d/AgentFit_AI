@@ -1,0 +1,4781 @@
+{
+  "execution_commit": "591965bd0b436371d41f0cef071ec9c250906b3d",
+  "freeze_sha256": "9b81925aba11eae0fb991999ee2ffff985ef544afdc0d2748681ec65836d3777",
+  "summary": {
+    "documents": {
+      "LS": {
+        "D": {
+          "records": [
+            {
+              "id": "C000",
+              "raw_field": "project_name",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 937,
+                "end": 946
+              },
+              "sourceValue": "LocalSend",
+              "support": [
+                {
+                  "start": 937,
+                  "end": 1111
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C001",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 993,
+                "end": 1109
+              },
+              "sourceValue": "securely share files and messages with nearby devices over your local network without needing an internet connection",
+              "support": [
+                {
+                  "start": 937,
+                  "end": 1111
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C002",
+              "raw_field": "other",
+              "raw_status": "irrelevant",
+              "verdict": "excluded",
+              "candidate": {
+                "start": 1773,
+                "end": 1781
+              },
+              "sourceValue": "REST API",
+              "support": [
+                {
+                  "start": 1681,
+                  "end": 2000
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C003",
+              "raw_field": "other",
+              "raw_status": "irrelevant",
+              "verdict": "excluded",
+              "candidate": {
+                "start": 1786,
+                "end": 1791
+              },
+              "sourceValue": "HTTPS",
+              "support": [
+                {
+                  "start": 1681,
+                  "end": 2000
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C004",
+              "raw_field": "other",
+              "raw_status": "irrelevant",
+              "verdict": "excluded",
+              "candidate": {
+                "start": 1948,
+                "end": 1965
+              },
+              "sourceValue": "fast and reliable",
+              "support": [
+                {
+                  "start": 1681,
+                  "end": 2000
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C005",
+              "raw_field": "features",
+              "raw_status": "negated",
+              "verdict": "excluded",
+              "candidate": {
+                "start": 2720,
+                "end": 2731
+              },
+              "sourceValue": "auto-update",
+              "support": [
+                {
+                  "start": 2598,
+                  "end": 2733
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C006",
+              "raw_field": "external_integrations",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 3052,
+                "end": 3062
+              },
+              "sourceValue": "Play Store",
+              "support": [
+                {
+                  "start": 2976,
+                  "end": 3097
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C007",
+              "raw_field": "other",
+              "raw_status": "irrelevant",
+              "verdict": "excluded",
+              "candidate": {
+                "start": 5643,
+                "end": 5650
+              },
+              "sourceValue": "Android",
+              "support": [
+                {
+                  "start": 5641,
+                  "end": 5798
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            }
+          ],
+          "evidence": [
+            {
+              "id": "C000",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C000",
+                "field": "project_name",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            {
+              "id": "C001",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C001",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            {
+              "id": "C002",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C002",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                ],
+                "counterUnitIds": [],
+                "status": "irrelevant"
+              }
+            },
+            {
+              "id": "C003",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C003",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                ],
+                "counterUnitIds": [],
+                "status": "irrelevant"
+              }
+            },
+            {
+              "id": "C004",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C004",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                ],
+                "counterUnitIds": [],
+                "status": "irrelevant"
+              }
+            },
+            {
+              "id": "C005",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C005",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2598:2733"
+                ],
+                "counterUnitIds": [],
+                "status": "negated"
+              }
+            },
+            {
+              "id": "C006",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C006",
+                "field": "external_integrations",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2976:3097"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            {
+              "id": "C007",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C007",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:5641:5798"
+                ],
+                "counterUnitIds": [],
+                "status": "irrelevant"
+              }
+            }
+          ],
+          "batches": [
+            {
+              "batch": 1,
+              "records": [
+                {
+                  "id": "C000",
+                  "raw_field": "project_name",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 937,
+                    "end": 946
+                  },
+                  "sourceValue": "LocalSend",
+                  "support": [
+                    {
+                      "start": 937,
+                      "end": 1111
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C001",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 993,
+                    "end": 1109
+                  },
+                  "sourceValue": "securely share files and messages with nearby devices over your local network without needing an internet connection",
+                  "support": [
+                    {
+                      "start": 937,
+                      "end": 1111
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C002",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 1773,
+                    "end": 1781
+                  },
+                  "sourceValue": "REST API",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C003",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 1786,
+                    "end": 1791
+                  },
+                  "sourceValue": "HTTPS",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C004",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 1948,
+                    "end": 1965
+                  },
+                  "sourceValue": "fast and reliable",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C005",
+                  "raw_field": "features",
+                  "raw_status": "negated",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 2720,
+                    "end": 2731
+                  },
+                  "sourceValue": "auto-update",
+                  "support": [
+                    {
+                      "start": 2598,
+                      "end": 2733
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C006",
+                  "raw_field": "external_integrations",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 3052,
+                    "end": 3062
+                  },
+                  "sourceValue": "Play Store",
+                  "support": [
+                    {
+                      "start": 2976,
+                      "end": 3097
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C007",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 5643,
+                    "end": 5650
+                  },
+                  "sourceValue": "Android",
+                  "support": [
+                    {
+                      "start": 5641,
+                      "end": 5798
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                }
+              ],
+              "evidence": [
+                {
+                  "id": "C000",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C000",
+                    "field": "project_name",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                {
+                  "id": "C001",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C001",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                {
+                  "id": "C002",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C002",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                {
+                  "id": "C003",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C003",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                {
+                  "id": "C004",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C004",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                {
+                  "id": "C005",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C005",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2598:2733"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "negated"
+                  }
+                },
+                {
+                  "id": "C006",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C006",
+                    "field": "external_integrations",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2976:3097"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                {
+                  "id": "C007",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C007",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:5641:5798"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                }
+              ],
+              "prompt_tokens": 35532,
+              "completion_tokens": 722,
+              "trace": {
+                "model": "deepseek-ai/deepseek-v4.1-flash",
+                "finish_reason": "stop",
+                "provider_elapsed_ms": 35259,
+                "request_bytes": 103735,
+                "response_bytes": 2343
+              }
+            }
+          ],
+          "usage": [
+            {
+              "sequence": 1,
+              "batch": 1,
+              "prompt_tokens": 35532,
+              "completion_tokens": 722
+            },
+            {
+              "sequence": 4,
+              "batch": 2,
+              "prompt_tokens": null,
+              "completion_tokens": null
+            }
+          ],
+          "wall_seconds": 62.18624079999972,
+          "metrics": {
+            "raw_false_confirmed": 1,
+            "false_supported": 1,
+            "raw_normal_missing": 4,
+            "normal_missing": 4,
+            "positive_supported": 2,
+            "held_normal": 0,
+            "correct_excluded": 5,
+            "raw_mismatch": 1,
+            "unassessable": 8,
+            "total": 16,
+            "scored": 15,
+            "positive_gold": 6,
+            "retained": 8,
+            "complete": false,
+            "core_positive_gold": 4,
+            "core_positive_supported": 1,
+            "held_total": 0,
+            "held_scored": 0,
+            "held_ambiguous": 0,
+            "citation_defects": 0,
+            "citation_unassessable": 8,
+            "citation_kinds": {
+              "valid_covering": 8
+            },
+            "details": [
+              {
+                "caseId": "LS01",
+                "candidateId": "C007",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C007",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 5643,
+                    "end": 5650
+                  },
+                  "sourceValue": "Android",
+                  "support": [
+                    {
+                      "start": 5641,
+                      "end": 5798
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C007",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C007",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:5641:5798"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS02",
+                "candidateId": "C008",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": null,
+                "citation": null,
+                "unassessable": true,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS03",
+                "candidateId": "C004",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C004",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 1948,
+                    "end": 1965
+                  },
+                  "sourceValue": "fast and reliable",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C004",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C004",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS04",
+                "candidateId": "C001",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": true,
+                "actual": {
+                  "id": "C001",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 993,
+                    "end": 1109
+                  },
+                  "sourceValue": "securely share files and messages with nearby devices over your local network without needing an internet connection",
+                  "support": [
+                    {
+                      "start": 937,
+                      "end": 1111
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C001",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C001",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": true,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS05",
+                "candidateId": "C002",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C002",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 1773,
+                    "end": 1781
+                  },
+                  "sourceValue": "REST API",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C002",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C002",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS06",
+                "candidateId": "C003",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C003",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 1786,
+                    "end": 1791
+                  },
+                  "sourceValue": "HTTPS",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C003",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C003",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS07",
+                "candidateId": "C005",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "negated",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C005",
+                  "raw_field": "features",
+                  "raw_status": "negated",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 2720,
+                    "end": 2731
+                  },
+                  "sourceValue": "auto-update",
+                  "support": [
+                    {
+                      "start": 2598,
+                      "end": 2733
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C005",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C005",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2598:2733"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "negated"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS08",
+                "candidateId": "C009",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": true,
+                "actual": null,
+                "citation": null,
+                "unassessable": true,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": true,
+                "normal_missing": true,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS09",
+                "candidateId": "C010",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": true,
+                "actual": null,
+                "citation": null,
+                "unassessable": true,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": true,
+                "normal_missing": true,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS10",
+                "candidateId": "C015",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": null,
+                "citation": null,
+                "unassessable": true,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS11",
+                "candidateId": "C006",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C006",
+                  "raw_field": "external_integrations",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 3052,
+                    "end": 3062
+                  },
+                  "sourceValue": "Play Store",
+                  "support": [
+                    {
+                      "start": 2976,
+                      "end": 3097
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C006",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C006",
+                    "field": "external_integrations",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2976:3097"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": true,
+                "false_supported": true,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": true,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS12",
+                "candidateId": "C014",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": true,
+                "actual": null,
+                "citation": null,
+                "unassessable": true,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": true,
+                "normal_missing": true,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS13",
+                "candidateId": "C013",
+                "scored": true,
+                "expected": {
+                  "expectedField": "frontend",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": false,
+                "actual": null,
+                "citation": null,
+                "unassessable": true,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": true,
+                "normal_missing": true,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS14",
+                "candidateId": "C012",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": null,
+                "citation": null,
+                "unassessable": true,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS15",
+                "candidateId": "C011",
+                "scored": false,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "tentative",
+                  "expectedVerdict": "needs_confirmation"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": null,
+                "citation": null,
+                "unassessable": true,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS16",
+                "candidateId": "C000",
+                "scored": true,
+                "expected": {
+                  "expectedField": "project_name",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": false,
+                "actual": {
+                  "id": "C000",
+                  "raw_field": "project_name",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 937,
+                    "end": 946
+                  },
+                  "sourceValue": "LocalSend",
+                  "support": [
+                    {
+                      "start": 937,
+                      "end": 1111
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C000",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C000",
+                    "field": "project_name",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": true,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              }
+            ]
+          },
+          "complete": false,
+          "comparison_metrics": null,
+          "diagnostics": {
+            "other_confirmed_total": 0,
+            "other_confirmed_scored": 0,
+            "special_cases": {
+              "LS07": {
+                "id": "C005",
+                "raw_field": "features",
+                "raw_status": "negated",
+                "verdict": "excluded",
+                "candidate": {
+                  "start": 2720,
+                  "end": 2731
+                },
+                "sourceValue": "auto-update",
+                "support": [
+                  {
+                    "start": 2598,
+                    "end": 2733
+                  }
+                ],
+                "counterEvidence": [],
+                "groundingValid": true,
+                "scored": true,
+                "support_text": [
+                  "It is recommended to download the app either from an app store or from a package manager because the app does not have an auto-update.\n"
+                ],
+                "counter_text": [],
+                "review_lines": [
+                  {
+                    "line": 64,
+                    "start": 2598,
+                    "end": 2733,
+                    "text": "It is recommended to download the app either from an app store or from a package manager because the app does not have an auto-update.\n",
+                    "selected_as_support": true,
+                    "selected_as_counter": false
+                  }
+                ]
+              },
+              "LS15": {
+                "unassessable": true
+              }
+            }
+          },
+          "calls": 2,
+          "responses_returned": 1,
+          "provider_failures": 1,
+          "model_seconds": 62.11313480000172,
+          "mean_call_seconds": 31.05656740000086,
+          "max_call_seconds": 35.22683690000122,
+          "prompt_tokens": null,
+          "prompt_tokens_known_sum": 35532,
+          "prompt_tokens_unknown_calls": 1,
+          "completion_tokens": null,
+          "completion_tokens_known_sum": 722,
+          "completion_tokens_unknown_calls": 1
+        },
+        "G": {
+          "records": [
+            {
+              "id": "C000",
+              "raw_field": "project_name",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 937,
+                "end": 946
+              },
+              "sourceValue": "LocalSend",
+              "support": [
+                {
+                  "start": 0,
+                  "end": 12
+                },
+                {
+                  "start": 937,
+                  "end": 1111
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C001",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 993,
+                "end": 1109
+              },
+              "sourceValue": "securely share files and messages with nearby devices over your local network without needing an internet connection",
+              "support": [
+                {
+                  "start": 937,
+                  "end": 1111
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C002",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1773,
+                "end": 1781
+              },
+              "sourceValue": "REST API",
+              "support": [
+                {
+                  "start": 1681,
+                  "end": 2000
+                },
+                {
+                  "start": 7712,
+                  "end": 7961
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C003",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 1786,
+                "end": 1791
+              },
+              "sourceValue": "HTTPS",
+              "support": [
+                {
+                  "start": 1681,
+                  "end": 2000
+                },
+                {
+                  "start": 7712,
+                  "end": 7961
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C004",
+              "raw_field": "other",
+              "raw_status": "irrelevant",
+              "verdict": "excluded",
+              "candidate": {
+                "start": 1948,
+                "end": 1965
+              },
+              "sourceValue": "fast and reliable",
+              "support": [
+                {
+                  "start": 1681,
+                  "end": 2000
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C005",
+              "raw_field": "features",
+              "raw_status": "negated",
+              "verdict": "excluded",
+              "candidate": {
+                "start": 2720,
+                "end": 2731
+              },
+              "sourceValue": "auto-update",
+              "support": [
+                {
+                  "start": 2598,
+                  "end": 2733
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C006",
+              "raw_field": "external_integrations",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 3052,
+                "end": 3062
+              },
+              "sourceValue": "Play Store",
+              "support": [
+                {
+                  "start": 2976,
+                  "end": 3097
+                },
+                {
+                  "start": 4304,
+                  "end": 4392
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C007",
+              "raw_field": "other",
+              "raw_status": "irrelevant",
+              "verdict": "excluded",
+              "candidate": {
+                "start": 5643,
+                "end": 5650
+              },
+              "sourceValue": "Android",
+              "support": [
+                {
+                  "start": 5641,
+                  "end": 5798
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C008",
+              "raw_field": "other",
+              "raw_status": "irrelevant",
+              "verdict": "excluded",
+              "candidate": {
+                "start": 6114,
+                "end": 6121
+              },
+              "sourceValue": "Windows",
+              "support": [
+                {
+                  "start": 6112,
+                  "end": 6197
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C009",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 7360,
+                "end": 7436
+              },
+              "sourceValue": "The app will use this file to store settings instead of the default location",
+              "support": [
+                {
+                  "start": 7360,
+                  "end": 7438
+                },
+                {
+                  "start": 7251,
+                  "end": 7336
+                },
+                {
+                  "start": 7226,
+                  "end": 7250
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C010",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 7482,
+                "end": 7517
+              },
+              "sourceValue": "start the app hidden (only in tray)",
+              "support": [
+                {
+                  "start": 7479,
+                  "end": 7584
+                },
+                {
+                  "start": 7457,
+                  "end": 7478
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C011",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 7828,
+                "end": 7864
+              },
+              "sourceValue": "All data is sent securely over HTTPS",
+              "support": [
+                {
+                  "start": 7712,
+                  "end": 7961
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C012",
+              "raw_field": "other",
+              "raw_status": "irrelevant",
+              "verdict": "excluded",
+              "candidate": {
+                "start": 7943,
+                "end": 7959
+              },
+              "sourceValue": "maximum security",
+              "support": [
+                {
+                  "start": 7712,
+                  "end": 7961
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C013",
+              "raw_field": "frontend",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 8259,
+                "end": 8266
+              },
+              "sourceValue": "Flutter",
+              "support": [
+                {
+                  "start": 8248,
+                  "end": 8364
+                },
+                {
+                  "start": 8601,
+                  "end": 8689
+                },
+                {
+                  "start": 8813,
+                  "end": 8929
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C014",
+              "raw_field": "features",
+              "raw_status": "confirmed",
+              "verdict": "supported",
+              "candidate": {
+                "start": 9441,
+                "end": 9537
+              },
+              "sourceValue": "To select the destination without an interactive device list, pass its exact alias\nor IP address",
+              "support": [
+                {
+                  "start": 9441,
+                  "end": 9524
+                },
+                {
+                  "start": 9524,
+                  "end": 9539
+                },
+                {
+                  "start": 9549,
+                  "end": 9598
+                },
+                {
+                  "start": 9598,
+                  "end": 9647
+                },
+                {
+                  "start": 9652,
+                  "end": 9738
+                },
+                {
+                  "start": 9738,
+                  "end": 9788
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            },
+            {
+              "id": "C015",
+              "raw_field": "other",
+              "raw_status": "irrelevant",
+              "verdict": "excluded",
+              "candidate": {
+                "start": 10253,
+                "end": 10260
+              },
+              "sourceValue": "Weblate",
+              "support": [
+                {
+                  "start": 10186,
+                  "end": 10346
+                }
+              ],
+              "counterEvidence": [],
+              "groundingValid": true
+            }
+          ],
+          "evidence": [
+            {
+              "id": "C000",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C000",
+                "field": "project_name",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:0:12",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            {
+              "id": "C001",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C001",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            {
+              "id": "C002",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C002",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            {
+              "id": "C003",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C003",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            {
+              "id": "C004",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C004",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                ],
+                "counterUnitIds": [],
+                "status": "irrelevant"
+              }
+            },
+            {
+              "id": "C005",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C005",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2598:2733"
+                ],
+                "counterUnitIds": [],
+                "status": "negated"
+              }
+            },
+            {
+              "id": "C006",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C006",
+                "field": "external_integrations",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2976:3097",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:4304:4392"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            {
+              "id": "C007",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C007",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:5641:5798"
+                ],
+                "counterUnitIds": [],
+                "status": "irrelevant"
+              }
+            },
+            {
+              "id": "C008",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C008",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:6112:6197"
+                ],
+                "counterUnitIds": [],
+                "status": "irrelevant"
+              }
+            },
+            {
+              "id": "C009",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C009",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7360:7438",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7251:7336",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7226:7250"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            {
+              "id": "C010",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C010",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7479:7584",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7457:7478"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            {
+              "id": "C011",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C011",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            {
+              "id": "C012",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C012",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                ],
+                "counterUnitIds": [],
+                "status": "irrelevant"
+              }
+            },
+            {
+              "id": "C013",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C013",
+                "field": "frontend",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8248:8364",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8601:8689",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8813:8929"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            {
+              "id": "C014",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C014",
+                "field": "features",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9441:9524",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9524:9539",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9549:9598",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9598:9647",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9652:9738",
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9738:9788"
+                ],
+                "counterUnitIds": [],
+                "status": "confirmed"
+              }
+            },
+            {
+              "id": "C015",
+              "citationDefect": false,
+              "kind": "valid_covering",
+              "issues": [],
+              "originalResponse": {
+                "id": "C015",
+                "field": "other",
+                "supportUnitIds": [
+                  "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:10186:10346"
+                ],
+                "counterUnitIds": [],
+                "status": "irrelevant"
+              }
+            }
+          ],
+          "batches": [
+            {
+              "batch": 1,
+              "records": [
+                {
+                  "id": "C000",
+                  "raw_field": "project_name",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 937,
+                    "end": 946
+                  },
+                  "sourceValue": "LocalSend",
+                  "support": [
+                    {
+                      "start": 0,
+                      "end": 12
+                    },
+                    {
+                      "start": 937,
+                      "end": 1111
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C001",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 993,
+                    "end": 1109
+                  },
+                  "sourceValue": "securely share files and messages with nearby devices over your local network without needing an internet connection",
+                  "support": [
+                    {
+                      "start": 937,
+                      "end": 1111
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C002",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 1773,
+                    "end": 1781
+                  },
+                  "sourceValue": "REST API",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    },
+                    {
+                      "start": 7712,
+                      "end": 7961
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C003",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 1786,
+                    "end": 1791
+                  },
+                  "sourceValue": "HTTPS",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    },
+                    {
+                      "start": 7712,
+                      "end": 7961
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C004",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 1948,
+                    "end": 1965
+                  },
+                  "sourceValue": "fast and reliable",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C005",
+                  "raw_field": "features",
+                  "raw_status": "negated",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 2720,
+                    "end": 2731
+                  },
+                  "sourceValue": "auto-update",
+                  "support": [
+                    {
+                      "start": 2598,
+                      "end": 2733
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C006",
+                  "raw_field": "external_integrations",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 3052,
+                    "end": 3062
+                  },
+                  "sourceValue": "Play Store",
+                  "support": [
+                    {
+                      "start": 2976,
+                      "end": 3097
+                    },
+                    {
+                      "start": 4304,
+                      "end": 4392
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C007",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 5643,
+                    "end": 5650
+                  },
+                  "sourceValue": "Android",
+                  "support": [
+                    {
+                      "start": 5641,
+                      "end": 5798
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                }
+              ],
+              "evidence": [
+                {
+                  "id": "C000",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C000",
+                    "field": "project_name",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:0:12",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                {
+                  "id": "C001",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C001",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                {
+                  "id": "C002",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C002",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                {
+                  "id": "C003",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C003",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                {
+                  "id": "C004",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C004",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                {
+                  "id": "C005",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C005",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2598:2733"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "negated"
+                  }
+                },
+                {
+                  "id": "C006",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C006",
+                    "field": "external_integrations",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2976:3097",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:4304:4392"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                {
+                  "id": "C007",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C007",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:5641:5798"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                }
+              ],
+              "prompt_tokens": null,
+              "completion_tokens": null,
+              "trace": {
+                "model": "z-ai/glm-5.3",
+                "finish_reason": "stop",
+                "provider_elapsed_ms": 157271,
+                "request_bytes": 103716,
+                "response_bytes": 2064
+              }
+            },
+            {
+              "batch": 2,
+              "records": [
+                {
+                  "id": "C008",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 6114,
+                    "end": 6121
+                  },
+                  "sourceValue": "Windows",
+                  "support": [
+                    {
+                      "start": 6112,
+                      "end": 6197
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C009",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 7360,
+                    "end": 7436
+                  },
+                  "sourceValue": "The app will use this file to store settings instead of the default location",
+                  "support": [
+                    {
+                      "start": 7360,
+                      "end": 7438
+                    },
+                    {
+                      "start": 7251,
+                      "end": 7336
+                    },
+                    {
+                      "start": 7226,
+                      "end": 7250
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C010",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 7482,
+                    "end": 7517
+                  },
+                  "sourceValue": "start the app hidden (only in tray)",
+                  "support": [
+                    {
+                      "start": 7479,
+                      "end": 7584
+                    },
+                    {
+                      "start": 7457,
+                      "end": 7478
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C011",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 7828,
+                    "end": 7864
+                  },
+                  "sourceValue": "All data is sent securely over HTTPS",
+                  "support": [
+                    {
+                      "start": 7712,
+                      "end": 7961
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C012",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 7943,
+                    "end": 7959
+                  },
+                  "sourceValue": "maximum security",
+                  "support": [
+                    {
+                      "start": 7712,
+                      "end": 7961
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C013",
+                  "raw_field": "frontend",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 8259,
+                    "end": 8266
+                  },
+                  "sourceValue": "Flutter",
+                  "support": [
+                    {
+                      "start": 8248,
+                      "end": 8364
+                    },
+                    {
+                      "start": 8601,
+                      "end": 8689
+                    },
+                    {
+                      "start": 8813,
+                      "end": 8929
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C014",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 9441,
+                    "end": 9537
+                  },
+                  "sourceValue": "To select the destination without an interactive device list, pass its exact alias\nor IP address",
+                  "support": [
+                    {
+                      "start": 9441,
+                      "end": 9524
+                    },
+                    {
+                      "start": 9524,
+                      "end": 9539
+                    },
+                    {
+                      "start": 9549,
+                      "end": 9598
+                    },
+                    {
+                      "start": 9598,
+                      "end": 9647
+                    },
+                    {
+                      "start": 9652,
+                      "end": 9738
+                    },
+                    {
+                      "start": 9738,
+                      "end": 9788
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                {
+                  "id": "C015",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 10253,
+                    "end": 10260
+                  },
+                  "sourceValue": "Weblate",
+                  "support": [
+                    {
+                      "start": 10186,
+                      "end": 10346
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                }
+              ],
+              "evidence": [
+                {
+                  "id": "C008",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C008",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:6112:6197"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                {
+                  "id": "C009",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C009",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7360:7438",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7251:7336",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7226:7250"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                {
+                  "id": "C010",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C010",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7479:7584",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7457:7478"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                {
+                  "id": "C011",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C011",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                {
+                  "id": "C012",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C012",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                {
+                  "id": "C013",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C013",
+                    "field": "frontend",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8248:8364",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8601:8689",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8813:8929"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                {
+                  "id": "C014",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C014",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9441:9524",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9524:9539",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9549:9598",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9598:9647",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9652:9738",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9738:9788"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                {
+                  "id": "C015",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C015",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:10186:10346"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                }
+              ],
+              "prompt_tokens": null,
+              "completion_tokens": null,
+              "trace": {
+                "model": "z-ai/glm-5.3",
+                "finish_reason": "stop",
+                "provider_elapsed_ms": 248152,
+                "request_bytes": 104403,
+                "response_bytes": 2536
+              }
+            }
+          ],
+          "usage": [
+            {
+              "sequence": 2,
+              "batch": 1,
+              "prompt_tokens": null,
+              "completion_tokens": null
+            },
+            {
+              "sequence": 3,
+              "batch": 2,
+              "prompt_tokens": null,
+              "completion_tokens": null
+            }
+          ],
+          "wall_seconds": 405.44222380000065,
+          "metrics": {
+            "raw_false_confirmed": 3,
+            "false_supported": 3,
+            "raw_normal_missing": 0,
+            "normal_missing": 0,
+            "positive_supported": 6,
+            "held_normal": 0,
+            "correct_excluded": 6,
+            "raw_mismatch": 3,
+            "unassessable": 0,
+            "total": 16,
+            "scored": 15,
+            "positive_gold": 6,
+            "retained": 16,
+            "complete": true,
+            "core_positive_gold": 4,
+            "core_positive_supported": 4,
+            "held_total": 0,
+            "held_scored": 0,
+            "held_ambiguous": 0,
+            "citation_defects": 0,
+            "citation_unassessable": 0,
+            "citation_kinds": {
+              "valid_covering": 16
+            },
+            "details": [
+              {
+                "caseId": "LS01",
+                "candidateId": "C007",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C007",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 5643,
+                    "end": 5650
+                  },
+                  "sourceValue": "Android",
+                  "support": [
+                    {
+                      "start": 5641,
+                      "end": 5798
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C007",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C007",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:5641:5798"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS02",
+                "candidateId": "C008",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C008",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 6114,
+                    "end": 6121
+                  },
+                  "sourceValue": "Windows",
+                  "support": [
+                    {
+                      "start": 6112,
+                      "end": 6197
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C008",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C008",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:6112:6197"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS03",
+                "candidateId": "C004",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C004",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 1948,
+                    "end": 1965
+                  },
+                  "sourceValue": "fast and reliable",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C004",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C004",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS04",
+                "candidateId": "C001",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": true,
+                "actual": {
+                  "id": "C001",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 993,
+                    "end": 1109
+                  },
+                  "sourceValue": "securely share files and messages with nearby devices over your local network without needing an internet connection",
+                  "support": [
+                    {
+                      "start": 937,
+                      "end": 1111
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C001",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C001",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": true,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS05",
+                "candidateId": "C002",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C002",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 1773,
+                    "end": 1781
+                  },
+                  "sourceValue": "REST API",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    },
+                    {
+                      "start": 7712,
+                      "end": 7961
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C002",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C002",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": true,
+                "false_supported": true,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": true,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS06",
+                "candidateId": "C003",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C003",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 1786,
+                    "end": 1791
+                  },
+                  "sourceValue": "HTTPS",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    },
+                    {
+                      "start": 7712,
+                      "end": 7961
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C003",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C003",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": true,
+                "false_supported": true,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": true,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS07",
+                "candidateId": "C005",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "negated",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C005",
+                  "raw_field": "features",
+                  "raw_status": "negated",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 2720,
+                    "end": 2731
+                  },
+                  "sourceValue": "auto-update",
+                  "support": [
+                    {
+                      "start": 2598,
+                      "end": 2733
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C005",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C005",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2598:2733"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "negated"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS08",
+                "candidateId": "C009",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": true,
+                "actual": {
+                  "id": "C009",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 7360,
+                    "end": 7436
+                  },
+                  "sourceValue": "The app will use this file to store settings instead of the default location",
+                  "support": [
+                    {
+                      "start": 7360,
+                      "end": 7438
+                    },
+                    {
+                      "start": 7251,
+                      "end": 7336
+                    },
+                    {
+                      "start": 7226,
+                      "end": 7250
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C009",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C009",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7360:7438",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7251:7336",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7226:7250"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": true,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS09",
+                "candidateId": "C010",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": true,
+                "actual": {
+                  "id": "C010",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 7482,
+                    "end": 7517
+                  },
+                  "sourceValue": "start the app hidden (only in tray)",
+                  "support": [
+                    {
+                      "start": 7479,
+                      "end": 7584
+                    },
+                    {
+                      "start": 7457,
+                      "end": 7478
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C010",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C010",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7479:7584",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7457:7478"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": true,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS10",
+                "candidateId": "C015",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C015",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 10253,
+                    "end": 10260
+                  },
+                  "sourceValue": "Weblate",
+                  "support": [
+                    {
+                      "start": 10186,
+                      "end": 10346
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C015",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C015",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:10186:10346"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS11",
+                "candidateId": "C006",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C006",
+                  "raw_field": "external_integrations",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 3052,
+                    "end": 3062
+                  },
+                  "sourceValue": "Play Store",
+                  "support": [
+                    {
+                      "start": 2976,
+                      "end": 3097
+                    },
+                    {
+                      "start": 4304,
+                      "end": 4392
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C006",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C006",
+                    "field": "external_integrations",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2976:3097",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:4304:4392"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": true,
+                "false_supported": true,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": true,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS12",
+                "candidateId": "C014",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": true,
+                "actual": {
+                  "id": "C014",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 9441,
+                    "end": 9537
+                  },
+                  "sourceValue": "To select the destination without an interactive device list, pass its exact alias\nor IP address",
+                  "support": [
+                    {
+                      "start": 9441,
+                      "end": 9524
+                    },
+                    {
+                      "start": 9524,
+                      "end": 9539
+                    },
+                    {
+                      "start": 9549,
+                      "end": 9598
+                    },
+                    {
+                      "start": 9598,
+                      "end": 9647
+                    },
+                    {
+                      "start": 9652,
+                      "end": 9738
+                    },
+                    {
+                      "start": 9738,
+                      "end": 9788
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C014",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C014",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9441:9524",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9524:9539",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9549:9598",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9598:9647",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9652:9738",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9738:9788"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": true,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS13",
+                "candidateId": "C013",
+                "scored": true,
+                "expected": {
+                  "expectedField": "frontend",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": false,
+                "actual": {
+                  "id": "C013",
+                  "raw_field": "frontend",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 8259,
+                    "end": 8266
+                  },
+                  "sourceValue": "Flutter",
+                  "support": [
+                    {
+                      "start": 8248,
+                      "end": 8364
+                    },
+                    {
+                      "start": 8601,
+                      "end": 8689
+                    },
+                    {
+                      "start": 8813,
+                      "end": 8929
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C013",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C013",
+                    "field": "frontend",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8248:8364",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8601:8689",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8813:8929"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": true,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS14",
+                "candidateId": "C012",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C012",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 7943,
+                    "end": 7959
+                  },
+                  "sourceValue": "maximum security",
+                  "support": [
+                    {
+                      "start": 7712,
+                      "end": 7961
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C012",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C012",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS15",
+                "candidateId": "C011",
+                "scored": false,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "tentative",
+                  "expectedVerdict": "needs_confirmation"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C011",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 7828,
+                    "end": 7864
+                  },
+                  "sourceValue": "All data is sent securely over HTTPS",
+                  "support": [
+                    {
+                      "start": 7712,
+                      "end": 7961
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C011",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C011",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS16",
+                "candidateId": "C000",
+                "scored": true,
+                "expected": {
+                  "expectedField": "project_name",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": false,
+                "actual": {
+                  "id": "C000",
+                  "raw_field": "project_name",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 937,
+                    "end": 946
+                  },
+                  "sourceValue": "LocalSend",
+                  "support": [
+                    {
+                      "start": 0,
+                      "end": 12
+                    },
+                    {
+                      "start": 937,
+                      "end": 1111
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C000",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C000",
+                    "field": "project_name",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:0:12",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": true,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              }
+            ]
+          },
+          "complete": true,
+          "comparison_metrics": {
+            "raw_false_confirmed": 3,
+            "false_supported": 3,
+            "raw_normal_missing": 0,
+            "normal_missing": 0,
+            "positive_supported": 6,
+            "held_normal": 0,
+            "correct_excluded": 6,
+            "raw_mismatch": 3,
+            "unassessable": 0,
+            "total": 16,
+            "scored": 15,
+            "positive_gold": 6,
+            "retained": 16,
+            "complete": true,
+            "core_positive_gold": 4,
+            "core_positive_supported": 4,
+            "held_total": 0,
+            "held_scored": 0,
+            "held_ambiguous": 0,
+            "citation_defects": 0,
+            "citation_unassessable": 0,
+            "citation_kinds": {
+              "valid_covering": 16
+            },
+            "details": [
+              {
+                "caseId": "LS01",
+                "candidateId": "C007",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C007",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 5643,
+                    "end": 5650
+                  },
+                  "sourceValue": "Android",
+                  "support": [
+                    {
+                      "start": 5641,
+                      "end": 5798
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C007",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C007",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:5641:5798"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS02",
+                "candidateId": "C008",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C008",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 6114,
+                    "end": 6121
+                  },
+                  "sourceValue": "Windows",
+                  "support": [
+                    {
+                      "start": 6112,
+                      "end": 6197
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C008",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C008",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:6112:6197"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS03",
+                "candidateId": "C004",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C004",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 1948,
+                    "end": 1965
+                  },
+                  "sourceValue": "fast and reliable",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C004",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C004",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS04",
+                "candidateId": "C001",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": true,
+                "actual": {
+                  "id": "C001",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 993,
+                    "end": 1109
+                  },
+                  "sourceValue": "securely share files and messages with nearby devices over your local network without needing an internet connection",
+                  "support": [
+                    {
+                      "start": 937,
+                      "end": 1111
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C001",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C001",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": true,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS05",
+                "candidateId": "C002",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C002",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 1773,
+                    "end": 1781
+                  },
+                  "sourceValue": "REST API",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    },
+                    {
+                      "start": 7712,
+                      "end": 7961
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C002",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C002",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": true,
+                "false_supported": true,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": true,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS06",
+                "candidateId": "C003",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C003",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 1786,
+                    "end": 1791
+                  },
+                  "sourceValue": "HTTPS",
+                  "support": [
+                    {
+                      "start": 1681,
+                      "end": 2000
+                    },
+                    {
+                      "start": 7712,
+                      "end": 7961
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C003",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C003",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:1681:2000",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": true,
+                "false_supported": true,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": true,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS07",
+                "candidateId": "C005",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "negated",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C005",
+                  "raw_field": "features",
+                  "raw_status": "negated",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 2720,
+                    "end": 2731
+                  },
+                  "sourceValue": "auto-update",
+                  "support": [
+                    {
+                      "start": 2598,
+                      "end": 2733
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C005",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C005",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2598:2733"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "negated"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS08",
+                "candidateId": "C009",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": true,
+                "actual": {
+                  "id": "C009",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 7360,
+                    "end": 7436
+                  },
+                  "sourceValue": "The app will use this file to store settings instead of the default location",
+                  "support": [
+                    {
+                      "start": 7360,
+                      "end": 7438
+                    },
+                    {
+                      "start": 7251,
+                      "end": 7336
+                    },
+                    {
+                      "start": 7226,
+                      "end": 7250
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C009",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C009",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7360:7438",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7251:7336",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7226:7250"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": true,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS09",
+                "candidateId": "C010",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": true,
+                "actual": {
+                  "id": "C010",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 7482,
+                    "end": 7517
+                  },
+                  "sourceValue": "start the app hidden (only in tray)",
+                  "support": [
+                    {
+                      "start": 7479,
+                      "end": 7584
+                    },
+                    {
+                      "start": 7457,
+                      "end": 7478
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C010",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C010",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7479:7584",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7457:7478"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": true,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS10",
+                "candidateId": "C015",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C015",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 10253,
+                    "end": 10260
+                  },
+                  "sourceValue": "Weblate",
+                  "support": [
+                    {
+                      "start": 10186,
+                      "end": 10346
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C015",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C015",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:10186:10346"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS11",
+                "candidateId": "C006",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C006",
+                  "raw_field": "external_integrations",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 3052,
+                    "end": 3062
+                  },
+                  "sourceValue": "Play Store",
+                  "support": [
+                    {
+                      "start": 2976,
+                      "end": 3097
+                    },
+                    {
+                      "start": 4304,
+                      "end": 4392
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C006",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C006",
+                    "field": "external_integrations",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:2976:3097",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:4304:4392"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": true,
+                "false_supported": true,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": true,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS12",
+                "candidateId": "C014",
+                "scored": true,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": true,
+                "actual": {
+                  "id": "C014",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 9441,
+                    "end": 9537
+                  },
+                  "sourceValue": "To select the destination without an interactive device list, pass its exact alias\nor IP address",
+                  "support": [
+                    {
+                      "start": 9441,
+                      "end": 9524
+                    },
+                    {
+                      "start": 9524,
+                      "end": 9539
+                    },
+                    {
+                      "start": 9549,
+                      "end": 9598
+                    },
+                    {
+                      "start": 9598,
+                      "end": 9647
+                    },
+                    {
+                      "start": 9652,
+                      "end": 9738
+                    },
+                    {
+                      "start": 9738,
+                      "end": 9788
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C014",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C014",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9441:9524",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9524:9539",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9549:9598",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9598:9647",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9652:9738",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:9738:9788"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": true,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS13",
+                "candidateId": "C013",
+                "scored": true,
+                "expected": {
+                  "expectedField": "frontend",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": false,
+                "actual": {
+                  "id": "C013",
+                  "raw_field": "frontend",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 8259,
+                    "end": 8266
+                  },
+                  "sourceValue": "Flutter",
+                  "support": [
+                    {
+                      "start": 8248,
+                      "end": 8364
+                    },
+                    {
+                      "start": 8601,
+                      "end": 8689
+                    },
+                    {
+                      "start": 8813,
+                      "end": 8929
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C013",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C013",
+                    "field": "frontend",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8248:8364",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8601:8689",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:8813:8929"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": true,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS14",
+                "candidateId": "C012",
+                "scored": true,
+                "expected": {
+                  "expectedField": "other",
+                  "expectedStatus": "irrelevant",
+                  "expectedVerdict": "excluded"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C012",
+                  "raw_field": "other",
+                  "raw_status": "irrelevant",
+                  "verdict": "excluded",
+                  "candidate": {
+                    "start": 7943,
+                    "end": 7959
+                  },
+                  "sourceValue": "maximum security",
+                  "support": [
+                    {
+                      "start": 7712,
+                      "end": 7961
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C012",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C012",
+                    "field": "other",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "irrelevant"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": true
+              },
+              {
+                "caseId": "LS15",
+                "candidateId": "C011",
+                "scored": false,
+                "expected": {
+                  "expectedField": "features",
+                  "expectedStatus": "tentative",
+                  "expectedVerdict": "needs_confirmation"
+                },
+                "positive": false,
+                "core_positive": false,
+                "actual": {
+                  "id": "C011",
+                  "raw_field": "features",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 7828,
+                    "end": 7864
+                  },
+                  "sourceValue": "All data is sent securely over HTTPS",
+                  "support": [
+                    {
+                      "start": 7712,
+                      "end": 7961
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C011",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C011",
+                    "field": "features",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:7712:7961"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": false,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              },
+              {
+                "caseId": "LS16",
+                "candidateId": "C000",
+                "scored": true,
+                "expected": {
+                  "expectedField": "project_name",
+                  "expectedStatus": "confirmed",
+                  "expectedVerdict": "supported"
+                },
+                "positive": true,
+                "core_positive": false,
+                "actual": {
+                  "id": "C000",
+                  "raw_field": "project_name",
+                  "raw_status": "confirmed",
+                  "verdict": "supported",
+                  "candidate": {
+                    "start": 937,
+                    "end": 946
+                  },
+                  "sourceValue": "LocalSend",
+                  "support": [
+                    {
+                      "start": 0,
+                      "end": 12
+                    },
+                    {
+                      "start": 937,
+                      "end": 1111
+                    }
+                  ],
+                  "counterEvidence": [],
+                  "groundingValid": true
+                },
+                "citation": {
+                  "id": "C000",
+                  "citationDefect": false,
+                  "kind": "valid_covering",
+                  "issues": [],
+                  "originalResponse": {
+                    "id": "C000",
+                    "field": "project_name",
+                    "supportUnitIds": [
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:0:12",
+                      "e179156a130472e4a2bf6d2bf87860bd35bda2605dfb98008ef6904b5c864b4b:937:1111"
+                    ],
+                    "counterUnitIds": [],
+                    "status": "confirmed"
+                  }
+                },
+                "unassessable": false,
+                "raw_false_confirmed": false,
+                "false_supported": false,
+                "raw_normal_missing": false,
+                "normal_missing": false,
+                "positive_supported": true,
+                "held": false,
+                "held_normal": false,
+                "raw_mismatch": false,
+                "correct_excluded": false
+              }
+            ]
+          },
+          "diagnostics": {
+            "other_confirmed_total": 0,
+            "other_confirmed_scored": 0,
+            "special_cases": {
+              "LS07": {
+                "id": "C005",
+                "raw_field": "features",
+                "raw_status": "negated",
+                "verdict": "excluded",
+                "candidate": {
+                  "start": 2720,
+                  "end": 2731
+                },
+                "sourceValue": "auto-update",
+                "support": [
+                  {
+                    "start": 2598,
+                    "end": 2733
+                  }
+                ],
+                "counterEvidence": [],
+                "groundingValid": true,
+                "scored": true,
+                "support_text": [
+                  "It is recommended to download the app either from an app store or from a package manager because the app does not have an auto-update.\n"
+                ],
+                "counter_text": [],
+                "review_lines": [
+                  {
+                    "line": 64,
+                    "start": 2598,
+                    "end": 2733,
+                    "text": "It is recommended to download the app either from an app store or from a package manager because the app does not have an auto-update.\n",
+                    "selected_as_support": true,
+                    "selected_as_counter": false
+                  }
+                ]
+              },
+              "LS15": {
+                "id": "C011",
+                "raw_field": "features",
+                "raw_status": "confirmed",
+                "verdict": "supported",
+                "candidate": {
+                  "start": 7828,
+                  "end": 7864
+                },
+                "sourceValue": "All data is sent securely over HTTPS",
+                "support": [
+                  {
+                    "start": 7712,
+                    "end": 7961
+                  }
+                ],
+                "counterEvidence": [],
+                "groundingValid": true,
+                "scored": false,
+                "support_text": [
+                  "LocalSend uses a secure communication protocol that allows devices to communicate with each other using a REST API. All data is sent securely over HTTPS, and the TLS/SSL certificate is generated on the fly on each device, ensuring maximum security.\n"
+                ],
+                "counter_text": [],
+                "review_lines": [
+                  {
+                    "line": 142,
+                    "start": 7712,
+                    "end": 7961,
+                    "text": "LocalSend uses a secure communication protocol that allows devices to communicate with each other using a REST API. All data is sent securely over HTTPS, and the TLS/SSL certificate is generated on the fly on each device, ensuring maximum security.\n",
+                    "selected_as_support": true,
+                    "selected_as_counter": false
+                  },
+                  {
+                    "line": 230,
+                    "start": 12922,
+                    "end": 13127,
+                    "text": "| Speed too slow     | Any                | Any                  | Use 5 Ghz; Disable encryption on both devices                                                                                           |\n",
+                    "selected_as_support": false,
+                    "selected_as_counter": false
+                  }
+                ]
+              }
+            }
+          },
+          "calls": 2,
+          "responses_returned": 2,
+          "provider_failures": 0,
+          "model_seconds": 405.3584267999995,
+          "mean_call_seconds": 202.67921339999975,
+          "max_call_seconds": 248.12086529999942,
+          "prompt_tokens": null,
+          "prompt_tokens_known_sum": 0,
+          "prompt_tokens_unknown_calls": 2,
+          "completion_tokens": null,
+          "completion_tokens_known_sum": 0,
+          "completion_tokens_unknown_calls": 2
+        }
+      }
+    },
+    "arm_labels": {
+      "D": "deepseek-ai/deepseek-v4.1-flash",
+      "G": "z-ai/glm-5.3"
+    },
+    "calls_started": 4,
+    "retries": 0,
+    "unstarted_calls": 0,
+    "stop_error": "INVALID_RESPONSE",
+    "comparable": false,
+    "wall_seconds": 467.6291185000009,
+    "free_basis": "User confirmed these NVIDIA endpoints are free and authorized this new LS-only four-call run; no independent account quota inspection; no paid fallback, no retry.",
+    "option_enforcement": "request acceptance and schema-valid content observable; backend enforcement of individual options not independently observable",
+    "response_storage": "existing SSE transport assembled content envelope; raw field/status retained; not original SSE event bytes",
+    "service_applied": false,
+    "large_goal_resumed": false
+  },
+  "verification": {
+    "frozen_files_unchanged": true,
+    "files": 229,
+    "prior_results_unchanged": true,
+    "calls_started": 4,
+    "retries": 0,
+    "diagnostic_failures": [
+      {
+        "docId": "LS",
+        "arm": "D",
+        "batch": 2,
+        "sequence": 4,
+        "model": "deepseek-ai/deepseek-v4.1-flash",
+        "returned": false,
+        "network_attempted": true,
+        "error": "INVALID_RESPONSE",
+        "timeout_seconds": 600,
+        "response_diagnostic": {
+          "version": 1,
+          "http_status": 200,
+          "content_type": "text/event-stream",
+          "error_location": "sse.event",
+          "sse_event": {
+            "index": 1,
+            "data_bytes": 87,
+            "excerpt": "{\"error\":{\"message\":\"Internal server error\",\"type\":\"internal_server_error\",\"code\":500}}",
+            "truncated": false,
+            "redacted": false,
+            "json_error": null
+          }
+        },
+        "seconds": 26.8862979000005
+      }
+    ],
+    "service_applied": false,
+    "large_goal_resumed": false
+  },
+  "audit": {
+    "frozen_and_prior_hashes_verified": 264,
+    "input_and_gold_unchanged": true,
+    "exact_payloads_verified": 4,
+    "raw_field_status_preserved": 24,
+    "calls": 4,
+    "retries": 0,
+    "fluent_reader_calls": 0,
+    "stopped_on_first_failure": true,
+    "observed_only_metrics": {
+      "D": {
+        "observed": 8,
+        "scored_observed": 8,
+        "raw_false_confirmed": 1,
+        "false_supported": 1,
+        "positive_observed": 2,
+        "normal_missing_observed": 0,
+        "correct_excluded": 5,
+        "excluded_gold_observed": 6,
+        "held_observed": 0,
+        "held_scored_observed": 0,
+        "citation_defects": 0,
+        "complete": false,
+        "unassessable": 8
+      },
+      "G": {
+        "observed": 16,
+        "scored_observed": 15,
+        "raw_false_confirmed": 3,
+        "false_supported": 3,
+        "positive_observed": 6,
+        "normal_missing_observed": 0,
+        "correct_excluded": 6,
+        "excluded_gold_observed": 9,
+        "held_observed": 0,
+        "held_scored_observed": 0,
+        "citation_defects": 0,
+        "complete": true,
+        "unassessable": 0
+      }
+    },
+    "whole_document_comparable": false,
+    "metrics_note": "Unreturned candidates are unassessable, not observed normal omissions.",
+    "model_calls_by_this_audit": 0
+  }
+}
