@@ -18,6 +18,18 @@
   로그 E:/AgentFit/output/status-model-comparison-tests.log. 실제호출0.
 - load_saved: 기존209개 입력/코드 hash 검증. 두 모델8개 job 생성,model 외 payload 변경0.
 - 독립 검토 status_model_comparison_review 진행 중. 검토 전 실제 실행하지 않는다.
+- 독립 검토 완료: Critical0/Important2/Minor0. 근거 배열 maxItems 초과 후 계속 호출,
+  해시/기록 I/O 동안 지난 만료 시각을 반영하지 않는 결함을 고정 응답·가짜시계3테스트로 RED 재현.
+- 수정: 기존 schema의 maxItems만 wrapper에서 사전검사,전송 직전 무료/전체 잔여시간 재계산.
+  기존 normalizer/score/공개schema 변경0.14테스트 GREEN. 전체 회귀 재실행 중.
+- Final Ruling: reviewer가 실서비스 옵션 준수·계정 잔량·모델 성능을 판단 유보한 것은
+  코드 검토로 확인할 수 없는 항목이다. 새 사용자 무료 확인을 근거로 승인된 본 배치만 실행하고,
+  실제 옵션 적용 여부와 계정 화면 독립 확인은 미검증으로 보고한다. 추측으로 성공 주장하지 않는다.
+- 보류 minor없음.실제호출0.새 요청 조건을 바꾸지 않는 실행기 결함 수정만 했다.
+- Task1 완료: 최종 전체1376실행/1369통과/7skip/실패0,69.163초.
+  E:/AgentFit/output/status-model-comparison-tests-final.log. 신규14개 GREEN.
+  두 Important 수정은 RED→GREEN 및전체suite로 검증,추가 리뷰 반복없음.
+- get_goal로 큰goal paused 확인. 다음은 freeze 후 live1회,실패시 재실행금지.
 
 2026-10-02 KST. 브랜치 feature/status-model-comparison-plan, 기준224a0d7.
 기존 document-input-runtime worktree 사용. 사용자 요청은 계획까지만이며 실제 호출 권한이 아니다.

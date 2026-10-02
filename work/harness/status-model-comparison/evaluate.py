@@ -74,6 +74,16 @@ def run_package(output,package,gate,sender):
             if model!=MODELS[arm] or set(reply)!={'decisions'}:
                 raise ValueError('INVALID_REPLY_ROOT')
             write_json(output/f'{doc}-{arm}-{batch:02d}-parsed.json',reply)
+            # Enforce the unchanged declared schema before the unchanged citation gate.
+            # Unknown unit IDs inside those limits remain citation defects, not parse errors.
+            item_schema=job['payload']['response_format']['json_schema']['schema']['properties']['decisions']['items']
+            if isinstance(reply['decisions'],list):
+                for row in reply['decisions']:
+                    if isinstance(row,dict):
+                        for name in ('supportUnitIds','counterUnitIds'):
+                            values=row.get(name)
+                            if isinstance(values,list) and len(values)>item_schema['properties'][name]['maxItems']:
+                                raise ValueError('INVALID_UNIT_DECISIONS')
             candidates=source['frozen']['candidates'][(batch-1)*8:batch*8]
             records,evidence=compare.baseline.normalize('U',source['document'],source['pair']['registry'],candidates,reply['decisions'])
             result['records'].extend(records)

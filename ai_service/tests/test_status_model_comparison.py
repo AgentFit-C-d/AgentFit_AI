@@ -193,5 +193,48 @@ class StatusModelTests(unittest.TestCase):
             (Path(tmp)/'live-started.json').write_text('{}')
             with self.assertRaises(FileExistsError): runner.live(Path(tmp))
 
+    def test_declared_schema_array_limit_stops_after_first_response(self):
+        runner=self.runner()
+        with tempfile.TemporaryDirectory() as tmp:
+            def transport(payload,key,timeout):
+                env=json.loads(self.response(payload))
+                body=json.loads(env['choices'][0]['message']['content'])
+                row=body['decisions'][0]
+                row['supportUnitIds']=row['supportUnitIds']*9
+                env['choices'][0]['message']['content']=json.dumps(body)
+                return json.dumps(env).encode()
+            gate=self.gate(tmp,transport)
+            report=runner.run_package(Path(tmp),self.package,gate,self.m.FixedPayloadSender('test-key',gate))
+            self.assertFalse(report['comparable'])
+            self.assertEqual(report['calls_started'],1)
+            self.assertEqual(report['stop_error'],'INVALID_UNIT_DECISIONS')
+            self.assertTrue((Path(tmp)/'FR-G-01-parsed.json').exists())
+
+    def test_free_expiry_during_hash_verification_does_not_send(self):
+        tick=[0]
+        def free():
+            if tick[0]>=10: raise ValueError('FREE_ACCESS_UNCONFIRMED')
+            return 10-tick[0]
+        def identity(): tick[0]=11
+        def forbidden(*args): self.fail('expired request reached transport')
+        with tempfile.TemporaryDirectory() as tmp:
+            gate=self.gate(tmp,forbidden,check_free=free,check_identity=identity,clock=lambda:tick[0])
+            with self.assertRaises(ValueError): gate(self.package['jobs'][0]['payload'],'test-key',600)
+            self.assertEqual(gate.started,0)
+
+    def test_final_gate_includes_record_write_time(self):
+        from unittest.mock import patch
+        tick=[0]; limits=[]
+        original=self.m.write_json
+        def delayed_write(path,value):
+            original(path,value)
+            tick[0]+=1
+        with tempfile.TemporaryDirectory() as tmp:
+            gate=self.gate(tmp,lambda p,k,t:limits.append(t) or self.response(p),
+                           check_free=lambda:10-tick[0],clock=lambda:tick[0])
+            with patch.object(self.m,'write_json',delayed_write):
+                gate(self.package['jobs'][0]['payload'],'test-key',600)
+            self.assertEqual(limits,[7])
+
 
 if __name__=='__main__': unittest.main()

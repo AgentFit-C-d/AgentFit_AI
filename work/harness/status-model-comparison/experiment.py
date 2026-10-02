@@ -117,8 +117,8 @@ class ModelCallGate:
         if self.stopped or self.started>=8:
             raise ValueError('CALLS_STOPPED')
         try:
-            remaining=self.check_free()
             self.check_identity()
+            remaining=self.check_free()
             job=self.jobs[self.started]
             if json.dumps(payload)!=json.dumps(job['payload']):
                 raise ValueError('PAYLOAD_ORDER_CHANGED')
@@ -136,8 +136,15 @@ class ModelCallGate:
                        utc=datetime.now(timezone.utc).isoformat(),timeout_seconds=limit))
             self.started+=1
             start=self.clock()
-            metadata=dict(label,sequence=sequence,model=payload['model'],returned=False,error='INTERRUPTED')
+            metadata=dict(label,sequence=sequence,model=payload['model'],returned=False,
+                          network_attempted=False,error='INTERRUPTED')
             try:
+                # Hash checks and durable request records consume the same deadline.
+                # No I/O occurs between this final check and the transport call.
+                limit=min(timeout,600,self.check_free(),5400-(self.clock()-self.start))
+                if limit<=0:
+                    raise ValueError('DEADLINE_EXPIRED')
+                metadata.update(network_attempted=True,timeout_seconds=limit)
                 raw=self.transport(payload,key,limit)
                 with Path(str(prefix)+'-response.json').open('xb') as handle:
                     handle.write(raw)
