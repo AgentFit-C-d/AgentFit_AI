@@ -4,7 +4,8 @@ import hashlib
 import json
 import re
 
-from agentfit_ai.candidate_confirmation import _checked_result
+from agentfit_ai.candidate_confirmation import CONTRACT, _checked_result
+from agentfit_ai.candidate_review_dispositions import REVIEW_CONTRACT
 from agentfit_ai.candidate_first_profile import validate_candidate_labels
 from agentfit_ai.operation_candidates import _validate_frozen
 from agentfit_ai.profile import ARRAY_FIELDS, FIELDS, MAX_ARRAY_ITEMS, MAX_TEXT_CODE_POINTS, check_profile_snapshot
@@ -169,7 +170,9 @@ def validate_trace(document: str, document_id: str, value: dict) -> dict:
 
 
 class CandidateTrace:
-    def __init__(self, document: str, document_id: str):
+    def __init__(self, document: str, document_id: str, *, contract=CONTRACT):
+        _require(contract in (CONTRACT, REVIEW_CONTRACT))
+        self._contract = contract
         digest = _identity(document, document_id)
         self._document, self._document_id = document, document_id
         self._frozen = None
@@ -203,7 +206,7 @@ class CandidateTrace:
     def finish(self, result: dict) -> None:
         try:
             _require(self._value['analysis'] is None and self._value['stages']['projected'] is not None)
-            profile = _checked_result(self._document, self._document_id, result)
+            profile = _checked_result(self._document, self._document_id, result, self._contract)
             _require(_same(_profile_data(profile), self._value['stages']['projected']))
             proposed = deepcopy(self._value)
             proposed.update(status='complete', analysis=_analysis_data(result))

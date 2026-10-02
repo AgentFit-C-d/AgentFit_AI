@@ -12,6 +12,8 @@ import sys
 from time import monotonic
 
 from agentfit_ai import analysis_worker, candidate_service_worker
+from agentfit_ai.candidate_confirmation import CONTRACT
+from agentfit_ai.candidate_review_dispositions import REVIEW_CONTRACT
 from agentfit_ai.diagnostics import safe_code
 from agentfit_ai.nvidia_response_diagnostics import _excerpt
 from .candidate_trace import CandidateTrace
@@ -36,9 +38,9 @@ def _extractions(rows):
 
 
 class DocumentRecorder:
-    def __init__(self, document, document_id, key):
+    def __init__(self, document, document_id, key, *, contract=CONTRACT):
         self.document, self.document_id, self.key = document, document_id, key
-        self.provenance = CandidateTrace(document, document_id)
+        self.provenance = CandidateTrace(document, document_id, contract=contract)
         self.started = monotonic()
         self.recording_seconds = 0.0
         self.size = 0
@@ -145,9 +147,11 @@ def observe_request(raw: bytes) -> tuple[bytes, dict]:
         raise ValueError('INVALID_EVALUATION_REQUEST')
     request = json.loads(raw)
     if (request.get('mode') != 'integrated-nvidia' or 'reviewModel' in request or
-            set(request) - {'document', 'documentId', 'key', 'mode', 'diagnostics'}):
+            request.get('contract', CONTRACT) not in (CONTRACT, REVIEW_CONTRACT) or
+            set(request) - {'document', 'documentId', 'key', 'mode', 'diagnostics', 'contract'}):
         raise ValueError('INVALID_EVALUATION_REQUEST')
-    recorder = DocumentRecorder(request['document'], request['documentId'], request['key'])
+    recorder = DocumentRecorder(request['document'], request['documentId'], request['key'],
+                                contract=request.get('contract', CONTRACT))
     original_analyze = candidate_service_worker.analyze_nvidia_candidates
     original_send = candidate_service_worker.post_nvidia_streaming_inline
 

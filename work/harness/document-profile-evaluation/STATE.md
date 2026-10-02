@@ -1,4 +1,24 @@
-# Document Profile Evaluation — anchor 큰따옴표 위치 연결 오프라인 수정 완료·종료
+# Document Profile Evaluation — v3 실행기 호환 수정·단일 평가 준비
+
+## 2026-10-02 관측/실행기 최소 수정 및 단일 실평가 승인
+
+- 사용자가 이전 차단 원인의 관측 도구/실행기 호환 수정을 승인했고 로컬 gate 통과 후 추가승인 없이1회 실제평가 허용. 큰Goal paused, live50호출/1800초/요청600초/재시도0/첫실패중단, 무료NVIDIA DeepSeek/GLM만. 기본v2와 모델/프롬프트/골드/분석로직/응답계약 유지.
+- feature/v3-evaluation-runner(BASE e73a43a), 기존 격리 worktree 사용. observer contract허용/전달과 CandidateTrace의 계약별 기존검증기 선택만 수정. v3 원시 최종응답/보류정보가 trace에 보존됨.
+- 새 diagnostic_tools/document_profile_live.py는 기존 analysis_process에 nvidia_only=True/confirmation-v3 전달. 단일자식 inline통신을 부모가감시/종료, 전체10초종료여유·요청기한남은시간-2. 요청전 bounded/redacted active본문과 checkpoint, 수정불가 deadline개별파일로 Windows 읽기/교체충돌 방지.
+- RED→GREEN: 계약3테스트, 실행기6테스트. Windows journal 교체충돌을 로컬 저장응답으로 확인·수정. 동결위반후입력복원해도후속전송차단 추가1테스트 RED→GREEN. 총10개 관련회귀 통과.
+- 최초 전체 offline1420건/1413통과/7skip/실패0, TCP29제외. 최종freeze-latch수정 후 실행기7회귀통과, 독립리뷰 진행중. 실제LangExtract1.7.0 확인. 분석 패키지 agentfit_ai에는 이번 변경0.
+- 다음: 리뷰/최종검증→코드·실제파일·원문·골드 동결→승인된1회 live. 실행 시작 후 코드수정 금지, 첫실패/상한에서종료, 미평가의미null. 기존후보/응답/골드주입은 로컬테스트에서만, live에서는0.
+- 최종gate통과: 전체1421=1414통과/7skip/실패0, TCP29제외. 독립리뷰10/10통과·차단사항없음. 종료검증은 로컬자식/HTTP연결까지이며 원격서버추론취소는 미확인. 코드커밋/동결 후 document-profile-v3-live-20261002-v1 폴더에 단일실행 예정.
+
+## 2026-10-02 v3 + 위치 복구 전체 평가 요청·실행 전 중단
+
+- 현재 사용자 승인: 기존 무료 NVIDIA DeepSeek/GLM, AgentFit 원문 전체 integrated-nvidia/confirmation-v3 1회, 50호출/1800초/단일600초/재시도0/첫실패중단. 설정 불일치 시 실제호출 전 중단, 자동수정 금지. 큰Goal paused 확인.
+- 코드 e73a43a32ce583fb618b53122479f56b13778311, 실제 작업파일146개의 SHA 및 전체 dirty 목록 동결. 원문/골드 이전 실제기준 해시 동일, 실행 코드의 추적 미커밋 변경 없음. 다른 dirty 변경 보존.
+- 차단 원인: diagnostic_tools/document_profile_worker.py:148의 허용목록에 contract가 없어 confirmation-v3 요청이 INVALID_EVALUATION_REQUEST로 worker 진입 전 거절됨. 실제 서비스 worker의 v3 전달은 로컬 합성 대조로 확인.
+- 기존 실행기도 274ec06에 고정되고 v3 미명시. 변경/우회 실행하지 않음. 새 모델호출0/재시도0/분석실행0초. 모든40의미 새지표 null/미측정, 실제 요청·응답 빈목록, result=not_executed.
+- 로컬 검사 최종8/8통과(0.081초). 기존 guard의50상한/600초/남은시간-2/첫실패차단/잘못된모델차단 검사. 전체 v3 실행기 제한의 통합검증은 미완료. 초기 대조테스트의 잘못된 문서ID1건을 로컬 스크립트에서만 정정, 최초 기록 보존.
+- 결과 E:/AgentFit/output/document-profile-v3-preflight-20261002-final, 최초폴더 document-profile-v3-preflight-20261002. freeze/source/gold/로컬검사/미실행결과 보존. 키 읽기·외부전송0.
+- 보고 v3-live-preflight-stop-20261002.md. 다음 최소변경은 관측도구의 v3 허용/전달과 명시선택 실행기, 통합 제한 검증. 이번에는 제품코드·모델·프롬프트·골드·서비스·Spring 변경 없음. 실제평가 없이 중단 보고 후 종료.
 
 ## 2026-10-02 텍스트 입력 후보 위치 연결 수정
 
