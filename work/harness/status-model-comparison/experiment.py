@@ -152,6 +152,9 @@ class ModelCallGate:
                 return raw
             except Exception as exc:
                 metadata['error']=compare.safe_error(exc)
+                diagnostic=getattr(exc,'response_diagnostic',None)
+                if isinstance(exc,AnalysisError) and exc.code=='INVALID_RESPONSE' and diagnostic is not None:
+                    metadata['response_diagnostic']=diagnostic
                 raise
             finally:
                 metadata['seconds']=self.clock()-start

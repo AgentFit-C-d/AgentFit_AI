@@ -10,24 +10,27 @@ from urllib.request import Request, build_opener
 
 from .deepseek_evaluation import NVIDIA_REVIEW_MODELS
 from .nvidia_streaming import MAX_STREAM_BYTES, _STREAM_CODES, _assemble_sse
+from .nvidia_response_diagnostics import encode_diagnostic, invalid_response
 from .provider_worker import MAX_INPUT_BYTES
 from .solar import AnalysisError, _NoRedirect, _json
 import json
 
 
 def _fetch(endpoint, payload, key, timeout):
+    status, content_type = None, None
     request = Request(endpoint, data=json.dumps(payload).encode('utf-8'), method='POST', headers={
         'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json',
         'Accept': 'text/event-stream', 'Accept-Encoding': 'identity'})
     try:
         with build_opener(_NoRedirect()).open(request, timeout=timeout) as response:
+            status, content_type = response.status, response.headers.get('Content-Type')
             if (response.status != 200 or response.headers.get_content_type() != 'text/event-stream' or
                     response.headers.get('Content-Encoding', 'identity').strip().lower() != 'identity'):
-                raise AnalysisError('INVALID_RESPONSE')
+                raise invalid_response('http.headers')
             declared = response.headers.get('Content-Length')
             if declared is not None:
                 if re.fullmatch(r'[0-9]{1,20}', declared) is None:
-                    raise AnalysisError('INVALID_RESPONSE')
+                    raise invalid_response('http.content_length')
                 if int(declared) > MAX_STREAM_BYTES:
                     raise AnalysisError('RESPONSE_TOO_LARGE')
             def chunks():
@@ -51,6 +54,10 @@ def _fetch(endpoint, payload, key, timeout):
         return b'E' + code.encode('ascii')
     except AnalysisError as error:
         code = error.code if error.code in _STREAM_CODES else 'PROVIDER_NETWORK'
+        if code == 'INVALID_RESPONSE':
+            diagnostic = encode_diagnostic(error, status, content_type, key)
+            if diagnostic is not None:
+                return b'D' + diagnostic
         return b'E' + code.encode('ascii')
 
 

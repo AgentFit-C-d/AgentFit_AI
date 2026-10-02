@@ -8,6 +8,7 @@ import sys
 
 from .deepseek_evaluation import ENDPOINT, NVIDIA_REVIEW_MODELS
 from .provider_worker import MAX_INPUT_BYTES
+from .nvidia_response_diagnostics import decode_diagnostic, invalid_response
 from .solar import (AnalysisError, MAX_RESPONSE_BYTES, PROVIDER_WORKER_CODES, _json,
                     _provider_worker_environment)
 
@@ -49,7 +50,7 @@ def post_nvidia_streaming(payload, api_key, timeout):
         raise AnalysisError('PROVIDER_NETWORK') from None
     if completed.returncode != 0:
         raise AnalysisError('PROVIDER_NETWORK')
-    return _stream_output(completed.stdout)
+    return _stream_output(completed.stdout, api_key)
 
 
 def post_nvidia_streaming_inline(payload, api_key, timeout):
@@ -57,16 +58,21 @@ def post_nvidia_streaming_inline(payload, api_key, timeout):
     from .nvidia_stream_worker import _fetch
     request = json.loads(_stream_request(payload, api_key, timeout))
     return _stream_output(_fetch(request['endpoint'], request['payload'],
-                                 request['key'], request['timeout']))
+                                 request['key'], request['timeout']), api_key)
 
 
-def _stream_output(output):
+def _stream_output(output, api_key=''):
     if type(output) is not bytes or not output:
         raise AnalysisError('PROVIDER_NETWORK')
     if len(output) > MAX_RESPONSE_BYTES + 1:
         raise AnalysisError('RESPONSE_TOO_LARGE')
     if output[:1] == b'S':
         return output[1:]
+    if output[:1] == b'D':
+        # Diagnostic framing is never a success response or a new error classification.
+        error = AnalysisError('INVALID_RESPONSE')
+        error.response_diagnostic = decode_diagnostic(output[1:], api_key)
+        raise error
     if output[:1] == b'E':
         try:
             code = output[1:].decode('ascii')
@@ -83,7 +89,7 @@ def _sse_events(chunks):
     total, event_size = 0, 0
     for chunk in chunks:
         if type(chunk) is not bytes:
-            raise AnalysisError('INVALID_RESPONSE')
+            raise invalid_response('sse.chunk_type')
         total += len(chunk)
         if total > MAX_STREAM_BYTES:
             raise AnalysisError('RESPONSE_TOO_LARGE')
@@ -117,7 +123,7 @@ def _assemble_sse(chunks, expected_model):
         raise ValueError('unsupported streaming model')
     content, usage = [], {}
     content_bytes, model_seen, completion_id, finish = 0, False, None, None
-    for raw in _sse_events(chunks):
+    for event_index, raw in enumerate(_sse_events(chunks), 1):
         if raw == b'[DONE]':
             if finish is None:
                 raise AnalysisError('INCOMPLETE_RESPONSE')
@@ -130,9 +136,12 @@ def _assemble_sse(chunks, expected_model):
             if len(encoded) > MAX_RESPONSE_BYTES:
                 raise AnalysisError('RESPONSE_TOO_LARGE')
             return encoded
-        event = _json(raw)
+        try:
+            event = _json(raw)
+        except AnalysisError:
+            raise invalid_response('sse.json', raw, event_index) from None
         if type(event) is not dict or 'error' in event:
-            raise AnalysisError('INVALID_RESPONSE')
+            raise invalid_response('sse.event', raw, event_index)
         if 'model' in event:
             if event['model'] != expected_model:
                 raise AnalysisError('PROVIDER_MODEL')
@@ -141,47 +150,47 @@ def _assemble_sse(chunks, expected_model):
             identity = event['id']
             if (type(identity) is not str or not identity or
                     (completion_id is not None and identity != completion_id)):
-                raise AnalysisError('INVALID_RESPONSE')
+                raise invalid_response('sse.id', raw, event_index)
             completion_id = identity
         if event.get('usage') is not None:
             if type(event['usage']) is not dict:
-                raise AnalysisError('INVALID_RESPONSE')
+                raise invalid_response('sse.usage', raw, event_index)
             for name in ('prompt_tokens', 'completion_tokens'):
                 value = event['usage'].get(name)
                 if value is not None:
                     if type(value) is not int or value < 0:
-                        raise AnalysisError('INVALID_RESPONSE')
+                        raise invalid_response('sse.usage.' + name, raw, event_index)
                     usage[name] = value
         choices = event.get('choices')
         if type(choices) is not list or len(choices) > 1:
-            raise AnalysisError('INVALID_RESPONSE')
+            raise invalid_response('sse.choices', raw, event_index)
         if not choices:
             continue
         choice = choices[0]
         if (type(choice) is not dict or type(choice.get('index')) is not int or
                 choice['index'] != 0 or finish is not None):
-            raise AnalysisError('INVALID_RESPONSE')
+            raise invalid_response('sse.choice', raw, event_index)
         delta = choice.get('delta')
         if delta is None:
             delta = {}
         if (type(delta) is not dict or delta.get('role') not in (None, 'assistant') or
                 any(delta.get(name) for name in ('tool_calls', 'function_call', 'refusal'))):
-            raise AnalysisError('INVALID_RESPONSE')
+            raise invalid_response('sse.delta', raw, event_index)
         for name in ('content', 'reasoning_content', 'reasoning'):
             if delta.get(name) is not None and type(delta[name]) is not str:
-                raise AnalysisError('INVALID_RESPONSE')
+                raise invalid_response('sse.delta.' + name, raw, event_index)
         part = delta.get('content')
         if part is not None:
             try:
                 content_bytes += len(part.encode('utf-8'))
             except UnicodeError:
-                raise AnalysisError('INVALID_RESPONSE') from None
+                raise invalid_response('sse.content_utf8', raw, event_index) from None
             if content_bytes > MAX_RESPONSE_BYTES:
                 raise AnalysisError('RESPONSE_TOO_LARGE')
             content.append(part)
         reason = choice.get('finish_reason')
         if reason is not None:
             if type(reason) is not str or reason not in _FINISH_REASONS:
-                raise AnalysisError('INVALID_RESPONSE')
+                raise invalid_response('sse.finish_reason', raw, event_index)
             finish = reason
     raise AnalysisError('INCOMPLETE_RESPONSE')
