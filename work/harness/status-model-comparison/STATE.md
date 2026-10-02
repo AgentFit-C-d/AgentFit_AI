@@ -1,5 +1,24 @@
 # 정의 통일 버전의 다른 모델 비교 — 계획 상태
 
+## 2026-10-02 실행 승인 / 재개
+
+- 사용자 최신 메시지가 두 엔드포인트의 무료 확인과 최대8회 실행,첫 GLM 본 배치 호환성 검사를 승인했다.
+- 브랜치 feature/status-model-comparison. 실행 기준 f2f9ea2. 시작06:44 UTC, 작업/호출 종료 상한08:10 UTC.
+- Task1 진행: 새로운 독립 실행기와 고정 응답 테스트. Task2 실제 한 쌍. Task3 결과 보고 후 종료.
+- Ruling: 과거 무료 기록을 재사용하지 않고 이번 사용자 확인에 한정한8회/이번 실행 종료시 만료 기록을 만든다.
+  계정 잔량·청구 화면의 독립 조회는 미검증으로 보고한다.
+- Ruling: NvidiaAnalyzer는 GLM의 temperature/reasoning/chat_template_kwargs를 자동 변경하므로 사용하지 않는다.
+  같은 Solar 응답 parser를 사용하되 실제 payload를 변경 없이 전달하는 독립 sender를 둔다.
+  전송 전후 동일성 테스트로 model 외 차이를 차단한다.
+- Ruling: 상태 기록은 기존 work/harness/STATE 관례를 유지한다. 기존 .superpowers/와 동결된 계획은 수정하지 않는다.
+- 사전 인터페이스 검토: Task1 package.jobs→Task2 gate/sender는 모델별 ID검사가 필요.
+  Task2 records/evidence→Task3는 기존 score/diagnostics를 그대로 재사용한다.
+- RED: 신규11개 테스트 모두 model-only harness missing으로 실패 확인.
+- GREEN: 신규11개 통과,전체1373실행/1366통과/7skip/실패0,69.636초.
+  로그 E:/AgentFit/output/status-model-comparison-tests.log. 실제호출0.
+- load_saved: 기존209개 입력/코드 hash 검증. 두 모델8개 job 생성,model 외 payload 변경0.
+- 독립 검토 status_model_comparison_review 진행 중. 검토 전 실제 실행하지 않는다.
+
 2026-10-02 KST. 브랜치 feature/status-model-comparison-plan, 기준224a0d7.
 기존 document-input-runtime worktree 사용. 사용자 요청은 계획까지만이며 실제 호출 권한이 아니다.
 
