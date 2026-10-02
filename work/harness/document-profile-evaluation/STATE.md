@@ -1,4 +1,17 @@
-# Document Profile Evaluation — 의미 검토 효과 오프라인 분석 완료, 종료
+# Document Profile Evaluation — 검토 후보 보존: 응답 계약 변경 필요로 구현 전 중단
+
+## 2026-10-02 검토 불일치 후보 보존 구현 요청·계약 사전 확인
+
+- 사용자 승인: review-effect-plan의 경계만 구현하되 공개 응답 계약 변경 필요 시 멈추고 영향/대안 보고. 큰 Goal은 실제 paused 상태 확인. 새 모델 호출0, 서비스 적용0.
+- 기반864c4d3, 기존 격리 worktree 재사용, feature/review-disagreement-preservation 브랜치 생성. 기존 다른 작업의 dirty 파일은 보존.
+- 계약 확인: confirmation-v2는 별도 검토 사유/보류 키를 거절. modelDecisions는 키 엄격 검증 및 decision을 원시 축에서 재계산하므로 supported를 보류로 단독 변경할 수 없음. 질문도 고정키/사유만 허용. AI HTTP와 mock 소비자 모두 영향.
+- Ruling: 사용자 조건2에 따라 제품 코드 수정 전 중단. 원시 grounding/분류 축을 위조하거나 questionId 등에 이유를 우회 삽입하지 않는다. 공개 Spring OpenAPI 변경이 필수라는 주장은 하지 않으며 AI HTTP 응답 확장이 필요한 것으로 구분.
+- 독립 작업: 원본 trace/원문/골드 등7파일을 E:/AgentFit/output/review-disagreement-preservation-preflight-20261002/fixture에 바이트 복사·SHA 고정. 네트워크와 모델 transport 차단, 저장 GLM응답23–25만 재생. 실제 검토/투영/확인 함수로 기존 result.json 완전 재현.
+- 사전 테스트16메서드:12통과,4실패메서드(하위사례 포함5실패),오류0. R1 누락2개와 R2형식2개 명시 보류 실패. 합성 실제 오답 거절은 긍정 자동 복원 없음 통과/명시 보류 실패. 기존27긍정/112미검토/52확인후보/11질문 유지. 새 모델 판단 아님.
+- 같은40의미:기존/재생 모두26보존·9보류·3누락·2사람검토. 최종긍정오답1. 수정 후 결과는 미구현(null), 모델 정확도 향상 주장 없음.
+- 변경 산출물: review-preservation-contract-stop-20261002.md 및 이 STATE. 재현 fixture/스크립트/실패 상세는 별도output폴더. 앱·모델·지침·골드·Spring 저장 변경0.
+- 남은 결정: 후보별 reviewDispositions 같은 별도 검토 메타데이터의 응답 계약 확장/버전 협상. 내부 기록만으로는 사용자 확인 보존 요구를 충족할 수 없음. Codex/이름/텍스트anchor/처리시간 미해결 유지.
+- 종료 지점: 계약 영향·대안 및 RED 재현 보고 후 멈춤. 구현 승인 범위를 임의 확대하지 않음.
 
 ## 2026-10-02 의미 검토 효과 분석
 
