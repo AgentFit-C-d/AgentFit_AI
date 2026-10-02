@@ -7,6 +7,8 @@ from pathlib import Path
 from jsonschema import Draft202012Validator, FormatChecker
 from agentfit_ai.profile import FIELDS
 from agentfit_ai.semantic_confirmation_metadata import check_decision_profile, check_unassigned_questions
+from agentfit_ai.candidate_confirmation import CONTRACT
+from agentfit_ai.candidate_review_dispositions import REVIEW_CONTRACT, check_review_dispositions
 
 
 class ContractError(Exception):
@@ -78,12 +80,15 @@ def check(name: str, value: object) -> None:
 
 
 def check_review(profile, review):
-    """Structural v2 metadata validation; no claim of semantic correctness."""
+    """Structural versioned metadata validation; no claim of semantic correctness."""
     try:
-        if type(review) is not dict or set(review) - {'modelDecisions', 'unassignedQuestions'} != {'contract', 'fieldStates', 'questions'}:
+        if type(review) is not dict:
+            raise ValueError
+        extra = {'reviewDispositions'} if review.get('contract') == REVIEW_CONTRACT else set()
+        if set(review) - {'modelDecisions', 'unassignedQuestions'} - extra != {'contract', 'fieldStates', 'questions'}:
             raise ValueError
         states, questions = review['fieldStates'], review['questions']
-        if (review['contract'] != 'confirmation-v2' or type(states) is not dict or set(states) != set(FIELDS)
+        if (review['contract'] not in (CONTRACT, REVIEW_CONTRACT) or type(states) is not dict or set(states) != set(FIELDS)
                 or any(type(v) is not str or v not in ('unknown', 'suggested', 'unresolved') for v in states.values())
                 or type(questions) is not list or len(questions) > 10):
             raise ValueError
@@ -109,5 +114,9 @@ def check_review(profile, review):
             check_unassigned_questions(review['modelDecisions'], review.get('unassignedQuestions', []))
         elif 'unassignedQuestions' in review:
             raise ValueError
+        if review['contract'] == REVIEW_CONTRACT:
+            if not {'modelDecisions', 'reviewDispositions'} <= set(review):
+                raise ValueError
+            check_review_dispositions(profile, review['modelDecisions'], review['reviewDispositions'], states=states)
     except (KeyError, TypeError, ValueError):
         raise ContractError(502, 'AI_INVALID_OUTPUT') from None

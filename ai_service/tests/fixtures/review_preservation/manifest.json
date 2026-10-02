@@ -1,0 +1,14 @@
+{
+  "baselineCode": "274ec06",
+  "implementationBase": "506a6a0",
+  "encoding": "gzip of exact original bytes",
+  "files": {
+    "audit-summary.json": "cb369038658d576c43d47ce101c3530acec974e07f7cd879455901b39d47bf1a",
+    "document.txt": "9c0115a34e4ae90f905c3021569bc4b5c10284388c7bac264b76e2d3d077f451",
+    "gold.json": "40ecc131c19fb8aa0e0127b67f9a5adf95885ed194a67350d3c89a9e9b328260",
+    "meaning-audit.json": "98df1cef815501993d10be5c7e7cc4e6a935da1d83fa049a61fe989774f7a512",
+    "result.json": "45f7fdae4ca8601d2f95aafd3ef9c4ddd55a9c9703bf61f3d5b7755e3b12b491",
+    "source.md": "9c0115a34e4ae90f905c3021569bc4b5c10284388c7bac264b76e2d3d077f451",
+    "trace.json": "703d98e7fe11cf50dc59b06c6fb0b053bc8d69d935f97cad541b6e6c8f962158"
+  }
+}

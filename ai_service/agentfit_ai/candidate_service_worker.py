@@ -4,6 +4,7 @@ from importlib.util import find_spec
 
 from .candidate_analysis_pipeline import analyze_integrated_candidates, analyze_nvidia_candidates
 from .candidate_confirmation import CONTRACT, project_candidate_confirmation
+from .candidate_review_dispositions import REVIEW_CONTRACT
 from .candidate_first_profile import CandidatePipelineError
 from .diagnostics import PIPELINE_FAILURE_CODES, safe_code
 from .nvidia_streaming import post_nvidia_streaming_inline
@@ -18,7 +19,9 @@ def execute_integrated_analysis(document, document_id, solar_key, nvidia_key):
 
 
 def execute_nvidia_analysis(document, document_id, nvidia_key, *, call_diagnostics=None, review_model=None,
-                            semantic_assessment=False):
+                            semantic_assessment=False, contract=CONTRACT):
+    if contract not in (CONTRACT, REVIEW_CONTRACT) or (contract == REVIEW_CONTRACT and not semantic_assessment):
+        raise ValueError('invalid candidate confirmation contract')
     if type(semantic_assessment) is not bool:
         raise ValueError('invalid semantic assessment option')
     if review_model is not None and (call_diagnostics is None or type(review_model) is not str
@@ -30,13 +33,16 @@ def execute_nvidia_analysis(document, document_id, nvidia_key, *, call_diagnosti
         options['review_model'] = review_model
     if semantic_assessment:
         options['semantic_assessment'] = True
+    if contract == REVIEW_CONTRACT:
+        options['preserve_review_dispositions'] = True
     return _execute_analysis(document, document_id, (nvidia_key,), lambda:
         analyze_nvidia_candidates(document, document_id, nvidia_key,
             nvidia_transport=post_nvidia_streaming_inline, **options),
-        call_diagnostics=call_diagnostics, call_trace=trace)
+        call_diagnostics=call_diagnostics, call_trace=trace, contract=contract)
 
 
-def _execute_analysis(document, document_id, keys, analyze, *, call_diagnostics=None, call_trace=None):
+def _execute_analysis(document, document_id, keys, analyze, *, call_diagnostics=None, call_trace=None,
+                      contract=CONTRACT):
     for key in keys:
         if type(key) is not str or not key.strip():
             raise AnalysisError('MISSING_OR_INVALID_KEY')
@@ -53,8 +59,8 @@ def _execute_analysis(document, document_id, keys, analyze, *, call_diagnostics=
             code = error.stage
         if call_diagnostics is not None:
             call_diagnostics.update(build_metadata(call_trace, error.stage))
-        return {'contract': CONTRACT, 'outcome': 'failed', 'error': code}
-    output = project_candidate_confirmation(document, document_id, result)
+        return {'contract': contract, 'outcome': 'failed', 'error': code}
+    output = project_candidate_confirmation(document, document_id, result, contract=contract)
     if call_diagnostics is not None:
         call_diagnostics.update(build_metadata(call_trace))
     return output

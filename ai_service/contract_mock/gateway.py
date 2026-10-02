@@ -2,6 +2,8 @@
 import httpx
 
 from agentfit_ai.profile import FIELDS
+from agentfit_ai.candidate_confirmation import CONTRACT
+from agentfit_ai.candidate_review_dispositions import REVIEW_CONTRACT
 from .schema import ContractError, check_review
 
 MEDIA = {'TEXT': 'text/plain', 'MARKDOWN': 'text/markdown', 'PDF': 'application/pdf'}
@@ -27,8 +29,11 @@ def synthetic_analysis(document, document_id):
 
 
 class LocalAnalysisGateway:
-    def __init__(self, ai_app):
+    def __init__(self, ai_app, *, contract=CONTRACT):
+        if contract not in (CONTRACT, REVIEW_CONTRACT):
+            raise ValueError('unsupported analysis contract')
         self.ai_app = ai_app
+        self.contract = contract
 
     async def analyze(self, kind, body, document_id, request_id):
         async with httpx.AsyncClient(transport=httpx.ASGITransport(app=self.ai_app, raise_app_exceptions=False),
@@ -36,7 +41,7 @@ class LocalAnalysisGateway:
             response = await client.post('/internal/v1/analyze', content=body, headers={
                 'Authorization': 'Bearer mock-internal', 'Content-Type': MEDIA[kind],
                 'X-Document-Id': document_id, 'X-Document-Kind': kind,
-                'X-Request-Id': request_id, 'X-AgentFit-Analysis-Contract': 'confirmation-v2'})
+                'X-Request-Id': request_id, 'X-AgentFit-Analysis-Contract': self.contract})
         try:
             if len(response.content) > 1_500_000:
                 raise ValueError
@@ -60,11 +65,12 @@ class LocalAnalysisGateway:
             if code == 'PDF_TIMEOUT' or response.status_code in (408, 504):
                 raise ContractError(504, 'ANALYSIS_TIMEOUT')
             raise ContractError(503 if response.status_code == 503 else 502, 'AI_UNAVAILABLE')
-        if result.get('requestId') != request_id or result.get('contract') != 'confirmation-v2':
+        if result.get('requestId') != request_id or result.get('contract') != self.contract:
             raise ContractError(502, 'AI_INVALID_OUTPUT')
         if set(result) == {'contract', 'outcome', 'error', 'requestId'} and result['outcome'] == 'failed':
             raise ContractError(502, 'AI_UNAVAILABLE')
-        if (set(result) - {'modelDecisions', 'unassignedQuestions'} != {'contract', 'outcome', 'error', 'requestId', 'profile', 'fieldStates', 'questions'}
+        extra = {'reviewDispositions'} if self.contract == REVIEW_CONTRACT else set()
+        if (set(result) - {'modelDecisions', 'unassignedQuestions'} - extra != {'contract', 'outcome', 'error', 'requestId', 'profile', 'fieldStates', 'questions'}
                 or result['outcome'] != 'needs_confirmation' or result['error'] != 'REVIEW_CONFIRMATION_REQUIRED'):
             raise ContractError(502, 'AI_INVALID_OUTPUT')
         review = {k: result[k] for k in ('contract', 'fieldStates', 'questions')}
@@ -72,5 +78,7 @@ class LocalAnalysisGateway:
             review['modelDecisions'] = result['modelDecisions']
         if 'unassignedQuestions' in result:
             review['unassignedQuestions'] = result['unassignedQuestions']
+        if 'reviewDispositions' in result:
+            review['reviewDispositions'] = result['reviewDispositions']
         check_review(result['profile'], review)
         return {'profile': result['profile'], 'review': review}

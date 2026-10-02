@@ -101,7 +101,9 @@ async def _until_disconnect(request, operation):
 
 
 def create_mock_app(*, store=None, ai_app=None, sessions=None, origin='http://127.0.0.1:8765',
-                    analysis_timeout_seconds=2):
+                    analysis_timeout_seconds=2, analysis_contract='confirmation-v2'):
+    if analysis_contract != 'confirmation-v2' and ai_app is None:
+        raise ValueError('extended mock contract requires an explicit AI app')
     if (type(analysis_timeout_seconds) not in (int, float) or not math.isfinite(analysis_timeout_seconds)
             or not 0 < analysis_timeout_seconds <= 60):
         raise ValueError('INVALID_MOCK_TIMEOUT')
@@ -109,7 +111,7 @@ def create_mock_app(*, store=None, ai_app=None, sessions=None, origin='http://12
     sessions = dict(sessions if sessions is not None else {'mock-session-a': 'owner-a', 'mock-session-b': 'owner-b'})
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
     gateway = LocalAnalysisGateway(ai_app or create_app(internal_token='mock-internal',
-        analyze=synthetic_analysis, analysis_mode='integrated-candidates'))
+        analyze=synthetic_analysis, analysis_mode='integrated-candidates'), contract=analysis_contract)
     # Event-loop-owned admission: reserve before awaiting upload, retain through deletion.
     active = {}
 
@@ -203,7 +205,10 @@ def create_mock_app(*, store=None, ai_app=None, sessions=None, origin='http://12
                     timeout_seconds=analysis_timeout_seconds)
                 result = await _until_disconnect(request,
                     gateway.analyze(kind, body, attempt['document']['id'], request.state.request_id))
-                return store.finish(user, project_id, attempt['id'], result['profile'], result['review'])
+                response = store.finish(user, project_id, attempt['id'], result['profile'], result['review'])
+                if analysis_contract == 'confirmation-v3':
+                    response['review'] = result['review']
+                return response
         except TimeoutError:
             failed('ANALYSIS_TIMEOUT')
             raise ContractError(504, 'ANALYSIS_TIMEOUT') from None

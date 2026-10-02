@@ -7,6 +7,8 @@ from .diagnostics import safe_code
 from .recoverable_solar_analysis import RecoverableSolarAnalyzer
 from .solar import AnalysisError, SolarAnalyzer, post_solar_inline
 from .analysis_call_metadata import METADATA_VERSION, MODELS, unavailable_metadata, validate_metadata
+from .candidate_confirmation import CONTRACT
+from .candidate_review_dispositions import REVIEW_CONTRACT
 
 
 MAX_INPUT_BYTES = 500_000
@@ -33,6 +35,10 @@ def execute_request(raw: bytes) -> bytes:
             expected.add('mode')
         elif mode is not None:
             return FAILED
+        if 'contract' in request:
+            if mode != 'integrated-nvidia' or request['contract'] not in (CONTRACT, REVIEW_CONTRACT):
+                return FAILED
+            expected.add('contract')
         if 'diagnostics' in request:
             if mode != 'integrated-nvidia' or request['diagnostics'] != METADATA_VERSION:
                 return FAILED
@@ -53,6 +59,8 @@ def execute_request(raw: bytes) -> bytes:
         elif mode == 'integrated-nvidia':
             from .candidate_service_worker import execute_nvidia_analysis
             options = {'semantic_assessment': True}
+            if request.get('contract') == REVIEW_CONTRACT:
+                options['contract'] = REVIEW_CONTRACT
             if metadata is not None:
                 options['call_diagnostics'] = metadata
             if 'reviewModel' in request:

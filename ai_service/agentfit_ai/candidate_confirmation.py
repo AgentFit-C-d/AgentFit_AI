@@ -5,6 +5,7 @@ from .profile import FIELDS, MAX_ARRAY_ITEMS, check_profile_snapshot
 from .semantic_confirmation_metadata import (
     check_decision_profile, unassigned_decision_questions, check_unassigned_questions,
 )
+from .candidate_review_dispositions import REVIEW_CONTRACT, check_review_dispositions
 
 
 CONTRACT = 'confirmation-v2'
@@ -19,8 +20,9 @@ def _count(value):
     return type(value) is int and value >= 0
 
 
-def _checked_result(document, document_id, result):
-    if (type(result) is not dict or set(result) - {'featureCuration', 'modelDecisions'} != _RESULT_KEYS
+def _checked_result(document, document_id, result, contract=CONTRACT):
+    extra = {'reviewDispositions'} if contract == REVIEW_CONTRACT else set()
+    if (type(result) is not dict or set(result) - {'featureCuration', 'modelDecisions'} - extra != _RESULT_KEYS
             or type(result['outcome']) is not str
             or result['outcome'] not in ('candidate_profile', 'needs_confirmation')):
         raise ValueError('invalid candidate result')
@@ -57,14 +59,20 @@ def _checked_result(document, document_id, result):
         records = check_decision_profile(profile, result['modelDecisions'], document=document, document_id=document_id)
         if len(records) != result['candidateCount']:
             raise ValueError('invalid semantic candidate count')
+    if contract == REVIEW_CONTRACT:
+        if not {'modelDecisions', 'reviewDispositions'} <= set(result):
+            raise ValueError('missing review dispositions')
+        check_review_dispositions(profile, records, result['reviewDispositions'])
     if result['candidateCount'] == 0 and any(value is not None for value in profile['data'].values()):
         raise ValueError('empty candidates contradict profile')
     return profile
 
 
-def project_candidate_confirmation(document, document_id, result) -> dict:
+def project_candidate_confirmation(document, document_id, result, *, contract=CONTRACT) -> dict:
     """Map a completed pipeline result to suggestions; never approve or persist it."""
-    profile = _checked_result(document, document_id, result)
+    if contract not in (CONTRACT, REVIEW_CONTRACT):
+        raise ValueError('invalid candidate confirmation contract')
+    profile = _checked_result(document, document_id, result, contract)
     unresolved = set(result['unresolvedFields'])
     records = result.get('modelDecisions', [])
     unassigned = unassigned_decision_questions(records)
@@ -86,15 +94,19 @@ def project_candidate_confirmation(document, document_id, result) -> dict:
                  document=document, document_id=document_id, states=states)} if 'modelDecisions' in result else {})
     if unassigned:
         metadata['unassignedQuestions'] = unassigned
+    if contract == REVIEW_CONTRACT:
+        metadata['reviewDispositions'] = result['reviewDispositions']
     return validate_candidate_confirmation(document, document_id, {
-        'contract': CONTRACT, 'outcome': 'needs_confirmation', 'profile': profile,
-        'fieldStates': states, 'questions': questions, 'error': 'REVIEW_CONFIRMATION_REQUIRED', **metadata})
+        'contract': contract, 'outcome': 'needs_confirmation', 'profile': profile,
+        'fieldStates': states, 'questions': questions, 'error': 'REVIEW_CONFIRMATION_REQUIRED', **metadata}, contract=contract)
 
 
-def validate_candidate_confirmation(document, document_id, outcome) -> dict:
-    """Validate the v2 boundary independently of the pipeline that produced it."""
-    if (type(outcome) is not dict or set(outcome) - {'modelDecisions', 'unassignedQuestions'} != _DRAFT_KEYS or
-            outcome['contract'] != CONTRACT or outcome['outcome'] != 'needs_confirmation' or
+def validate_candidate_confirmation(document, document_id, outcome, *, contract=CONTRACT) -> dict:
+    """Validate the explicitly selected boundary, defaulting to unchanged v2."""
+    extra = {'reviewDispositions'} if contract == REVIEW_CONTRACT else set()
+    if (contract not in (CONTRACT, REVIEW_CONTRACT) or type(outcome) is not dict or
+            set(outcome) - {'modelDecisions', 'unassignedQuestions'} - extra != _DRAFT_KEYS or
+            outcome['contract'] != contract or outcome['outcome'] != 'needs_confirmation' or
             outcome['error'] != 'REVIEW_CONFIRMATION_REQUIRED'):
         raise ValueError('invalid candidate confirmation contract')
     profile = check_profile_snapshot(document, document_id, outcome['profile'])
@@ -128,4 +140,9 @@ def validate_candidate_confirmation(document, document_id, outcome) -> dict:
         check_unassigned_questions(metadata['modelDecisions'], outcome.get('unassignedQuestions', []))
     elif 'unassignedQuestions' in outcome:
         raise ValueError('unassigned questions require model decisions')
+    if contract == REVIEW_CONTRACT:
+        if not {'modelDecisions', 'reviewDispositions'} <= set(outcome):
+            raise ValueError('missing review dispositions')
+        metadata['reviewDispositions'] = check_review_dispositions(
+            profile, metadata['modelDecisions'], outcome['reviewDispositions'], states=states)
     return deepcopy({**outcome, 'profile': profile, **metadata})

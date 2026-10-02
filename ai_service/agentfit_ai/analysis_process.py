@@ -7,6 +7,7 @@ from pathlib import Path
 
 from .analysis_worker import MAX_INPUT_BYTES, MAX_OUTPUT_BYTES
 from .candidate_confirmation import CONTRACT, validate_candidate_confirmation
+from .candidate_review_dispositions import REVIEW_CONTRACT
 from .diagnostics import safe_code
 from .solar import _provider_worker_environment
 from .analysis_call_metadata import METADATA_VERSION, MODELS, unavailable_metadata, validate_metadata
@@ -23,9 +24,10 @@ async def run_analysis_process(document: str, document_id: str, key: str,
                                deadline: float, *, recoverable_solar: bool = False,
                                integrated_candidates: bool = False, nvidia_key=None,
                                nvidia_only: bool = False, command=None, call_diagnostics=None,
-                               nvidia_review_model=None) -> dict:
+                               nvidia_review_model=None, contract=CONTRACT) -> dict:
     flags = (recoverable_solar, integrated_candidates, nvidia_only)
     if (any(type(flag) is not bool for flag in flags) or sum(flags) > 1
+            or contract not in (CONTRACT, REVIEW_CONTRACT) or (contract == REVIEW_CONTRACT and not nvidia_only)
             or (integrated_candidates and (type(nvidia_key) is not str or not nvidia_key.strip()))
             or (nvidia_only and (type(key) is not str or not key.strip()))
             or (not integrated_candidates and nvidia_key is not None)
@@ -44,6 +46,8 @@ async def run_analysis_process(document: str, document_id: str, key: str,
         request.update(mode='integrated-candidates', nvidiaKey=nvidia_key)
     if nvidia_only:
         request['mode'] = 'integrated-nvidia'
+        if contract == REVIEW_CONTRACT:
+            request['contract'] = contract
     if call_diagnostics is not None:
         request['diagnostics'] = METADATA_VERSION
     if nvidia_review_model is not None:
@@ -123,12 +127,12 @@ async def run_analysis_process(document: str, document_id: str, key: str,
         if safe_code(result["error"]) == result["error"]:
             return accept(result)
     if integrated_candidates or nvidia_only:
-        if (set(result) == {'contract', 'outcome', 'error'} and result['contract'] == CONTRACT
+        if (set(result) == {'contract', 'outcome', 'error'} and result['contract'] == contract
                 and result['outcome'] == 'failed' and type(result['error']) is str
                 and safe_code(result['error']) == result['error']):
             return accept(result)
         try:
-            return accept(validate_candidate_confirmation(document, document_id, result))
+            return accept(validate_candidate_confirmation(document, document_id, result, contract=contract))
         except (TypeError, ValueError, KeyError):
             raise AnalysisProcessError("ANALYSIS_WORKER_FAILED") from None
     if (set(result) == {"outcome", "profile"} and result["outcome"] == "complete"

@@ -14,6 +14,7 @@ from .candidate_field_review import review_candidates_by_field
 from .capability_candidates import extract_capability_candidates
 from .candidate_split_review import review_candidates_separately
 from .candidate_semantic_assessment import classify_grounded_candidates
+from .candidate_review_dispositions import build_review_dispositions
 from .semantic_confirmation_metadata import unresolved_decision_fields
 from .deepseek_evaluation import MODEL, NVIDIA_REVIEW_MODELS
 from .diagnostics import safe_code
@@ -52,7 +53,8 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
                                   max_calls=64, nvidia_retry_limit=1, candidate_model=None,
                                   capability_candidates=False, field_local_review=False,
                                   classification_model=None, classification_batch_size=30,
-                                  semantic_assessment=False, detail_observer=None):
+                                  semantic_assessment=False, detail_observer=None,
+                                  preserve_review_dispositions=False):
     """Run fresh extraction through reviewed projection with one provider-call budget.
 
     Injected extractors are trusted callbacks. Only the default LangExtract adapter's
@@ -78,6 +80,8 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
             type(nvidia_retry_limit) is not int or nvidia_retry_limit not in (0, 1) or
             type(capability_candidates) is not bool or type(field_local_review) is not bool or
             type(semantic_assessment) is not bool or (semantic_assessment and not nvidia_only) or
+            type(preserve_review_dispositions) is not bool or
+            (preserve_review_dispositions and (not semantic_assessment or field_local_review)) or
             (classification_model is not None and
              (type(classification_model) is not str or classification_model not in NVIDIA_REVIEW_MODELS)) or
             type(classification_batch_size) is not int or classification_batch_size not in (15, 30)):
@@ -216,6 +220,9 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
     reviewer = review_candidates_by_field if field_local_review else review_candidates_separately
     review_options = {} if field_local_review else {
         'reasoned_review': True, 'adaptive_review': False, 'field_semantics': 'explicit-v1'}
+    review_reasons = []
+    if preserve_review_dispositions:
+        review_options['review_reasons'] = review_reasons
     review = run('COVERAGE_REVIEW_FAILED', lambda: reviewer(
         document, frozen, labels, nvidia_key, transport=nvidia_send,
         review_model=review_model, review_calls=review_calls, **review_options))
@@ -234,6 +241,9 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
         result['reviewIssueCount'] += sum(r['decision'] == 'needs_confirmation' for r in decisions)
         if unresolved or result['reviewIssueCount']:
             result['outcome'] = 'needs_confirmation'
+    if preserve_review_dispositions:
+        result['reviewDispositions'] = run('PROJECTION_FAILED', lambda:
+            build_review_dispositions(review, review_reasons))
     return result
 
 
@@ -242,7 +252,8 @@ def analyze_nvidia_candidates(document, document_id, nvidia_key, *,
                               nvidia_transport=None, observer=None, call_trace=None,
                               review_calls=None, max_calls=64, capability_candidates=False,
                               field_local_review=False, classification_model=None,
-                              classification_batch_size=30, semantic_assessment=False, detail_observer=None):
+                              classification_batch_size=30, semantic_assessment=False, detail_observer=None,
+                              preserve_review_dispositions=False):
     """Opt-in NVIDIA-only variant; no retries, fallback, or account/billing guarantee.
 
     Callers own the total process deadline and must establish permission and free
@@ -258,4 +269,4 @@ def analyze_nvidia_candidates(document, document_id, nvidia_key, *,
         nvidia_retry_limit=0, capability_candidates=capability_candidates,
         field_local_review=field_local_review, classification_model=classification_model,
         classification_batch_size=classification_batch_size, semantic_assessment=semantic_assessment,
-        detail_observer=detail_observer)
+        detail_observer=detail_observer, preserve_review_dispositions=preserve_review_dispositions)

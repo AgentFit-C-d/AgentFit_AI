@@ -1,4 +1,19 @@
-# Document Profile Evaluation — 검토 후보 보존: 응답 계약 변경 필요로 구현 전 중단
+# Document Profile Evaluation — confirmation-v3 오프라인 후보 보존 완료·종료
+
+## 2026-10-02 A안·응답 계약 확장 승인
+
+- 사용자 후속 승인으로 이전 계약 중단 해소. confirmation-v2 기본 불변, 명시 v3 선택 시에만 검토 불일치 후보를 원시 판단과 분리 전달한다. 큰 Goal paused 확인.
+- 기존 feature/review-disagreement-preservation 격리 worktree 재사용, BASE506a6a0. 기존 다른 dirty 파일 보존.
+- Ruling: 새 헤더 옵션 대신 기존 계약 헤더의 confirmation-v3 사용. integrated-nvidia만 허용해 기존 비의미 분류 경로로 확장을 넓히지 않는다. 모델/프롬프트/스키마/골드/실제Spring 저장은 불변.
+- executing-plans 및 test-driven-development 절차로 직접 구현. Windows 프로젝트의 기존 STATE를 실행 ledger로 사용하고 .superpowers 다른 작업은 건드리지 않는다.
+- Task1 동결fixture 및 RED → Task2 응답 생성/검증 → Task3 worker/HTTP/mock → Task4 전체 오프라인 회귀·40의미 비교·최종 리뷰.
+- 네트워크와 모델 호출 금지. ASGI 메모리 전달과 자식 stdin/stdout만 사용. 실제 서비스 적용/Goal 재개 없음.
+- Task1–4 완료. 새 회귀18/18, 독립 리뷰18/18. 최종 오프라인 전체1392통과/7skip/실패0, TCP29제외. 최초 RED(v3 미구현4오류)와 mock메타데이터 유실 실패, 리뷰에서 발견한 default헤더 무시/괄호이름 위치재사용 RED→GREEN 기록 보존.
+- v2 최종JSON 동일. Profile/modelDecisions145/통과27/미검토112/기존확인52/질문11 불변. 새 reviewDispositions6개만 추가, 후보확인58. 40의미26보존·9보류·3누락·2사람검토 → 26·11·1·2. 최종긍정오답1 유지. 모델정확도 향상 아님.
+- 최종산출물 E:/AgentFit/output/review-preservation-v3-20261002-final. 원본 평가7파일의정확바이트 gzip fixture와SHA보존. 일반추출 저장객체 재생, 이후요청3–25 payload동일·저장응답재생. 신규SDK/모델실행 아님.
+- 검증장치 정정: 초기 전체회귀에 기존loopback TCP테스트가 포함되어 부모차단실패 및 자식로컬통신이 있었다. 외부모델0이지만 네트워크0으로 주장하지 않음. 최종run은 TCP29제외·응용소켓차단. 초기결과2폴더 보존.
+- 리뷰제외범위 판정: 실제Spring/운영/모델정확도/시간은 승인범위 밖. mock 즉시분석응답 review전달까지 이번범위, 상세재조회/직접저장감사 확장은 후속. known Codex/name/anchor 미해결.
+- 완료보고: specs/ai-developer/document-profile-evaluation/review-preservation-v3-report-20261002.md. 큰Goal paused 재확인, 추가실험/서비스적용 없이 종료.
 
 ## 2026-10-02 검토 불일치 후보 보존 구현 요청·계약 사전 확인
 

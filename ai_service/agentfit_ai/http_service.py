@@ -13,6 +13,7 @@ from fastapi.responses import JSONResponse, Response
 
 from .analysis_process import AnalysisProcessError, run_analysis_process
 from .candidate_confirmation import CONTRACT, validate_candidate_confirmation
+from .candidate_review_dispositions import REVIEW_CONTRACT
 from .diagnostics import safe_code
 from .document_extraction import (MAX_FILE_BYTES, PDF_TIMEOUT_SECONDS,
                                   DocumentExtractionError,
@@ -70,7 +71,7 @@ async def _wait_for_disconnect(request: Request) -> None:
 async def _run_default_analysis(request: Request, document: str, document_id: str,
                                 deadline: float, *, recoverable_solar: bool = False,
                                 integrated_candidates: bool = False,
-                                nvidia_only: bool = False) -> dict:
+                                nvidia_only: bool = False, contract=CONTRACT) -> dict:
     key = os.environ.get('NVIDIA_API_KEY' if nvidia_only else 'UPSTAGE_API_KEY', '')
     nvidia_key = os.environ.get("NVIDIA_API_KEY", "") if integrated_candidates else None
     if not key.strip() or (integrated_candidates and not nvidia_key.strip()):
@@ -78,8 +79,9 @@ async def _run_default_analysis(request: Request, document: str, document_id: st
     if await request.is_disconnected():
         return _DISCONNECTED
     if nvidia_only:
+        options = {'contract': contract} if contract == REVIEW_CONTRACT else {}
         worker = asyncio.create_task(run_analysis_process(
-            document, document_id, key, deadline, nvidia_only=True))
+            document, document_id, key, deadline, nvidia_only=True, **options))
     elif integrated_candidates:
         worker = asyncio.create_task(run_analysis_process(
             document, document_id, key, deadline, integrated_candidates=True, nvidia_key=nvidia_key))
@@ -201,10 +203,16 @@ def create_app(*, internal_token: str | None = None,
         supplied = authorization.removeprefix("Bearer ")
         if not authorization.startswith("Bearer ") or not hmac.compare_digest(supplied, token):
             return _error(401, "UNAUTHORIZED")
-        if (mode in ("recoverable-solar", *_INTEGRATED_MODES) and
-                request.headers.getlist("x-agentfit-analysis-contract") !=
-                [CONTRACT if mode in _INTEGRATED_MODES else "confirmation-v1"]):
-            return _error(428, "CONFIRMATION_CONTRACT_REQUIRED")
+        contract = CONTRACT
+        versions = request.headers.getlist('x-agentfit-analysis-contract')
+        if mode == 'default' and versions and versions != [CONTRACT]:
+            return _error(428, 'CONFIRMATION_CONTRACT_REQUIRED')
+        if mode in ("recoverable-solar", *_INTEGRATED_MODES):
+            allowed = ((CONTRACT, REVIEW_CONTRACT) if mode == 'integrated-nvidia' else
+                       (CONTRACT,) if mode == 'integrated-candidates' else ('confirmation-v1',))
+            if len(versions) != 1 or versions[0] not in allowed:
+                return _error(428, 'CONFIRMATION_CONTRACT_REQUIRED')
+            contract = versions[0]
 
         document_id = request.headers.get("x-document-id", "")
         request_id = request.headers.get("x-request-id", "")
@@ -284,7 +292,8 @@ def create_app(*, internal_token: str | None = None,
                     request, extracted.text, document_id, deadline,
                     recoverable_solar=(mode == "recoverable-solar"),
                     integrated_candidates=(mode == 'integrated-candidates'),
-                    nvidia_only=(mode == 'integrated-nvidia'))
+                    nvidia_only=(mode == 'integrated-nvidia'),
+                    **({'contract': contract} if contract == REVIEW_CONTRACT else {}))
                 if outcome is _DISCONNECTED:
                     response = _AbortedResponse(slots.release)
                     release_here = False
@@ -297,11 +306,11 @@ def create_app(*, internal_token: str | None = None,
                 return fail(503 if code in _CONFIGURATION_ERRORS else 502, code)
             if mode in _INTEGRATED_MODES:
                 if (type(outcome) is dict and set(outcome) == {'contract', 'outcome', 'error'}
-                        and outcome['contract'] == CONTRACT and outcome['outcome'] == 'failed'
+                        and outcome['contract'] == contract and outcome['outcome'] == 'failed'
                         and type(outcome['error']) is str and safe_code(outcome['error']) == outcome['error']):
                     return finish(200, dict(outcome, requestId=request_id))
                 try:
-                    checked = validate_candidate_confirmation(extracted.text, document_id, outcome)
+                    checked = validate_candidate_confirmation(extracted.text, document_id, outcome, contract=contract)
                 except (TypeError, ValueError, KeyError):
                     return fail(502, 'INVALID_ANALYSIS_RESULT')
                 return finish(200, dict(checked, requestId=request_id))
