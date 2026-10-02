@@ -99,8 +99,11 @@ class FixedPayloadSender:
 
 class ModelCallGate:
     """One exact eight-attempt schedule, terminal failure, no retry and no paid fallback."""
+    schedule = SCHEDULE
+    max_calls = 8
+
     def __init__(self,output,jobs,*,check_free,check_identity,transport,clock=time.monotonic):
-        if ([(j['docId'],j['arm'],j['batch']) for j in jobs]!=list(SCHEDULE)
+        if ([(j['docId'],j['arm'],j['batch']) for j in jobs]!=list(self.schedule)
                 or any(j['payload']['model']!=MODELS[j['arm']] for j in jobs)):
             raise ValueError('INVALID_JOB_COUNT')
         self.output=Path(output)
@@ -114,7 +117,7 @@ class ModelCallGate:
         self.completed=[]
 
     def __call__(self,payload,key,timeout):
-        if self.stopped or self.started>=8:
+        if self.stopped or self.started>=self.max_calls:
             raise ValueError('CALLS_STOPPED')
         try:
             self.check_identity()

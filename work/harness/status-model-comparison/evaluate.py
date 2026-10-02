@@ -120,10 +120,10 @@ def run_package(output,package,gate,sender):
                 result[key]=None if unknown else sum(known)
                 result[key+'_known_sum'],result[key+'_unknown_calls']=sum(known),unknown
     report={'documents':results,'arm_labels':dict(MODELS),'calls_started':gate.started,
-            'retries':0,'unstarted_calls':8-gate.started,'stop_error':stop_error,
+            'retries':0,'unstarted_calls':len(package['jobs'])-gate.started,'stop_error':stop_error,
             'comparable':stop_error is None and all(a['complete'] for d in results.values() for a in d.values()),
             'wall_seconds':time.monotonic()-started,
-            'free_basis':'fresh user confirmation for these free endpoints and this eight-attempt run; no independent account quota inspection',
+            'free_basis':getattr(gate,'free_basis','fresh user confirmation for these free endpoints and this eight-attempt run; no independent account quota inspection'),
             'option_enforcement':'request acceptance and schema-valid content observable; backend enforcement of individual options not independently observable',
             'response_storage':'existing SSE transport assembled content envelope; raw field/status retained; not original SSE event bytes',
             'service_applied':False,'large_goal_resumed':False}
