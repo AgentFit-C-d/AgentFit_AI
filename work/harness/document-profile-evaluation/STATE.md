@@ -1,4 +1,37 @@
-# Document Profile Evaluation — 준비 후 중단
+# Document Profile Evaluation — 로컬 검증 완료, 실제 호출 전 중단
+
+## 2026-10-02 후속 승인
+
+사용자가 제시한 기대값(10필드, 36개 세부 기능 의미)을 승인하고 현재 서비스 경로의 관측·채점 최소 구현과 로컬 검증을 요청했다. U/US 삽입과 실제 모델 호출은 금지. 브랜치는 `feature/document-profile-baseline`, BASE는 `db76596`.
+
+- Task 1: 기대값의 내용은 유지하고 승인 상태·의미 단위 ID만 고정한다.
+- Task 2: 기존 CandidateTrace/analysis_worker를 재사용하고 누락된 상세 단계만 opt-in 기록한다.
+- Task 3: 수동 의미 대응표와 실제 기록을 대조하는 채점기를 구현한다. 문자열/목록 수로 대체하지 않는다.
+- Task 4: 모델·호출 수·시간 상한을 보고하고 실제 호출 전에 종료한다.
+- Pre-flight: 추출 입력은 원문만, 채점기는 골드와 기록만 받는다. 공개 API와 worker 출력 계약은 유지한다.
+- Ruling: 기존 observer는 정확히 네 단계만 허용하므로 새 상세 기록은 별도 선택형 detail_observer로 추가한다. 기존 관측 소비자를 깨뜨리지 않기 위한 최소 확장이다.
+- Ruling: Windows의 기존 기록 관례에 맞춰 이 STATE를 실행 ledger로 사용한다. 기존 `.superpowers` 내용은 수정하지 않는다.
+- Baseline: `python -m unittest discover -s tests -p test_candidate_analysis_pipeline.py -q` → 20 passed.
+
+### 현재 완료·검증
+
+- Task 1 complete: `gold-draft.json`은 내용 변경 없이 유지. baseline-contract.json에 사용자 승인과 골드 SHA 기록, meaning-units.json에 기능 36 + 기타 4 의미 ID 생성.
+- Task 2 complete: 기존 CandidateTrace와 실제 analysis_worker 재사용. 추가 상세 관측만 선택형 훅. 신규 테스트 5개 RED→GREEN, 실제 SDK/HTTP/child/loopback 테스트 3개 RED→GREEN.
+- Task 3 complete: 수동 의미 대응표를 기록 해시와 묶어 최초 손실 단계와 최종 보존을 계수. 채점 테스트 12개 RED→GREEN. 미감사·미관측을 0오확정으로 만들지 않는 검증 포함.
+- Ruling: 평가 기능은 diagnostic_tools에 두고 current worker를 그대로 재사용한다. 계획의 직접 함수 연결보다 서비스 경로 차이를 줄이면서 기본 서버에는 설치하지 않기 위함이다.
+- Ruling: 대응표를 골드·trace 해시를 포함한 객체로 감쌌다. 다른 실행의 판단 재사용을 막기 위함이며 의미 기준은 그대로다.
+- 최초 전체 unit: 1407건 / 1400 통과 / 7 skip, 77.972초. `E:/AgentFit/tmp/document-profile-unit-tests.log`.
+- 리뷰 후 최종 전체 unit: 1410건 / 1403 통과 / 7 skip, 80.385초. `E:/AgentFit/tmp/document-profile-unit-tests-final.log`.
+- 전체 runtime: 39건 통과, 151.673초. `E:/AgentFit/tmp/document-profile-runtime-tests.log`. 외부 API가 아닌 합성 응답·로컬 루프백이다.
+- 실제 문서 준비 출력: `E:/AgentFit/output/document-profile-baseline-preparation-v1` (원문/추출문/준비 메타데이터/미실행 대응표). 36개 의미 모두 unjudged, 최종 누락 수 null.
+- SDK 로컬 분할: LangExtract 1.7.0 / RegexTokenizer / max_char_buffer=4000 → 2 chunks. 모델 호출 0회.
+- 제안 호출 수: 4 + ceil(N/8) + ceil(C/20) + K(0~4), 후보 상한 240에서 계산상 최대50회. 서비스 제한64회/1800초/호출당600초/재시도0.
+- 독립 리뷰: Important 2건(미관측 지표가 0으로 표시됨, 중간 단계 미검토를 완료로 처리함). 3개 회귀 테스트가 수정 전 실패하고 수정 후 통과. 최초 오류 귀속과 전체 검토 완료 조건을 분리하고 지표별 관측 여부를 검사했다. 추가 모델 호출 없음.
+- 초기 미실행 미리보기는 보존했다. `trace-preview-not-executed-v2.json`, `alignment-preview-not-executed-v2.json`, `metrics-not-executed-v2.json`을 별도 생성해 미관측 지표를 null로 표시했다.
+- Task 4: local-implementation.md에 단계별 모델·호출식·제한을 기록했다. 다음 실제 실행 전에 승인·무료 조건 확인 및 기존 부모 프로세스의 제한 연결이 필요하다.
+- 안전한 중단 지점: 로컬 구현·검증 완료. 이번 변경만 커밋/push한 뒤 결과 보고하고 종료한다. 실제 모델 평가·서비스 적용·큰 goal 재개는 수행하지 않는다.
+
+아래는 이전 준비 단계의 기록이며 후속 승인이 실행 범위를 갱신한다.
 
 ## 현재 요청
 

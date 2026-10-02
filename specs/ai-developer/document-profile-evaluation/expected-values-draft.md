@@ -2,6 +2,8 @@
 
 **상태: 사용자 검토 전 초안. 실제 모델 결과가 아님.**
 
+**2026-10-02 갱신:** 사용자가 이 기대값을 기준으로 로컬 평가 준비를 진행하도록 승인했다. 아래 초안 내용은 변경하지 않았으며 승인·해시는 [baseline-contract.json](baseline-contract.json)에 기록했다. 실제 모델 결과는 아직 없다.
+
 - 원문: [project-proposal.md](E:/AgentFit/Docs/project-proposal.md), 2026-09-08판, 전체 186줄.
 - 원본 바이트 SHA-256: `9c0115a34e4ae90f905c3021569bc4b5c10284388c7bac264b76e2d3d077f451`. UTF-8, CRLF 유지, 7796 Unicode code points.
 - 기존 개발 문서이므로 일반화 검증용 새 문서가 아니다. 연결 문서·대화의 스택 정보는 사용하지 않는다.

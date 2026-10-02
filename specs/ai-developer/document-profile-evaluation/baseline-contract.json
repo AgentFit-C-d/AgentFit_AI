@@ -1,0 +1,28 @@
+{
+  "status": "approved_for_local_baseline_preparation",
+  "userApprovalDate": "2026-10-02",
+  "goldFile": "gold-draft.json",
+  "goldFileSha256": "40ecc131c19fb8aa0e0127b67f9a5adf95885ed194a67350d3c89a9e9b328260",
+  "goldSemanticSha256": "4eea558d0d66f4088b3ef069af515de0330893c09bb8f9995c645ceb49b1ac8c",
+  "sourceSha256": "9c0115a34e4ae90f905c3021569bc4b5c10284388c7bac264b76e2d3d077f451",
+  "fieldCount": 10,
+  "featureMeaningCount": 36,
+  "positiveMeaningCount": 40,
+  "valueOrCriteriaChanges": false,
+  "modelCallsAuthorized": false,
+  "models": {
+    "extraction": "deepseek-ai/deepseek-v4.1-flash",
+    "classification": "deepseek-ai/deepseek-v4.1-flash",
+    "review": "z-ai/glm-5.3",
+    "features": "deepseek-ai/deepseek-v4.1-flash"
+  },
+  "classificationPath": "current integrated-nvidia / semantic_assessment=True; no U/US",
+  "limitsProposal": {
+    "maxCalls": 64,
+    "totalSeconds": 1800,
+    "perCallSeconds": 600,
+    "retries": 0,
+    "stopOnFirstFailure": true
+  },
+  "sdkLocalChunkCount": 2
+}

@@ -52,7 +52,7 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
                                   max_calls=64, nvidia_retry_limit=1, candidate_model=None,
                                   capability_candidates=False, field_local_review=False,
                                   classification_model=None, classification_batch_size=30,
-                                  semantic_assessment=False):
+                                  semantic_assessment=False, detail_observer=None):
     """Run fresh extraction through reviewed projection with one provider-call budget.
 
     Injected extractors are trusted callbacks. Only the default LangExtract adapter's
@@ -71,7 +71,7 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
             any(type(model) is not str or model not in NVIDIA_REVIEW_MODELS
                 for model in (review_model, feature_model)) or
             any(callback is not None and not callable(callback)
-                for callback in (extractor, solar_transport, nvidia_transport, observer)) or
+                for callback in (extractor, solar_transport, nvidia_transport, observer, detail_observer)) or
             any(collector is not None and type(collector) is not list
                 for collector in (call_trace, review_calls)) or
             type(max_calls) is not int or not 1 <= max_calls <= 64 or
@@ -116,6 +116,11 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
     def observe(stage, state):
         if observer is not None:
             run('DIAGNOSTIC_FAILED', lambda: observer(stage, deepcopy(state)))
+
+    def detail(stage, state):
+        if detail_observer is not None:
+            # Keep the established four-stage observer contract unchanged.
+            run('DIAGNOSTIC_FAILED', lambda: detail_observer(stage, deepcopy(state)))
 
     def metered(provider, transport):
         def send(payload, key, timeout):
@@ -185,10 +190,14 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
         return extract_profile_candidates(document, candidate_key, extractor=selected)
 
     extractions = run('EXTRACTION_FAILED', extract)
+    detail('general_extracted', extractions)
     general = run('GROUNDING_FAILED', lambda: freeze_candidate_occurrences(document, extractions))
+    detail('general_grounded', general)
     operation_extractor = extract_capability_candidates if capability_candidates else extract_operation_candidates
     operations = run('OPERATION_EXTRACTION_FAILED', lambda: operation_extractor(
         document, nvidia_key, model=feature_model, transport=nvidia_send))
+    detail('operations_grounded', operations)
+    detail('grounding_inputs', {'general': general, 'operations': operations})
     frozen = run('MERGE_FAILED', lambda: _merge_occurrences(document, general, operations))
     observe('grounded', frozen)
     decisions = None
@@ -197,6 +206,7 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
             document, frozen, classification_key, transport=classification_send,
             model=classification_model or candidate_model))
         labels, decisions = assessed['labels'], assessed['modelDecisions']
+        detail('semantic_assessed', assessed)
     else:
         labels = run('CLASSIFICATION_FAILED', lambda: classify_profile_candidates(
             document, frozen, classification_key, transport=classification_send,
@@ -210,8 +220,10 @@ def analyze_integrated_candidates(document, document_id, solar_key, nvidia_key, 
         document, frozen, labels, nvidia_key, transport=nvidia_send,
         review_model=review_model, review_calls=review_calls, **review_options))
     safe_labels = run('COVERAGE_REVIEW_FAILED', lambda: apply_candidate_review(frozen, labels, review))
+    detail('review_completed', {'frozen': frozen, 'labels': safe_labels, 'review': review})
     curation = run('FEATURE_CURATION_FAILED', lambda: curate_reviewed_features(
         document, frozen, safe_labels, nvidia_key, model=feature_model, transport=nvidia_send))
+    detail('feature_curated', {'frozen': frozen, 'labels': safe_labels, 'curation': curation})
     result = run('PROJECTION_FAILED', lambda: finalize_candidate_analysis(
         document, document_id, frozen, labels, review,
         observer=observe if observer is not None else None, feature_curation=curation))
@@ -230,7 +242,7 @@ def analyze_nvidia_candidates(document, document_id, nvidia_key, *,
                               nvidia_transport=None, observer=None, call_trace=None,
                               review_calls=None, max_calls=64, capability_candidates=False,
                               field_local_review=False, classification_model=None,
-                              classification_batch_size=30, semantic_assessment=False):
+                              classification_batch_size=30, semantic_assessment=False, detail_observer=None):
     """Opt-in NVIDIA-only variant; no retries, fallback, or account/billing guarantee.
 
     Callers own the total process deadline and must establish permission and free
@@ -245,4 +257,5 @@ def analyze_nvidia_candidates(document, document_id, nvidia_key, *,
         call_trace=call_trace, review_calls=review_calls, max_calls=max_calls,
         nvidia_retry_limit=0, capability_candidates=capability_candidates,
         field_local_review=field_local_review, classification_model=classification_model,
-        classification_batch_size=classification_batch_size, semantic_assessment=semantic_assessment)
+        classification_batch_size=classification_batch_size, semantic_assessment=semantic_assessment,
+        detail_observer=detail_observer)
