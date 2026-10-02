@@ -1,0 +1,18 @@
+{
+  "kind": "artifact_integrity_only",
+  "sourceSha256": "9c0115a34e4ae90f905c3021569bc4b5c10284388c7bac264b76e2d3d077f451",
+  "sourceCopiesIdentical": true,
+  "fieldCount": 10,
+  "statedFields": 5,
+  "unknownFields": 5,
+  "entireFieldExplicitNoneCount": 0,
+  "featureGroups": 16,
+  "featureSemanticAtoms": 36,
+  "statedNonFeatureFacts": 4,
+  "evidenceReferencesChecked": 98,
+  "evidenceExactMatch": true,
+  "profileShapeValidation": "passed",
+  "newModelCalls": 0,
+  "serviceChanges": 0,
+  "realExtractionEvaluation": "not_run"
+}

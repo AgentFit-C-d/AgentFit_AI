@@ -1,0 +1,274 @@
+{
+  "data": {
+    "project_name": "AgentFit",
+    "project_type": "웹 서비스",
+    "domain": "AI 개발 도구와 설정",
+    "frontend": null,
+    "backend": null,
+    "ai": null,
+    "database": null,
+    "deployment": null,
+    "features": [
+      "GitHub 로그인",
+      "프로젝트 생성·목록·상세·삭제",
+      "입력·추출·분석",
+      "Profile 수정·확인 저장",
+      "실패 복구",
+      "역할·환경 확인",
+      "필요한 Capability 도출",
+      "Catalog 검토",
+      "호환성·중복·충돌 검사",
+      "추천 설명",
+      "지원 권한 선택",
+      "설정 파일",
+      "Preview·최종 승인",
+      "다운로드",
+      "적용·인증·확인 안내",
+      "상태 확인"
+    ],
+    "external_integrations": [
+      "GitHub"
+    ]
+  },
+  "sources": {
+    "project_name": "DOCUMENT",
+    "project_type": "DOCUMENT",
+    "domain": "DOCUMENT",
+    "frontend": "UNKNOWN",
+    "backend": "UNKNOWN",
+    "ai": "UNKNOWN",
+    "database": "UNKNOWN",
+    "deployment": "UNKNOWN",
+    "features": "DOCUMENT",
+    "external_integrations": "DOCUMENT"
+  },
+  "evidence": {
+    "project_name": [
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 0,
+        "end": 19
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 168,
+        "end": 244
+      }
+    ],
+    "project_type": [
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 77,
+        "end": 144
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 6761,
+        "end": 6852
+      }
+    ],
+    "domain": [
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 168,
+        "end": 244
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 910,
+        "end": 1000
+      }
+    ],
+    "frontend": [],
+    "backend": [],
+    "ai": [],
+    "database": [],
+    "deployment": [],
+    "features": [
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 3552,
+        "end": 3669
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 5108,
+        "end": 5172
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 1461,
+        "end": 1512
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 1850,
+        "end": 1915
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 1917,
+        "end": 1953
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 5174,
+        "end": 5318
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 1955,
+        "end": 1986
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 5320,
+        "end": 5393
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 1988,
+        "end": 2025
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 5395,
+        "end": 5532
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 1514,
+        "end": 1549
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 2040,
+        "end": 2072
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 3671,
+        "end": 3788
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 2074,
+        "end": 2119
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 3244,
+        "end": 3283
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 1597,
+        "end": 1641
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 1551,
+        "end": 1595
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 2121,
+        "end": 2144
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 2146,
+        "end": 2170
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 2172,
+        "end": 2206
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 2315,
+        "end": 2350
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 2352,
+        "end": 2385
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 2208,
+        "end": 2236
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 3790,
+        "end": 3902
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 77,
+        "end": 144
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 1643,
+        "end": 1694
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 3331,
+        "end": 3379
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 2238,
+        "end": 2271
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 5714,
+        "end": 5823
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 2273,
+        "end": 2313
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 1696,
+        "end": 1734
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 1738,
+        "end": 1801
+      }
+    ],
+    "external_integrations": [
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 1850,
+        "end": 1915
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 3552,
+        "end": 3669
+      },
+      {
+        "documentId": "agentfit-proposal-eval-draft",
+        "start": 5108,
+        "end": 5172
+      }
+    ]
+  },
+  "unknownFields": [
+    "frontend",
+    "backend",
+    "ai",
+    "database",
+    "deployment"
+  ]
+}
