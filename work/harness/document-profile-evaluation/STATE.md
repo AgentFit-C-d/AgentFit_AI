@@ -1,4 +1,15 @@
-# Document Profile Evaluation — v3 실행기 호환 수정·단일 평가 준비
+# Document Profile Evaluation — v3 단일 평가 첫 GLM 오류로 종료
+
+## 2026-10-02 단일 실제 평가 결과·종료
+
+- 동결 실행 코드9385e22d39494165e5f0b841ea6d611a7435973b, 실제147파일/원문/골드해시/dirty목록·사본 보존. integrated-nvidia/nvidia_only=True/confirmation-v3 명시, 원문부터 새 추출, 기존후보/응답/골드주입0.
+- 결과 PROVIDER_UNAVAILABLE, COVERAGE_REVIEW_FAILED. 요청24(첫 GLM, features20개 검토)에서 실패. DeepSeek23회성공+GLM1회실패, 전체1724.336초(28분44초), 재시도0/후속호출0. timeout초과아님: 해당요청365.994초제한,302.263초후제공자오류.
+- 추출·분류완료, 검토/기능정리/투영미완료. 일반객체63→원문후보112, operation60→44연결/16거절, merged156. 분류supported44/pending35/excluded77는 중간후보수이며 최종40의미/확인부담 지표 아님.
+- 원문·골드·코드불변/관측오류0/API키기록0 확인. 요청24·성공응답23·partial trace/최종failed응답/메타데이터 보존. HTTP>=500매핑이나 정확상태번호·본문·Content-Type미기록,503단정안함.
+- text mention23의 anchor=B로 값문맥부족 ambiguous_anchor. 원문[1890,1913) 존재, 따옴표차이와다른응답. C085재접속/C088정보부족·후보없음은 features/supported; AgentFit은project_name/confirmed지만역할충돌보류; C091Codex는외부연동supported오분류. 모두검토전판단, 최종값/보류/오답수 미측정.
+- 40개최종의미(보존·보류·누락·사람검토),최종긍정오답,10필드실제값,확인후보·질문수 모두미측정null. 이전실제와단계호출·시간비교만가능. v3오프라인재생성적과새실행혼용안함.
+- 폴더 E:/AgentFit/output/document-profile-v3-live-20261002-v1, 결과보고 specs/ai-developer/document-profile-evaluation/v3-live-result-20261002.md. 보고용JSON4개+검증기록추가,원본trace/gold불변. 실행시작이후코드변경0.
+- 안전한 종료: 보고 문서기록 후 종료. 자동수정/재호출/유료대체/추가실험/배포/사용자확정/Spring저장0. 큰Goal paused 유지.
 
 ## 2026-10-02 관측/실행기 최소 수정 및 단일 실평가 승인
 
