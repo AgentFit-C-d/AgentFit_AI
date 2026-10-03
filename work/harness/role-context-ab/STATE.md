@@ -16,3 +16,8 @@
 - 최소 수정: 평가용 conflictEvidenceSelected가 유효한 긍정 support의 선택후보 포함과 부정 counterEvidence 둘 다 요구하도록 함. raw statusError/인용결함은 별도 유지. 모델·지침·원문·기대값·schema·서버판정·제한 변경0. 실제 호출 전 평가기 구현 누락 수정이다.
 - 독립 검토 완료: 위 P2 한건 외 실행 차단 문제 없음. 별도 비평가 항목(실제 정확도/일반화)은 이번 비교의 미검증 한계로 기록. 전체테스트는 메인이 실행하며 재검토 에이전트 추가 없음. 빈 support/잘못된 occurrence/다른 후보 support 세 경우를 동일 회귀에 포함.
 - 최종 사전검증 기존12+신규15=27/27 통과. 로그 E:/AgentFit/output/role-context-ab-preflight-20261003T092738411584Z. 검증 생략/완화0. 다음은 로컬 커밋→실제파일/요청 동결→승인된 최대4호출. 실행 시작 이후 실험파일 수정 금지.
+- 실행 동결: 코드914e97b144a39858eb6ab2b8407323494888d82b, E:/AgentFit/output/role-context-ab-20261003-v1. B는 이전동결SHA f6c4265d4f459babee04e5ed010b9ac81525dcbe3c77ba784ebd54dbb0229523 동일.
+- 실제 D1A,D1B,D2B,D2A 4/4 성공, 재시도0, 실패0. 33.722/32.106/45.862/63.325초, 전체175.438초. 제한600/1220/20준수. 실행시작뒤코드·원문·후보·기대값·지침·서버변경0.
+- 결과: 역할오류10→0, field오류1→0, 정상supported3/9→9/9(보류6→0/제외0), 정상인증·SDK3/3 양쪽유지. 서버통과오답1→0. 단 유효field confirmed오류1→2, other/confirmed1→2, 상태오류3→4. strict올바른범위밖제외0→1/4. 명시부정negated0/1 양쪽실패. 미정/상충raw2/2양쪽일치/실제보류1/2, tentativeproposed서버제외1건양쪽남음. 인용결함0양쪽.
+- 사후오프라인재검산:동결해시일치/기준변경없이저장채점과완전동일/호출순서시간검사통과. 합성테스트응답점수제외. 실제응답32행·원문근거·metadata·report별도보존. 키/인증헤더저장0.
+- 보고 specs/ai-developer/mention-role-cause-analysis/context-ab-result-20261003.md. 서비스/GLM/전체추출/복구/Spring/추가모델0, 큰Goalpaused. 새실험자동진행없음, 종료.
