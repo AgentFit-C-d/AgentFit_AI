@@ -51,15 +51,21 @@ def offline(*, block_providers=True):
 
 
 @contextmanager
-def replay_providers():
-    """Freeze upstream grounding for v3 regression, never label newly added spans.
+def replay_providers(*, historical_classification=False):
+    """Current v3 regression starts at saved classification; no new B-model claim.
 
     Operation grounding now recovers additional candidates. Its current output
     cannot be paired with old classification responses. This regression starts
     downstream of the saved general/operation candidate boundaries instead.
+    The current B instruction also cannot be paired with old A responses. Check
+    those requests only in the sealed historical runtime. Current tests recheck
+    the saved raw classifications and retain exact downstream review requests.
     """
     trace = load('trace.json')
-    calls = trace['calls'][3:]
+    classification = [c for c in trace['calls'] if c['request'].get('response_format', {}).get(
+        'json_schema', {}).get('name') == 'agentfit_semantic_assessment']
+    calls = trace['calls'][3:] if historical_classification else [
+        c for c in trace['calls'][3:] if c not in classification]
     seen = []
 
     def transport(payload, key, timeout):
@@ -76,19 +82,40 @@ def replay_providers():
         assert document == load('document.txt')
         return deepcopy(trace['stages']['operations_grounded'])
 
+    def assessed(document, frozen, key, **kwargs):
+        from agentfit_ai.candidate_semantic_assessment import validate_assessments, semantic_labels
+        assert document == load('document.txt')
+        assert frozen == trace['stages']['grounded']
+        records = []
+        for call in classification:
+            body = json.loads(call['request']['messages'][1]['content'])
+            batch = {'candidates': [{k:c[k] for k in ('id', 'start', 'end')}
+                                    for c in body['candidates']], 'rejected': []}
+            raw = json.loads(json.loads(call['response']['text'])['choices'][0]['message']['content'])
+            records.extend(validate_assessments(document, batch, raw['assessments'], require_mention_kind=True))
+        assert [r['id'] for r in records] == [c['id'] for c in frozen['candidates']]
+        result = {'labels': semantic_labels(records), 'modelDecisions': records}
+        assert result == trace['stages']['semantic_assessed']
+        return result
+
     # The optional SDK is not executed: its already-saved output is the boundary.
-    with offline(), patch('agentfit_ai.candidate_service_worker.find_spec', return_value=object()), \
+    with ExitStack() as stack, offline(), patch('agentfit_ai.candidate_service_worker.find_spec', return_value=object()), \
             patch('agentfit_ai.langextract_solar_trial.extract_candidates', side_effect=extract), \
             patch('agentfit_ai.candidate_analysis_pipeline.extract_operation_candidates', side_effect=operations), \
             patch('agentfit_ai.candidate_service_worker.post_nvidia_streaming_inline', side_effect=transport):
+        if not historical_classification:
+            classification_patch = stack.enter_context(patch(
+                'agentfit_ai.candidate_analysis_pipeline.classify_grounded_candidates', side_effect=assessed))
         yield transport, seen
-        assert seen == list(range(4, 26)), seen
+        assert seen == [c['index'] for c in calls], seen
+        if not historical_classification:
+            classification_patch.assert_called_once()
 
 
-def replay(contract='confirmation-v2'):
+def replay(contract='confirmation-v2', *, historical_classification=False):
     from agentfit_ai.candidate_service_worker import execute_nvidia_analysis
     kwargs = {} if contract == 'confirmation-v2' else {'contract': contract}
-    with replay_providers():
+    with replay_providers(historical_classification=historical_classification):
         return execute_nvidia_analysis(load('document.txt'), load('trace.json')['documentId'],
                                        'OFFLINE-NONCREDENTIAL', semantic_assessment=True, **kwargs)
 

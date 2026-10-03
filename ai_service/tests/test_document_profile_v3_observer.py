@@ -13,7 +13,7 @@ from review_preservation_fixture import load, offline, replay_providers
 
 
 @contextmanager
-def observed_replay():
+def observed_replay(*, historical_classification=False):
     # Recreate the SDK interval objects from the saved observation serialization.
     def extract(*args, **kwargs):
         output = []
@@ -22,7 +22,8 @@ def observed_replay():
             output.append(SimpleNamespace(**{**row, 'char_interval': None if interval is None else
                 SimpleNamespace(start_pos=interval['start'], end_pos=interval['end'])}))
         return output
-    with replay_providers(), patch('agentfit_ai.langextract_solar_trial.extract_candidates', side_effect=extract):
+    with replay_providers(historical_classification=historical_classification), patch(
+            'agentfit_ai.langextract_solar_trial.extract_candidates', side_effect=extract):
         yield
 
 
@@ -45,7 +46,11 @@ class DocumentProfileV3ObserverTests(unittest.TestCase):
             self.assertEqual(trace['stages']['final_response'], result)
             self.assertEqual(trace['observationErrors'], [])
             self.assertEqual(trace['status'], 'complete')
-            self.assertEqual(len(trace['calls']), 22)
+            # Current replay begins after classification; historical A's 22
+            # requests are separately checked in the sealed historical runtime.
+            self.assertEqual(len(trace['calls']), 3)
+            self.assertEqual([c['request'] for c in trace['calls']],
+                             [c['request'] for c in load('trace.json')['calls'][-3:]])
 
     def test_default_and_explicit_v2_preserve_frozen_result(self):
         for contract in (None, 'confirmation-v2'):

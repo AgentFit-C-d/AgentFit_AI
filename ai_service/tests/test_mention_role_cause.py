@@ -82,12 +82,17 @@ class MentionRoleCauseTests(unittest.TestCase):
                     self.assertEqual(record,original)
                     self.assertEqual(raw['modelStatus'],record['modelStatus'])
 
-    def test_transmitted_instructions_schema_and_source_match_current_builder(self):
+    def test_current_builder_differs_from_historical_requests_only_by_role_block(self):
+        from tentative_proposed_fixture import load
+        old, new = load('D1/A-role-instruction.txt'), load('D1/B-role-instruction.txt')
         for version in ('v2','v3'):
             for batch in recorded_batches(version):
                 with self.subTest(version=version,call=batch['call']['index']):
                     generated=assessment_payload(batch['document'],batch['frozen']['candidates'])
-                    self.assertEqual(batch['call']['request']['messages'],generated['messages'])
+                    historical = batch['call']['request']['messages']
+                    self.assertEqual(historical[0]['content'].count(old), 1)
+                    self.assertEqual(historical[0]['content'].replace(old, new), generated['messages'][0]['content'])
+                    self.assertEqual(historical[1:], generated['messages'][1:])
                     self.assertEqual(batch['call']['request']['response_format'],generated['response_format'])
                     self.assertEqual(batch['input']['document'],batch['document'])
 

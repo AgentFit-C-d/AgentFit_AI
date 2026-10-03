@@ -81,9 +81,13 @@ def run_preserved_suite():
         shutil.copyfile(inspector, destination)
         tests = runtime/'ai_service/tests'
         tests.mkdir(exist_ok=False)
-        for name in ('recovery_preserved_cases.py', 'recovery_preserved_worker.py', 'review_preservation_fixture.py'):
+        for name in ('recovery_preserved_cases.py', 'recovery_preserved_worker.py', 'review_preservation_fixture.py',
+                     'tentative_proposed_fixture.py', 'test_mention_role_cause.py',
+                     'test_document_profile_v3_observer.py'):
             shutil.copyfile(TESTS/name, tests/name)
         shutil.copytree(FIXTURE, tests/'fixtures/review_recovery')
+        for name in ('review_preservation', 'tentative_proposed'):
+            shutil.copytree(TESTS/'fixtures'/name, tests/'fixtures'/name)
         env = os.environ.copy()
         for key in list(env):
             if key.endswith('_API_KEY'):

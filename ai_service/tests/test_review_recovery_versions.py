@@ -19,7 +19,7 @@ class CurrentRecoveryVersionTests(unittest.TestCase):
         # CI installs Python dependencies, not the developer's RTK utility.
         with patch.dict(os.environ, {'PATH': ''}):
             results = run_preserved_suite()
-        self.assertEqual(len(results), 20)
+        self.assertEqual(len(results), 24)  # Original 20 recovery cases + 4 historical A checks.
         self.assertTrue(all(row['status'] in ('success', 'skip') for row in results.values()))
 
     def test_current_runtime_rejects_historical_execution_with_exact_code_mismatch(self):

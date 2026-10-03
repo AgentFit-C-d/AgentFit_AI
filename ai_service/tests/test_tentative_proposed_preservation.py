@@ -162,14 +162,14 @@ class TentativeProposedTests(unittest.TestCase):
             bad=deepcopy(out); bad['modelDecisions'][0]['decision']='user_confirmed'
             with self.assertRaises(ValueError): validate_candidate_confirmation(self.document,'SYNTHETIC-BOUNDARY-D2',bad,contract=contract)
 
-    def test_service_prompt_and_schema_unchanged_and_frozen_b_not_installed(self):
+    def test_current_service_prompt_and_schema_match_frozen_b(self):
         suite=load('suite.json')
         for doc,p in suite['documents'].items():
             generated=assessment_payload(p['document'],p['frozen']['candidates'])
-            self.assertEqual(generated['messages'],p['payloads']['A']['messages'])
-            self.assertEqual(generated['response_format'],p['payloads']['A']['response_format'])
-            self.assertEqual(MENTION_ROLE_INSTRUCTION,load(f'{doc}/A-role-instruction.txt'))
-            self.assertNotEqual(MENTION_ROLE_INSTRUCTION,load(f'{doc}/B-role-instruction.txt'))
+            self.assertEqual(generated['messages'],p['payloads']['B']['messages'])
+            self.assertEqual(generated['response_format'],p['payloads']['B']['response_format'])
+            self.assertEqual(MENTION_ROLE_INSTRUCTION,load(f'{doc}/B-role-instruction.txt'))
+            self.assertNotEqual(MENTION_ROLE_INSTRUCTION,load(f'{doc}/A-role-instruction.txt'))
 
 
 if __name__=='__main__': unittest.main(verbosity=2)

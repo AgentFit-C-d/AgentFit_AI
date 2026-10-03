@@ -300,6 +300,58 @@ class ReviewRecoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(recovery.RecoveryRefused,'CONSUMPTION_MISMATCH'):
             self.audit()
 
+    def test_historical_service_prompt_schema_and_a_block_exactly_match(self):
+        from agentfit_ai.candidate_semantic_assessment import assessment_payload
+        from agentfit_ai.candidate_mention_roles import MENTION_ROLE_INSTRUCTION
+        from tentative_proposed_fixture import load
+        for doc, item in load('suite.json')['documents'].items():
+            generated = assessment_payload(item['document'], item['frozen']['candidates'])
+            self.assertEqual(generated['messages'], item['payloads']['A']['messages'])
+            self.assertEqual(generated['response_format'], item['payloads']['A']['response_format'])
+            self.assertEqual(MENTION_ROLE_INSTRUCTION, load(f'{doc}/A-role-instruction.txt'))
+            self.assertNotEqual(MENTION_ROLE_INSTRUCTION, load(f'{doc}/B-role-instruction.txt'))
+
+    def test_historical_v2_v3_all_classification_requests_match_a_builder(self):
+        from agentfit_ai.candidate_semantic_assessment import assessment_payload
+        from test_mention_role_cause import recorded_batches
+        for version in ('v2', 'v3'):
+            batches = recorded_batches(version)
+            self.assertTrue(batches)
+            for batch in batches:
+                with self.subTest(version=version, call=batch['call']['index']):
+                    generated = assessment_payload(batch['document'], batch['frozen']['candidates'])
+                    self.assertEqual(batch['call']['request']['messages'], generated['messages'])
+                    self.assertEqual(batch['call']['request']['response_format'], generated['response_format'])
+                    self.assertEqual(batch['input']['document'], batch['document'])
+
+    def test_historical_a_transport_replay_preserves_exact_v2_and_v3_review(self):
+        from review_preservation_fixture import load, replay
+        v2 = replay(historical_classification=True)
+        self.assertEqual(v2, load('result.json'))
+        v3 = replay('confirmation-v3', historical_classification=True)
+        for key in ('profile', 'modelDecisions', 'questions', 'unassignedQuestions', 'fieldStates'):
+            self.assertEqual(v3[key], v2[key], key)
+        self.assertEqual(len(v3['reviewDispositions']), 6)
+        self.assertTrue(all(r['disposition'] == 'needs_confirmation' for r in v3['reviewDispositions']))
+
+    def test_historical_observer_records_all_22_a_replay_requests(self):
+        from test_document_profile_v3_observer import observed_replay, DocumentProfileV3ObserverTests
+        from diagnostic_tools.document_profile_worker import execute_observed_request
+        from review_preservation_fixture import load
+        with observed_replay(historical_classification=True):
+            target = self.folder/'historical-trace.json'
+            request = DocumentProfileV3ObserverTests().request('confirmation-v3')
+            result = json.loads(execute_observed_request(request, target))
+            trace = json.loads(target.read_text(encoding='utf-8'))
+            self.assertEqual(result['contract'], 'confirmation-v3')
+            self.assertEqual(len(result['reviewDispositions']), 6)
+            self.assertEqual(trace['stages']['final_response'], result)
+            self.assertEqual(trace['observationErrors'], [])
+            self.assertEqual(trace['status'], 'complete')
+            self.assertEqual(len(trace['calls']), 22)
+            self.assertEqual([c['request'] for c in trace['calls']],
+                             [c['request'] for c in load('trace.json')['calls'][3:]])
+
 
 if __name__=='__main__':
     unittest.main()

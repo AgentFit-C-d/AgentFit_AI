@@ -102,7 +102,10 @@ class DocumentProfileLiveTests(unittest.TestCase):
             self.assertEqual(trace['status'], 'complete')
             self.assertEqual(trace['stages']['final_response'], result)
             run = json.loads((output/'execution.json').read_text(encoding='utf-8'))
-            self.assertEqual(run['requestAttempts'], 22)  # Stored responses, not live requests.
+            # Saved classification boundary, then three exact downstream replies.
+            self.assertEqual(run['requestAttempts'], 3)
+            self.assertEqual([c['request'] for c in trace['calls']],
+                             [c['request'] for c in load('trace.json')['calls'][-3:]])
             self.assertEqual(run['retries'], 0)
             self.assertTrue(all(c['state'] == 'completed' for c in
                 json.loads((output/'request-journal.json').read_text(encoding='utf-8'))))
