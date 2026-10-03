@@ -22,3 +22,13 @@
 - Ruling: 저장 경계에서 기존 NvidiaAnalyzer/parser를 이미 받은 bytes만 반환하는 로컬 transport로 재사용하여 디코딩된 민감값 검사까지 파일쓰기 전에 수행. 새 모델 전송/해석규칙/schema/서버판정/시간·호출제한 변경0. 민감값을 기록하지 않는 기존 조건을 실행기의 로컬 저장 경로에 적용하는 최소 수정이며 사용자 허용 범위로 판단했다. parser 미통과 응답 본문은 디스크에 저장하지 않고 실패 코드/안전한 진단만 남긴다.
 - 최종 preflight 12/12 통과(0.486초), 검증 조건 완화/skip 없음. encoded key의 envelope와 내부 content 두 경우 모두 파일저장 전에 거절되고 후속 B 전송이 차단됨. 실제 모델0. 로그: E:/AgentFit/output/mention-role-guidance-ab-preflight-20261003-v2/final-tests.txt.
 - 독립 검토 제외 항목 판단: 계정 잔여량 별도조회는 승인된 두호출 외 요청이므로 하지 않음. 실제 정확도/일반화는 이번 한쌍결과 범위만 보고. 디스크I/O까지 강제종료하는 별도watchdog은 추가하지 않으며, subprocess 요청 제한과 남은 전체 전송 시간 검사를 유지하고 실제 경과시간을 보고한다.
+
+## 실제 한 쌍 완료 / 종료
+
+- 코드 cbb3da03dbfe0603fa399fab23700f566a95c7bd와 실제 실행 파일·A/B역할블록·원문·8후보·기대값·옵션을 freeze. A/B역할블록 외 차이0. 서비스상수 변경0.
+- E:/AgentFit/output/mention-role-guidance-ab-20261003-v2 에 A/B 새각1회 성공, 총2회, 재시도0, 첫실패없음. A85.040초/B105.248초/전체190.365초. 600/1220/20초 제한 준수. 동결해시 실행후일치.
+- 정상 이름·유형 역할오류4→0. 정상7발생위치 supported2→7/보류5→0/제외0→0. 고유정상의미3개 supported근거1→3. GitHub2→3, 보류1→0. 인용결함후보3→0(occurrence3→0, 후보미포함2→0은중복).
+- Codex A=other/product_operation/confirmed→보류, B=other/other/confirmed→제외. 유효필드오확정/서버supported는양쪽0. raw confirmed오용은양쪽1, raw irrelevant까지요구한정확한제외는양쪽0. 사전전체성공판정아님, 정상역할개선방향만관측.
+- tentative/proposed 실제사례없음. 기존서버제외문제미해결. 최종Profile/40의미/일반화/반복재현성미측정.
+- 후처리 audit-results.py는 모델/네트워크 차단 상태에서 저장응답 재검산/제한/해시를 확인했고 추가호출0. 원래고정metric변경없음, 원시status기대불일치1/1을별도표시.
+- 상세보고 specs/ai-developer/mention-role-cause-analysis/ab-result-20261003.md. 초기v1/RED/GREEN기록모두보존. 다음자동작업없음. 큰Goalpaused·서비스적용/복구/GLM/Spring저장0으로종료.
