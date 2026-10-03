@@ -100,9 +100,14 @@ def _decision(row):
     if any(row[k] == 'unclear' for k in AXES):
         return 'needs_confirmation'
     if (row['scope'] != 'target' or row['time'] != 'current' or row['polarity'] != 'positive' or
-            row['commitment'] != 'adopted' or row['role'] != 'product_fact' or row['field'] == 'other' or
+            row['role'] != 'product_fact' or row['field'] == 'other' or
             row['modelStatus'] in ('negated', 'irrelevant')):
         return 'excluded'
+    if row['commitment'] != 'adopted':
+        # All grounding, role and exclusion checks above still apply.
+        return ('needs_confirmation' if row['modelStatus'] == 'tentative' and
+                row['commitment'] == 'proposed' and
+                kind in ('external_service', 'product_operation', 'other') else 'excluded')
     return 'supported' if row['modelStatus'] == 'confirmed' else 'needs_confirmation'
 
 

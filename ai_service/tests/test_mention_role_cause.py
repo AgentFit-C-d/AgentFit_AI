@@ -179,7 +179,6 @@ class MentionRoleCauseTests(unittest.TestCase):
     def test_historical_v3_client_is_not_an_adopted_outside_provider(self):
         self.assertNotEqual(saved('v3',4020)[3]['decision'],'supported')
 
-    @unittest.expectedFailure
     def test_separate_proposed_in_scope_fact_remains_pending(self):
         row=synthetic('AtlasID 연동을 검토 중이며 채택은 미정이다.','AtlasID','external_integrations','external_service',modelStatus='tentative',commitment='proposed')
         self.assertEqual(row['decision'],'needs_confirmation')
