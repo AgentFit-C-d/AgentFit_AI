@@ -21,7 +21,7 @@ from diagnostic_tools.document_profile_live import actual_hashes, save, digest
 
 PRIOR = Path('E:/AgentFit/output/document-profile-v3-live-20261002-v1')
 PLAN = ROOT/'specs/ai-developer/mention-role-cause-analysis/comparison-plan.md'
-OUTPUT = Path('E:/AgentFit/output/mention-role-guidance-ab-20261003-v1')
+OUTPUT = Path('E:/AgentFit/output/mention-role-guidance-ab-20261003-v2')
 IDS = ('C000','C002','C003','C043','C081','C091','C125','C145')
 POSITIONS = ((2,10),(137,142),(168,176),(1857,1863),(3570,3576),(4020,4025),(5122,5128),(7266,7274))
 EXPECTED = (
@@ -193,6 +193,11 @@ class PairGate:
             row['actualTransportTimeoutSeconds']=limit
             raw=self.transport(payload,key,limit)
             _reject_sensitive(raw.decode('utf-8'),key)
+            # Run the unchanged parser on already-received bytes before writing.
+            # It checks decoded envelope AND JSON content for sensitive values.
+            # This local replay cannot make a provider call or change its options.
+            NvidiaAnalyzer(key,transport=lambda *_:raw,model=MODEL)._send_payload(
+                payload,('assessments',),timeout=limit)
             (self.output/f'{arm}-response.json').write_bytes(raw)
             if self.clock()>=self.stop_at:
                 raise AnalysisError('PROVIDER_TIMEOUT')

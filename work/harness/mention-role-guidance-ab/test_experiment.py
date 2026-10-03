@@ -28,8 +28,11 @@ class PreflightTests(unittest.TestCase):
         cls.package=ex.build_package()
 
     def setUp(self):
-        self.tmp=tempfile.TemporaryDirectory(dir=ex.ROOT/'tmp')
+        test_root=ex.ROOT/'tmp'
+        test_root.mkdir(parents=True,exist_ok=True)
+        self.tmp=tempfile.TemporaryDirectory(dir=test_root,prefix='role-guidance-preflight-')
         self.output=Path(self.tmp.name)
+        assert self.output.resolve().is_relative_to(test_root.resolve())
         self.addCleanup(self.tmp.cleanup)
         guard=offline()
         guard.__enter__()
@@ -96,6 +99,34 @@ class PreflightTests(unittest.TestCase):
             self.assertTrue(result['failed'])
             self.assertEqual(len(calls),1)
             self.assertFalse((sub/'B-started.json').exists())
+
+    def test_encoded_secret_is_rejected_before_any_response_is_saved(self):
+        key='OFFLINE-KEY'
+        encoded=''.join('\\u%04x'%ord(char) for char in key)
+        for layer in ('envelope','content'):
+            sub=self.output/layer
+            sub.mkdir()
+            envelope=json.loads(reply(self.package))
+            if layer=='envelope':
+                envelope['private']=key
+                raw=json.dumps(envelope).replace(key,encoded).encode()
+            else:
+                body=json.loads(envelope['choices'][0]['message']['content'])
+                body['private']=key
+                envelope['choices'][0]['message']['content']=json.dumps(body).replace(key,encoded)
+                raw=json.dumps(envelope).encode()
+            sends=[]
+            def send(*args):
+                sends.append(True)
+                return raw
+            result=ex.run_pair(self.package,sub,key,transport=send)
+            self.assertTrue(result['failed'])
+            self.assertEqual(len(sends),1)
+            self.assertFalse(list(sub.glob('*-response.json')))
+            for path in sub.glob('*.json'):
+                text=path.read_text(encoding='utf-8')
+                self.assertNotIn(key,text)
+                self.assertNotIn(encoded,text)
 
     def test_identity_failure_prevents_any_send(self):
         seen=[]
