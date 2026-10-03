@@ -1,0 +1,18 @@
+# 역할 지침 새 합성 문맥 A/B
+
+- 사용자 승인 범위: B 문구 변경 없이 합성 문서2 × 8후보, D1 A→B / D2 B→A, 최대4회 신규 DeepSeek, 재시도0, 요청600초·전체1220초·종료20초.
+- 큰 Goal paused. 서비스 상수·모델·다른 지침·schema·서버·기존40의미 골드 변경0. GLM/전체추출/복구/배포/Spring0.
+- 계획: 별도 원문·기대값/위치 작성 → 기존 평가기 파서·검증 재사용한 독립 실행기와 오프라인 검사 → 독립 검토 → 파일·요청 동결 → 허용4회 비교 → 보고 후 종료.
+- 기존 worktree와 harness 관례 재사용. 새 문맥 자료는 별도 합성 평가이며 실제 문서 일반화·최종 Profile 점수로 사용하지 않는다. 기대값은 실행 전에 확정하고 모델에 보내지 않는다.
+- 초기 환경 문제: 기본 exec 2회 setup refresh 실패, Node kernel도 실패. 승인된 escalated rtk shell로 지침/로컬 접근 성공. 모델 호출0. 기존 실험/실패기록 보존.
+- Ruling: 이미 승인된 소규모 비교 계획을 이 ledger에 기록한다. 추가 설계 재승인/새 worktree/서비스 코드 변경 불필요. 기록 보존 요청을 우선해 실험 자료와 ledger를 삭제하지 않는다.
+- 상태: 준비 중. 실제 모델 호출은 아직 없다.
+- RED: 첫 테스트에서 build_suite의 미구현 반환 None을 assertIsInstance(dict)가 거부해 1개 실패를 직접 확인했다. 새 문맥 suite 작성 후 해당 테스트 GREEN.
+- 2026-10-03 로컬 준비 완료: D1 521자/D2 599자, 각8후보. 정상9/범위밖4/명시부정1/미정·상충2. 기존 B 바이트/이전 A/모델·옵션 일치. 스키마는 새 후보 ID enum 외 차이 없음을 검사.
+- 최신 오프라인 검증 26/26 통과: 기존12 + 새14. 로그 E:/AgentFit/output/role-context-ab-preflight-20261003T092324377726Z. 전체4회 순서, 첫실패 각위치, 문서간 공유시간, timeout진행중자식종료, 중복/다섯번째차단, secret/파싱/서버검증 검사. 합성응답은 품질점수 제외.
+- Python 실행시 기존 환경 경고 `Could not find platform independent libraries <prefix>` 발생하나 import/테스트26개 모두 성공. 환경 설치/모델 옵션 변경 없음.
+- 독립 preflight 검토 진행 중. 실제 동결 및 모델 호출은 검토 후에만 진행.
+- 독립 검토 발견: 상충 후보에서 support=[]이고 부정 counterEvidence만 있어도 correctHold 집계 가능. 양쪽 근거가 필요하다는 사전 기준과 불일치. 회귀 RED(1실패/15테스트) E:/AgentFit/output/role-context-ab-preflight-20261003T092538618199Z 보존.
+- 최소 수정: 평가용 conflictEvidenceSelected가 유효한 긍정 support의 선택후보 포함과 부정 counterEvidence 둘 다 요구하도록 함. raw statusError/인용결함은 별도 유지. 모델·지침·원문·기대값·schema·서버판정·제한 변경0. 실제 호출 전 평가기 구현 누락 수정이다.
+- 독립 검토 완료: 위 P2 한건 외 실행 차단 문제 없음. 별도 비평가 항목(실제 정확도/일반화)은 이번 비교의 미검증 한계로 기록. 전체테스트는 메인이 실행하며 재검토 에이전트 추가 없음. 빈 support/잘못된 occurrence/다른 후보 support 세 경우를 동일 회귀에 포함.
+- 최종 사전검증 기존12+신규15=27/27 통과. 로그 E:/AgentFit/output/role-context-ab-preflight-20261003T092738411584Z. 검증 생략/완화0. 다음은 로컬 커밋→실제파일/요청 동결→승인된 최대4호출. 실행 시작 이후 실험파일 수정 금지.
